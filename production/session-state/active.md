@@ -4,9 +4,11 @@
 
 ## Fase actual
 
-**FASE 0 — COMPLETADA** (2026-06-10). Criterio de salida cumplido: 20 casos únicos de deducción pura generados. Pendiente: validación a mano del usuario (jugar casos de `production/fase0-casos/casos-para-jugar.txt`).
+**FASE 1 — EN CURSO** (arrancada 2026-06-10 como banco de pruebas web local, decisión del usuario). La app Flutter vive en `app/` y corre como web: `JUGAR.bat` en la raíz compila/sirve y abre http://localhost:8123.
 
-Siguiente fase: **FASE 1** (vertical slice Flutter) — ver `docs/17-roadmap.md`. Esperando mockups del usuario (Claude Design) para la UI; el tablero puede arrancar antes con UI provisional si el usuario lo aprueba.
+Estado: lista de casos + partida completa (tablero con drag & drop fiel al doc 03, pistas con ciclo, papelera, deshacer/rehacer, resolver con validación local, resumen con feedback de playtest). 9 tests de reglas del tablero pasando. Pendiente: que el usuario juegue y dé feedback; tutorial; UI definitiva con mockups; build Android.
+
+FASE 0 — COMPLETADA (2026-06-10): 20 casos únicos de deducción pura; hojas en `production/fase0-casos/`.
 
 ## El motor (tools/) — estado
 

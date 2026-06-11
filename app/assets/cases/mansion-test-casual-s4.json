@@ -1,0 +1,101 @@
+{
+  "caseId": "mansion-test-casual-s4",
+  "mapId": "mansion-test",
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c1",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela"
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno"
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara"
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario"
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena"
+    }
+  ],
+  "clues": [
+    {
+      "type": "not_in_area",
+      "subject": "c2",
+      "area": "pasillo"
+    },
+    {
+      "type": "corner",
+      "subject": "c3",
+      "area": null
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "biblioteca"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "comedor"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "pasillo"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c1",
+      "other": "c2",
+      "dir": "west"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c1",
+      "other": "c2",
+      "dir": "north"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c1",
+      "other": "c5",
+      "dir": "east"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c3",
+      "other": "c4",
+      "dir": "west"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c3",
+      "other": "c5",
+      "dir": "north"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 3,
+      "c2": 9,
+      "c3": 10,
+      "c4": 16,
+      "c5": 22
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 10,
+    "maxTier": 3,
+    "clueCount": 10
+  }
+}

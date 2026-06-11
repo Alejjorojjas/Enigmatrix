@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "enigmatrix-web",
+      "runtimeExecutable": "dart",
+      "runtimeArgs": [
+        "pub",
+        "global",
+        "run",
+        "dhttpd",
+        "--path",
+        "D:\\OneDrive\\Documentos\\Repositorios GitHub\\Proyecto Enigmatrix\\Enigmatrix version final Claude\\app\\build\\web",
+        "--port",
+        "8123"
+      ],
+      "port": 8123
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "caseId": "hotel-test-intermedio-s2",
+  "mapId": "hotel-test",
+  "difficulty": "intermedio",
+  "hasWeapon": false,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela"
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno"
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara"
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario"
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena"
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco"
+    }
+  ],
+  "clues": [
+    {
+      "type": "corner",
+      "subject": "c1",
+      "area": null
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c2",
+      "area": "recepcion"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c2",
+      "area": "eventos"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c3",
+      "area": "restaurante"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c3",
+      "area": "pasillo"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "recepcion"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "lavanderia"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "eventos"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c5",
+      "area": "recepcion"
+    },
+    {
+      "type": "corner",
+      "subject": "c6",
+      "area": null
+    },
+    {
+      "type": "cardinal",
+      "subject": "c1",
+      "other": "c2",
+      "dir": "north"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c3",
+      "other": "c4",
+      "dir": "east"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c3",
+      "other": "c4",
+      "dir": "north"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 5,
+      "c2": 10,
+      "c3": 15,
+      "c4": 20,
+      "c5": 25,
+      "c6": 30
+    },
+    "murderer": "c6"
+  },
+  "metrics": {
+    "deductionSteps": 8,
+    "maxTier": 4,
+    "clueCount": 13
+  }
+}

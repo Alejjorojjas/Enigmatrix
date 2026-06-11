@@ -1,0 +1,66 @@
+{
+  "caseId": "cabana-test-principiante-s8",
+  "mapId": "cabana-test",
+  "difficulty": "principiante",
+  "hasWeapon": false,
+  "victim": "c1",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela"
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno"
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara"
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario"
+    }
+  ],
+  "clues": [
+    {
+      "type": "in_row",
+      "subject": "c2",
+      "index": 1
+    },
+    {
+      "type": "in_col",
+      "subject": "c2",
+      "index": 1
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c3",
+      "area": "dormitorio"
+    },
+    {
+      "type": "in_row",
+      "subject": "c3",
+      "index": 2
+    },
+    {
+      "type": "in_col",
+      "subject": "c4",
+      "index": 2
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 0,
+      "c2": 5,
+      "c3": 11,
+      "c4": 14
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 6,
+    "maxTier": 4,
+    "clueCount": 5
+  }
+}

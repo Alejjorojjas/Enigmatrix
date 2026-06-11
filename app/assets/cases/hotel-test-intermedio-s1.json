@@ -1,0 +1,117 @@
+{
+  "caseId": "hotel-test-intermedio-s1",
+  "mapId": "hotel-test",
+  "difficulty": "intermedio",
+  "hasWeapon": false,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela"
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno"
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara"
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario"
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena"
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco"
+    }
+  ],
+  "clues": [
+    {
+      "type": "corner",
+      "subject": "c3",
+      "area": null
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "restaurante"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c4",
+      "area": "pasillo"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c5",
+      "area": "recepcion"
+    },
+    {
+      "type": "not_in_area",
+      "subject": "c5",
+      "area": "habitacion"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c1",
+      "other": "c2",
+      "dir": "north"
+    },
+    {
+      "type": "not_same_area",
+      "a": "c1",
+      "b": "c3"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c1",
+      "other": "c3",
+      "dir": "west"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c2",
+      "other": "c5",
+      "dir": "west"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c4",
+      "other": "c5",
+      "dir": "east"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c5",
+      "other": "c6",
+      "dir": "east"
+    },
+    {
+      "type": "cardinal",
+      "subject": "c5",
+      "other": "c6",
+      "dir": "north"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 7,
+      "c3": 17,
+      "c4": 21,
+      "c5": 26,
+      "c6": 30
+    },
+    "murderer": "c6"
+  },
+  "metrics": {
+    "deductionSteps": 14,
+    "maxTier": 3,
+    "clueCount": 12
+  }
+}

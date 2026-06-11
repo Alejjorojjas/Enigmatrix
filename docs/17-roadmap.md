@@ -31,17 +31,21 @@ Una app Flutter que se instala en el teléfono del usuario y se juega. Sin Fireb
 
 Entregables:
 
-- [ ] Proyecto Flutter (`app/`) con Riverpod + go_router
-- [ ] Tablero jugable: render del mapa (CustomPainter), áreas, objetos, avatares
-- [ ] Interacción completa: candidato/confirmado/X, arrastre, papelera, deshacer/rehacer, limpiar
-- [ ] Los dos modos de notas (separada y superpuesta)
-- [ ] Pistas visibles con tachado/destacado
-- [ ] Botón Resolver con validación local (en esta fase el cliente sí valida — es throwaway aceptado)
-- [ ] Pantallas mínimas: selección de caso, partida, error/éxito, resumen
+- [x] Proyecto Flutter (`app/`) con Riverpod + go_router — 2026-06-10, corre como web local (banco de pruebas)
+- [x] Tablero jugable: áreas con paredes, objetos, armas visibles, avatares (widgets por celda; CustomPainter se evaluará para animaciones)
+- [x] Interacción: candidato/confirmado/X parcial/fuerte, tap y arrastre, papelera, mini panel de borrado, deshacer/rehacer (límite 50), limpiar con confirmación
+- [~] Modos de notas: toggle Mapa/Notas básico (la versión definitiva con mockups)
+- [x] Pistas visibles con ciclo normal→destacada→tachada
+- [x] Botón Resolver con validación local + resaltado de casillas incorrectas + bloqueo temporal (throwaway aceptado; en Fase 2 valida el servidor)
+- [x] Pantallas: lista de casos, partida, resumen con revelación de asesino/arma
+- [x] Instrumentación de playtest: cronómetro, contador de errores, feedback por caso, exportar feedback al portapapeles
 - [ ] Tutorial guiado (versión simple)
-- [ ] Integración del Design System (colores, tipografía de `docs/Enigmatrix Design System - Standalone.html` y mockups cuando existan)
+- [~] Design System: colores/tipografía base integrados; UI definitiva cuando lleguen los mockups
+- [ ] Versión Android instalada en el teléfono del usuario
 
-Criterio de salida: el usuario juega 10 casos en su Android y el loop se siente bien. Feedback de UX documentado.
+Cómo probar: doble clic en `JUGAR.bat` (sirve la web compilada en http://localhost:8123). Tests: `flutter test` en `app/` (9 tests de reglas del tablero).
+
+Criterio de salida: el usuario juega 10 casos y el loop se siente bien. Feedback de UX documentado.
 
 ## FASE 2 — Online: cuentas, reto diario y ranking (el MVP mínimo publicable)
 
