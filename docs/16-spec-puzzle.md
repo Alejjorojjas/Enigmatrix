@@ -10,9 +10,9 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 
 ### 1.1 Grilla
 
-- El tablero es una grilla rectangular de `width × height` celdas.
+- El tablero es una grilla **cuadrada de N×N** celdas, donde **N = número de personajes del caso (incluida la víctima)**. [DECISIÓN 2026-06-10]
 - Cada celda se identifica por `(col, row)` con origen `(0,0)` arriba-izquierda, o por índice lineal `idx = row * width + col`.
-- Tamaños de referencia (calibrar con doc 05): desde 4×4 (Principiante) hasta ~7×7 (Elite).
+- Tamaños derivados de los rangos del doc 05 (sospechosos + víctima): Principiante 4×4, Casual 5×5, Intermedio 6×6, Experto 7×7, Elite 7×7 u 8×8.
 
 ### 1.2 Áreas (habitaciones)
 
@@ -46,7 +46,7 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 ### 2.2 Restricciones globales (invariantes de toda solución)
 
 1. Cada personaje ocupa exactamente una celda ocupable.
-2. **Máximo una persona por fila y máximo una por columna** de la grilla (restricción tipo sudoku — es la firma del juego).
+2. **Exactamente una persona por fila y exactamente una por columna** (restricción tipo sudoku — es la firma del juego). Como N personajes = N filas = N columnas, ninguna fila ni columna queda vacía, y el jugador puede deducir por completitud ("en esta fila falta alguien"). [DECISIÓN 2026-06-10]
 3. Exactamente **una persona acompaña a la víctima en su área: el asesino**. Toda otra área contiene cualquier número de personas (0, 1 o varias) salvo lo que digan las pistas.
 4. En casos con arma: el **arma homicida** está en la misma área que asesino y víctima.
 
@@ -164,17 +164,18 @@ Estas marcas son presentación del cliente: la validación oficial solo compara 
 
 ## 7. Decisiones tomadas y preguntas abiertas
 
-### [DECISIÓN] tomadas en esta spec (validar con el usuario si chirría)
+### [DECISIÓN] cerradas (2026-06-10, confirmadas con el usuario)
 
 - La víctima se ubica como cualquier personaje y su identidad es pública desde el inicio (modelo de la versión web).
 - "Junto a" exige misma área además de adyacencia ortogonal (regla de la web).
 - Norte/sur/este/oeste NO exigen misma área salvo que la pista lo diga (regla de la web).
-- Máximo una persona por fila Y por columna en toda la grilla (firma del juego en la web).
+- **Grilla cuadrada N×N con N = personajes (incluida la víctima); exactamente una persona por fila y por columna; ninguna fila/columna vacía.** Tamaño escala con dificultad (4×4 → 7×7/8×8).
+- **Ayudas en Principiante y Tutorial: NO penalizan.** Desde Casual: todas penalizan. Manda `08-balance.md`; `03-reglas-del-juego.md` fue corregido.
+- **La rotación del mapa también rota las pistas**: la pista lógica se guarda en coordenadas canónicas; el renderizador de texto la transforma según la orientación del jugador. Bajo rotación de 90°/270° las referencias de fila/columna se intercambian ("primera fila" → "primera columna") y las cardinales se remapean (oeste→norte, etc.). El servidor valida siempre en coordenadas canónicas; la rotación nunca toca la lógica.
+- "Island" en la versión web es solo vocabulario de resaltado (nombre de zona/objeto de mapas concretos), no una regla del motor. En Enigmatrix los nombres de áreas y objetos son **datos del mapa**, no palabras clave del motor: el renderizador de pistas los toma del mapa autorado.
+- Nomenclatura de marcas del jugador: la del doc 03 (candidato/confirmado/X parcial/X fuerte).
 
-### Preguntas abiertas (cerrar antes o durante Fase 0)
+### Preguntas abiertas
 
-1. ¿Puede haber filas/columnas sin nadie? (Si personajes < width, sí por fuerza. Confirmar si N personajes = tamaño de grilla siempre, como en sudoku, o puede ser menor.)
-2. ¿Las celdas de un área deben ser siempre contiguas? (Asumimos sí; la web menciona "island" como keyword — averiguar su semántica exacta.)
-3. ¿El tutorial usa esta misma mecánica completa o una reducida sin la regla fila/columna?
-4. Rotación del mapa (anti-trampa): confirmar que es solo presentación y las pistas cardinales se re-renderizan según orientación (si el mapa rota 90°, "al oeste" debe seguir siendo coherente con lo que ve el jugador). **Esto afecta al generador de texto de pistas — resolver en Fase 0.**
-5. Conciliar nombres: docs móviles usan candidato/confirmado/X-parcial/X-fuerte; la web usa nota/colocado/X. Mantener los del doc 03 (ya decidido arriba) salvo indicación contraria.
+1. ¿El tutorial usa la mecánica completa en grilla pequeña o una versión reducida? → decidir en Fase 1 (cuando se diseñe el tutorial guiado). Propuesta por defecto: mecánica completa en 4×4 con pasos guiados.
+2. ¿Las celdas de un área deben ser siempre contiguas? → asumimos que sí; el autor de mapas lo respeta como convención. Validarlo como regla del editor en Fase 4.

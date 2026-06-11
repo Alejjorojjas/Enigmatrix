@@ -66,7 +66,7 @@ Los documentos en `docs/` mandan. Orden de lectura recomendado para contexto:
 | 08-balance.md | Números: puntos, vidas, precios, límites |
 | 09 a 15 | Pillars, arte, accesibilidad, audio, narrativa, analítica, legal |
 
-**Conflicto conocido**: `08-balance.md` dice que en Principiante las ayudas no penalizan; `03-reglas-del-juego.md` dice que siempre penalizan. Manda el 08 (posterior y más específico) — pendiente de confirmación final del usuario.
+Si detectas una contradicción entre docs: no la resuelvas en silencio — repórtala con ambas referencias y propone cuál manda.
 
 ## Estructura del repo
 

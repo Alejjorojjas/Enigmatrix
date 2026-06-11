@@ -285,7 +285,8 @@ Numeros exactos: `pendiente`
 - explicar una deduccion parcial
 
 ### Reglas de ayudas
-- siempre penalizan
+- penalizan en `Casual` y dificultades superiores
+- en `Tutorial` y `Principiante` no penalizan (decidido 2026-06-10, detalle en `08-balance.md`)
 - la penalizacion exacta no se muestra antes
 - hay boton visible de `Ayudas`
 - se pide confirmacion simple antes de usarlas
