@@ -31,7 +31,7 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 ### 1.4 Adyacencia y geografía
 
 - **Adyacente / junto a / beside**: celda directamente arriba, abajo, izquierda o derecha **Y en la misma área**. (Regla verificada en la versión web.)
-- **Al norte/sur/este/oeste de X**: en alguna celda arriba/abajo/derecha/izquierda de X (misma columna o fila según el eje), **en cualquier área** salvo que la pista especifique área.
+- **Al norte/sur/este/oeste de X**: comparación estricta de coordenada — "Y al oeste de X" significa `col(Y) < col(X)`, en **cualquier fila y cualquier área** (análogo para norte/sur con filas). Nota: como dos personas nunca comparten fila ni columna (sección 2.2), una versión "directamente al lado en la misma fila" sería imposible entre personas; la comparación estricta es la única semántica consistente.
 - **Diagonal**: las 4 celdas diagonales inmediatas.
 - **Fila / columna**: línea horizontal / vertical completa de la grilla, referenciable por ordinal ("primera fila") o por extremo ("la fila más al norte").
 
@@ -86,8 +86,13 @@ Categorías de arma (doc 03, no visibles en UI): cortante, contundente, veneno, 
 
 - Ninguna pista contradice a otra; ninguna es trivialmente deducible de otra.
 - Redundancia limitada a un margen permitido (parámetro del generador).
-- `Principiante`: solo `in_area`, `not_in_area` y `same_area` simples; sin arma.
+- `Principiante`: pistas directas y simples; sin arma.
 - Pistas de arma solo en casos con arma homicida.
+
+### Hallazgos de la Fase 0 (motor implementado, 2026-06-10)
+
+- **Toda dificultad necesita pistas a nivel de celda** (junto a, fila/columna, esquina, cardinales). Con pistas solo de área la unicidad es matemáticamente imposible: intercambiar a las dos personas de un área produce siempre otra solución válida, y víctima + asesino comparten área SIEMPRE. Por eso el perfil Principiante incluye `beside`, `corner` e `in_row/in_col` además de las de área. Demostrado en `tools/test/deduction_uniqueness_test.dart`.
+- **Rangos de pistas medidos** (conjunto irreducible real del generador): 4×4 ≈ 4-6 pistas · 5×5 ≈ 8-9 · 6×6 ≈ 10-12. Los rangos del doc 05 (5-7 y 7-9) quedaron cortos; el doc 05 ya prevé recalibrar con datos, los perfiles del generador usan los rangos medidos.
 
 ## 4. Interacción del jugador (estado del tablero en cliente)
 

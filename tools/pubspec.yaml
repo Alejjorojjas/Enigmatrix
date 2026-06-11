@@ -1,0 +1,10 @@
+name: enigmatrix_engine
+description: Motor de puzzles de Enigmatrix - modelo, motor de deduccion, verificador de unicidad y generador de casos (Fase 0). Dart puro, sin Flutter ni Firebase.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+
+dev_dependencies:
+  test: ^1.25.0

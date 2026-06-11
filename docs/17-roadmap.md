@@ -12,16 +12,18 @@ La apuesta del proyecto es que se pueden generar casos con solución única y di
 
 Entregables:
 
-- [ ] Cerrar preguntas abiertas de `16-spec-puzzle.md` (sección 7)
-- [ ] Modelo de datos en Dart puro (`tools/`): mapa, área, celda, personaje, pista, caso
-- [ ] Motor de deducción (resuelve como humano, sin adivinar)
-- [ ] Verificador de unicidad (backtracking exhaustivo)
-- [ ] Contador de pasos de deducción + clasificador de dificultad
-- [ ] Generador de casos sobre un mapa de prueba
-- [ ] Suite de tests deterministas (fixtures: caso válido, caso doble solución, caso que requiere adivinar)
-- [ ] CLI mínimo: `generar caso → imprimir tablero y pistas en consola → validar`
+- [x] Cerrar preguntas abiertas de `16-spec-puzzle.md` (sección 7) — 2026-06-10
+- [x] Modelo de datos en Dart puro (`tools/`): mapa, área, celda, personaje, pista, caso
+- [x] Motor de deducción (8 técnicas en 4 niveles, resuelve sin adivinar)
+- [x] Verificador de unicidad (backtracking exhaustivo con poda)
+- [x] Contador de pasos de deducción + métricas por caso
+- [x] Generador de casos (pool de pistas verdaderas → minimización a conjunto irreducible)
+- [x] Suite de tests deterministas (38 tests: semántica de pistas, validador, doble solución, caso que requiere adivinar, determinismo por semilla)
+- [x] CLI: `generate` / `show` / `validate` (`tools/bin/enigmatrix.dart`)
 
-Criterio de salida: generar 20 casos válidos de dificultades Principiante/Casual/Intermedio sobre 1 mapa de prueba, todos con solución única verificada, y poder jugarlos a mano en papel.
+Criterio de salida: ✅ CUMPLIDO (2026-06-10) — 20 casos generados (8 principiante 4×4, 7 casual 5×5 —uno con arma—, 5 intermedio 6×6), todos con solución única verificada y deducción pura. Hojas imprimibles en `production/fase0-casos/`. **Pendiente: que el usuario juegue algunos en papel y valide que se sienten bien.**
+
+Hallazgos de Fase 0 (detalle en spec 16 §3.2): las pistas solo de área nunca dan unicidad (se requieren pistas de celda en toda dificultad); rangos de pistas reales: 4×4≈4-6, 5×5≈8-9, 6×6≈10-12 (el doc 05 quedó corto y se recalibrará con playtest).
 
 ## FASE 1 — Vertical slice jugable (app local, sin cuentas)
 

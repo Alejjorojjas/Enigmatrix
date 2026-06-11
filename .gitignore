@@ -9,6 +9,8 @@ app/ios/Pods/
 app/ios/.symlinks/
 tools/.dart_tool/
 tools/build/
+tools/out/
+pubspec.lock
 
 # Firebase / Node
 backend/node_modules/
