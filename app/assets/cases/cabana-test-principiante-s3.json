@@ -3,45 +3,59 @@
   "mapId": "cabana-test",
   "difficulty": "principiante",
   "hasWeapon": false,
-  "victim": "c2",
+  "victim": "c1",
   "characters": [
     {
       "id": "c1",
-      "name_es": "Adela"
+      "name_es": "Adela",
+      "female": true
     },
     {
       "id": "c2",
-      "name_es": "Bruno"
+      "name_es": "Bruno",
+      "female": false
     },
     {
       "id": "c3",
-      "name_es": "Clara"
+      "name_es": "Clara",
+      "female": true
     },
     {
       "id": "c4",
-      "name_es": "Dario"
+      "name_es": "Dario",
+      "female": false
     }
   ],
   "clues": [
     {
-      "type": "in_col",
-      "subject": "c1",
-      "index": 1
+      "type": "victim_filler",
+      "subject": "c1"
     },
     {
-      "type": "in_row",
+      "type": "on_object",
       "subject": "c2",
-      "index": 1
+      "group": "silla"
     },
     {
-      "type": "in_row",
-      "subject": "c4",
-      "index": 3
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "tv"
     },
     {
-      "type": "in_col",
+      "type": "compound",
       "subject": "c4",
-      "index": 3
+      "parts": [
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "alfombra"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "tv"
+        }
+      ]
     }
   ],
   "solution": {
@@ -51,11 +65,11 @@
       "c3": 10,
       "c4": 15
     },
-    "murderer": "c1"
+    "murderer": "c2"
   },
   "metrics": {
-    "deductionSteps": 7,
-    "maxTier": 4,
+    "deductionSteps": 3,
+    "maxTier": 2,
     "clueCount": 4
   }
 }

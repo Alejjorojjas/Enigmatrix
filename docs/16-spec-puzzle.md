@@ -21,12 +21,17 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 - Las áreas tienen `id` y nombre localizable (Cocina, Biblioteca...).
 - **Esquina**: celda de un área donde se encuentran dos o tres paredes del área.
 
-### 1.3 Celdas ocupables y objetos
+### 1.3 Muebles (modelo Murdoku, decidido 2026-06-11)
 
-- Una celda puede contener un **objeto** (mesa, cama, planta, sofá...).
-- Las celdas con objeto **no son ocupables**: ningún personaje puede colocarse ahí.
-- Los objetos son parte del mapa autorado (doc 05) y pueden ser referidos por pistas ("junto a la mesa").
-- Las **armas potenciales** son objetos pequeños visibles que NO bloquean la celda; lógicamente pertenecen al **área**, no a una celda exacta (doc 03).
+- El mapa está **amueblado**: los muebles son protagonistas del vocabulario de pistas (pillar 5).
+- Cada mueble tiene **tipo** (silla, sillón, sofá, cama, alfombra, mesa, TV, planta, arbusto, armario, caja, lavadora, piano, barra...) y puede ocupar **varias celdas** (cama de 2 celdas, mesa larga).
+- Dos clases de mueble:
+  - **Pisables** (silla, sillón, sofá, cama, alfombra): la gente puede estar ENCIMA → pistas "estaba sentada en una silla", "sobre una cama".
+  - **Bloqueantes** (mesa, TV, planta, armario, caja...): nadie puede ocupar sus celdas → pistas "junto a la mesa".
+- Los tipos se agrupan para las pistas: planta y arbusto comparten el grupo "planta" ("junto a una planta").
+- Artículo en los textos: si el mapa tiene UN solo mueble del grupo → "la silla"; si hay varios → "una silla".
+- La repetición de muebles es la palanca de dificultad: "junto a una TV" con dos TVs deja más candidatas que con una.
+- Las **armas potenciales** son objetos pequeños visibles que NO bloquean; lógicamente pertenecen al **área**, no a una celda exacta (doc 03).
 
 ### 1.4 Adyacencia y geografía
 
@@ -60,39 +65,45 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 
 Cada pista es una restricción formal con representación textual localizable. El generador produce la estructura; el texto se renderiza por plantilla (ES/EN).
 
-### 3.1 Tipos de pista V1 (consolidado docs 05 + versión web)
+### 3.1 Tipos de pista V1 (vocabulario Murdoku, decidido 2026-06-11)
+
+**Formato: UNA pista por personaje** (vive en su tarjeta, bajo su retrato) + pistas sueltas ("extras": área vacía, arma) solo desde Intermedio (máx. 2). Los textos usan el género del personaje ("sentada"/"sentado").
 
 | Tipo | Forma textual ejemplo | Semántica formal |
 |---|---|---|
-| `in_area` | "X está en la Cocina" | pos(X) ∈ celdas(área) |
-| `not_in_area` | "X no está en la Cocina" | pos(X) ∉ celdas(área) |
-| `beside` | "X está junto a Y / junto a la mesa" | pos(X) adyacente-ortogonal a pos(Y) u objeto, misma área |
-| `same_area` | "X está con Y" | área(X) = área(Y) |
-| `not_same_area` | "X no está con Y" | área(X) ≠ área(Y) |
-| `alone` | "X estaba solo" | área(X) no contiene a nadie más (ni a la víctima) |
-| `alone_with` | "X estaba a solas con Y" | área(X) contiene exactamente {X, Y} |
-| `area_empty` | "La Biblioteca estaba vacía" | ninguna persona en ese área |
-| `cardinal` | "X está al oeste de Y" | col(X) < col(Y) (misma fila NO requerida; ver 1.4) |
-| `row_col` | "X está en la primera fila" | row(X) = k |
-| `corner` | "X está en una esquina del Salón" | pos(X) ∈ esquinas(área) |
-| `victim_loc` | "La víctima está en el Estudio" | pos(víctima) ∈ celdas(área) |
-| `weapon_area` | "El arma está en la Cocina" | área(arma) = Cocina |
-| `weapon_type` | "El arma es cortante" | categoría(arma) = cortante |
-| `weapon_exact` | "El arma es el abrecartas" | arma = abrecartas |
+| `in_area` | "Estaba en la Cocina" | pos(X) ∈ celdas(área) |
+| `not_in_area` | "No estaba en la Cocina" | pos(X) ∉ celdas(área) |
+| `on_object` | "Estaba sobre una cama / sentada en la silla" | pos(X) ∈ celdas de muebles pisables del grupo |
+| `beside_object` | "Estaba junto a una planta" | pos(X) adyacente-ortogonal a celda de mueble del grupo, misma área, sin estar encima de ese mueble |
+| `only_one_on` | "Era la única persona sobre una alfombra" | X sobre el grupo ∧ nadie más sobre ningún mueble del grupo |
+| `compound` | "Estaba junto a una planta y sobre una cama" | conjunción de condiciones unarias del mismo sujeto |
+| `victim_filler` | "Estaba en la última casilla libre" | sin información (solo la víctima; el caso se resuelve con el resto) |
+| `beside` | "Estaba junto a Bruno" | pos(X) adyacente-ortogonal a pos(Y), misma área |
+| `same_area` | "Estaba con Clara" | área(X) = área(Y) |
+| `not_same_area` | "No estaba con la víctima" | área(X) ≠ área(Y) |
+| `alone` | "Estaba sola" | área(X) no contiene a nadie más (ni a la víctima) |
+| `alone_with` | "Estaba a solas con Elena" | área(X) contiene exactamente {X, Y} |
+| `area_empty` | "Nadie estaba en la Biblioteca" | (extra) ninguna persona en ese área |
+| `weapon_area` | "El arma homicida está en la Cocina" | (extra) área(arma) = Cocina |
+| `weapon_category` | "El arma homicida es un veneno" | (extra) categoría(arma) |
+| `weapon_exact` | "El arma homicida es el abrecartas" | (extra) arma = abrecartas |
 
 Categorías de arma (doc 03, no visibles en UI): cortante, contundente, veneno, asfixia/atadura.
 
-### 3.2 Reglas de composición de pistas (doc 05)
+**Eliminadas de V1** (decisión 2026-06-11): las pistas mecánicas de fila/columna, esquina y cardinales ("al oeste de"). Las TÉCNICAS de fila/columna siguen siendo el corazón del juego (el jugador tacha la fila y columna de cada persona ubicada, como en el video del cuadernillo); lo que no existe son pistas que las mencionen. Si un caso difícil no logra unicidad, se amuebla más el mapa — no se recurre a pistas mecánicas.
 
-- Ninguna pista contradice a otra; ninguna es trivialmente deducible de otra.
-- Redundancia limitada a un margen permitido (parámetro del generador).
-- `Principiante`: pistas directas y simples; sin arma.
-- Pistas de arma solo en casos con arma homicida.
+### 3.2 Reglas de composición de pistas
 
-### Hallazgos de la Fase 0 (motor implementado, 2026-06-10)
+- Ninguna pista contradice a otra.
+- Ninguna relación de "misma área" (`same_area`, `beside`, `alone_with`) conecta jamás a la víctima con el asesino: delataría el final.
+- `Principiante`: sin pistas vagas (`not_in_area`, `not_same_area`); sin arma. Las compuestas se permiten desde principiante (apuntan mejor, como en el cuadernillo).
+- La víctima lleva relleno ("última casilla libre") siempre que el caso se resuelva sin su pista; pista real solo si hace falta.
+- Pistas de arma solo en casos con arma; en `Casual` (sin extras) el área del crimen tiene UNA sola arma para que sea deducible sin pista adicional.
 
-- **Toda dificultad necesita pistas a nivel de celda** (junto a, fila/columna, esquina, cardinales). Con pistas solo de área la unicidad es matemáticamente imposible: intercambiar a las dos personas de un área produce siempre otra solución válida, y víctima + asesino comparten área SIEMPRE. Por eso el perfil Principiante incluye `beside`, `corner` e `in_row/in_col` además de las de área. Demostrado en `tools/test/deduction_uniqueness_test.dart`.
-- **Rangos de pistas medidos** (conjunto irreducible real del generador): 4×4 ≈ 4-6 pistas · 5×5 ≈ 8-9 · 6×6 ≈ 10-12. Los rangos del doc 05 (5-7 y 7-9) quedaron cortos; el doc 05 ya prevé recalibrar con datos, los perfiles del generador usan los rangos medidos.
+### Hallazgos del motor (Fase 0, 2026-06-10/11)
+
+- **Toda dificultad necesita pistas a nivel de celda**. Con pistas solo de área la unicidad es matemáticamente imposible: intercambiar a las dos personas de un área produce siempre otra solución válida, y víctima + asesino comparten área SIEMPRE. Tras el rediseño Murdoku, ese nivel de celda lo aportan los MUEBLES (sobre/junto a), no las pistas mecánicas. Demostrado en `tools/test/deduction_uniqueness_test.dart`.
+- Con una pista por tarjeta, la deducción descansa en cruzar cada pista con la exclusión de filas/columnas de los ya ubicados — exactamente el loop del Murdoku original.
 
 ## 4. Interacción del jugador (estado del tablero en cliente)
 
@@ -179,6 +190,16 @@ Estas marcas son presentación del cliente: la validación oficial solo compara 
 - **La rotación del mapa también rota las pistas**: la pista lógica se guarda en coordenadas canónicas; el renderizador de texto la transforma según la orientación del jugador. Bajo rotación de 90°/270° las referencias de fila/columna se intercambian ("primera fila" → "primera columna") y las cardinales se remapean (oeste→norte, etc.). El servidor valida siempre en coordenadas canónicas; la rotación nunca toca la lógica.
 - "Island" en la versión web es solo vocabulario de resaltado (nombre de zona/objeto de mapas concretos), no una regla del motor. En Enigmatrix los nombres de áreas y objetos son **datos del mapa**, no palabras clave del motor: el renderizador de pistas los toma del mapa autorado.
 - Nomenclatura de marcas del jugador: la del doc 03 (candidato/confirmado/X parcial/X fuerte).
+
+### [DECISIÓN] cerradas (2026-06-11, rediseño Murdoku tras playtest del usuario)
+
+- **Una pista por personaje** (en su tarjeta), incluida la víctima; pistas sueltas extra solo desde Intermedio (máx. 2).
+- **Muebles estilo Murdoku**: pisables (silla, sillón, sofá, cama, alfombra) y bloqueantes (mesa, TV, planta, armario, caja...); multi-celda; grupos (planta+arbusto); artículo según cantidad.
+- **Pistas mecánicas eliminadas de V1** (fila/columna, esquina, cardinales). El vocabulario es áreas + muebles + personas.
+- **Tamaño de grilla crece con dificultad** (4×4 principiante → 6×6+ en difíciles); la dificultad también escala por vaguedad de pistas y muebles repetidos.
+- **Víctima con relleno** ("estaba en la última casilla libre") siempre que sea posible; pista real solo si el caso la necesita.
+- **Pistas compuestas desde principiante** (el cuadernillo las usa en casos fáciles).
+- La rotación anti-trampa quedó SIN pistas que rotar texto direccional (las cardinales ya no existen): solo rota la presentación del mapa.
 
 ### Preguntas abiertas
 

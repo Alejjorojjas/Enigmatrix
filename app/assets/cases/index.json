@@ -1,4 +1,4 @@
-﻿[
+[
     "cabana-test-principiante-s1.json",
     "cabana-test-principiante-s2.json",
     "cabana-test-principiante-s3.json",
@@ -10,13 +10,13 @@
     "hotel-test-intermedio-s1.json",
     "hotel-test-intermedio-s2.json",
     "hotel-test-intermedio-s3.json",
-    "hotel-test-intermedio-s4.json",
-    "hotel-test-intermedio-s5.json",
     "mansion-test-casual-s1.json",
-    "mansion-test-casual-s11.json",
     "mansion-test-casual-s2.json",
     "mansion-test-casual-s3.json",
+    "mansion-test-casual-s30.json",
+    "mansion-test-casual-s31.json",
     "mansion-test-casual-s4.json",
     "mansion-test-casual-s5.json",
-    "mansion-test-casual-s6.json"
+    "mansion-test-casual-s6.json",
+    "mansion-test-casual-s7.json"
 ]

@@ -7,65 +7,80 @@
   "characters": [
     {
       "id": "c1",
-      "name_es": "Adela"
+      "name_es": "Adela",
+      "female": true
     },
     {
       "id": "c2",
-      "name_es": "Bruno"
+      "name_es": "Bruno",
+      "female": false
     },
     {
       "id": "c3",
-      "name_es": "Clara"
+      "name_es": "Clara",
+      "female": true
     },
     {
       "id": "c4",
-      "name_es": "Dario"
+      "name_es": "Dario",
+      "female": false
     }
   ],
   "clues": [
     {
-      "type": "in_col",
+      "type": "compound",
       "subject": "c1",
-      "index": 2
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "salon"
+        },
+        {
+          "type": "on_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
-      "subject": "c2",
-      "area": "estudio"
+      "type": "victim_filler",
+      "subject": "c2"
     },
     {
-      "type": "in_row",
+      "type": "beside_object",
       "subject": "c3",
-      "index": 2
+      "group": "tv"
     },
     {
-      "type": "in_col",
-      "subject": "c3",
-      "index": 1
-    },
-    {
-      "type": "not_in_area",
+      "type": "compound",
       "subject": "c4",
-      "area": "cocina"
-    },
-    {
-      "type": "not_in_area",
-      "subject": "c4",
-      "area": "estudio"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "estudio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "alfombra"
+        }
+      ]
     }
   ],
   "solution": {
     "positions": {
-      "c1": 2,
-      "c2": 7,
-      "c3": 9,
-      "c4": 12
+      "c1": 1,
+      "c2": 4,
+      "c3": 10,
+      "c4": 15
     },
     "murderer": "c1"
   },
   "metrics": {
-    "deductionSteps": 5,
-    "maxTier": 4,
-    "clueCount": 6
+    "deductionSteps": 3,
+    "maxTier": 2,
+    "clueCount": 4
   }
 }

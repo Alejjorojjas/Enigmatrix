@@ -142,7 +142,8 @@ class _CaseCard extends StatelessWidget {
                     padding: EdgeInsets.only(left: 6),
                     child: Tooltip(
                       message: 'Incluye arma homicida',
-                      child: Text('🗡', style: TextStyle(fontSize: 16)),
+                      child:
+                          Icon(Icons.colorize, size: 16, color: Brand.gold),
                     ),
                   ),
               ],

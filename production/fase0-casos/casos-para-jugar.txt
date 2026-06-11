@@ -1,31 +1,24 @@
-﻿================================================================
+================================================================
 CASO: cabana-test-principiante-s1
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara  <- LA VÍCTIMA
-  D = Dario
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en el Salón y sobre una alfombra.
+  B = Bruno (LA VÍCTIMA): Estaba en la última casilla libre.
+  C = Clara: Estaba junto a la TV.
+  D = Dario: Estaba sobre una alfombra y junto a la TV.
 
-PISTAS:
-  1. Bruno estaba en la columna 4.
-  2. La víctima no estaba en el Salón.
-  3. La víctima no estaba en la Cocina.
-  4. Dario estaba en la fila 4.
-  5. Dario estaba en la columna 2.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -34,39 +27,40 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: cabana-test-principiante-s2
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela  <- LA VÍCTIMA
-  B = Bruno
-  C = Clara
-  D = Dario
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en el Salón y sobre una alfombra.
+  B = Bruno: Estaba sentado en la silla.
+  C = Clara: Estaba junto a la TV.
+  D = Dario (LA VÍCTIMA): Estaba en el Estudio y sobre una alfombra.
 
-PISTAS:
-  1. La víctima estaba en la fila 1.
-  2. La víctima estaba en la columna 2.
-  3. Clara estaba en la fila 3.
-  4. Clara estaba en la columna 3.
-  5. Dario no estaba en el Salón.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -75,38 +69,40 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: cabana-test-principiante-s3
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno  <- LA VÍCTIMA
-  C = Clara
-  D = Dario
+PERSONAJES Y SUS PISTAS:
+  A = Adela (LA VÍCTIMA): Estaba en la última casilla libre.
+  B = Bruno: Estaba sentado en la silla.
+  C = Clara: Estaba junto a la TV.
+  D = Dario: Estaba sobre una alfombra y junto a la TV.
 
-PISTAS:
-  1. Adela estaba en la columna 2.
-  2. La víctima estaba en la fila 2.
-  3. Dario estaba en la fila 4.
-  4. Dario estaba en la columna 4.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -115,39 +111,40 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: cabana-test-principiante-s4
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela  <- LA VÍCTIMA
-  B = Bruno
-  C = Clara
-  D = Dario
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en el Salón y sobre una alfombra.
+  B = Bruno: Estaba sentado en la silla.
+  C = Clara: Estaba junto a la TV.
+  D = Dario (LA VÍCTIMA): Estaba en el Estudio y sobre una alfombra.
 
-PISTAS:
-  1. La víctima estaba en la columna 3.
-  2. Bruno no estaba en el Estudio.
-  3. Clara estaba en la columna 2.
-  4. Dario no estaba en el Estudio.
-  5. Dario estaba en la fila 4.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -156,40 +153,40 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: cabana-test-principiante-s5
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno  <- LA VÍCTIMA
-  C = Clara
-  D = Dario
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en el Salón y sobre una alfombra.
+  B = Bruno (LA VÍCTIMA): Estaba en la última casilla libre.
+  C = Clara: Estaba junto a la TV.
+  D = Dario: Estaba en el Estudio y sobre una alfombra.
 
-PISTAS:
-  1. Adela estaba en la columna 3.
-  2. La víctima no estaba en el Estudio.
-  3. Clara estaba en la fila 3.
-  4. Clara estaba en la columna 2.
-  5. Dario no estaba en la Cocina.
-  6. Dario no estaba en el Estudio.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -198,38 +195,40 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: cabana-test-principiante-s6
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario  <- LA VÍCTIMA
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en el Salón y sobre una alfombra.
+  B = Bruno: Estaba sentado en la silla.
+  C = Clara (LA VÍCTIMA): Estaba en la última casilla libre.
+  D = Dario: Estaba sobre una alfombra y junto a la TV.
 
-PISTAS:
-  1. Adela estaba en la fila 1.
-  2. Adela estaba en la columna 2.
-  3. Clara estaba en la fila 3.
-  4. La víctima estaba en la columna 4.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -238,38 +237,40 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: cabana-test-principiante-s7
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario  <- LA VÍCTIMA
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en el Salón y sobre una alfombra.
+  B = Bruno: Estaba sentado en la silla.
+  C = Clara (LA VÍCTIMA): Estaba en la última casilla libre.
+  D = Dario: Estaba sobre una alfombra y junto a la TV.
 
-PISTAS:
-  1. Adela estaba en la fila 1.
-  2. Bruno estaba en la columna 2.
-  3. La víctima estaba en la fila 4.
-  4. La víctima estaba en la columna 3.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -278,39 +279,40 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: cabana-test-principiante-s8
 Mapa: Cabaña de prueba   Dificultad: principiante
 ================================================================
 
-PERSONAJES:
-  A = Adela  <- LA VÍCTIMA
-  B = Bruno
-  C = Clara
-  D = Dario
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en el Salón y sobre una alfombra.
+  B = Bruno: Estaba sentado en la silla.
+  C = Clara: Estaba junto a la TV.
+  D = Dario (LA VÍCTIMA): Estaba en el Estudio y sobre una alfombra.
 
-PISTAS:
-  1. Bruno estaba en la fila 2.
-  2. Bruno estaba en la columna 2.
-  3. Clara no estaba en el Dormitorio.
-  4. Clara estaba en la fila 3.
-  5. Dario estaba en la columna 3.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4 
     +---+---+---+---+
- f1 | a   a | b   b |
+ f1 | a  (a)| b   b |
     +   +   +   +   +
- f2 | a   a | ##  b |
+ f2 |(a)  a | ##  b |
     +---+---+---+---+
- f3 | c   c | d   d |
+ f3 | ##  c | d   ##|
     +   +   +   +   +
- f4 | c   c | d   d |
+ f4 |(c) (c)| d  (d)|
     +---+---+---+---+
 
 HABITACIONES:
@@ -319,52 +321,46 @@ HABITACIONES:
   c = el Dormitorio
   d = el Estudio  [armas: las tijeras, el abrecartas]
 
-OBJETOS (bloquean su celda):
-  la mesa: fila 2, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c2
+  la silla (pisable): f2c1
+  la mesa (bloquea): f2c3
+  la planta (bloquea): f3c1
+  la cama (pisable): f4c1, f4c2
+  la TV (bloquea): f3c4
+  la alfombra (pisable): f4c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: hotel-test-intermedio-s1
 Mapa: Hotel de prueba   Dificultad: intermedio
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario
-  E = Elena  <- LA VÍCTIMA
-  F = Franco
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Era la única persona sentada en una silla.
+  B = Bruno: Estaba sentado en el sofá.
+  C = Clara: Estaba sobre la cama.
+  D = Dario: Estaba en la Lavandería y junto a una caja.
+  E = Elena: Era la única persona sobre una alfombra.
+  F = Franco (LA VÍCTIMA): Estaba en la última casilla libre.
 
-PISTAS:
-  1. Clara estaba en una esquina.
-  2. Dario no estaba en el Restaurante.
-  3. Dario no estaba en el Pasillo.
-  4. La víctima no estaba en la Recepción.
-  5. La víctima no estaba en la Habitación 101.
-  6. Adela estaba al norte de Bruno.
-  7. Adela no estaba con Clara.
-  8. Adela estaba al oeste de Clara.
-  9. Bruno estaba al oeste de la víctima.
-  10. Dario estaba al este de la víctima.
-  11. La víctima estaba al este de Franco.
-  12. La víctima estaba al norte de Franco.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | a   a   a | b   b   b |
+ f1 | a   a   ##|(b)  ##  b |
     +   +   +   +   +   +   +
- f2 | a   a   a | ##  b   b |
+ f2 |(a) (a)  ##| ## (b)  ##|
     +---+---+---+---+---+---+
- f3 | c   c | d   d | e   e |
+ f3 | ##  c |(d) (d)| e   e |
     +   +   +   +   +   +   +
- f4 | c   ##| d   d | e   e |
+ f4 | ##  c |(d)  ##| ##  e |
     +---+---+---+---+   +   +
- f5 | f   f   f   f | e   e |
+ f5 | ## (f)  f   f |(e)  e |
     +   +   +   +   +   +   +
- f6 | f   ##  f   f | e   e |
+ f6 | ##  ##  f   ##| ##  e |
     +---+---+---+---+---+---+
 
 HABITACIONES:
@@ -375,55 +371,59 @@ HABITACIONES:
   e = el Pasillo  [armas: la cuerda]
   f = el Salón de Eventos  [armas: el martillo de servicio]
 
-OBJETOS (bloquean su celda):
-  la barra: fila 2, columna 4
-  el carrito de lavandería: fila 4, columna 2
-  la tarima: fila 6, columna 2
+MUEBLES:
+  la TV (bloquea): f1c3
+  el sofá (pisable): f2c1, f2c2
+  la planta (bloquea): f2c3
+  la silla (pisable): f1c4
+  la mesa (bloquea): f1c5
+  la barra (bloquea): f2c4
+  la silla (pisable): f2c5
+  la caja (bloquea): f2c6
+  la lavadora (bloquea): f3c1
+  la caja (bloquea): f4c1
+  la cama (pisable): f3c3, f3c4
+  la alfombra (pisable): f4c3
+  la planta (bloquea): f4c4
+  la planta (bloquea): f4c5
+  la alfombra (pisable): f5c5
+  el armario (bloquea): f6c5
+  la TV (bloquea): f5c1
+  el sillón (pisable): f5c2
+  la mesa (bloquea): f6c1, f6c2
+  el arbusto (bloquea): f6c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: hotel-test-intermedio-s2
 Mapa: Hotel de prueba   Dificultad: intermedio
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario
-  E = Elena  <- LA VÍCTIMA
-  F = Franco
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en la Recepción y junto a una TV.
+  B = Bruno (LA VÍCTIMA): Estaba en la última casilla libre.
+  C = Clara: Estaba sobre la cama y junto a una planta.
+  D = Dario: Estaba en la Habitación 101 y sobre una alfombra.
+  E = Elena: Estaba sobre una alfombra y junto a el armario.
+  F = Franco: Estaba junto a el armario.
 
-PISTAS:
-  1. Adela estaba en una esquina.
-  2. Bruno no estaba en la Recepción.
-  3. Bruno no estaba en el Salón de Eventos.
-  4. Clara no estaba en el Restaurante.
-  5. Clara no estaba en el Pasillo.
-  6. Dario no estaba en la Recepción.
-  7. Dario no estaba en la Lavandería.
-  8. Dario no estaba en el Salón de Eventos.
-  9. La víctima no estaba en la Recepción.
-  10. Franco estaba en una esquina.
-  11. Adela estaba al norte de Bruno.
-  12. Clara estaba al este de Dario.
-  13. Clara estaba al norte de Dario.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | a   a   a | b   b   b |
+ f1 | a   a   ##|(b)  ##  b |
     +   +   +   +   +   +   +
- f2 | a   a   a | ##  b   b |
+ f2 |(a) (a)  ##| ## (b)  ##|
     +---+---+---+---+---+---+
- f3 | c   c | d   d | e   e |
+ f3 | ##  c |(d) (d)| e   e |
     +   +   +   +   +   +   +
- f4 | c   ##| d   d | e   e |
+ f4 | ##  c |(d)  ##| ##  e |
     +---+---+---+---+   +   +
- f5 | f   f   f   f | e   e |
+ f5 | ## (f)  f   f |(e)  e |
     +   +   +   +   +   +   +
- f6 | f   ##  f   f | e   e |
+ f6 | ##  ##  f   ##| ##  e |
     +---+---+---+---+---+---+
 
 HABITACIONES:
@@ -434,55 +434,59 @@ HABITACIONES:
   e = el Pasillo  [armas: la cuerda]
   f = el Salón de Eventos  [armas: el martillo de servicio]
 
-OBJETOS (bloquean su celda):
-  la barra: fila 2, columna 4
-  el carrito de lavandería: fila 4, columna 2
-  la tarima: fila 6, columna 2
+MUEBLES:
+  la TV (bloquea): f1c3
+  el sofá (pisable): f2c1, f2c2
+  la planta (bloquea): f2c3
+  la silla (pisable): f1c4
+  la mesa (bloquea): f1c5
+  la barra (bloquea): f2c4
+  la silla (pisable): f2c5
+  la caja (bloquea): f2c6
+  la lavadora (bloquea): f3c1
+  la caja (bloquea): f4c1
+  la cama (pisable): f3c3, f3c4
+  la alfombra (pisable): f4c3
+  la planta (bloquea): f4c4
+  la planta (bloquea): f4c5
+  la alfombra (pisable): f5c5
+  el armario (bloquea): f6c5
+  la TV (bloquea): f5c1
+  el sillón (pisable): f5c2
+  la mesa (bloquea): f6c1, f6c2
+  el arbusto (bloquea): f6c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: hotel-test-intermedio-s3
 Mapa: Hotel de prueba   Dificultad: intermedio
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario  <- LA VÍCTIMA
-  E = Elena
-  F = Franco
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba junto a el sofá.
+  B = Bruno: Era la única persona sentada en una silla.
+  C = Clara: Estaba sola.
+  D = Dario: Estaba en la Lavandería y junto a una caja.
+  E = Elena: Estaba en el Salón de Eventos y junto a una planta.
+  F = Franco (LA VÍCTIMA): Estaba junto a una planta y junto a una mesa.
 
-PISTAS:
-  1. Adela no estaba en el Restaurante.
-  2. Bruno no estaba en el Pasillo.
-  3. Bruno no estaba en el Salón de Eventos.
-  4. Clara no estaba en la Recepción.
-  5. La víctima no estaba en el Restaurante.
-  6. La víctima no estaba en el Pasillo.
-  7. La víctima no estaba en el Salón de Eventos.
-  8. Elena estaba en una esquina.
-  9. Franco estaba en una esquina.
-  10. Adela estaba al norte de Bruno.
-  11. Bruno estaba al oeste de Franco.
-  12. Clara estaba al oeste de la víctima.
-  13. Clara estaba al norte de la víctima.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | a   a   a | b   b   b |
+ f1 | a   a   ##|(b)  ##  b |
     +   +   +   +   +   +   +
- f2 | a   a   a | ##  b   b |
+ f2 |(a) (a)  ##| ## (b)  ##|
     +---+---+---+---+---+---+
- f3 | c   c | d   d | e   e |
+ f3 | ##  c |(d) (d)| e   e |
     +   +   +   +   +   +   +
- f4 | c   ##| d   d | e   e |
+ f4 | ##  c |(d)  ##| ##  e |
     +---+---+---+---+   +   +
- f5 | f   f   f   f | e   e |
+ f5 | ## (f)  f   f |(e)  e |
     +   +   +   +   +   +   +
- f6 | f   ##  f   f | e   e |
+ f6 | ##  ##  f   ##| ##  e |
     +---+---+---+---+---+---+
 
 HABITACIONES:
@@ -493,166 +497,56 @@ HABITACIONES:
   e = el Pasillo  [armas: la cuerda]
   f = el Salón de Eventos  [armas: el martillo de servicio]
 
-OBJETOS (bloquean su celda):
-  la barra: fila 2, columna 4
-  el carrito de lavandería: fila 4, columna 2
-  la tarima: fila 6, columna 2
+MUEBLES:
+  la TV (bloquea): f1c3
+  el sofá (pisable): f2c1, f2c2
+  la planta (bloquea): f2c3
+  la silla (pisable): f1c4
+  la mesa (bloquea): f1c5
+  la barra (bloquea): f2c4
+  la silla (pisable): f2c5
+  la caja (bloquea): f2c6
+  la lavadora (bloquea): f3c1
+  la caja (bloquea): f4c1
+  la cama (pisable): f3c3, f3c4
+  la alfombra (pisable): f4c3
+  la planta (bloquea): f4c4
+  la planta (bloquea): f4c5
+  la alfombra (pisable): f5c5
+  el armario (bloquea): f6c5
+  la TV (bloquea): f5c1
+  el sillón (pisable): f5c2
+  la mesa (bloquea): f6c1, f6c2
+  el arbusto (bloquea): f6c4
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
-================================================================
-CASO: hotel-test-intermedio-s4
-Mapa: Hotel de prueba   Dificultad: intermedio
-================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno  <- LA VÍCTIMA
-  C = Clara
-  D = Dario
-  E = Elena
-  F = Franco
-
-PISTAS:
-  1. Adela no estaba en el Pasillo.
-  2. Adela estaba en una esquina.
-  3. Clara no estaba en el Restaurante.
-  4. Clara no estaba en la Habitación 101.
-  5. Clara no estaba en el Pasillo.
-  6. Clara no estaba en el Salón de Eventos.
-  7. Dario no estaba en el Restaurante.
-  8. Dario no estaba en el Pasillo.
-  9. Adela estaba al norte de la víctima.
-  10. Clara estaba al este de Elena.
-  11. Dario no estaba con Franco.
-  12. Dario estaba al este de Franco.
-  13. Elena estaba al norte de Franco.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
-      c1  c2  c3  c4  c5  c6 
-    +---+---+---+---+---+---+
- f1 | a   a   a | b   b   b |
-    +   +   +   +   +   +   +
- f2 | a   a   a | ##  b   b |
-    +---+---+---+---+---+---+
- f3 | c   c | d   d | e   e |
-    +   +   +   +   +   +   +
- f4 | c   ##| d   d | e   e |
-    +---+---+---+---+   +   +
- f5 | f   f   f   f | e   e |
-    +   +   +   +   +   +   +
- f6 | f   ##  f   f | e   e |
-    +---+---+---+---+---+---+
-
-HABITACIONES:
-  a = la Recepción
-  b = el Restaurante  [armas: la botella rota]
-  c = la Lavandería  [armas: el cable]
-  d = la Habitación 101  [armas: el frasco de veneno]
-  e = el Pasillo  [armas: la cuerda]
-  f = el Salón de Eventos  [armas: el martillo de servicio]
-
-OBJETOS (bloquean su celda):
-  la barra: fila 2, columna 4
-  el carrito de lavandería: fila 4, columna 2
-  la tarima: fila 6, columna 2
-
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
-
-================================================================
-CASO: hotel-test-intermedio-s5
-Mapa: Hotel de prueba   Dificultad: intermedio
-================================================================
-
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario
-  E = Elena
-  F = Franco  <- LA VÍCTIMA
-
-PISTAS:
-  1. Adela no estaba en el Pasillo.
-  2. Adela estaba en una esquina.
-  3. Bruno no estaba en el Pasillo.
-  4. Bruno no estaba en el Salón de Eventos.
-  5. Clara no estaba en el Salón de Eventos.
-  6. Dario no estaba en el Pasillo.
-  7. Dario no estaba en el Salón de Eventos.
-  8. Dario estaba en una esquina.
-  9. Elena estaba en una esquina.
-  10. Adela estaba al norte de Bruno.
-  11. Clara estaba al oeste de la víctima.
-  12. Dario estaba al este de la víctima.
-  13. Elena estaba al norte de la víctima.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
-      c1  c2  c3  c4  c5  c6 
-    +---+---+---+---+---+---+
- f1 | a   a   a | b   b   b |
-    +   +   +   +   +   +   +
- f2 | a   a   a | ##  b   b |
-    +---+---+---+---+---+---+
- f3 | c   c | d   d | e   e |
-    +   +   +   +   +   +   +
- f4 | c   ##| d   d | e   e |
-    +---+---+---+---+   +   +
- f5 | f   f   f   f | e   e |
-    +   +   +   +   +   +   +
- f6 | f   ##  f   f | e   e |
-    +---+---+---+---+---+---+
-
-HABITACIONES:
-  a = la Recepción
-  b = el Restaurante  [armas: la botella rota]
-  c = la Lavandería  [armas: el cable]
-  d = la Habitación 101  [armas: el frasco de veneno]
-  e = el Pasillo  [armas: la cuerda]
-  f = el Salón de Eventos  [armas: el martillo de servicio]
-
-OBJETOS (bloquean su celda):
-  la barra: fila 2, columna 4
-  el carrito de lavandería: fila 4, columna 2
-  la tarima: fila 6, columna 2
-
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
 
 ================================================================
 CASO: mansion-test-casual-s1
 Mapa: Mansión de prueba   Dificultad: casual
 ================================================================
 
-PERSONAJES:
-  A = Adela  <- LA VÍCTIMA
-  B = Bruno
-  C = Clara
-  D = Dario
-  E = Elena
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba junto a la TV y junto a una planta.
+  B = Bruno: Estaba junto a la TV.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Estaba sobre una alfombra y junto a una planta.
+  E = Elena (LA VÍCTIMA): Estaba en la última casilla libre.
 
-PISTAS:
-  1. Bruno no estaba en la Cocina.
-  2. Clara estaba en una esquina.
-  3. Dario no estaba en el Salón.
-  4. Dario no estaba en la Cocina.
-  5. Elena no estaba en la Cocina.
-  6. La víctima estaba al norte de Bruno.
-  7. Clara estaba al este de Elena.
-  8. Dario no estaba con Elena.
-  9. Dario estaba al norte de Elena.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5 
     +---+---+---+---+---+
- f1 | a   a | b   b   b |
+ f1 |(a) (a)| ## (b)  ##|
     +   +   +   +   +   +
  f2 | ##  a | b   b   b |
     +---+---+---+---+---+
- f3 | c   c | d   d | e |
+ f3 | c   c |(d)  d | e |
     +   +   +   +   +   +
- f4 | c   c | ##  d | e |
+ f4 | ##  c | ##  ##|(e)|
     +   +   +   +   +   +
- f5 | c   c | d   d | e |
+ f5 | ##  c |(d)  d | ##|
     +---+---+---+---+---+
 
 HABITACIONES:
@@ -662,98 +556,48 @@ HABITACIONES:
   d = el Comedor  [armas: el frasco de veneno]
   e = el Pasillo  [armas: la cuerda]
 
-OBJETOS (bloquean su celda):
-  el piano: fila 2, columna 1
-  la mesa del comedor: fila 4, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
-================================================================
-CASO: mansion-test-casual-s11
-Mapa: Mansión de prueba   Dificultad: casual   (incluye arma homicida)
-================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno  <- LA VÍCTIMA
-  C = Clara
-  D = Dario
-  E = Elena
-
-PISTAS:
-  1. La víctima no estaba en la Biblioteca.
-  2. La víctima estaba en una esquina.
-  3. Clara no estaba en el Salón.
-  4. Clara no estaba en la Biblioteca.
-  5. Clara estaba en una esquina.
-  6. Dario no estaba en el Pasillo.
-  7. Elena estaba en una esquina.
-  8. Adela estaba al oeste de la víctima.
-  9. Clara no estaba con Dario.
-  10. Clara estaba al norte de Elena.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
-      c1  c2  c3  c4  c5 
-    +---+---+---+---+---+
- f1 | a   a | b   b   b |
-    +   +   +   +   +   +
- f2 | ##  a | b   b   b |
-    +---+---+---+---+---+
- f3 | c   c | d   d | e |
-    +   +   +   +   +   +
- f4 | c   c | ##  d | e |
-    +   +   +   +   +   +
- f5 | c   c | d   d | e |
-    +---+---+---+---+---+
-
-HABITACIONES:
-  a = el Salón  [armas: el candelabro]
-  b = la Biblioteca  [armas: el abrecartas]
-  c = la Cocina  [armas: el cuchillo de cocina]
-  d = el Comedor  [armas: el frasco de veneno]
-  e = el Pasillo  [armas: la cuerda]
-
-OBJETOS (bloquean su celda):
-  el piano: fila 2, columna 1
-  la mesa del comedor: fila 4, columna 3
-
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
 
 ================================================================
 CASO: mansion-test-casual-s2
 Mapa: Mansión de prueba   Dificultad: casual
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara  <- LA VÍCTIMA
-  D = Dario
-  E = Elena
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba junto a la TV y junto a una planta.
+  B = Bruno: Estaba junto a la TV.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Era la única persona sobre una alfombra.
+  E = Elena (LA VÍCTIMA): Estaba en la última casilla libre.
 
-PISTAS:
-  1. Bruno no estaba en la Cocina.
-  2. Bruno no estaba en el Comedor.
-  3. La víctima estaba en una esquina.
-  4. Elena no estaba en la Cocina.
-  5. Adela estaba al este de Bruno.
-  6. Adela estaba al norte de Bruno.
-  7. Bruno estaba al este de Elena.
-  8. La víctima estaba al este de Dario.
-  9. La víctima estaba al norte de Dario.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5 
     +---+---+---+---+---+
- f1 | a   a | b   b   b |
+ f1 |(a) (a)| ## (b)  ##|
     +   +   +   +   +   +
  f2 | ##  a | b   b   b |
     +---+---+---+---+---+
- f3 | c   c | d   d | e |
+ f3 | c   c |(d)  d | e |
     +   +   +   +   +   +
- f4 | c   c | ##  d | e |
+ f4 | ##  c | ##  ##|(e)|
     +   +   +   +   +   +
- f5 | c   c | d   d | e |
+ f5 | ##  c |(d)  d | ##|
     +---+---+---+---+---+
 
 HABITACIONES:
@@ -763,46 +607,48 @@ HABITACIONES:
   d = el Comedor  [armas: el frasco de veneno]
   e = el Pasillo  [armas: la cuerda]
 
-OBJETOS (bloquean su celda):
-  el piano: fila 2, columna 1
-  la mesa del comedor: fila 4, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: mansion-test-casual-s3
 Mapa: Mansión de prueba   Dificultad: casual
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno  <- LA VÍCTIMA
-  C = Clara
-  D = Dario
-  E = Elena
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba junto a la TV y junto a una planta.
+  B = Bruno (LA VÍCTIMA): Estaba en la última casilla libre.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Era la única persona sobre una alfombra.
+  E = Elena: Estaba junto a la lavadora.
 
-PISTAS:
-  1. La víctima no estaba en el Comedor.
-  2. Clara estaba en una esquina.
-  3. Elena no estaba en la Cocina.
-  4. Adela estaba al este de la víctima.
-  5. Adela estaba al norte de la víctima.
-  6. La víctima estaba al este de Elena.
-  7. Clara estaba al este de Dario.
-  8. Dario estaba al norte de Elena.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5 
     +---+---+---+---+---+
- f1 | a   a | b   b   b |
+ f1 |(a) (a)| ## (b)  ##|
     +   +   +   +   +   +
  f2 | ##  a | b   b   b |
     +---+---+---+---+---+
- f3 | c   c | d   d | e |
+ f3 | c   c |(d)  d | e |
     +   +   +   +   +   +
- f4 | c   c | ##  d | e |
+ f4 | ##  c | ##  ##|(e)|
     +   +   +   +   +   +
- f5 | c   c | d   d | e |
+ f5 | ##  c |(d)  d | ##|
     +---+---+---+---+---+
 
 HABITACIONES:
@@ -812,48 +658,150 @@ HABITACIONES:
   d = el Comedor  [armas: el frasco de veneno]
   e = el Pasillo  [armas: la cuerda]
 
-OBJETOS (bloquean su celda):
-  el piano: fila 2, columna 1
-  la mesa del comedor: fila 4, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
+
+================================================================
+CASO: mansion-test-casual-s30
+Mapa: Mansión de prueba   Dificultad: casual   (incluye arma homicida)
+================================================================
+
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba sentada en el sillón.
+  B = Bruno: Estaba junto a la TV.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Era la única persona sobre una alfombra.
+  E = Elena (LA VÍCTIMA): Estaba en la última casilla libre.
+
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
+      c1  c2  c3  c4  c5 
+    +---+---+---+---+---+
+ f1 |(a) (a)| ## (b)  ##|
+    +   +   +   +   +   +
+ f2 | ##  a | b   b   b |
+    +---+---+---+---+---+
+ f3 | c   c |(d)  d | e |
+    +   +   +   +   +   +
+ f4 | ##  c | ##  ##|(e)|
+    +   +   +   +   +   +
+ f5 | ##  c |(d)  d | ##|
+    +---+---+---+---+---+
+
+HABITACIONES:
+  a = el Salón  [armas: el candelabro]
+  b = la Biblioteca  [armas: el abrecartas]
+  c = la Cocina  [armas: el cuchillo de cocina]
+  d = el Comedor  [armas: el frasco de veneno]
+  e = el Pasillo  [armas: la cuerda]
+
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
+
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
+
+================================================================
+CASO: mansion-test-casual-s31
+Mapa: Mansión de prueba   Dificultad: casual   (incluye arma homicida)
+================================================================
+
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en la Biblioteca y junto a una planta.
+  B = Bruno: Estaba junto a la TV.
+  C = Clara (LA VÍCTIMA): Estaba en la última casilla libre.
+  D = Dario: Era la única persona sobre una alfombra.
+  E = Elena: Estaba junto a la lavadora.
+
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
+      c1  c2  c3  c4  c5 
+    +---+---+---+---+---+
+ f1 |(a) (a)| ## (b)  ##|
+    +   +   +   +   +   +
+ f2 | ##  a | b   b   b |
+    +---+---+---+---+---+
+ f3 | c   c |(d)  d | e |
+    +   +   +   +   +   +
+ f4 | ##  c | ##  ##|(e)|
+    +   +   +   +   +   +
+ f5 | ##  c |(d)  d | ##|
+    +---+---+---+---+---+
+
+HABITACIONES:
+  a = el Salón  [armas: el candelabro]
+  b = la Biblioteca  [armas: el abrecartas]
+  c = la Cocina  [armas: el cuchillo de cocina]
+  d = el Comedor  [armas: el frasco de veneno]
+  e = el Pasillo  [armas: la cuerda]
+
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
+
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: mansion-test-casual-s4
 Mapa: Mansión de prueba   Dificultad: casual
 ================================================================
 
-PERSONAJES:
-  A = Adela  <- LA VÍCTIMA
-  B = Bruno
-  C = Clara
-  D = Dario
-  E = Elena
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba junto a la TV y junto a una planta.
+  B = Bruno (LA VÍCTIMA): Estaba en la última casilla libre.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Era la única persona sobre una alfombra.
+  E = Elena: Estaba junto a la lavadora.
 
-PISTAS:
-  1. Bruno no estaba en el Pasillo.
-  2. Clara estaba en una esquina.
-  3. Dario no estaba en la Biblioteca.
-  4. Dario no estaba en el Comedor.
-  5. Dario no estaba en el Pasillo.
-  6. La víctima estaba al oeste de Bruno.
-  7. La víctima estaba al norte de Bruno.
-  8. La víctima estaba al este de Elena.
-  9. Clara estaba al oeste de Dario.
-  10. Clara estaba al norte de Elena.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5 
     +---+---+---+---+---+
- f1 | a   a | b   b   b |
+ f1 |(a) (a)| ## (b)  ##|
     +   +   +   +   +   +
  f2 | ##  a | b   b   b |
     +---+---+---+---+---+
- f3 | c   c | d   d | e |
+ f3 | c   c |(d)  d | e |
     +   +   +   +   +   +
- f4 | c   c | ##  d | e |
+ f4 | ##  c | ##  ##|(e)|
     +   +   +   +   +   +
- f5 | c   c | d   d | e |
+ f5 | ##  c |(d)  d | ##|
     +---+---+---+---+---+
 
 HABITACIONES:
@@ -863,47 +811,48 @@ HABITACIONES:
   d = el Comedor  [armas: el frasco de veneno]
   e = el Pasillo  [armas: la cuerda]
 
-OBJETOS (bloquean su celda):
-  el piano: fila 2, columna 1
-  la mesa del comedor: fila 4, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: mansion-test-casual-s5
 Mapa: Mansión de prueba   Dificultad: casual
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario  <- LA VÍCTIMA
-  E = Elena
+PERSONAJES Y SUS PISTAS:
+  A = Adela: Estaba en la Biblioteca y junto a una planta.
+  B = Bruno (LA VÍCTIMA): Estaba en la última casilla libre.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Estaba sobre una alfombra y junto a una planta.
+  E = Elena: Estaba junto a la lavadora.
 
-PISTAS:
-  1. Bruno no estaba en el Pasillo.
-  2. Bruno estaba en una esquina.
-  3. Clara estaba en una esquina.
-  4. Elena no estaba en la Cocina.
-  5. Adela estaba al oeste de Bruno.
-  6. Adela estaba al norte de Bruno.
-  7. Adela estaba al este de Elena.
-  8. Clara estaba al oeste de la víctima.
-  9. Clara estaba al norte de Elena.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5 
     +---+---+---+---+---+
- f1 | a   a | b   b   b |
+ f1 |(a) (a)| ## (b)  ##|
     +   +   +   +   +   +
  f2 | ##  a | b   b   b |
     +---+---+---+---+---+
- f3 | c   c | d   d | e |
+ f3 | c   c |(d)  d | e |
     +   +   +   +   +   +
- f4 | c   c | ##  d | e |
+ f4 | ##  c | ##  ##|(e)|
     +   +   +   +   +   +
- f5 | c   c | d   d | e |
+ f5 | ##  c |(d)  d | ##|
     +---+---+---+---+---+
 
 HABITACIONES:
@@ -913,48 +862,48 @@ HABITACIONES:
   d = el Comedor  [armas: el frasco de veneno]
   e = el Pasillo  [armas: la cuerda]
 
-OBJETOS (bloquean su celda):
-  el piano: fila 2, columna 1
-  la mesa del comedor: fila 4, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 
 ================================================================
 CASO: mansion-test-casual-s6
 Mapa: Mansión de prueba   Dificultad: casual
 ================================================================
 
-PERSONAJES:
-  A = Adela
-  B = Bruno
-  C = Clara
-  D = Dario  <- LA VÍCTIMA
-  E = Elena
+PERSONAJES Y SUS PISTAS:
+  A = Adela (LA VÍCTIMA): Estaba sentada en el sillón.
+  B = Bruno: Estaba junto a la TV.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Era la única persona sobre una alfombra.
+  E = Elena: Estaba junto a la lavadora.
 
-PISTAS:
-  1. Adela no estaba en la Biblioteca.
-  2. Bruno no estaba en la Cocina.
-  3. Bruno no estaba en el Comedor.
-  4. Bruno no estaba en el Pasillo.
-  5. Clara estaba en una esquina.
-  6. La víctima no estaba en el Pasillo.
-  7. Elena estaba en una esquina.
-  8. Adela estaba al norte de Bruno.
-  9. Adela estaba al este de Elena.
-  10. Clara estaba al norte de la víctima.
-
-TABLERO (letra = habitación, ## = celda bloqueada):
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5 
     +---+---+---+---+---+
- f1 | a   a | b   b   b |
+ f1 |(a) (a)| ## (b)  ##|
     +   +   +   +   +   +
  f2 | ##  a | b   b   b |
     +---+---+---+---+---+
- f3 | c   c | d   d | e |
+ f3 | c   c |(d)  d | e |
     +   +   +   +   +   +
- f4 | c   c | ##  d | e |
+ f4 | ##  c | ##  ##|(e)|
     +   +   +   +   +   +
- f5 | c   c | d   d | e |
+ f5 | ##  c |(d)  d | ##|
     +---+---+---+---+---+
 
 HABITACIONES:
@@ -964,9 +913,72 @@ HABITACIONES:
   d = el Comedor  [armas: el frasco de veneno]
   e = el Pasillo  [armas: la cuerda]
 
-OBJETOS (bloquean su celda):
-  el piano: fila 2, columna 1
-  la mesa del comedor: fila 4, columna 3
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
 
-REGLAS: exactamente una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación.
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
+
+================================================================
+CASO: mansion-test-casual-s7
+Mapa: Mansión de prueba   Dificultad: casual
+================================================================
+
+PERSONAJES Y SUS PISTAS:
+  A = Adela (LA VÍCTIMA): Estaba sentada en el sillón.
+  B = Bruno: Estaba junto a la TV.
+  C = Clara: Estaba en la Cocina y junto a una mesa.
+  D = Dario: Estaba en el Pasillo y junto a una planta.
+  E = Elena: Estaba junto a la lavadora.
+
+TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
+      c1  c2  c3  c4  c5 
+    +---+---+---+---+---+
+ f1 |(a) (a)| ## (b)  ##|
+    +   +   +   +   +   +
+ f2 | ##  a | b   b   b |
+    +---+---+---+---+---+
+ f3 | c   c |(d)  d | e |
+    +   +   +   +   +   +
+ f4 | ##  c | ##  ##|(e)|
+    +   +   +   +   +   +
+ f5 | ##  c |(d)  d | ##|
+    +---+---+---+---+---+
+
+HABITACIONES:
+  a = el Salón  [armas: el candelabro]
+  b = la Biblioteca  [armas: el abrecartas]
+  c = la Cocina  [armas: el cuchillo de cocina]
+  d = el Comedor  [armas: el frasco de veneno]
+  e = el Pasillo  [armas: la cuerda]
+
+MUEBLES:
+  la alfombra (pisable): f1c1, f1c2
+  el piano (bloquea): f2c1
+  la TV (bloquea): f1c3
+  el sillón (pisable): f1c4
+  la planta (bloquea): f1c5
+  la mesa (bloquea): f4c1
+  la lavadora (bloquea): f5c1
+  la silla (pisable): f3c3
+  la mesa (bloquea): f4c3, f4c4
+  la silla (pisable): f5c3
+  la alfombra (pisable): f4c5
+  la planta (bloquea): f5c5
+
+REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
+
+
 

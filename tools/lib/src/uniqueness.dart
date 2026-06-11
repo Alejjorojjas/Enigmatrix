@@ -15,14 +15,17 @@ Set<String> _subjectsOf(Clue c) => switch (c) {
       SameArea(:final a, :final b) => {a, b},
       NotSameArea(:final a, :final b) => {a, b},
       BesideChar(:final a, :final b) => {a, b},
-      BesideObject(:final subject) => {subject},
+      OnObjectGroup(:final subject) => {subject},
+      BesideObjectGroup(:final subject) => {subject},
+      // Poda sonora con solo el sujeto asignado: si el sujeto no está sobre
+      // el grupo (permanente) o si otro asignado ya está sobre él
+      // (permanente), la pista nunca podrá cumplirse.
+      OnlyOneOnGroup(:final subject) => {subject},
+      CompoundClue(:final subject) => {subject},
+      LastFreeCell() => const {},
       Alone(:final subject) => {subject},
       AloneWith(:final a, :final b) => {a, b},
       AreaEmpty() => const {},
-      Cardinal(:final subject, :final other) => {subject, other},
-      InRow(:final subject) => {subject},
-      InCol(:final subject) => {subject},
-      CornerClue(:final subject) => {subject},
       WeaponInArea() || WeaponCat() || WeaponExact() => const {},
     };
 

@@ -11,10 +11,10 @@ PuzzleCase makeCase({
     caseId: 'test',
     map: cabana,
     characters: const [
-      Character(id: 'c1', nameEs: 'Adela'),
-      Character(id: 'c2', nameEs: 'Bruno'),
-      Character(id: 'c3', nameEs: 'Clara'),
-      Character(id: 'c4', nameEs: 'Dario'),
+      Character(id: 'c1', nameEs: 'Adela', female: true),
+      Character(id: 'c2', nameEs: 'Bruno', female: false),
+      Character(id: 'c3', nameEs: 'Clara', female: true),
+      Character(id: 'c4', nameEs: 'Dario', female: false),
     ],
     victimId: 'c4',
     clues: clues,
@@ -34,10 +34,10 @@ void main() {
     });
 
     test('arma deducible única: válida y la identifica', () {
-      // Estudio tiene tijeras Y abrecartas (ambas cortantes):
+      // El Estudio tiene tijeras Y abrecartas (ambas cortantes):
       // hace falta la pista exacta para distinguir.
-      final pc = makeCase(
-          clues: const [WeaponExact('tijeras')], hasWeapon: true);
+      final pc =
+          makeCase(clues: const [WeaponExact('tijeras')], hasWeapon: true);
       final v = Validator.validate(pc, pc.solution.positions);
       expect(v.valid, isTrue, reason: v.errors.join('; '));
       expect(v.lethalWeaponId, 'tijeras');
@@ -52,10 +52,10 @@ void main() {
     });
 
     test('víctima sin acompañante: inválida', () {
-      // c4 queda sola en el Estudio.
+      // c4 queda sola en el Estudio (c3 está en el Dormitorio).
       final pc = makeCase(
         clues: const [],
-        positions: {'c1': 1, 'c2': 7, 'c3': 8, 'c4': 14},
+        positions: {'c1': 0, 'c2': 7, 'c3': 9, 'c4': 14},
       );
       final v = Validator.validate(pc, pc.solution.positions);
       expect(v.valid, isFalse);
@@ -70,12 +70,23 @@ void main() {
       expect(Validator.validate(pc, pc.solution.positions).valid, isFalse);
     });
 
-    test('celda bloqueada: inválida', () {
+    test('celda con mueble bloqueante: inválida', () {
       final pc = makeCase(
         clues: const [],
         positions: {'c1': 0, 'c2': 6, 'c3': 10, 'c4': 15}, // 6 = mesa
       );
       expect(Validator.validate(pc, pc.solution.positions).valid, isFalse);
+    });
+
+    test('celda con mueble pisable: VÁLIDA (sobre la cama)', () {
+      // c3 sobre la cama (12), víctima c4 en el dormitorio (9).
+      final pc = makeCase(
+        clues: const [],
+        positions: {'c1': 2, 'c2': 7, 'c3': 12, 'c4': 9},
+      );
+      final v = Validator.validate(pc, pc.solution.positions);
+      expect(v.valid, isTrue, reason: v.errors.join('; '));
+      expect(v.murdererId, 'c3');
     });
 
     test('pista incumplida: inválida', () {

@@ -3,117 +3,128 @@
   "mapId": "hotel-test",
   "difficulty": "intermedio",
   "hasWeapon": false,
-  "victim": "c5",
+  "victim": "c2",
   "characters": [
     {
       "id": "c1",
-      "name_es": "Adela"
+      "name_es": "Adela",
+      "female": true
     },
     {
       "id": "c2",
-      "name_es": "Bruno"
+      "name_es": "Bruno",
+      "female": false
     },
     {
       "id": "c3",
-      "name_es": "Clara"
+      "name_es": "Clara",
+      "female": true
     },
     {
       "id": "c4",
-      "name_es": "Dario"
+      "name_es": "Dario",
+      "female": false
     },
     {
       "id": "c5",
-      "name_es": "Elena"
+      "name_es": "Elena",
+      "female": true
     },
     {
       "id": "c6",
-      "name_es": "Franco"
+      "name_es": "Franco",
+      "female": false
     }
   ],
   "clues": [
     {
-      "type": "corner",
+      "type": "compound",
       "subject": "c1",
-      "area": null
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "recepcion"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "tv"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
-      "subject": "c2",
-      "area": "recepcion"
+      "type": "victim_filler",
+      "subject": "c2"
     },
     {
-      "type": "not_in_area",
-      "subject": "c2",
-      "area": "eventos"
-    },
-    {
-      "type": "not_in_area",
+      "type": "compound",
       "subject": "c3",
-      "area": "restaurante"
+      "parts": [
+        {
+          "type": "on_object",
+          "subject": "c3",
+          "group": "cama"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "planta"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
-      "subject": "c3",
-      "area": "pasillo"
-    },
-    {
-      "type": "not_in_area",
+      "type": "compound",
       "subject": "c4",
-      "area": "recepcion"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "habitacion"
+        },
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "alfombra"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
-      "subject": "c4",
-      "area": "lavanderia"
-    },
-    {
-      "type": "not_in_area",
-      "subject": "c4",
-      "area": "eventos"
-    },
-    {
-      "type": "not_in_area",
+      "type": "compound",
       "subject": "c5",
-      "area": "recepcion"
+      "parts": [
+        {
+          "type": "on_object",
+          "subject": "c5",
+          "group": "alfombra"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "armario"
+        }
+      ]
     },
     {
-      "type": "corner",
+      "type": "beside_object",
       "subject": "c6",
-      "area": null
-    },
-    {
-      "type": "cardinal",
-      "subject": "c1",
-      "other": "c2",
-      "dir": "north"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c3",
-      "other": "c4",
-      "dir": "east"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c3",
-      "other": "c4",
-      "dir": "north"
+      "group": "armario"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 5,
-      "c2": 10,
+      "c1": 1,
+      "c2": 6,
       "c3": 15,
       "c4": 20,
-      "c5": 25,
-      "c6": 30
+      "c5": 28,
+      "c6": 35
     },
-    "murderer": "c6"
+    "murderer": "c1"
   },
   "metrics": {
-    "deductionSteps": 8,
-    "maxTier": 4,
-    "clueCount": 13
+    "deductionSteps": 2,
+    "maxTier": 2,
+    "clueCount": 6
   }
 }

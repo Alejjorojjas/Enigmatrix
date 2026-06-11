@@ -4,11 +4,13 @@
 
 ## Fase actual
 
-**FASE 1 — EN CURSO** (arrancada 2026-06-10 como banco de pruebas web local, decisión del usuario). La app Flutter vive en `app/` y corre como web: `JUGAR.bat` en la raíz compila/sirve y abre http://localhost:8123.
+**FASE 1 — EN CURSO**. App Flutter en `app/` corriendo como web local: `JUGAR.bat` abre http://localhost:8123.
 
-Estado: lista de casos + partida completa (tablero con drag & drop fiel al doc 03, pistas con ciclo, papelera, deshacer/rehacer, resolver con validación local, resumen con feedback de playtest). 9 tests de reglas del tablero pasando. Pendiente: que el usuario juegue y dé feedback; tutorial; UI definitiva con mockups; build Android.
+**2026-06-11 — REDISEÑO MURDOKU del motor** (feedback del usuario jugando murdoku.com + video del cuadernillo): el motor pasó de pistas mecánicas (fila/columna/cardinales) a vocabulario de muebles. Decisiones: una pista por personaje en su tarjeta (+extras desde intermedio, máx 2); muebles pisables (silla/sillón/sofá/cama/alfombra) vs bloqueantes (mesa/TV/planta/armario/caja), multi-celda, con grupos (planta+arbusto); pistas mecánicas ELIMINADAS de V1; tamaño de grilla crece con dificultad; víctima con relleno "última casilla libre" cuando se puede; compuestas desde principiante. Mapas de prueba reamueblados. 44 tests del motor + 9 de la app pasando. 20 casos regenerados (assets de la app + hojas en `production/fase0-casos/`). UI: tarjetas de personaje con su pista, iconos de muebles en el tablero.
 
-FASE 0 — COMPLETADA (2026-06-10): 20 casos únicos de deducción pura; hojas en `production/fase0-casos/`.
+Pendiente: que el usuario juegue el nuevo estilo y dé feedback; tutorial; UI definitiva con mockups; build Android.
+
+FASE 0 — COMPLETADA (2026-06-10, motor rediseñado 06-11).
 
 ## El motor (tools/) — estado
 

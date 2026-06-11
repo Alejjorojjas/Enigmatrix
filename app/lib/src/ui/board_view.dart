@@ -1,5 +1,5 @@
-/// Tablero jugable: celdas con áreas/paredes, marcas, drag & drop.
-/// Interacción según docs/03 y spec 16 §4.
+/// Tablero jugable: celdas con áreas/paredes, muebles (pisables y
+/// bloqueantes), marcas y drag & drop. Interacción según docs/03 y spec 16 §4.
 library;
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
@@ -48,6 +48,24 @@ Color charColor(PuzzleCase pc, String charId) =>
     charPalette[pc.characters.indexWhere((c) => c.id == charId) %
         charPalette.length];
 
+/// Icono por tipo de mueble.
+IconData objectIcon(ObjectType type) => switch (type) {
+      ObjectType.silla => Icons.chair_alt,
+      ObjectType.sillon => Icons.chair,
+      ObjectType.sofa => Icons.weekend,
+      ObjectType.cama => Icons.bed,
+      ObjectType.alfombra => Icons.texture,
+      ObjectType.mesa => Icons.table_restaurant,
+      ObjectType.tv => Icons.tv,
+      ObjectType.planta => Icons.local_florist,
+      ObjectType.arbusto => Icons.grass,
+      ObjectType.armario => Icons.door_sliding,
+      ObjectType.caja => Icons.inventory_2,
+      ObjectType.lavadora => Icons.local_laundry_service,
+      ObjectType.piano => Icons.piano,
+      ObjectType.barra => Icons.countertops,
+    };
+
 class BoardView extends ConsumerWidget {
   final PuzzleCase pc;
   final void Function(int cell, Tool tool) onPlace;
@@ -71,8 +89,10 @@ class BoardView extends ConsumerWidget {
                   children: [
                     for (var c = 0; c < n; c++)
                       Expanded(
-                          child:
-                              _Cell(pc: pc, cell: map.cellAt(r, c), onPlace: onPlace)),
+                          child: _Cell(
+                              pc: pc,
+                              cell: map.cellAt(r, c),
+                              onPlace: onPlace)),
                   ],
                 ),
               ),
@@ -95,9 +115,9 @@ class _Cell extends ConsumerWidget {
     final state = ref.watch(gameControllerProvider(pc));
     final map = pc.map;
     final r = map.row(cell), c = map.col(cell);
-    final areaIdx =
-        map.areas.indexWhere((a) => a.id == map.areaIdOf(cell));
-    final blocked = !map.isOccupiable(cell);
+    final areaIdx = map.areas.indexWhere((a) => a.id == map.areaIdOf(cell));
+    final obj = map.objectAt(cell);
+    final blocked = obj != null && obj.blocks;
     final isError = state.errorCells.contains(cell);
     final content = state.board.cell(cell);
 
@@ -160,21 +180,32 @@ class _Cell extends ConsumerWidget {
               if (isAreaAnchor)
                 Positioned(
                   right: 2,
-                  top: 1,
+                  top: 2,
                   child: Tooltip(
                     message:
                         'Armas: ${weapons.map((w) => w.nameEs).join(', ')}',
-                    child: const Text('🗡', style: TextStyle(fontSize: 13)),
+                    child: const Icon(Icons.colorize,
+                        size: 13, color: Brand.goldBright),
                   ),
                 ),
+              // Mueble bloqueante: ocupa la celda.
               if (blocked)
                 Center(
                   child: Tooltip(
-                    message: map.objects
-                        .firstWhere((o) => o.cell == cell)
-                        .nameEs,
-                    child: Icon(Icons.chair_outlined,
-                        color: Brand.cream.withValues(alpha: .5), size: 22),
+                    message: '${obj.type.defEs} (bloquea)',
+                    child: Icon(objectIcon(obj.type),
+                        color: Brand.cream.withValues(alpha: .55), size: 22),
+                  ),
+                ),
+              // Mueble pisable: se dibuja tenue debajo de las marcas.
+              if (obj != null && !blocked)
+                Center(
+                  child: Tooltip(
+                    message: '${obj.type.defEs} (puedes colocar encima)',
+                    child: Icon(objectIcon(obj.type),
+                        color: Brand.cream
+                            .withValues(alpha: state.mapMode ? .35 : .18),
+                        size: 26),
                   ),
                 ),
               if (!blocked) Center(child: _CellMarks(pc: pc, cell: cell)),
@@ -193,7 +224,8 @@ class _Cell extends ConsumerWidget {
       context: context,
       builder: (ctx) => SimpleDialog(
         backgroundColor: Brand.surface,
-        title: const Text('Borrar de esta casilla', style: TextStyle(fontSize: 16)),
+        title:
+            const Text('Borrar de esta casilla', style: TextStyle(fontSize: 16)),
         children: [
           for (final el in elements)
             SimpleDialogOption(
@@ -232,8 +264,8 @@ class _CellMarks extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final content = ref
-        .watch(gameControllerProvider(pc).select((s) => s.board.cell(cell)));
+    final content =
+        ref.watch(gameControllerProvider(pc).select((s) => s.board.cell(cell)));
 
     if (content.confirmed != null) {
       return _draggableMark(

@@ -1,31 +1,36 @@
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:test/test.dart';
 
+/// Fixture sobre la cabaña:
+///   c1 Adela en 1 (Salón, alfombra) · c2 Bruno en 4 (Salón, silla)
+///   c3 Clara en 10 (Estudio) · c4 Dario en 15 (Estudio, alfombra) — víctima
 PuzzleCase makeCase(List<Clue> clues) => PuzzleCase(
       caseId: 'test',
       map: cabana,
       characters: const [
-        Character(id: 'c1', nameEs: 'Adela'),
-        Character(id: 'c2', nameEs: 'Bruno'),
-        Character(id: 'c3', nameEs: 'Clara'),
-        Character(id: 'c4', nameEs: 'Dario'),
+        Character(id: 'c1', nameEs: 'Adela', female: true),
+        Character(id: 'c2', nameEs: 'Bruno', female: false),
+        Character(id: 'c3', nameEs: 'Clara', female: true),
+        Character(id: 'c4', nameEs: 'Dario', female: false),
       ],
       victimId: 'c4',
       clues: clues,
       hasWeapon: false,
       difficulty: 'test',
       solution: Solution(
-        positions: {'c1': 0, 'c2': 5, 'c3': 10, 'c4': 15},
+        positions: {'c1': 1, 'c2': 4, 'c3': 10, 'c4': 15},
         murdererId: 'c3',
       ),
     );
 
-/// Pistas que fijan cada personaje en su celda exacta (fila + columna).
-const fullPin = <Clue>[
-  InRow('c1', 0), InCol('c1', 0),
-  InRow('c2', 1), InCol('c2', 1),
-  InRow('c3', 2), InCol('c3', 2),
-  InRow('c4', 3), InCol('c4', 3),
+/// Pistas de mueble que fijan el caso por completo (estilo Murdoku).
+const murdokuPin = <Clue>[
+  CompoundClue(
+      'c1', [InArea('c1', 'salon'), OnObjectGroup('c1', 'alfombra')]),
+  OnObjectGroup('c2', 'silla'),
+  BesideObjectGroup('c3', 'tv'),
+  CompoundClue(
+      'c4', [InArea('c4', 'estudio'), OnObjectGroup('c4', 'alfombra')]),
 ];
 
 /// Pistas SOLO a nivel de área: no pueden distinguir el intercambio de dos
@@ -39,8 +44,8 @@ const areaOnly = <Clue>[
 
 void main() {
   group('UniquenessChecker', () {
-    test('pistas exactas: exactamente una solución', () {
-      expect(UniquenessChecker.countSolutions(makeCase(fullPin)), 1);
+    test('pistas de mueble bien puestas: exactamente una solución', () {
+      expect(UniquenessChecker.countSolutions(makeCase(murdokuPin)), 1);
     });
 
     test(
@@ -52,39 +57,55 @@ void main() {
   });
 
   group('DeductionEngine', () {
-    test('caso con pistas exactas: resuelto, asignación correcta', () {
-      final r = DeductionEngine(makeCase(fullPin)).run();
+    test('caso al estilo Murdoku: resuelto, asignación correcta', () {
+      final r = DeductionEngine(makeCase(murdokuPin)).run();
       expect(r.status, DeductionStatus.solved);
-      expect(r.assignment, {'c1': 0, 'c2': 5, 'c3': 10, 'c4': 15});
+      expect(r.assignment, {'c1': 1, 'c2': 4, 'c3': 10, 'c4': 15});
       expect(r.deductionSteps, greaterThan(0));
     });
 
     test('caso ambiguo: se atasca (= requeriría adivinar, se rechaza)', () {
       final r = DeductionEngine(makeCase(areaOnly)).run();
       expect(r.status, DeductionStatus.stuck);
+      expect(r.stuckDomains, isNotNull);
+      expect(r.stuckDomains!['c1']!.length, greaterThan(1));
     });
 
     test('pistas contradictorias: contradicción detectada', () {
       final r = DeductionEngine(makeCase(const [
         InArea('c1', 'salon'),
         NotInArea('c1', 'salon'),
-        ...fullPin,
+        ...murdokuPin,
       ])).run();
       expect(r.status, DeductionStatus.contradiction);
     });
 
-    test('deducción indirecta: resuelve sin pistas de celda exacta del asesino',
-        () {
-      // Sin fila/columna de c3: su posición sale por descarte
-      // (exclusión fila/columna + regla del asesino).
+    test('deducción indirecta: sin pista de la asesina, sale por descarte '
+        '(filas/columnas tachadas, como en el video)', () {
       final r = DeductionEngine(makeCase(const [
-        InRow('c1', 0), InCol('c1', 0),
-        InRow('c2', 1), InCol('c2', 1),
-        InRow('c4', 3), InCol('c4', 3),
-        InArea('c3', 'estudio'),
+        CompoundClue(
+            'c1', [InArea('c1', 'salon'), OnObjectGroup('c1', 'alfombra')]),
+        OnObjectGroup('c2', 'silla'),
+        CompoundClue(
+            'c4', [InArea('c4', 'estudio'), OnObjectGroup('c4', 'alfombra')]),
       ])).run();
       expect(r.status, DeductionStatus.solved);
       expect(r.assignment!['c3'], 10);
+    });
+
+    test('"única persona sobre una alfombra" excluye a los demás del grupo',
+        () {
+      // c1 única sobre alfombra: c4 (también en alfombra en la solución
+      // original) ahora debe estar en otra celda -> contradicción con el
+      // resto del pin original.
+      final r = DeductionEngine(makeCase(const [
+        OnlyOneOnGroup('c1', 'alfombra'),
+        OnObjectGroup('c2', 'silla'),
+        BesideObjectGroup('c3', 'tv'),
+        CompoundClue(
+            'c4', [InArea('c4', 'estudio'), OnObjectGroup('c4', 'alfombra')]),
+      ])).run();
+      expect(r.status, DeductionStatus.contradiction);
     });
   });
 }

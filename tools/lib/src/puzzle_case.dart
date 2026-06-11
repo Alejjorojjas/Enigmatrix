@@ -62,6 +62,9 @@ class PuzzleCase {
   final GameMap map;
   final List<Character> characters;
   final String victimId;
+
+  /// Una pista por personaje (en el orden de [characters]) + extras al final
+  /// (área vacía / arma) — formato Murdoku decidido el 2026-06-11.
   final List<Clue> clues;
   final bool hasWeapon;
   final String difficulty;
@@ -84,10 +87,26 @@ class PuzzleCase {
 
   Character character(String id) => characters.firstWhere((c) => c.id == id);
 
-  /// En texto de pistas la víctima se nombra por rol, no por nombre
-  /// (minúscula: el render capitaliza inicio de frase).
   String nameOf(String charId) =>
-      charId == victimId ? 'la víctima' : character(charId).nameEs;
+      charId == victimId ? 'La víctima' : character(charId).nameEs;
+
+  ClueNames get names => ClueNames(
+        nameOf: nameOf,
+        isFemale: (id) => character(id).female,
+      );
+
+  /// La pista de la tarjeta de un personaje (null si no tiene — no debería
+  /// pasar en casos generados).
+  Clue? clueFor(String charId) {
+    for (final c in clues) {
+      if (c.subjectId == charId) return c;
+    }
+    return null;
+  }
+
+  /// Pistas sueltas (sin tarjeta): área vacía, arma.
+  List<Clue> get extraClues =>
+      [for (final c in clues) if (c.subjectId == null) c];
 
   ClueContext contextFor(Map<String, int> positions, {String? lethal}) =>
       ClueContext(
@@ -105,7 +124,8 @@ class PuzzleCase {
         'hasWeapon': hasWeapon,
         'victim': victimId,
         'characters': [
-          for (final c in characters) {'id': c.id, 'name_es': c.nameEs}
+          for (final c in characters)
+            {'id': c.id, 'name_es': c.nameEs, 'female': c.female}
         ],
         'clues': [for (final c in clues) c.toJson()],
         'solution': solution.toJson(),
@@ -121,7 +141,8 @@ class PuzzleCase {
         'hasWeapon': hasWeapon,
         'victim': victimId,
         'characters': [
-          for (final c in characters) {'id': c.id, 'name_es': c.nameEs}
+          for (final c in characters)
+            {'id': c.id, 'name_es': c.nameEs, 'female': c.female}
         ],
         'clues': [for (final c in clues) c.toJson()],
       };
@@ -135,7 +156,11 @@ class PuzzleCase {
       map: map,
       characters: [
         for (final c in (j['characters'] as List))
-          Character(id: c['id'] as String, nameEs: c['name_es'] as String)
+          Character(
+            id: c['id'] as String,
+            nameEs: c['name_es'] as String,
+            female: (c['female'] as bool?) ?? false,
+          )
       ],
       victimId: j['victim'] as String,
       clues: [

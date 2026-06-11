@@ -4,6 +4,10 @@
 /// Si llega a una asignación completa, la solución es ÚNICA (la propagación
 /// solo elimina celdas imposibles, nunca la verdadera). Si se atasca, el
 /// caso requiere adivinanza y debe rechazarse (pillar 1: deducción pura).
+///
+/// Nota: las pistas mecánicas (fila/columna) no existen en V1, pero las
+/// TÉCNICAS de fila/columna sí — son exactamente lo que el jugador hace al
+/// tachar la fila y columna de un personaje ya ubicado.
 library;
 
 import 'clue.dart';
@@ -29,11 +33,16 @@ class DeductionResult {
   final List<InferenceStep> steps;
   final Map<String, int>? assignment;
 
-  const DeductionResult(this.status, this.steps, this.assignment);
+  /// Dominios al momento de atascarse (para que el generador repare el caso).
+  final Map<String, Set<int>>? stuckDomains;
+
+  const DeductionResult(this.status, this.steps, this.assignment,
+      {this.stuckDomains});
 
   int get deductionSteps => steps.length;
-  int get maxTier =>
-      steps.isEmpty ? 1 : steps.map((s) => s.tier).reduce((a, b) => a > b ? a : b);
+  int get maxTier => steps.isEmpty
+      ? 1
+      : steps.map((s) => s.tier).reduce((a, b) => a > b ? a : b);
 }
 
 class DeductionEngine {
@@ -54,9 +63,8 @@ class DeductionEngine {
     dom = {
       for (final ch in pc.characters) ch.id: Set.of(map.occupiableCells),
     };
-    lethalCands = pc.hasWeapon
-        ? {for (final w in map.weapons) w.id}
-        : <String>{};
+    lethalCands =
+        pc.hasWeapon ? {for (final w in map.weapons) w.id} : <String>{};
 
     while (true) {
       if (dom.values.any((d) => d.isEmpty) ||
@@ -71,7 +79,10 @@ class DeductionEngine {
             : DeductionResult(DeductionStatus.contradiction, _steps, null);
       }
       if (!_applyNextTechnique()) {
-        return DeductionResult(DeductionStatus.stuck, _steps, null);
+        return DeductionResult(DeductionStatus.stuck, _steps, null,
+            stuckDomains: {
+              for (final e in dom.entries) e.key: Set.of(e.value)
+            });
       }
     }
   }
@@ -99,7 +110,6 @@ class DeductionEngine {
     return false;
   }
 
-  /// ¿El personaje está forzado a estar dentro del área?
   bool _confinedToArea(String charId, String areaId) =>
       dom[charId]!.isNotEmpty &&
       dom[charId]!.every((p) => map.areaIdOf(p) == areaId);
@@ -113,31 +123,40 @@ class DeductionEngine {
 
   // ---- T1: lectura directa de pistas unarias -------------------------------
 
+  /// Conjunto permitido por una pista unaria (null si no es unaria).
+  Set<int>? _allowedOf(Clue clue) => switch (clue) {
+        InArea(:final areaId) => Set.of(map.area(areaId).cells),
+        NotInArea(:final areaId) => {
+            for (final c in map.occupiableCells)
+              if (map.areaIdOf(c) != areaId) c
+          },
+        OnObjectGroup(:final group) => map.cellsOnGroup(group),
+        BesideObjectGroup(:final group) => map.cellsBesideGroup(group),
+        CompoundClue(:final parts) => parts
+            .map(_allowedOf)
+            .whereType<Set<int>>()
+            .reduce((a, b) => a.intersection(b)),
+        _ => null,
+      };
+
   int _unaryClues() {
     var pruned = 0;
     for (final clue in pc.clues) {
       switch (clue) {
-        case InArea(:final subject, :final areaId):
-          pruned += _pruneWhere(subject, (p) => map.areaIdOf(p) != areaId);
-        case NotInArea(:final subject, :final areaId):
-          pruned += _pruneWhere(subject, (p) => map.areaIdOf(p) == areaId);
-        case InRow(:final subject, :final index):
-          pruned += _pruneWhere(subject, (p) => map.row(p) != index);
-        case InCol(:final subject, :final index):
-          pruned += _pruneWhere(subject, (p) => map.col(p) != index);
-        case CornerClue(:final subject, :final areaId):
-          pruned += _pruneWhere(
-              subject,
-              (p) =>
-                  !map.isCorner(p) ||
-                  (areaId != null && map.areaIdOf(p) != areaId));
-        case BesideObject(:final subject, :final objectId):
-          final objCell = map.objectById(objectId).cell;
-          final valid = map
-              .orthNeighbors(objCell)
-              .where((n) => map.sameArea(n, objCell))
-              .toSet();
-          pruned += _pruneWhere(subject, (p) => !valid.contains(p));
+        case InArea(:final subject) ||
+              NotInArea(:final subject) ||
+              OnObjectGroup(:final subject) ||
+              BesideObjectGroup(:final subject) ||
+              CompoundClue(:final subject):
+          final allowed = _allowedOf(clue)!;
+          pruned += _pruneWhere(subject, (p) => !allowed.contains(p));
+        case OnlyOneOnGroup(:final subject, :final group):
+          final onCells = map.cellsOnGroup(group);
+          pruned += _pruneWhere(subject, (p) => !onCells.contains(p));
+          for (final ch in pc.characters) {
+            if (ch.id == subject) continue;
+            pruned += _pruneWhere(ch.id, onCells.contains);
+          }
         case AreaEmpty(:final areaId):
           for (final ch in pc.characters) {
             pruned += _pruneWhere(ch.id, (p) => map.areaIdOf(p) == areaId);
@@ -158,7 +177,8 @@ class DeductionEngine {
   int _pruneLethal(bool Function(WeaponDef) bad) {
     if (!pc.hasWeapon) return 0;
     final before = lethalCands.length;
-    lethalCands.removeWhere((id) => bad(map.weapons.firstWhere((w) => w.id == id)));
+    lethalCands
+        .removeWhere((id) => bad(map.weapons.firstWhere((w) => w.id == id)));
     return before - lethalCands.length;
   }
 
@@ -205,16 +225,6 @@ class DeductionEngine {
         BesideChar(:final a, :final b) =>
           (a, b, (p, q) => map.besideInArea(p, q)),
         AloneWith(:final a, :final b) => (a, b, (p, q) => map.sameArea(p, q)),
-        Cardinal(:final subject, :final other, :final dir) => (
-            subject,
-            other,
-            (p, q) => switch (dir) {
-                  Direction.west => map.col(p) < map.col(q),
-                  Direction.east => map.col(p) > map.col(q),
-                  Direction.north => map.row(p) < map.row(q),
-                  Direction.south => map.row(p) > map.row(q),
-                }
-          ),
         _ => null,
       };
 
@@ -291,8 +301,8 @@ class DeductionEngine {
           }
           pruned += _pruneWhere(subject, (p) {
             final areaId = map.areaIdOf(p);
-            return pc.characters.any(
-                (y) => y.id != subject && _confinedToArea(y.id, areaId));
+            return pc.characters
+                .any((y) => y.id != subject && _confinedToArea(y.id, areaId));
           });
         case AloneWith(:final a, :final b):
           // Solo {a, b} en esa área: terceros excluidos.
@@ -343,7 +353,10 @@ class DeductionEngine {
     final vAreas = dom[victim]!.map(map.areaIdOf).toSet();
     if (vAreas.length == 1) {
       final areaId = vAreas.single;
-      final forced = [for (final s in suspects) if (_confinedToArea(s, areaId)) s];
+      final forced = [
+        for (final s in suspects)
+          if (_confinedToArea(s, areaId)) s
+      ];
       final can = [
         for (final s in suspects)
           if (dom[s]!.any((q) => map.areaIdOf(q) == areaId)) s

@@ -3,64 +3,84 @@
   "mapId": "cabana-test",
   "difficulty": "principiante",
   "hasWeapon": false,
-  "victim": "c3",
+  "victim": "c2",
   "characters": [
     {
       "id": "c1",
-      "name_es": "Adela"
+      "name_es": "Adela",
+      "female": true
     },
     {
       "id": "c2",
-      "name_es": "Bruno"
+      "name_es": "Bruno",
+      "female": false
     },
     {
       "id": "c3",
-      "name_es": "Clara"
+      "name_es": "Clara",
+      "female": true
     },
     {
       "id": "c4",
-      "name_es": "Dario"
+      "name_es": "Dario",
+      "female": false
     }
   ],
   "clues": [
     {
-      "type": "in_col",
-      "subject": "c2",
-      "index": 3
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "salon"
+        },
+        {
+          "type": "on_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
+      "type": "victim_filler",
+      "subject": "c2"
+    },
+    {
+      "type": "beside_object",
       "subject": "c3",
-      "area": "salon"
+      "group": "tv"
     },
     {
-      "type": "not_in_area",
-      "subject": "c3",
-      "area": "cocina"
-    },
-    {
-      "type": "in_row",
+      "type": "compound",
       "subject": "c4",
-      "index": 3
-    },
-    {
-      "type": "in_col",
-      "subject": "c4",
-      "index": 1
+      "parts": [
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "alfombra"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "tv"
+        }
+      ]
     }
   ],
   "solution": {
     "positions": {
-      "c1": 2,
-      "c2": 7,
-      "c3": 8,
-      "c4": 13
+      "c1": 1,
+      "c2": 4,
+      "c3": 10,
+      "c4": 15
     },
-    "murderer": "c4"
+    "murderer": "c1"
   },
   "metrics": {
-    "deductionSteps": 6,
-    "maxTier": 4,
-    "clueCount": 5
+    "deductionSteps": 3,
+    "maxTier": 2,
+    "clueCount": 4
   }
 }

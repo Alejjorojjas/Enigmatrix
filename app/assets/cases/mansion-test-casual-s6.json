@@ -3,97 +3,85 @@
   "mapId": "mansion-test",
   "difficulty": "casual",
   "hasWeapon": false,
-  "victim": "c4",
+  "victim": "c1",
   "characters": [
     {
       "id": "c1",
-      "name_es": "Adela"
+      "name_es": "Adela",
+      "female": true
     },
     {
       "id": "c2",
-      "name_es": "Bruno"
+      "name_es": "Bruno",
+      "female": false
     },
     {
       "id": "c3",
-      "name_es": "Clara"
+      "name_es": "Clara",
+      "female": true
     },
     {
       "id": "c4",
-      "name_es": "Dario"
+      "name_es": "Dario",
+      "female": false
     },
     {
       "id": "c5",
-      "name_es": "Elena"
+      "name_es": "Elena",
+      "female": true
     }
   ],
   "clues": [
     {
-      "type": "not_in_area",
+      "type": "on_object",
       "subject": "c1",
-      "area": "biblioteca"
+      "group": "sillon"
     },
     {
-      "type": "not_in_area",
+      "type": "beside_object",
       "subject": "c2",
-      "area": "cocina"
+      "group": "tv"
     },
     {
-      "type": "not_in_area",
-      "subject": "c2",
-      "area": "comedor"
-    },
-    {
-      "type": "not_in_area",
-      "subject": "c2",
-      "area": "pasillo"
-    },
-    {
-      "type": "corner",
+      "type": "compound",
       "subject": "c3",
-      "area": null
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "mesa"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
+      "type": "only_one_on",
       "subject": "c4",
-      "area": "pasillo"
+      "group": "alfombra"
     },
     {
-      "type": "corner",
+      "type": "beside_object",
       "subject": "c5",
-      "area": null
-    },
-    {
-      "type": "cardinal",
-      "subject": "c1",
-      "other": "c2",
-      "dir": "north"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c1",
-      "other": "c5",
-      "dir": "east"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c3",
-      "other": "c4",
-      "dir": "north"
+      "group": "lavadora"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 1,
-      "c2": 9,
-      "c3": 12,
-      "c4": 18,
-      "c5": 20
+      "c1": 3,
+      "c2": 7,
+      "c3": 10,
+      "c4": 19,
+      "c5": 21
     },
-    "murderer": "c3"
+    "murderer": "c2"
   },
   "metrics": {
-    "deductionSteps": 10,
-    "maxTier": 4,
-    "clueCount": 10
+    "deductionSteps": 2,
+    "maxTier": 2,
+    "clueCount": 5
   }
 }

@@ -14,19 +14,23 @@ String renderCaseSheet(PuzzleCase pc, {bool revealSolution = false}) {
       '${pc.hasWeapon ? '   (incluye arma homicida)' : ''}');
   b.writeln('=' * 64);
 
-  b.writeln('\nPERSONAJES:');
+  b.writeln('\nPERSONAJES Y SUS PISTAS:');
   for (final ch in pc.characters) {
-    final tag = ch.id == pc.victimId ? '  <- LA VÍCTIMA' : '';
-    b.writeln('  ${ch.nameEs[0]} = ${ch.nameEs}$tag');
+    final tag = ch.id == pc.victimId ? ' (LA VÍCTIMA)' : '';
+    final clue = pc.clueFor(ch.id);
+    final text = clue == null ? '—' : clue.cardTextEs(map, pc.names);
+    b.writeln('  ${ch.nameEs[0]} = ${ch.nameEs}$tag: $text');
+  }
+  final extras = pc.extraClues;
+  if (extras.isNotEmpty) {
+    b.writeln('\nINFORMACIÓN ADICIONAL:');
+    for (final e in extras) {
+      b.writeln('  · ${e.textEs(map, pc.names)}');
+    }
   }
 
-  b.writeln('\nPISTAS:');
-  for (var i = 0; i < pc.clues.length; i++) {
-    final text = pc.clues[i].textEs(map, pc.nameOf);
-    b.writeln('  ${i + 1}. ${text[0].toUpperCase()}${text.substring(1)}');
-  }
-
-  b.writeln('\nTABLERO (letra = habitación, ## = celda bloqueada):');
+  b.writeln('\nTABLERO (letra = habitación, ## = mueble que bloquea, '
+      '() = mueble pisable):');
   b.write(_renderGrid(pc, revealSolution: revealSolution));
 
   b.writeln('\nHABITACIONES:');
@@ -40,14 +44,18 @@ String renderCaseSheet(PuzzleCase pc, {bool revealSolution = false}) {
     b.writeln('  $letter = ${a.nameEs}$wTxt');
   }
   if (map.objects.isNotEmpty) {
-    b.writeln('\nOBJETOS (bloquean su celda):');
+    b.writeln('\nMUEBLES:');
     for (final o in map.objects) {
-      b.writeln('  ${o.nameEs}: fila ${map.row(o.cell) + 1}, '
-          'columna ${map.col(o.cell) + 1}');
+      final where = o.cells
+          .map((c) => 'f${map.row(c) + 1}c${map.col(c) + 1}')
+          .join(', ');
+      final kind = o.type.standable ? 'pisable' : 'bloquea';
+      b.writeln('  ${o.type.defEs} ($kind): $where');
     }
   }
 
   b.writeln('\nREGLAS: exactamente una persona por fila y por columna. '
+      'Nadie puede estar en celdas con muebles que bloquean. '
       'El asesino quedó a solas con la víctima en la misma habitación.');
 
   if (revealSolution) {
@@ -86,8 +94,7 @@ String _renderGrid(PuzzleCase pc, {required bool revealSolution}) {
 
   final areaLetter = <String, String>{};
   for (var i = 0; i < map.areas.length; i++) {
-    areaLetter[map.areas[i].id] =
-        String.fromCharCode('a'.codeUnitAt(0) + i);
+    areaLetter[map.areas[i].id] = String.fromCharCode('a'.codeUnitAt(0) + i);
   }
   final charAt = <int, String>{};
   if (revealSolution) {
@@ -100,8 +107,11 @@ String _renderGrid(PuzzleCase pc, {required bool revealSolution}) {
 
   String cellText(int cell) {
     if (charAt.containsKey(cell)) return ' ${charAt[cell]}';
-    if (!map.isOccupiable(cell)) return ' ##';
-    return ' ${areaLetter[map.areaIdOf(cell)]} ';
+    final obj = map.objectAt(cell);
+    if (obj != null && obj.blocks) return ' ##';
+    final letter = areaLetter[map.areaIdOf(cell)]!;
+    if (obj != null) return '($letter)'; // mueble pisable
+    return ' $letter ';
   }
 
   bool wallRight(int r, int c) =>

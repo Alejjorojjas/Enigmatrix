@@ -4,7 +4,7 @@ import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Generator', () {
+  group('Generator (formato Murdoku: una pista por tarjeta)', () {
     test('determinismo: misma semilla, mismo caso', () {
       final g = Generator(cabana, DifficultyProfile.principiante);
       final a = g.generate(7).puzzle!;
@@ -12,12 +12,21 @@ void main() {
       expect(jsonEncode(a.toJson()), jsonEncode(b.toJson()));
     });
 
-    test('semillas distintas: casos distintos', () {
+    test('semillas distintas: variedad de casos', () {
+      // En un 4×4 hay pocas distribuciones válidas: dos semillas pueden
+      // coincidir en posiciones. Exigimos variedad en el lote, no en pares.
       final g = Generator(cabana, DifficultyProfile.principiante);
-      final a = g.generate(1).puzzle!;
-      final b = g.generate(2).puzzle!;
-      expect(jsonEncode(a.solution.toJson()),
-          isNot(jsonEncode(b.solution.toJson())));
+      final solutions = {
+        for (var seed = 1; seed <= 6; seed++)
+          jsonEncode(g.generate(seed).puzzle!.solution.toJson())
+      };
+      final clueSets = {
+        for (var seed = 1; seed <= 6; seed++)
+          jsonEncode(
+              [for (final c in g.generate(seed).puzzle!.clues) c.toJson()])
+      };
+      expect(solutions.length, greaterThanOrEqualTo(3));
+      expect(clueSets.length, greaterThanOrEqualTo(4));
     });
 
     for (final (label, map) in [
@@ -26,13 +35,24 @@ void main() {
       ('intermedio', hotel),
     ]) {
       test('$label: lote de casos válidos, únicos y de deducción pura', () {
-        final g = Generator(map, DifficultyProfile.byLabel(label));
+        final profile = DifficultyProfile.byLabel(label);
+        final g = Generator(map, profile);
         for (var seed = 1; seed <= 5; seed++) {
           final result = g.generate(seed);
           final pc = result.puzzle;
-          expect(pc, isNotNull, reason: 'semilla $seed sin caso');
+          expect(pc, isNotNull,
+              reason: 'semilla $seed sin caso: ${result.rejections}');
 
-          final v = Validator.validate(pc!, pc.solution.positions);
+          // Formato Murdoku: exactamente una pista por personaje.
+          for (final ch in pc!.characters) {
+            final card = pc.clues.where((c) => c.subjectId == ch.id);
+            expect(card.length, 1,
+                reason: 'semilla $seed: ${ch.id} tiene ${card.length} pistas');
+          }
+          expect(pc.extraClues.length, lessThanOrEqualTo(profile.maxExtras),
+              reason: 'semilla $seed: demasiadas pistas extra');
+
+          final v = Validator.validate(pc, pc.solution.positions);
           expect(v.valid, isTrue, reason: 'semilla $seed: ${v.errors}');
           expect(v.murdererId, pc.solution.murdererId);
 
@@ -47,10 +67,13 @@ void main() {
       });
     }
 
-    test('caso con arma: el arma queda deducible de forma única', () {
+    test('caso con arma en casual (sin extras): el área de la pareja tiene '
+        'una sola arma y queda deducible', () {
       final g = Generator(mansion, DifficultyProfile.casual, withWeapon: true);
-      final pc = g.generate(11).puzzle!;
+      final result = g.generate(11);
+      final pc = result.puzzle!;
       expect(pc.hasWeapon, isTrue);
+      expect(pc.extraClues.whereType<WeaponInArea>(), isEmpty);
       final v = Validator.validate(pc, pc.solution.positions);
       expect(v.valid, isTrue, reason: v.errors.join('; '));
       expect(v.lethalWeaponId, pc.solution.lethalWeaponId);
@@ -67,29 +90,37 @@ void main() {
       expect(jsonEncode(client), isNot(contains('lethal')));
     });
 
-    test('conjunto de pistas irreducible: quitar cualquiera rompe la deducción',
+    test('las pistas generadas son del vocabulario Murdoku (sin mecánicas)',
         () {
-      final pc = Generator(mansion, DifficultyProfile.casual)
-          .generate(3)
-          .puzzle!;
-      for (var i = 0; i < pc.clues.length; i++) {
-        final reduced = PuzzleCase(
-          caseId: pc.caseId,
-          map: pc.map,
-          characters: pc.characters,
-          victimId: pc.victimId,
-          clues: [
-            for (var j = 0; j < pc.clues.length; j++)
-              if (j != i) pc.clues[j]
-          ],
-          hasWeapon: pc.hasWeapon,
-          difficulty: pc.difficulty,
-          solution: pc.solution,
-        );
-        expect(DeductionEngine(reduced).run().status,
-            isNot(DeductionStatus.solved),
-            reason: 'la pista ${pc.clues[i].toJson()} sobra');
+      for (var seed = 1; seed <= 6; seed++) {
+        final pc = Generator(mansion, DifficultyProfile.casual)
+            .generate(seed)
+            .puzzle!;
+        for (final clue in pc.clues) {
+          // El switch sellado garantiza que solo existen estos tipos;
+          // verificamos que las tarjetas tengan sujeto.
+          if (clue is AreaEmpty ||
+              clue is WeaponInArea ||
+              clue is WeaponCat ||
+              clue is WeaponExact) {
+            continue;
+          }
+          expect(clue.subjectId, isNotNull);
+        }
       }
+    });
+
+    test('el relleno de la víctima aparece cuando el caso lo permite', () {
+      var fillers = 0;
+      for (var seed = 1; seed <= 10; seed++) {
+        final pc = Generator(cabana, DifficultyProfile.principiante)
+            .generate(seed)
+            .puzzle!;
+        if (pc.clueFor(pc.victimId) is LastFreeCell) fillers++;
+      }
+      // No exigimos un número exacto (depende del sorteo), pero el momento
+      // "última casilla libre" debe existir en el contenido generado.
+      expect(fillers, greaterThan(0));
     });
   });
 }

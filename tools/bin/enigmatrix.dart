@@ -56,7 +56,7 @@ void _generate(List<String> args) {
 
   Directory(outDir).createSync(recursive: true);
   final rejectionTotals = <String, int>{};
-  var ok = 0, outOfRange = 0, failed = 0;
+  var ok = 0, failed = 0;
   String? firstPath;
 
   for (var k = 0; k < count; k++) {
@@ -74,15 +74,16 @@ void _generate(List<String> args) {
         const JsonEncoder.withIndent('  ').convert(pc.toJson()));
     firstPath ??= file.path;
     final m = pc.metrics!;
-    final range = result.clueCountInRange ? '' : '  [fuera de rango de pistas]';
-    stdout.writeln('${pc.caseId}: ${m.clueCount} pistas, '
+    final extras =
+        result.extrasUsed > 0 ? ' +${result.extrasUsed} extras' : '';
+    stdout.writeln('${pc.caseId}: ${m.clueCount} pistas$extras, '
         '${m.deductionSteps} pasos, T${m.maxTier}, única OK '
-        '(${result.attempts} intentos)$range -> ${file.path}');
-    result.clueCountInRange ? ok++ : outOfRange++;
+        '(${result.attempts} intentos) -> ${file.path}');
+    ok++;
   }
 
-  stdout.writeln('\nResumen: $ok en rango, $outOfRange fuera de rango, '
-      '$failed fallidos, de $count solicitados.');
+  stdout.writeln('\nResumen: $ok generados, $failed fallidos, '
+      'de $count solicitados.');
   if (rejectionTotals.isNotEmpty) {
     stdout.writeln('Descartes internos del generador:');
     rejectionTotals.forEach((r, n) => stdout.writeln('  $n × $r'));

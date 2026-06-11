@@ -3,64 +3,85 @@
   "mapId": "cabana-test",
   "difficulty": "principiante",
   "hasWeapon": false,
-  "victim": "c1",
+  "victim": "c4",
   "characters": [
     {
       "id": "c1",
-      "name_es": "Adela"
+      "name_es": "Adela",
+      "female": true
     },
     {
       "id": "c2",
-      "name_es": "Bruno"
+      "name_es": "Bruno",
+      "female": false
     },
     {
       "id": "c3",
-      "name_es": "Clara"
+      "name_es": "Clara",
+      "female": true
     },
     {
       "id": "c4",
-      "name_es": "Dario"
+      "name_es": "Dario",
+      "female": false
     }
   ],
   "clues": [
     {
-      "type": "in_col",
+      "type": "compound",
       "subject": "c1",
-      "index": 2
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "salon"
+        },
+        {
+          "type": "on_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
+      "type": "on_object",
       "subject": "c2",
-      "area": "estudio"
+      "group": "silla"
     },
     {
-      "type": "in_col",
+      "type": "beside_object",
       "subject": "c3",
-      "index": 1
+      "group": "tv"
     },
     {
-      "type": "not_in_area",
+      "type": "compound",
       "subject": "c4",
-      "area": "estudio"
-    },
-    {
-      "type": "in_row",
-      "subject": "c4",
-      "index": 3
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "estudio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "alfombra"
+        }
+      ]
     }
   ],
   "solution": {
     "positions": {
-      "c1": 2,
-      "c2": 7,
-      "c3": 9,
-      "c4": 12
+      "c1": 1,
+      "c2": 4,
+      "c3": 10,
+      "c4": 15
     },
-    "murderer": "c2"
+    "murderer": "c3"
   },
   "metrics": {
-    "deductionSteps": 6,
-    "maxTier": 4,
-    "clueCount": 5
+    "deductionSteps": 2,
+    "maxTier": 2,
+    "clueCount": 4
   }
 }

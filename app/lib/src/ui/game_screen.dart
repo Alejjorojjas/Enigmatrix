@@ -1,5 +1,6 @@
-/// Pantalla de partida (doc 06, pantalla 19): tablero, pistas, panel de
-/// sospechosos, papelera, deshacer/rehacer, limpiar, resolver.
+/// Pantalla de partida (doc 06, pantalla 19): tablero, tarjetas de
+/// personajes con su pista (formato Murdoku), papelera, deshacer/rehacer,
+/// limpiar, resolver.
 library;
 
 import 'dart:convert';
@@ -110,8 +111,8 @@ class _GameView extends ConsumerWidget {
       ],
     );
 
-    final cluePanel = _CluePanel(pc: pc);
-    final suspectPanel = _SuspectPanel(pc: pc);
+    final infoPanel = _InfoPanel(pc: pc, shrink: false);
+    final suspectPanel = _SuspectPanel(pc: pc, shrink: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -121,7 +122,7 @@ class _GameView extends ConsumerWidget {
         ),
         title: Text(
             '${pc.map.nameEs} · ${pc.difficulty}'
-            '${pc.hasWeapon ? ' · 🗡 caso con arma' : ''}',
+            '${pc.hasWeapon ? ' · caso con arma' : ''}',
             style: const TextStyle(fontSize: 16)),
         actions: [
           if (state.solved)
@@ -140,20 +141,24 @@ class _GameView extends ConsumerWidget {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: 330, child: cluePanel),
+                SizedBox(width: 300, child: suspectPanel),
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: boardColumn,
                 )),
-                SizedBox(width: 240, child: suspectPanel),
+                SizedBox(width: 280, child: infoPanel),
               ],
             );
           }
           return SingleChildScrollView(
             padding: const EdgeInsets.all(12),
             child: Column(
-              children: [boardColumn, suspectPanel, cluePanel],
+              children: [
+                boardColumn,
+                _SuspectPanel(pc: pc, shrink: true),
+                _InfoPanel(pc: pc, shrink: true),
+              ],
             ),
           );
         },
@@ -175,9 +180,8 @@ class _GameView extends ConsumerWidget {
         TextEditingController(text: prefs.getString('fb:${pc.caseId}') ?? '');
 
     if (!context.mounted) return;
-    final murderer = state.murdererId == null
-        ? null
-        : pc.character(state.murdererId!);
+    final murderer =
+        state.murdererId == null ? null : pc.character(state.murdererId!);
     final weapon = state.lethalWeaponId == null
         ? null
         : pc.map.weapons.firstWhere((w) => w.id == state.lethalWeaponId);
@@ -258,8 +262,7 @@ class _Header extends ConsumerWidget {
       children: [
         const Icon(Icons.timer_outlined, size: 18, color: Brand.muted),
         const SizedBox(width: 4),
-        Text(_fmt(state.elapsedSeconds),
-            style: const TextStyle(fontSize: 18, fontFeatures: [])),
+        Text(_fmt(state.elapsedSeconds), style: const TextStyle(fontSize: 18)),
         const SizedBox(width: 24),
         const Icon(Icons.close, size: 18, color: Brand.error),
         const SizedBox(width: 4),
@@ -344,9 +347,7 @@ class _Controls extends ConsumerWidget {
             foregroundColor: Colors.black,
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
           ),
-          onPressed: state.solved
-              ? null
-              : () => onFeedback(controller.solve()),
+          onPressed: state.solved ? null : () => onFeedback(controller.solve()),
           icon: const Icon(Icons.gavel),
           label: const Text('RESOLVER',
               style: TextStyle(fontWeight: FontWeight.bold)),
@@ -356,96 +357,13 @@ class _Controls extends ConsumerWidget {
   }
 }
 
-class _CluePanel extends ConsumerWidget {
-  final PuzzleCase pc;
-  const _CluePanel({required this.pc});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final marks =
-        ref.watch(gameControllerProvider(pc).select((s) => s.clueMarks));
-    final controller = ref.read(gameControllerProvider(pc).notifier);
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text('PISTAS',
-            style: TextStyle(
-                color: Brand.gold, letterSpacing: 3, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 4),
-        const Text('Toca una pista para destacarla o tacharla',
-            style: TextStyle(color: Brand.muted, fontSize: 12)),
-        const SizedBox(height: 8),
-        for (var i = 0; i < pc.clues.length; i++)
-          InkWell(
-            onTap: () => controller.cycleClue(i),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: Text(
-                '${i + 1}. ${_capitalize(pc.clues[i].textEs(pc.map, pc.nameOf))}',
-                style: switch (marks[i]) {
-                  ClueMark.normal => const TextStyle(fontSize: 14, height: 1.3),
-                  ClueMark.highlighted => const TextStyle(
-                      fontSize: 14,
-                      height: 1.3,
-                      color: Brand.goldBright,
-                      fontWeight: FontWeight.bold),
-                  ClueMark.struck => TextStyle(
-                      fontSize: 14,
-                      height: 1.3,
-                      color: Brand.muted.withValues(alpha: .6),
-                      decoration: TextDecoration.lineThrough),
-                },
-              ),
-            ),
-          ),
-        const SizedBox(height: 16),
-        ExpansionTile(
-          tilePadding: EdgeInsets.zero,
-          title: const Text('Habitaciones y armas',
-              style: TextStyle(fontSize: 14, color: Brand.muted)),
-          children: [
-            for (var i = 0; i < pc.map.areas.length; i++)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 14,
-                      height: 14,
-                      color: areaPalette[i % areaPalette.length]
-                          .withValues(alpha: .6),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        '${String.fromCharCode('a'.codeUnitAt(0) + i)} = '
-                        '${pc.map.areas[i].nameEs}'
-                        '${pc.map.weaponsInArea(pc.map.areas[i].id).isEmpty ? '' : ' · 🗡 ${pc.map.weaponsInArea(pc.map.areas[i].id).map((w) => w.nameEs).join(', ')}'}',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Reglas: una persona por fila y por columna. El asesino quedó '
-          'a solas con la víctima en la misma habitación.',
-          style: TextStyle(color: Brand.muted, fontSize: 12, height: 1.4),
-        ),
-      ],
-    );
-  }
-
-  String _capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-}
-
+/// Panel de personajes: tarjeta con avatar + SU pista (formato Murdoku).
+/// Tocar el avatar selecciona (candidato → confirmado); tocar la pista la
+/// destaca/tacha; arrastrar el avatar lo lleva al tablero.
 class _SuspectPanel extends ConsumerWidget {
   final PuzzleCase pc;
-  const _SuspectPanel({required this.pc});
+  final bool shrink;
+  const _SuspectPanel({required this.pc, required this.shrink});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -453,18 +371,28 @@ class _SuspectPanel extends ConsumerWidget {
     final controller = ref.read(gameControllerProvider(pc).notifier);
 
     return ListView(
+      shrinkWrap: shrink,
+      physics: shrink ? const NeverScrollableScrollPhysics() : null,
       padding: const EdgeInsets.all(16),
       children: [
         const Text('PERSONAJES',
             style: TextStyle(
-                color: Brand.gold, letterSpacing: 3, fontWeight: FontWeight.bold)),
+                color: Brand.gold,
+                letterSpacing: 3,
+                fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        const Text('Toca: candidato → confirmado. Arrastra al tablero.',
+        const Text(
+            'Toca el avatar: candidato → confirmado. Arrastra al tablero. '
+            'Toca la pista para destacarla o tacharla.',
             style: TextStyle(color: Brand.muted, fontSize: 12)),
         const SizedBox(height: 10),
         for (final ch in pc.characters)
-          _SuspectChip(pc: pc, charId: ch.id, state: state,
-              onTap: () => controller.tapSuspect(ch.id)),
+          _SuspectCard(
+              pc: pc,
+              charId: ch.id,
+              state: state,
+              onTapAvatar: () => controller.tapSuspect(ch.id),
+              onTapClue: (i) => controller.cycleClue(i)),
         const Divider(height: 28),
         _XChip(state: state, onTap: controller.tapX),
         const SizedBox(height: 20),
@@ -474,16 +402,19 @@ class _SuspectPanel extends ConsumerWidget {
   }
 }
 
-class _SuspectChip extends StatelessWidget {
+class _SuspectCard extends StatelessWidget {
   final PuzzleCase pc;
   final String charId;
   final GameState state;
-  final VoidCallback onTap;
-  const _SuspectChip(
-      {required this.pc,
-      required this.charId,
-      required this.state,
-      required this.onTap});
+  final VoidCallback onTapAvatar;
+  final void Function(int clueIndex) onTapClue;
+  const _SuspectCard({
+    required this.pc,
+    required this.charId,
+    required this.state,
+    required this.onTapAvatar,
+    required this.onTapClue,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -493,9 +424,53 @@ class _SuspectChip extends StatelessWidget {
     final isVictim = charId == pc.victimId;
     final color = charColor(pc, charId);
 
-    final chip = Container(
+    final clue = pc.clueFor(charId);
+    final clueIndex = clue == null ? -1 : pc.clues.indexOf(clue);
+    final clueMark =
+        clueIndex >= 0 ? state.clueMarks[clueIndex] : ClueMark.normal;
+
+    final avatarRow = Row(
+      children: [
+        CircleAvatar(
+          radius: selected && markState == SuspectMarkState.confirmed ? 18 : 14,
+          backgroundColor: color,
+          child: Text(
+            isVictim ? '†' : pc.character(charId).nameEs[0],
+            style: const TextStyle(
+                color: Colors.black87, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(pc.character(charId).nameEs,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.bold)),
+              if (isVictim)
+                const Text('LA VÍCTIMA',
+                    style: TextStyle(
+                        fontSize: 10, color: Brand.error, letterSpacing: 1.5)),
+            ],
+          ),
+        ),
+        if (selected)
+          Text(
+            markState == SuspectMarkState.candidate ? '?' : '✓',
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: markState == SuspectMarkState.candidate
+                    ? Brand.goldBright
+                    : Brand.success),
+          ),
+      ],
+    );
+
+    return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: selected ? Brand.gold.withValues(alpha: .18) : Brand.surface,
         borderRadius: BorderRadius.circular(10),
@@ -508,65 +483,175 @@ class _SuspectChip extends StatelessWidget {
           width: 2,
         ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: selected && markState == SuspectMarkState.confirmed
-                ? 18
-                : 14,
-            backgroundColor: color,
-            child: Text(
-              isVictim ? '†' : pc.character(charId).nameEs[0],
-              style: const TextStyle(
-                  color: Colors.black87, fontWeight: FontWeight.bold),
+          GestureDetector(
+            onTap: onTapAvatar,
+            child: Draggable<PanelDrag>(
+              data: PanelDrag(SuspectTool(charId, markState)),
+              feedback: Material(
+                color: Colors.transparent,
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: color,
+                  child: Text(isVictim ? '†' : pc.character(charId).nameEs[0],
+                      style: const TextStyle(
+                          color: Colors.black87, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              child: avatarRow,
             ),
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(pc.character(charId).nameEs,
-                    style: const TextStyle(fontSize: 14)),
-                if (isVictim)
-                  const Text('LA VÍCTIMA',
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: Brand.error,
-                          letterSpacing: 1.5)),
-              ],
-            ),
-          ),
-          if (selected)
-            Text(
-              markState == SuspectMarkState.candidate ? '?' : '✓',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: markState == SuspectMarkState.candidate
-                      ? Brand.goldBright
-                      : Brand.success),
+          if (clue != null)
+            InkWell(
+              onTap: clueIndex >= 0 ? () => onTapClue(clueIndex) : null,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 6, left: 2),
+                child: Text(
+                  clue.cardTextEs(pc.map, pc.names),
+                  style: switch (clueMark) {
+                    ClueMark.normal =>
+                      const TextStyle(fontSize: 13, height: 1.25),
+                    ClueMark.highlighted => const TextStyle(
+                        fontSize: 13,
+                        height: 1.25,
+                        color: Brand.goldBright,
+                        fontWeight: FontWeight.bold),
+                    ClueMark.struck => TextStyle(
+                        fontSize: 13,
+                        height: 1.25,
+                        color: Brand.muted.withValues(alpha: .6),
+                        decoration: TextDecoration.lineThrough),
+                  },
+                ),
+              ),
             ),
         ],
       ),
     );
+  }
+}
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Draggable<PanelDrag>(
-        data: PanelDrag(SuspectTool(charId, markState)),
-        feedback: Material(
-          color: Colors.transparent,
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: color,
-            child: Text(isVictim ? '†' : pc.character(charId).nameEs[0],
-                style: const TextStyle(
-                    color: Colors.black87, fontWeight: FontWeight.bold)),
+/// Panel de información: pistas sueltas, habitaciones/armas y reglas.
+class _InfoPanel extends ConsumerWidget {
+  final PuzzleCase pc;
+  final bool shrink;
+  const _InfoPanel({required this.pc, required this.shrink});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final marks =
+        ref.watch(gameControllerProvider(pc).select((s) => s.clueMarks));
+    final controller = ref.read(gameControllerProvider(pc).notifier);
+    final extras = pc.extraClues;
+
+    return ListView(
+      shrinkWrap: shrink,
+      physics: shrink ? const NeverScrollableScrollPhysics() : null,
+      padding: const EdgeInsets.all(16),
+      children: [
+        if (extras.isNotEmpty) ...[
+          const Text('INFORMACIÓN ADICIONAL',
+              style: TextStyle(
+                  color: Brand.gold,
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          for (final e in extras)
+            Builder(builder: (context) {
+              final i = pc.clues.indexOf(e);
+              return InkWell(
+                onTap: () => controller.cycleClue(i),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    '· ${e.textEs(pc.map, pc.names)}',
+                    style: switch (marks[i]) {
+                      ClueMark.normal =>
+                        const TextStyle(fontSize: 13, height: 1.3),
+                      ClueMark.highlighted => const TextStyle(
+                          fontSize: 13,
+                          height: 1.3,
+                          color: Brand.goldBright,
+                          fontWeight: FontWeight.bold),
+                      ClueMark.struck => TextStyle(
+                          fontSize: 13,
+                          height: 1.3,
+                          color: Brand.muted.withValues(alpha: .6),
+                          decoration: TextDecoration.lineThrough),
+                    },
+                  ),
+                ),
+              );
+            }),
+          const SizedBox(height: 16),
+        ],
+        const Text('HABITACIONES',
+            style: TextStyle(
+                color: Brand.gold,
+                letterSpacing: 2,
+                fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        for (var i = 0; i < pc.map.areas.length; i++)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 14,
+                  height: 14,
+                  margin: const EdgeInsets.only(top: 2),
+                  color: areaPalette[i % areaPalette.length]
+                      .withValues(alpha: .6),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '${String.fromCharCode('a'.codeUnitAt(0) + i)} = '
+                    '${pc.map.areas[i].nameEs}'
+                    '${pc.map.weaponsInArea(pc.map.areas[i].id).isEmpty ? '' : ' · armas: ${pc.map.weaponsInArea(pc.map.areas[i].id).map((w) => w.nameEs).join(', ')}'}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
           ),
+        const SizedBox(height: 16),
+        const Text('MUEBLES',
+            style: TextStyle(
+                color: Brand.gold,
+                letterSpacing: 2,
+                fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        const Text('Pisables: puedes colocar gente encima. '
+            'Los demás bloquean su casilla.',
+            style: TextStyle(color: Brand.muted, fontSize: 11)),
+        const SizedBox(height: 6),
+        for (final type in {for (final o in pc.map.objects) o.type})
+          Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: Row(
+              children: [
+                Icon(objectIcon(type),
+                    size: 16, color: Brand.cream.withValues(alpha: .7)),
+                const SizedBox(width: 8),
+                Text(
+                  '${type.nameEs}${type.standable ? ' (pisable)' : ''}',
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(height: 16),
+        const Text(
+          'REGLAS: una persona por fila y por columna. El asesino quedó '
+          'a solas con la víctima en la misma habitación. Ubica a todos, '
+          'incluida la víctima.',
+          style: TextStyle(color: Brand.muted, fontSize: 12, height: 1.4),
         ),
-        child: chip,
-      ),
+      ],
     );
   }
 }

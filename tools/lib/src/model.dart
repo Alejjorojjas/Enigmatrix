@@ -1,11 +1,60 @@
 /// Modelo del tablero de Enigmatrix.
 /// Fuente conceptual: docs/16-spec-puzzle.md (secciones 1 y 2).
+library;
 
 /// Direcciones cardinales en orientación canónica (fila 0 = norte).
 enum Direction { north, south, east, west }
 
 /// Categorías lógicas de arma (doc 03). No se muestran en UI.
 enum WeaponCategory { cortante, contundente, veneno, asfixia }
+
+/// Tipos de mueble/objeto del mapa (modelo Murdoku, decidido 2026-06-10):
+/// - pisables: la gente puede estar ENCIMA ("sobre una cama",
+///   "sentado en una silla")
+/// - bloqueantes: nadie puede ocupar esas celdas ("junto a la mesa")
+///
+/// [group] agrupa tipos equivalentes para las pistas
+/// (planta y arbusto se leen ambos como "una planta").
+enum ObjectType {
+  silla('silla', female: true, standable: true, seated: true),
+  sillon('sillón', female: false, standable: true, seated: true),
+  sofa('sofá', female: false, standable: true, seated: true),
+  cama('cama', female: true, standable: true),
+  alfombra('alfombra', female: true, standable: true),
+  mesa('mesa', female: true),
+  tv('TV', female: true),
+  planta('planta', female: true),
+  arbusto('arbusto', female: false, groupOverride: 'planta'),
+  armario('armario', female: false),
+  caja('caja', female: true),
+  lavadora('lavadora', female: true),
+  piano('piano', female: false),
+  barra('barra', female: true);
+
+  final String nameEs;
+  final bool female;
+
+  /// true: la gente puede estar encima; false: bloquea la celda.
+  final bool standable;
+
+  /// true: "sentado en" en vez de "sobre".
+  final bool seated;
+  final String? groupOverride;
+
+  const ObjectType(
+    this.nameEs, {
+    required this.female,
+    this.standable = false,
+    this.seated = false,
+    this.groupOverride,
+  });
+
+  /// Grupo de pista: planta y arbusto comparten "planta".
+  String get group => groupOverride ?? name;
+
+  String get indefEs => '${female ? 'una' : 'un'} $nameEs';
+  String get defEs => '${female ? 'la' : 'el'} $nameEs';
+}
 
 class Area {
   final String id;
@@ -15,20 +64,15 @@ class Area {
   const Area({required this.id, required this.nameEs, required this.cells});
 }
 
+/// Mueble u objeto del mapa. Puede ocupar varias celdas (cama, mesa larga).
 class MapObject {
   final String id;
-  final String nameEs;
-  final int cell;
+  final ObjectType type;
+  final List<int> cells;
 
-  /// true: la celda no es ocupable por personajes (mesa, planta...).
-  final bool blocks;
+  const MapObject({required this.id, required this.type, required this.cells});
 
-  const MapObject({
-    required this.id,
-    required this.nameEs,
-    required this.cell,
-    this.blocks = true,
-  });
+  bool get blocks => !type.standable;
 }
 
 /// Arma potencial visible: vive en un área fija del mapa, no bloquea celda.
@@ -49,15 +93,17 @@ class WeaponDef {
 class Character {
   final String id;
   final String nameEs;
+  final bool female;
 
-  const Character({required this.id, required this.nameEs});
+  const Character(
+      {required this.id, required this.nameEs, required this.female});
 }
 
 /// Mapa autorado. Grilla cuadrada de size × size.
 /// Invariantes (validados en el constructor):
 /// - toda celda pertenece a exactamente un área
-/// - las áreas referencian celdas dentro de la grilla
-/// - los objetos y armas referencian celdas/áreas existentes
+/// - objetos dentro de grilla y sin solaparse entre sí
+/// - armas en áreas existentes
 class GameMap {
   final String id;
   final String nameEs;
@@ -67,7 +113,7 @@ class GameMap {
   final List<WeaponDef> weapons;
 
   late final List<String> _areaIdByCell;
-  late final List<bool> _occupiable;
+  late final List<MapObject?> _objectByCell;
 
   GameMap({
     required this.id,
@@ -98,12 +144,18 @@ class GameMap {
     }
     _areaIdByCell = byCell.cast<String>();
 
-    _occupiable = List<bool>.filled(total, true);
+    _objectByCell = List<MapObject?>.filled(total, null);
     for (final obj in objects) {
-      if (obj.cell < 0 || obj.cell >= total) {
-        throw ArgumentError('Objeto ${obj.id}: celda fuera de grilla');
+      for (final cell in obj.cells) {
+        if (cell < 0 || cell >= total) {
+          throw ArgumentError('Objeto ${obj.id}: celda fuera de grilla');
+        }
+        if (_objectByCell[cell] != null) {
+          throw ArgumentError('Celda $cell con dos objetos: '
+              '${_objectByCell[cell]!.id} y ${obj.id}');
+        }
+        _objectByCell[cell] = obj;
       }
-      if (obj.blocks) _occupiable[obj.cell] = false;
     }
     for (final w in weapons) {
       area(w.areaId); // lanza si no existe
@@ -122,10 +174,13 @@ class GameMap {
         orElse: () => throw ArgumentError('Área inexistente: $id'),
       );
 
-  bool isOccupiable(int cell) => _occupiable[cell];
+  /// Objeto que cubre la celda (o null).
+  MapObject? objectAt(int cell) => _objectByCell[cell];
+
+  bool isOccupiable(int cell) => !(_objectByCell[cell]?.blocks ?? false);
 
   List<int> get occupiableCells =>
-      [for (var i = 0; i < size * size; i++) if (_occupiable[i]) i];
+      [for (var i = 0; i < size * size; i++) if (isOccupiable(i)) i];
 
   bool sameArea(int a, int b) => _areaIdByCell[a] == _areaIdByCell[b];
 
@@ -140,26 +195,55 @@ class GameMap {
     ];
   }
 
-  /// "Junto a": adyacencia ortogonal Y misma área (spec 1.4).
+  /// "Junto a" entre personas: adyacencia ortogonal Y misma área (spec 1.4).
   bool besideInArea(int a, int b) =>
       sameArea(a, b) && orthNeighbors(a).contains(b);
 
-  /// Esquina de un área: al menos una pared vertical (N o S) Y una
-  /// horizontal (E u O) — donde "pared" = borde de grilla o cambio de área.
-  bool isCorner(int cell) {
-    final r = row(cell), c = col(cell);
-    bool wall(int rr, int cc) =>
-        !inGrid(rr, cc) || _areaIdByCell[cellAt(rr, cc)] != _areaIdByCell[cell];
-    final vertical = wall(r - 1, c) || wall(r + 1, c);
-    final horizontal = wall(r, c - 1) || wall(r, c + 1);
-    return vertical && horizontal;
+  // ---- Consultas de muebles (vocabulario de pistas Murdoku) ----------------
+
+  List<MapObject> objectsOfGroup(String group) =>
+      [for (final o in objects) if (o.type.group == group) o];
+
+  /// Cuántos muebles del grupo hay en el mapa (decide "la silla" vs
+  /// "una silla" en el texto de la pista).
+  int countOfGroup(String group) => objectsOfGroup(group).length;
+
+  /// ¿La persona en [cell] está ENCIMA de un mueble del grupo?
+  bool isOnGroup(int cell, String group) {
+    final o = _objectByCell[cell];
+    return o != null && o.type.standable && o.type.group == group;
   }
+
+  /// Celdas donde alguien puede estar "sobre {grupo}".
+  Set<int> cellsOnGroup(String group) => {
+        for (final o in objectsOfGroup(group))
+          if (o.type.standable) ...o.cells
+      };
+
+  /// ¿La persona en [cell] está JUNTO A un mueble del grupo?
+  /// Adyacente ortogonal a alguna celda del mueble, misma área, y no
+  /// encima de ese mismo mueble.
+  bool isBesideGroup(int cell, String group) {
+    for (final o in objectsOfGroup(group)) {
+      if (o.cells.contains(cell)) continue;
+      for (final oc in o.cells) {
+        if (sameArea(cell, oc) && orthNeighbors(cell).contains(oc)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /// Celdas (ocupables) que cumplen "junto a {grupo}".
+  Set<int> cellsBesideGroup(String group) => {
+        for (final c in occupiableCells)
+          if (isBesideGroup(c, group)) c
+      };
+
+  /// Grupos de mueble presentes en el mapa.
+  Set<String> get objectGroups => {for (final o in objects) o.type.group};
 
   List<WeaponDef> weaponsInArea(String areaId) =>
       [for (final w in weapons) if (w.areaId == areaId) w];
-
-  MapObject objectById(String id) => objects.firstWhere(
-        (o) => o.id == id,
-        orElse: () => throw ArgumentError('Objeto inexistente: $id'),
-      );
 }

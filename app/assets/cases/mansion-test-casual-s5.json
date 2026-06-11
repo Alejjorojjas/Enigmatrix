@@ -3,94 +3,106 @@
   "mapId": "mansion-test",
   "difficulty": "casual",
   "hasWeapon": false,
-  "victim": "c4",
+  "victim": "c2",
   "characters": [
     {
       "id": "c1",
-      "name_es": "Adela"
+      "name_es": "Adela",
+      "female": true
     },
     {
       "id": "c2",
-      "name_es": "Bruno"
+      "name_es": "Bruno",
+      "female": false
     },
     {
       "id": "c3",
-      "name_es": "Clara"
+      "name_es": "Clara",
+      "female": true
     },
     {
       "id": "c4",
-      "name_es": "Dario"
+      "name_es": "Dario",
+      "female": false
     },
     {
       "id": "c5",
-      "name_es": "Elena"
+      "name_es": "Elena",
+      "female": true
     }
   ],
   "clues": [
     {
-      "type": "not_in_area",
-      "subject": "c2",
-      "area": "pasillo"
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "planta"
+        }
+      ]
     },
     {
-      "type": "corner",
-      "subject": "c2",
-      "area": null
+      "type": "victim_filler",
+      "subject": "c2"
     },
     {
-      "type": "corner",
+      "type": "compound",
       "subject": "c3",
-      "area": null
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "mesa"
+        }
+      ]
     },
     {
-      "type": "not_in_area",
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "alfombra"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
       "subject": "c5",
-      "area": "cocina"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c1",
-      "other": "c2",
-      "dir": "west"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c1",
-      "other": "c2",
-      "dir": "north"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c1",
-      "other": "c5",
-      "dir": "east"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c3",
-      "other": "c4",
-      "dir": "west"
-    },
-    {
-      "type": "cardinal",
-      "subject": "c3",
-      "other": "c5",
-      "dir": "north"
+      "group": "lavadora"
     }
   ],
   "solution": {
     "positions": {
       "c1": 3,
-      "c2": 9,
+      "c2": 7,
       "c3": 10,
-      "c4": 16,
-      "c5": 22
+      "c4": 19,
+      "c5": 21
     },
-    "murderer": "c3"
+    "murderer": "c1"
   },
   "metrics": {
-    "deductionSteps": 10,
-    "maxTier": 4,
-    "clueCount": 9
+    "deductionSteps": 3,
+    "maxTier": 2,
+    "clueCount": 5
   }
 }
