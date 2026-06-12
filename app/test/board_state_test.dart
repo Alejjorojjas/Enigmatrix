@@ -10,13 +10,22 @@ void main() {
       expect(b2.outcome, PlaceOutcome.noChange);
     });
 
-    test('entidades distintas coexisten (candidatos + X)', () {
+    test('varios candidatos coexisten en una casilla', () {
       var board = BoardState.empty().placeCandidate(0, 'c1').board;
       board = board.placeCandidate(0, 'c2').board;
-      board = board.placeX(0, XLevel.small).board;
       expect(board.cell(0).candidates, {'c1', 'c2'});
+    });
+
+    test('X manual limpia los candidatos (acto deliberado: no conviven)', () {
+      var board = BoardState.empty().placeCandidate(0, 'c1').board;
+      board = board.placeX(0, XLevel.small).board;
+      expect(board.cell(0).candidates, isEmpty);
       expect(board.cell(0).x, XLevel.small);
-      expect(board.cell(0).elementCount, 3);
+    });
+
+    test('no se puede anotar candidato sobre una X', () {
+      final board = BoardState.empty().placeX(0, XLevel.small).board;
+      expect(board.placeCandidate(0, 'c1').outcome, PlaceOutcome.rejectedByX);
     });
 
     test('X de otro nivel reemplaza (misma entidad, otro estado)', () {
@@ -24,6 +33,37 @@ void main() {
       final result = board.placeX(0, XLevel.large);
       expect(result.outcome, PlaceOutcome.placed);
       expect(result.board.cell(0).x, XLevel.large);
+    });
+
+    test('un personaje solo puede estar confirmado en UNA casilla', () {
+      final board = BoardState.empty().placeConfirmed(0, 'c1').board;
+      expect(board.placeConfirmed(5, 'c1').outcome,
+          PlaceOutcome.alreadyConfirmedElsewhere);
+    });
+
+    test('al confirmar, sus candidatos desaparecen del resto del tablero',
+        () {
+      var board = BoardState.empty().placeCandidate(1, 'c1').board;
+      board = board.placeCandidate(2, 'c1').board;
+      board = board.placeCandidate(2, 'c2').board;
+      board = board.placeConfirmed(5, 'c1').board;
+      expect(board.cell(1).candidates, isEmpty);
+      expect(board.cell(2).candidates, {'c2'}); // los de otros se quedan
+      expect(board.cell(5).confirmed, 'c1');
+    });
+
+    test('el borrador limpia la casilla completa (y las auto-X del fijo)',
+        () {
+      var board = BoardState.empty()
+          .placeConfirmed(5, 'c1', autoXGridSize: 4)
+          .board;
+      board = board.eraseCell(5);
+      expect(board.isEmpty, isTrue); // confirmado y sus X fuera
+      // Borrar candidatos y X manual:
+      var b2 = BoardState.empty().placeCandidate(0, 'c1').board;
+      b2 = b2.placeX(3, XLevel.large).board;
+      b2 = b2.eraseCell(0).eraseCell(3);
+      expect(b2.isEmpty, isTrue);
     });
 
     test('confirmado borra automáticamente todo lo demás de la casilla', () {
@@ -96,14 +136,16 @@ void main() {
       expect(board.cell(2).hasX, isFalse); // solo era de c1
     });
 
-    test('la X automática no pisa confirmados y convive con candidatos', () {
+    test('la X automática NO pisa confirmados NI candidatos', () {
       var board = BoardState.empty().placeCandidate(4, 'c3').board;
       board = board.placeConfirmed(0, 'c2', autoXGridSize: 4).board;
       board = board.placeConfirmed(5, 'c1', autoXGridSize: 4).board;
-      expect(board.cell(0).confirmed, 'c2'); // misma... celda confirmada intacta
+      expect(board.cell(0).confirmed, 'c2'); // celda confirmada intacta
       expect(board.cell(0).autoXFrom, isEmpty);
-      expect(board.cell(4).candidates, {'c3'}); // candidato convive con X
-      expect(board.cell(4).hasX, isTrue);
+      // La celda 4 (fila de c2@0, columna de c1@5) tenía un candidato:
+      // se respeta la anotación del jugador, sin X encima.
+      expect(board.cell(4).candidates, {'c3'});
+      expect(board.cell(4).hasX, isFalse);
     });
 
     test('sin autoXGridSize no se tacha nada (opción apagada)', () {
@@ -138,9 +180,10 @@ void main() {
       expect(board.confirmedPositions(['c1', 'c2']), {'c1': 0, 'c2': 5});
       // Falta un personaje:
       expect(board.confirmedPositions(['c1', 'c2', 'c3']), isNull);
-      // Mismo personaje confirmado dos veces:
-      board = board.placeConfirmed(9, 'c1').board;
-      expect(board.confirmedPositions(['c1', 'c2']), isNull);
+      // Duplicar un confirmado es imposible por diseño (regla 2026-06-12):
+      final dup = board.placeConfirmed(9, 'c1');
+      expect(dup.outcome, PlaceOutcome.alreadyConfirmedElsewhere);
+      expect(dup.board.confirmedPositions(['c1', 'c2']), {'c1': 0, 'c2': 5});
     });
   });
 }

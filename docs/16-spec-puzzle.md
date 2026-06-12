@@ -109,11 +109,14 @@ Categorías de arma (doc 03, no visibles en UI): cortante, contundente, veneno, 
 
 ## 4. Interacción del jugador (estado del tablero en cliente)
 
-Estados de marca sobre una celda (docs 02/03):
+Estados de marca sobre una celda (docs 02/03 + reglas 2026-06-12):
 
-- **Candidato**: avatar pequeño + "?" (equivale a "nota" en la versión web).
-- **Confirmado**: avatar grande + flecha verde. Colocar confirmado limpia la celda; una celda con confirmado rechaza candidatos y X.
+- **Candidato**: letra del personaje (anotación). Varios candidatos coexisten.
+- **Confirmado**: círculo con avatar (mantener oprimido o arrastrar). Colocar confirmado limpia la celda; una celda con confirmado rechaza candidatos y X.
 - **X parcial / X fuerte**: descarte del jugador (X pequeña / X grande).
+- **Reglas de convivencia (2026-06-12)**: X y candidatos NO conviven — una celda con X rechaza candidatos (mensaje), y la X manual limpia los candidatos de la celda (acto deliberado). La **auto-X** (al confirmar se tachan fila y columna) solo marca celdas vacías: nunca pisa candidatos ni confirmados, y se retira si se borra su confirmado.
+- **Un confirmado por personaje**: confirmar a alguien que ya está fijado en otra celda se rechaza con mensaje; al confirmarse, sus candidatos desaparecen de todo el tablero.
+- **Borrado**: herramienta borrador (toca casillas y las limpia por completo), papelera (arrastrar marcas) y mini panel (tocar celda sin herramienta seleccionada).
 - Modos de notas: cuadrícula lógica separada o superpuesta al mapa; ambas comparten el mismo estado lógico.
 - Opción de calidad de vida heredable de la web: **auto-X** en fila/columna al confirmar a alguien (configurable).
 

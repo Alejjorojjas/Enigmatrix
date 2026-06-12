@@ -76,6 +76,12 @@ class _GameView extends ConsumerWidget {
             controller.placeSuspect(cell,
                 charId: tool.charId, confirm: true, replace: true);
           }
+        case ActionFeedback.cellHasX:
+          showMsg('Esta casilla está descartada con una X — '
+              'bórrala primero para anotar candidatos');
+        case ActionFeedback.alreadyConfirmedElsewhere:
+          showMsg('Ese personaje ya está confirmado en otra casilla — '
+              'borra esa confirmación primero');
         case ActionFeedback.incompleteBoard:
           showMsg('Confirma a cada personaje exactamente una vez '
               'antes de resolver');
@@ -89,11 +95,13 @@ class _GameView extends ConsumerWidget {
     }
 
     // Tap = candidato (letra) · mantener oprimido o arrastrar = confirmado.
+    // Con el borrador seleccionado, tocar limpia la casilla.
     void onPlace(int cell, Tool tool, {required bool confirm}) async {
       final fb = switch (tool) {
         SuspectTool(:final charId) =>
           controller.placeSuspect(cell, charId: charId, confirm: confirm),
         XTool(:final level) => controller.placeXMark(cell, level),
+        EraserTool() => controller.eraseCell(cell),
       };
       await handleFeedback(fb, cell: cell, tool: tool);
     }
@@ -462,10 +470,60 @@ class _SuspectPanel extends ConsumerWidget {
               onTapAvatar: () => controller.tapSuspect(ch.id),
               onTapClue: (i) => controller.cycleClue(i)),
         const Divider(height: 28),
+        const Text('HERRAMIENTAS',
+            style: TextStyle(
+                color: Brand.gold,
+                letterSpacing: 3,
+                fontWeight: FontWeight.bold,
+                fontSize: 12)),
+        const SizedBox(height: 8),
         _XChip(state: state, onTap: controller.tapX),
-        const SizedBox(height: 20),
+        const SizedBox(height: 8),
+        _EraserChip(state: state, onTap: controller.tapEraser),
+        const SizedBox(height: 14),
         _Trash(pc: pc),
       ],
+    );
+  }
+}
+
+/// Borrador: selecciónalo y toca casillas para limpiarlas.
+class _EraserChip extends StatelessWidget {
+  final GameState state;
+  final VoidCallback onTap;
+  const _EraserChip({required this.state, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = state.tool is EraserTool;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          color: selected ? Brand.gold.withValues(alpha: .18) : Brand.surface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: selected ? Brand.goldBright : Brand.muted.withValues(alpha: .4),
+              width: selected ? 2 : 1),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.backspace_outlined,
+                size: 20,
+                color: selected ? Brand.goldBright : Brand.cream),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                selected
+                    ? 'Borrador activo: toca casillas para limpiarlas'
+                    : 'Borrador (toca y limpia casillas)',
+                style: const TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

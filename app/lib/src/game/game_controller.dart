@@ -26,6 +26,11 @@ class XTool extends Tool {
   const XTool(this.level);
 }
 
+/// Borrador: tocar una casilla la limpia por completo.
+class EraserTool extends Tool {
+  const EraserTool();
+}
+
 /// Estado de una pista: ciclo normal -> destacada -> tachada -> normal.
 enum ClueMark { normal, highlighted, struck }
 
@@ -103,6 +108,8 @@ class GameState {
 enum ActionFeedback {
   ok,
   cellHasConfirmed, // mensaje del doc 03
+  cellHasX, // casilla descartada: no acepta candidatos
+  alreadyConfirmedElsewhere, // ese personaje ya está fijado en otra casilla
   askReplaceConfirmed, // diálogo de confirmación
   incompleteBoard, // falta confirmar personajes
   wrongSolution,
@@ -155,6 +162,12 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     }
   }
 
+  void tapEraser() {
+    state = state.copyWith(
+      tool: () => state.tool is EraserTool ? null : const EraserTool(),
+    );
+  }
+
   void toggleAutoX() => state = state.copyWith(autoX: !state.autoX);
 
   // ---- colocación ----------------------------------------------------------
@@ -170,7 +183,19 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
       SuspectTool(:final charId) =>
         placeSuspect(cell, charId: charId, confirm: confirm),
       XTool(:final level) => placeXMark(cell, level),
+      EraserTool() => eraseCell(cell),
     };
+  }
+
+  /// Borrador: limpia la casilla completa (incluye X automáticas del
+  /// confirmado borrado).
+  ActionFeedback eraseCell(int cell) {
+    if (!_editable) return ActionFeedback.ok;
+    final next = state.board.eraseCell(cell);
+    if (identical(next, state.board)) return ActionFeedback.ok;
+    _pushUndo();
+    state = state.copyWith(board: next, canUndo: true, canRedo: false);
+    return ActionFeedback.ok;
   }
 
   ActionFeedback placeSuspect(int cell,
@@ -200,6 +225,10 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         return ActionFeedback.ok;
       case PlaceOutcome.rejectedByConfirmed:
         return ActionFeedback.cellHasConfirmed;
+      case PlaceOutcome.rejectedByX:
+        return ActionFeedback.cellHasX;
+      case PlaceOutcome.alreadyConfirmedElsewhere:
+        return ActionFeedback.alreadyConfirmedElsewhere;
       case PlaceOutcome.needsReplaceConfirmation:
         return ActionFeedback.askReplaceConfirmed;
     }

@@ -53,7 +53,7 @@ class CellContent {
       );
 }
 
-/// Resultado de un intento de colocación (doc 03).
+/// Resultado de un intento de colocación (doc 03 + reglas 2026-06-12).
 enum PlaceOutcome {
   /// Cambió el tablero.
   placed,
@@ -64,6 +64,12 @@ enum PlaceOutcome {
   /// "Esta casilla ya tiene una decisión confirmada, borra primero
   /// para colocar candidato." (aplica también a X)
   rejectedByConfirmed,
+
+  /// La casilla está descartada con X: no se pueden anotar candidatos.
+  rejectedByX,
+
+  /// Ese personaje ya está confirmado en otra casilla.
+  alreadyConfirmedElsewhere,
 
   /// Confirmado sobre confirmado: pide confirmación antes de reemplazar.
   needsReplaceConfirmation,
@@ -118,14 +124,26 @@ class BoardState {
     return BoardState._(next);
   }
 
-  /// Coloca un candidato (doc 03):
+  /// ¿Dónde está confirmado este personaje? (null si no lo está)
+  int? confirmedCellOf(String charId) {
+    for (final e in _cells.entries) {
+      if (e.value.confirmed == charId) return e.key;
+    }
+    return null;
+  }
+
+  /// Coloca un candidato (doc 03 + reglas 2026-06-12):
   /// - celda con confirmado: rechazado con mensaje
+  /// - celda con X (manual o automática): rechazado — está descartada
   /// - mismo candidato ya presente: no hace nada
-  /// - entidad distinta: coexiste
+  /// - otros candidatos: coexisten
   PlaceResult placeCandidate(int index, String charId) {
     final c = cell(index);
     if (c.confirmed != null) {
       return PlaceResult(PlaceOutcome.rejectedByConfirmed, this);
+    }
+    if (c.hasX) {
+      return PlaceResult(PlaceOutcome.rejectedByX, this);
     }
     if (c.candidates.contains(charId)) {
       return PlaceResult(PlaceOutcome.noChange, this);
@@ -136,19 +154,24 @@ class BoardState {
     );
   }
 
-  /// Coloca un confirmado (doc 03):
+  /// Coloca un confirmado (doc 03 + reglas 2026-06-12):
+  /// - cada personaje solo puede estar confirmado en UNA casilla
+  /// - al confirmarse, sus candidatos desaparecen de todo el tablero
   /// - borra automáticamente todo lo demás de la celda
   /// - sobre otro confirmado: exige confirmación explícita (replace=true)
-  /// - mismo confirmado: no hace nada
   ///
   /// Si [autoXGridSize] no es null, tacha automáticamente la fila y la
-  /// columna del confirmado (celdas sin confirmado), atribuyéndole las X
-  /// para poder retirarlas si se borra.
+  /// columna del confirmado — solo en casillas VACÍAS (no pisa candidatos),
+  /// atribuyéndole las X para poder retirarlas si se borra.
   PlaceResult placeConfirmed(int index, String charId,
       {bool replace = false, int? autoXGridSize}) {
     final c = cell(index);
     if (c.confirmed == charId) {
       return PlaceResult(PlaceOutcome.noChange, this);
+    }
+    final existing = confirmedCellOf(charId);
+    if (existing != null && existing != index) {
+      return PlaceResult(PlaceOutcome.alreadyConfirmedElsewhere, this);
     }
     if (c.confirmed != null && !replace) {
       return PlaceResult(PlaceOutcome.needsReplaceConfirmation, this);
@@ -158,10 +181,23 @@ class BoardState {
       board = board._clearAutoX(c.confirmed!);
     }
     board = board._with(index, CellContent(confirmed: charId));
+    // Confirmado => sus candidatos sobran en el resto del tablero.
+    board = board._removeCandidateEverywhere(charId);
     if (autoXGridSize != null) {
       board = board._applyAutoX(index, charId, autoXGridSize);
     }
     return PlaceResult(PlaceOutcome.placed, board);
+  }
+
+  BoardState _removeCandidateEverywhere(String charId) {
+    var board = this;
+    for (final e in [..._cells.entries]) {
+      if (e.value.candidates.contains(charId)) {
+        board = board._with(e.key,
+            e.value.copyWith(candidates: {...e.value.candidates}..remove(charId)));
+      }
+    }
+    return board;
   }
 
   BoardState _applyAutoX(int index, String charId, int size) {
@@ -172,6 +208,8 @@ class BoardState {
         if (target == index) continue;
         final tc = board.cell(target);
         if (tc.confirmed != null) continue;
+        // No pisa candidatos: el jugador conserva sus anotaciones.
+        if (tc.candidates.isNotEmpty) continue;
         if (tc.autoXFrom.contains(charId)) continue;
         board = board._with(
             target, tc.copyWith(autoXFrom: {...tc.autoXFrom, charId}));
@@ -193,9 +231,11 @@ class BoardState {
     return board;
   }
 
-  /// Coloca una X manual (doc 03):
+  /// Coloca una X manual (doc 03 + reglas 2026-06-12):
   /// - celda con confirmado: rechazada
   /// - misma X: no hace nada · X de otro nivel: reemplaza (misma entidad)
+  /// - X y candidatos no conviven: la X manual (acto deliberado) limpia
+  ///   los candidatos de la casilla
   PlaceResult placeX(int index, XLevel level) {
     final c = cell(index);
     if (c.confirmed != null) {
@@ -206,8 +246,20 @@ class BoardState {
     }
     return PlaceResult(
       PlaceOutcome.placed,
-      _with(index, c.copyWith(x: () => level)),
+      _with(index, c.copyWith(x: () => level, candidates: const {})),
     );
+  }
+
+  /// Borrador: limpia por completo una casilla (candidatos, X y confirmado
+  /// con sus X automáticas). Devuelve this si no había nada.
+  BoardState eraseCell(int index) {
+    final c = cell(index);
+    if (c.isEmpty) return this;
+    var board = this;
+    if (c.confirmed != null) {
+      board = board._clearAutoX(c.confirmed!);
+    }
+    return board._with(index, const CellContent());
   }
 
   /// Lista los elementos de una celda (para mini panel de borrado).
