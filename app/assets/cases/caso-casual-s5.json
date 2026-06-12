@@ -219,7 +219,7 @@
   },
   "difficulty": "casual",
   "hasWeapon": false,
-  "victim": "c1",
+  "victim": "c8",
   "characters": [
     {
       "id": "c1",
@@ -264,7 +264,7 @@
   ],
   "clues": [
     {
-      "type": "on_object",
+      "type": "beside_object",
       "subject": "c1",
       "group": "sillon"
     },
@@ -280,12 +280,12 @@
         {
           "type": "in_area",
           "subject": "c3",
-          "area": "bodega"
+          "area": "terraza"
         },
         {
           "type": "beside_object",
           "subject": "c3",
-          "group": "sofa"
+          "group": "planta"
         }
       ]
     },
@@ -310,59 +310,58 @@
       "subject": "c5",
       "parts": [
         {
-          "type": "beside_object",
-          "subject": "c5",
-          "group": "planta"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c5",
-          "group": "piano"
-        }
-      ]
-    },
-    {
-      "type": "on_object",
-      "subject": "c6",
-      "group": "cama"
-    },
-    {
-      "type": "compound",
-      "subject": "c7",
-      "parts": [
-        {
           "type": "in_area",
-          "subject": "c7",
-          "area": "porche"
+          "subject": "c5",
+          "area": "bodega"
         },
         {
           "type": "beside_object",
-          "subject": "c7",
+          "subject": "c5",
           "group": "alfombra"
         }
       ]
     },
     {
-      "type": "same_area",
-      "a": "c8",
-      "b": "c5"
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "planta"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "piano"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c7",
+      "group": "cama"
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c8"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 1,
+      "c1": 2,
       "c2": 13,
-      "c3": 22,
+      "c3": 19,
       "c4": 24,
-      "c5": 34,
-      "c6": 44,
-      "c7": 55,
-      "c8": 59
+      "c5": 38,
+      "c6": 41,
+      "c7": 52,
+      "c8": 63
     },
-    "murderer": "c2"
+    "murderer": "c7"
   },
   "metrics": {
-    "deductionSteps": 6,
+    "deductionSteps": 11,
     "maxTier": 3,
     "clueCount": 8
   }

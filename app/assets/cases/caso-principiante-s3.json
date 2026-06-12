@@ -228,9 +228,9 @@
       ]
     },
     {
-      "type": "beside_object",
+      "type": "in_area",
       "subject": "c4",
-      "group": "armario"
+      "area": "porche"
     },
     {
       "type": "compound",
@@ -249,20 +249,9 @@
       ]
     },
     {
-      "type": "compound",
+      "type": "beside_object",
       "subject": "c6",
-      "parts": [
-        {
-          "type": "beside_object",
-          "subject": "c6",
-          "group": "piano"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c6",
-          "group": "planta"
-        }
-      ]
+      "group": "piano"
     }
   ],
   "solution": {
@@ -277,8 +266,8 @@
     "murderer": "c6"
   },
   "metrics": {
-    "deductionSteps": 4,
-    "maxTier": 2,
+    "deductionSteps": 7,
+    "maxTier": 3,
     "clueCount": 6
   }
 }

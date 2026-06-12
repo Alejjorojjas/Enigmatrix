@@ -425,7 +425,11 @@ class Generator {
 
     void addUnary(Clue clue, Set<int> allowed, double flavor) {
       final filtered = allowed.where(map.isOccupiable).toSet();
-      if (filtered.isEmpty) return;
+      // REGLA MURDOKU (2026-06-11): ninguna pista de tarjeta puede dejar
+      // una sola casilla posible por sí sola — mínimo 2. El descarte debe
+      // nacer de CRUZAR pistas con filas/columnas, no de pistas que
+      // regalan la posición ("la única silla del mapa").
+      if (filtered.length < 2) return;
       cands.add(_Cand(clue, filtered, filtered.length, flavor));
     }
 
@@ -466,7 +470,8 @@ class Generator {
       for (var j = i + 1; j < unaryCands.length; j++) {
         final a = unaryCands[i], b = unaryCands[j];
         final inter = a.allowed!.intersection(b.allowed!);
-        if (inter.isNotEmpty &&
+        // La compuesta también respeta el mínimo de 2 casillas posibles.
+        if (inter.length >= 2 &&
             inter.length < a.allowed!.length &&
             inter.length < b.allowed!.length) {
           cands.add(_Cand(

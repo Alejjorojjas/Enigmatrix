@@ -95,6 +95,7 @@ Categorías de arma (doc 03, no visibles en UI): cortante, contundente, veneno, 
 
 ### 3.2 Reglas de composición de pistas
 
+- **Regla del mínimo 2** (2026-06-11): ninguna pista de tarjeta puede dejar una sola casilla posible por sí sola — mínimo 2 candidatas. La posición exacta SIEMPRE nace de cruzar la pista con el tachado de filas/columnas de otros personajes; ninguna pista "regala" a su personaje. Aplica también a las compuestas. Garantizado por test (`REGLA MURDOKU` en `generator_test.dart`).
 - Ninguna pista contradice a otra.
 - Ninguna relación de "misma área" (`same_area`, `beside`, `alone_with`) conecta jamás a la víctima con el asesino: delataría el final.
 - `Principiante`: sin pistas vagas (`not_in_area`, `not_same_area`); sin arma. Las compuestas se permiten desde principiante (apuntan mejor, como en el cuadernillo).

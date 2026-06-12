@@ -12,21 +12,14 @@ void main() {
       expect(jsonEncode(a.toJson()), jsonEncode(b.toJson()));
     });
 
-    test('semillas distintas: variedad de casos', () {
-      // En un 4×4 hay pocas distribuciones válidas: dos semillas pueden
-      // coincidir en posiciones. Exigimos variedad en el lote, no en pares.
-      final g = Generator(cabana, DifficultyProfile.principiante);
-      final solutions = {
-        for (var seed = 1; seed <= 6; seed++)
-          jsonEncode(g.generate(seed).puzzle!.solution.toJson())
-      };
+    test('semillas distintas: variedad de casos (tamaño real 6×6)', () {
+      final f = CaseFactory(DifficultyProfile.principiante);
       final clueSets = {
-        for (var seed = 1; seed <= 6; seed++)
+        for (var seed = 1; seed <= 4; seed++)
           jsonEncode(
-              [for (final c in g.generate(seed).puzzle!.clues) c.toJson()])
+              [for (final c in f.generate(seed).puzzle!.clues) c.toJson()])
       };
-      expect(solutions.length, greaterThanOrEqualTo(3));
-      expect(clueSets.length, greaterThanOrEqualTo(4));
+      expect(clueSets.length, 4);
     });
 
     for (final (label, map) in [
@@ -112,10 +105,9 @@ void main() {
 
     test('el relleno de la víctima aparece cuando el caso lo permite', () {
       var fillers = 0;
+      final f = CaseFactory(DifficultyProfile.principiante);
       for (var seed = 1; seed <= 10; seed++) {
-        final pc = Generator(cabana, DifficultyProfile.principiante)
-            .generate(seed)
-            .puzzle!;
+        final pc = f.generate(seed).puzzle!;
         if (pc.clueFor(pc.victimId) is LastFreeCell) fillers++;
       }
       // No exigimos un número exacto (depende del sorteo), pero el momento
@@ -187,6 +179,39 @@ void main() {
       final v = Validator.validate(pc, pc.solution.positions);
       expect(v.valid, isTrue, reason: v.errors.join('; '));
       expect(v.lethalWeaponId, pc.solution.lethalWeaponId);
+    });
+
+    test('REGLA MURDOKU: ninguna pista de tarjeta deja una sola casilla '
+        'posible por sí sola (mínimo 2)', () {
+      // Conjunto de celdas permitido por una pista unaria, por sí sola.
+      Set<int>? standaloneAllowed(GameMap map, Clue clue) => switch (clue) {
+            InArea(:final areaId) =>
+              map.area(areaId).cells.where(map.isOccupiable).toSet(),
+            OnObjectGroup(:final group) => map.cellsOnGroup(group),
+            BesideObjectGroup(:final group) => map.cellsBesideGroup(group),
+            OnlyOneOnGroup(:final group) => map.cellsOnGroup(group),
+            CompoundClue(:final parts) => parts
+                .map((p) => standaloneAllowed(map, p))
+                .whereType<Set<int>>()
+                .reduce((a, b) => a.intersection(b)),
+            _ => null, // relacionales/vagas: nunca fijan una celda solas
+          };
+
+      for (final label in ['principiante', 'casual', 'intermedio']) {
+        final f = CaseFactory(DifficultyProfile.byLabel(label));
+        for (var seed = 1; seed <= 3; seed++) {
+          final pc = f.generate(seed).puzzle!;
+          for (final clue in pc.clues) {
+            if (clue.subjectId == null) continue; // extras
+            final allowed = standaloneAllowed(pc.map, clue);
+            if (allowed != null) {
+              expect(allowed.length, greaterThanOrEqualTo(2),
+                  reason: '$label s$seed: la pista ${clue.toJson()} '
+                      'deja ${allowed.length} casilla(s)');
+            }
+          }
+        }
+      }
     });
   });
 }

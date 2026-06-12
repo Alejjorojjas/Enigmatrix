@@ -191,20 +191,9 @@
   ],
   "clues": [
     {
-      "type": "compound",
+      "type": "beside_object",
       "subject": "c1",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c1",
-          "area": "porche"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c1",
-          "group": "piano"
-        }
-      ]
+      "group": "piano"
     },
     {
       "type": "compound",
@@ -233,13 +222,14 @@
       "group": "sofa"
     },
     {
-      "type": "same_area",
+      "type": "alone_with",
       "a": "c5",
       "b": "c4"
     },
     {
-      "type": "alone",
-      "subject": "c6"
+      "type": "in_area",
+      "subject": "c6",
+      "area": "dormitorio"
     }
   ],
   "solution": {
@@ -254,8 +244,8 @@
     "murderer": "c3"
   },
   "metrics": {
-    "deductionSteps": 11,
-    "maxTier": 4,
+    "deductionSteps": 7,
+    "maxTier": 3,
     "clueCount": 6
   }
 }

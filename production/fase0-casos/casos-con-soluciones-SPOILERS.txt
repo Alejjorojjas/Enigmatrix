@@ -4,443 +4,447 @@ Mapa: La Villa   Dificultad: casual
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba sentada en la silla.
-  B = Bruno: Estaba junto a una cama y junto a una TV.
-  C = Clara: Estaba sobre una cama y junto a una cama.
-  D = Dario: Estaba en el Comedor.
-  E = Elena: Estaba junto a el sillón.
-  F = Franco: Estaba junto a el sofá.
-  G = Greta: Estaba en el Estudio y junto a una TV.
-  H = Hugo (LA VÍCTIMA): Estaba en el Porche.
+  A = Adela: Estaba en el Ático y junto a una alfombra.
+  B = Bruno: Estaba junto a la caja.
+  C = Clara: Era la única persona sentada en un sillón.
+  D = Dario: Estaba en el Jardín y junto a un sofá.
+  E = Elena: Estaba junto a la TV.
+  F = Franco: Estaba en el Dormitorio.
+  G = Greta (LA VÍCTIMA): Estaba junto a una alfombra y junto a una planta.
+  H = Hugo: Estaba con Dario.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8 
     +---+---+---+---+---+---+---+---+
- f1 | b |(c)  ##  c   c   A | e   e |
-    +   +   +   +   +---+   +   +   +
- f2 | b |(c)  B   c | a | c | e   ##|
-    +   +   +   +---+   +---+   +   +
- f3 | b | C  (c)| a   a | e  (e)  e |
-    +   +   +   +   +   +---+---+   +
- f4 | b | c   ##| ##  a   a   D |(e)|
-    +   +---+---+   +   +   +---+   +
- f5 | ##| a   a   a   a   a | e   E |
-    +   +---+---+---+---+---+   +   +
- f6 | b   b   b | F   d   d | e   e |
-    +   +   +---+   +   +   +---+---+
- f7 | G   ##| d  (d)  d   d   d   d |
-    +   +   +---+---+   +   +   +   +
- f8 | b   b   b   b | H†  d   ##  d |
+ f1 | a | b   b   A   b  (b)| c   c |
+    +   +---+   +   +   +---+   +   +
+ f2 | a   ##| b  (b) (b)| B   ##  c |
+    +   +   +---+   +   +---+   +   +
+ f3 | C   a   a |(b)  ##| e | c  (c)|
+    +   +   +---+---+---+   +---+   +
+ f4 | a   a | ##| e   ##  e   e | D |
+    +   +   +   +---+   +   +   +   +
+ f5 | a   a | ##  d | E   e   e | c |
+    +   +---+   +   +---+   +   +   +
+ f6 | a | F   d  (d)  ##| e   e | c |
+    +---+   +   +   +   +   +   +   +
+ f7 | d   d   G†  ##  d | ##  e | c |
+    +   +   +   +   +   +   +---+   +
+ f8 | d   d  (d) (d)  d | e | H   c |
     +---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Comedor  [armas: las tijeras]
-  b = el Estudio
-  c = la Terraza  [armas: el candelabro]
-  d = el Porche
-  e = el Pasillo  [armas: el abrecartas]
+  a = el Salón
+  b = el Ático
+  c = el Jardín
+  d = el Dormitorio  [armas: la jeringa]
+  e = la Terraza  [armas: el abrecartas]
 
 MUEBLES:
-  el sofá (pisable): f7c4
-  la cama (pisable): f3c3, f3c2
-  el sillón (pisable): f4c8
-  la cama (pisable): f3c7
-  la silla (pisable): f1c6
-  la cama (pisable): f2c2, f1c2
-  la TV (bloquea): f2c8
-  la TV (bloquea): f7c2
-  la lavadora (bloquea): f4c4
-  la TV (bloquea): f8c7
-  la TV (bloquea): f4c3
-  la caja (bloquea): f5c1
-  la TV (bloquea): f1c3
+  la alfombra (pisable): f3c4, f2c4
+  el sillón (pisable): f2c5
+  el sofá (pisable): f1c6
+  la alfombra (pisable): f8c4, f8c3
+  la silla (pisable): f6c4
+  el sillón (pisable): f3c1
+  el sofá (pisable): f3c8
+  la barra (bloquea): f6c5
+  la barra (bloquea): f5c3, f4c3
+  el arbusto (bloquea): f7c4
+  la planta (bloquea): f3c5
+  el arbusto (bloquea): f2c2
+  la TV (bloquea): f4c5
+  la mesa (bloquea): f7c6
+  la caja (bloquea): f2c7
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 6 (la Terraza)
-  Bruno: fila 2, col 3 (la Terraza)
-  Clara: fila 3, col 2 (la Terraza)
-  Dario: fila 4, col 7 (el Comedor)
-  Elena: fila 5, col 8 (el Pasillo)
-  Franco: fila 6, col 4 (el Porche)   <- ASESINO
-  Greta: fila 7, col 1 (el Estudio)
-  Hugo: fila 8, col 5 (el Porche)   <- VÍCTIMA
+  Adela: fila 1, col 4 (el Ático)
+  Bruno: fila 2, col 6 (el Jardín)
+  Clara: fila 3, col 1 (el Salón)
+  Dario: fila 4, col 8 (el Jardín)
+  Elena: fila 5, col 5 (la Terraza)
+  Franco: fila 6, col 2 (el Dormitorio)   <- ASESINO
+  Greta: fila 7, col 3 (el Dormitorio)   <- VÍCTIMA
+  Hugo: fila 8, col 7 (el Jardín)
   Métricas: 8 pistas, 10 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-casual-s2
-Mapa: La Cabaña   Dificultad: casual
+Mapa: El Club   Dificultad: casual
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en el Estudio y junto a una cama.
-  B = Bruno: Estaba en el Ático y sobre una cama.
-  C = Clara: Estaba en el Jardín y junto a una cama.
-  D = Dario (LA VÍCTIMA): Estaba en la última casilla libre.
-  E = Elena: Estaba en el Comedor.
-  F = Franco: Estaba en el Porche y junto a una cama.
-  G = Greta: Estaba sobre la alfombra.
-  H = Hugo: Estaba junto a una planta.
+  A = Adela: Estaba en la Bodega y junto a una mesa.
+  B = Bruno: Estaba a solas con Adela.
+  C = Clara (LA VÍCTIMA): Estaba en la Terraza.
+  D = Dario: Estaba en la Terraza y junto a una cama.
+  E = Elena: Estaba en el Comedor y junto a una mesa.
+  F = Franco: Estaba junto a la TV.
+  G = Greta: Era la única persona sobre una cama.
+  H = Hugo: Estaba solo.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8 
     +---+---+---+---+---+---+---+---+
- f1 | c   c   A   c   c | b  (b)  b |
-    +   +   +   +   +---+---+   +   +
- f2 | c   c  (c) (c)| B  (e)| b   b |
-    +---+---+   +---+---+   +   +   +
- f3 | ##  f | c | f   f | e | C   ##|
-    +   +   +---+   +   +   +   +   +
- f4 | f   ##  f   f   f | D†|(b)  b |
-    +---+---+---+   +---+   +---+   +
- f5 | E   d | a | ##| e   e   e | b |
-    +   +---+   +---+---+   +---+   +
- f6 | d | F  (a)  a   a | e | b   b |
-    +   +---+   +   +   +   +---+   +
- f7 | d   d |(a)  ##  ##|(e)  e | G |
-    +   +   +   +   +   +   +   +---+
- f8 | d   d | a   H   a |(e)  e   e |
+ f1 | f  (f) (f)  f  (f)  f   f   A |
+    +   +---+---+   +   +   +   +   +
+ f2 | f |(b)  b | B   f   f   f   ##|
+    +---+   +   +---+---+---+---+---+
+ f3 | e | b   C†  b   ##  b  (b) (b)|
+    +   +   +---+---+   +   +   +---+
+ f4 | e | b | c   c |(b)  D  (b)| c |
+    +   +---+   +   +---+---+---+   +
+ f5 | ##  e | c   c   E   ##  c   c |
+    +   +---+---+---+   +   +   +   +
+ f6 | F | d | a   a | c   c   c   c |
+    +---+   +   +   +---+---+---+---+
+ f7 | d   d | a   a   ##  a   G   ##|
+    +   +   +   +   +   +   +   +   +
+ f8 | d   H | a   a   a   a   a   a |
     +---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Porche  [armas: la cuerda]
-  b = el Jardín
-  c = el Estudio
-  d = el Comedor
-  e = el Ático  [armas: las tijeras]
-  f = la Cocina  [armas: la botella rota]
+  a = el Dormitorio  [armas: el cable]
+  b = la Terraza
+  c = el Comedor
+  d = el Baño
+  e = el Estudio  [armas: la botella rota]
+  f = la Bodega
 
 MUEBLES:
-  la cama (pisable): f7c3, f6c3
-  la cama (pisable): f2c5, f2c6
-  la cama (pisable): f8c6, f7c6
-  la cama (pisable): f2c3, f2c4
-  la cama (pisable): f1c7
-  la alfombra (pisable): f7c8
   la cama (pisable): f4c7
-  el arbusto (bloquea): f7c5
-  el piano (bloquea): f3c1
-  el piano (bloquea): f4c2
-  la lavadora (bloquea): f5c4
-  el piano (bloquea): f3c8
-  el arbusto (bloquea): f7c4
+  la cama (pisable): f7c7
+  la cama (pisable): f3c7, f3c8
+  la cama (pisable): f1c2, f1c3
+  el sillón (pisable): f2c2
+  la cama (pisable): f4c5
+  la cama (pisable): f1c5
+  la mesa (bloquea): f5c6
+  la TV (bloquea): f5c1
+  la mesa (bloquea): f2c8
+  el armario (bloquea): f7c8
+  la barra (bloquea): f7c5
+  el arbusto (bloquea): f3c5
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 3 (el Estudio)
-  Bruno: fila 2, col 5 (el Ático)   <- ASESINO
-  Clara: fila 3, col 7 (el Jardín)
-  Dario: fila 4, col 6 (el Ático)   <- VÍCTIMA
-  Elena: fila 5, col 1 (el Comedor)
-  Franco: fila 6, col 2 (el Porche)
-  Greta: fila 7, col 8 (el Jardín)
-  Hugo: fila 8, col 4 (el Porche)
-  Métricas: 8 pistas, 7 pasos de deducción, técnica máx. T4
+  Adela: fila 1, col 8 (la Bodega)
+  Bruno: fila 2, col 4 (la Bodega)
+  Clara: fila 3, col 3 (la Terraza)   <- VÍCTIMA
+  Dario: fila 4, col 6 (la Terraza)   <- ASESINO
+  Elena: fila 5, col 5 (el Comedor)
+  Franco: fila 6, col 1 (el Estudio)
+  Greta: fila 7, col 7 (el Dormitorio)
+  Hugo: fila 8, col 2 (el Baño)
+  Métricas: 8 pistas, 14 pasos de deducción, técnica máx. T4
 
 
 
 ================================================================
 CASO: caso-casual-s20
-Mapa: La Villa   Dificultad: casual   (incluye arma homicida)
+Mapa: El Club   Dificultad: casual   (incluye arma homicida)
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en la Biblioteca.
-  B = Bruno: Estaba sentado en el sofá.
-  C = Clara: Estaba en la Terraza y junto a una planta.
-  D = Dario: Estaba junto a un sillón y junto a una planta.
-  E = Elena (LA VÍCTIMA): Estaba junto a un sillón y junto a una barra.
-  F = Franco: Estaba a solas con Greta.
-  G = Greta: Era la única persona sentada en una silla.
-  H = Hugo: Estaba junto a una TV.
+  A = Adela: Estaba junto a la planta.
+  B = Bruno (LA VÍCTIMA): Estaba en la Terraza y junto a una lavadora.
+  C = Clara: Estaba en el Baño y junto a una cama.
+  D = Dario: Estaba junto a la mesa.
+  E = Elena: Estaba en la Bodega.
+  F = Franco: Estaba junto a la silla y junto a una lavadora.
+  G = Greta: Estaba junto a la TV.
+  H = Hugo: Estaba en el Dormitorio y junto a una cama.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8 
     +---+---+---+---+---+---+---+---+
- f1 | a   a   a   A   a | d   d  (d)|
-    +   +   +   +   +---+   +   +   +
- f2 | a   a   a   a | d  (d) (d)  B |
-    +   +   +   +---+   +   +   +   +
- f3 | a   a   a | ##  C   d   d   d |
-    +---+---+---+   +---+---+---+   +
- f4 |(b)  D   b | d | ##  ##  e | d |
-    +   +   +---+---+   +   +   +---+
- f5 | E†  ##| c | e   e   e   e   e |
-    +   +---+   +---+---+   +   +   +
- f6 | ##| c   ##  c   c | F   e   e |
-    +   +---+   +   +   +   +   +   +
- f7 | ##  b | ##  ##  c | e   G   e |
-    +---+---+   +   +   +---+   +   +
- f8 | ##  c   H   c  (c)  c | e   e |
+ f1 | A   ##  e   ##  e | b   b   b |
+    +   +   +   +   +   +   +   +   +
+ f2 |(e)  ##  e   B†  e | b   b   b |
+    +   +   +---+---+---+---+   +   +
+ f3 |(e)  ##| f   f   ##  f |(b)  C |
+    +---+---+   +   +   +   +   +---+
+ f4 | c |(f) (f)  f   D   f | b | a |
+    +   +---+   +   +   +---+---+   +
+ f5 | c  (c)| f   f   f | E   a   a |
+    +   +   +---+---+---+   +   +   +
+ f6 |(c)  ##  F | d   d | a   ##  a |
+    +   +   +   +   +   +---+   +   +
+ f7 | c   c  (c)| d   d   d | G   a |
+    +   +   +   +   +   +   +---+   +
+ f8 |(c)  H   c | d   d   ##  d | a |
     +---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = la Biblioteca  [armas: la jeringa]
-  b = el Dormitorio  [armas: el cable]
-  c = la Bodega  [armas: la botella rota]
-  d = la Terraza
-  e = el Pasillo
+  a = la Bodega  [armas: la jeringa]
+  b = el Baño
+  c = el Dormitorio
+  d = la Biblioteca
+  e = la Terraza  [armas: el cable]
+  f = el Comedor
 
 MUEBLES:
-  el sillón (pisable): f4c1
-  la silla (pisable): f7c7
-  el sofá (pisable): f2c8, f2c7
-  el sillón (pisable): f2c6
-  la silla (pisable): f8c5
-  el sillón (pisable): f1c8
-  la barra (bloquea): f4c5, f4c6
-  la barra (bloquea): f6c1, f7c1
-  la TV (bloquea): f7c3
-  la TV (bloquea): f8c1
-  el arbusto (bloquea): f3c4
-  la barra (bloquea): f6c3
-  el arbusto (bloquea): f5c2
-  la barra (bloquea): f7c4
+  la cama (pisable): f4c2, f4c3
+  la cama (pisable): f3c7
+  la alfombra (pisable): f5c2
+  la alfombra (pisable): f6c1
+  el sofá (pisable): f2c1, f3c1
+  la cama (pisable): f8c1
+  la silla (pisable): f7c3
+  la lavadora (bloquea): f6c2
+  la mesa (bloquea): f3c5
+  el armario (bloquea): f8c6
+  la barra (bloquea): f3c2, f2c2
+  la lavadora (bloquea): f1c4
+  la planta (bloquea): f1c2
+  la TV (bloquea): f6c7
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 4 (la Biblioteca)
-  Bruno: fila 2, col 8 (la Terraza)
-  Clara: fila 3, col 5 (la Terraza)
-  Dario: fila 4, col 2 (el Dormitorio)   <- ASESINO
-  Elena: fila 5, col 1 (el Dormitorio)   <- VÍCTIMA
-  Franco: fila 6, col 6 (el Pasillo)
-  Greta: fila 7, col 7 (el Pasillo)
-  Hugo: fila 8, col 3 (la Bodega)
+  Adela: fila 1, col 1 (la Terraza)   <- ASESINO
+  Bruno: fila 2, col 4 (la Terraza)   <- VÍCTIMA
+  Clara: fila 3, col 8 (el Baño)
+  Dario: fila 4, col 5 (el Comedor)
+  Elena: fila 5, col 6 (la Bodega)
+  Franco: fila 6, col 3 (el Dormitorio)
+  Greta: fila 7, col 7 (la Bodega)
+  Hugo: fila 8, col 2 (el Dormitorio)
   Arma homicida: el cable
-  Métricas: 8 pistas, 6 pasos de deducción, técnica máx. T2
+  Métricas: 8 pistas, 10 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-casual-s21
-Mapa: El Club   Dificultad: casual   (incluye arma homicida)
+Mapa: La Mansión   Dificultad: casual   (incluye arma homicida)
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela (LA VÍCTIMA): Estaba en el Ático y sentada en una silla.
-  B = Bruno: Estaba en el Ático.
-  C = Clara: Era la única persona sobre una alfombra.
-  D = Dario: Estaba en la Terraza.
-  E = Elena: Estaba en el Salón y junto a una lavadora.
-  F = Franco: Estaba a solas con Hugo.
-  G = Greta: Estaba en el Jardín y junto a una silla.
-  H = Hugo: Estaba en el Pasillo y junto a una alfombra.
+  A = Adela: Estaba a solas con Bruno.
+  B = Bruno: Estaba junto a la silla.
+  C = Clara: Estaba en la Terraza y junto a una cama.
+  D = Dario (LA VÍCTIMA): Estaba junto a la TV.
+  E = Elena: Estaba en la Cocina y junto a una cama.
+  F = Franco: Estaba en el Ático.
+  G = Greta: Estaba junto a la barra.
+  H = Hugo: Era la única persona sobre una cama.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8 
     +---+---+---+---+---+---+---+---+
- f1 | b   A†  b   b   ##| c   c   c |
-    +   +---+   +   +   +---+   +   +
- f2 | B | f | ## (b)  b   b | c   ##|
-    +   +   +---+---+---+---+   +   +
- f3 | b | f   f   C   ##  f | c   c |
-    +---+   +---+   +   +   +   +   +
- f4 | f   f | ##| f   f   f | c   D |
-    +---+---+   +---+---+---+---+---+
- f5 | e   e   E   e   e | a   a   a |
-    +   +   +   +---+---+---+   +   +
- f6 | e   e   e | d   d   F | a   a |
-    +   +   +---+   +   +---+   +   +
- f7 | e   ##| d  (d)  d |(a)  G   a |
-    +---+---+   +   +   +   +   +   +
- f8 | d   d   d  (d)  H | a   a   ##|
+ f1 | e   e   e | A   f   f   f   f |
+    +   +   +   +   +   +   +   +   +
+ f2 | e   ##  e | f   B  (f)  f   ##|
+    +   +---+   +---+---+---+---+---+
+ f3 | e |(d)| e  (e)|(a)  C   a   a |
+    +---+   +---+---+   +   +   +   +
+ f4 | ##  ##  D†  d |(a)  a   a   a |
+    +   +   +   +   +   +   +   +   +
+ f5 | E  (d)  d   d | a   a   a   a |
+    +   +---+---+---+---+---+---+---+
+ f6 | d | F   b   b | c   c   c   c |
+    +---+   +   +   +   +   +   +   +
+ f7 | b   b   b   b | c   c   G   c |
+    +   +   +   +---+   +   +   +   +
+ f8 | b   ##  ##|(c)  c   ##  ##  H |
     +---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Jardín
-  b = el Ático  [armas: el frasco de veneno]
-  c = la Terraza  [armas: la jeringa]
-  d = el Pasillo
-  e = el Salón  [armas: el cable]
-  f = la Bodega
+  a = la Terraza
+  b = el Ático  [armas: el cable]
+  c = el Dormitorio
+  d = la Cocina  [armas: las tijeras]
+  e = la Biblioteca
+  f = el Salón
 
 MUEBLES:
-  la silla (pisable): f7c6
-  la silla (pisable): f1c2
-  el sillón (pisable): f7c4
-  la silla (pisable): f2c4
-  la alfombra (pisable): f8c4
-  la alfombra (pisable): f3c4
-  la TV (bloquea): f2c3
-  el arbusto (bloquea): f1c5
-  la lavadora (bloquea): f8c8
-  la lavadora (bloquea): f7c2
-  el piano (bloquea): f2c8
-  la lavadora (bloquea): f3c5
-  la lavadora (bloquea): f4c3
+  la cama (pisable): f3c4
+  el sofá (pisable): f8c4
+  la cama (pisable): f3c2
+  la cama (pisable): f5c2
+  la cama (pisable): f8c8
+  la cama (pisable): f4c5, f3c5
+  la silla (pisable): f2c6
+  la lavadora (bloquea): f2c8
+  la lavadora (bloquea): f4c1
+  la barra (bloquea): f8c7, f8c6
+  la lavadora (bloquea): f2c2
+  la TV (bloquea): f4c2
+  la lavadora (bloquea): f8c3
+  la lavadora (bloquea): f8c2
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 2 (el Ático)   <- VÍCTIMA
-  Bruno: fila 2, col 1 (el Ático)   <- ASESINO
-  Clara: fila 3, col 4 (la Bodega)
-  Dario: fila 4, col 8 (la Terraza)
-  Elena: fila 5, col 3 (el Salón)
-  Franco: fila 6, col 6 (el Pasillo)
-  Greta: fila 7, col 7 (el Jardín)
-  Hugo: fila 8, col 5 (el Pasillo)
-  Arma homicida: el frasco de veneno
+  Adela: fila 1, col 4 (el Salón)
+  Bruno: fila 2, col 5 (el Salón)
+  Clara: fila 3, col 6 (la Terraza)
+  Dario: fila 4, col 3 (la Cocina)   <- VÍCTIMA
+  Elena: fila 5, col 1 (la Cocina)   <- ASESINO
+  Franco: fila 6, col 2 (el Ático)
+  Greta: fila 7, col 7 (el Dormitorio)
+  Hugo: fila 8, col 8 (el Dormitorio)
+  Arma homicida: las tijeras
   Métricas: 8 pistas, 7 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-casual-s3
-Mapa: La Mansión   Dificultad: casual
+Mapa: La Villa   Dificultad: casual
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en la Biblioteca y junto a una caja.
-  B = Bruno: Era la única persona sentada en un sillón.
-  C = Clara: Estaba en el Ático.
-  D = Dario: Estaba con Adela.
-  E = Elena: Estaba junto a la cama.
-  F = Franco: Estaba en el Comedor.
-  G = Greta: Estaba en el Baño y junto a una caja.
-  H = Hugo (LA VÍCTIMA): Estaba junto a la TV y junto a una planta.
+  A = Adela: Estaba junto a un sofá y junto a una caja.
+  B = Bruno: Estaba en la Bodega y junto a un sofá.
+  C = Clara: Estaba en el Salón.
+  D = Dario (LA VÍCTIMA): Estaba en el Pasillo y junto a una caja.
+  E = Elena: Estaba en el Pasillo y junto a un sofá.
+  F = Franco: Estaba en el Jardín.
+  G = Greta: Estaba en la Terraza y junto a una silla.
+  H = Hugo: Estaba en el Baño.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8 
     +---+---+---+---+---+---+---+---+
- f1 | e   e | a   a  (a)  a   A   ##|
-    +   +   +   +   +   +   +   +   +
- f2 | e   ##| a   B   a   a   a  (a)|
-    +   +   +   +   +---+---+---+---+
- f3 | C   e | a   a |(d)  d   d | c |
-    +---+---+   +   +   +   +   +   +
- f4 | d   d | D   a | d   d   d | c |
-    +   +   +---+---+   +---+---+   +
- f5 | d   ## (d) (d)  E | c   ## (c)|
-    +   +---+---+---+---+   +   +   +
- f6 | d | b | f   f   ##| F   c   c |
-    +---+   +   +   +   +---+   +   +
- f7 | b   G | f   f   f   f | c   ##|
-    +   +   +   +   +   +   +   +   +
- f8 | b   ##| f   f   f   f | ##  H†|
+ f1 | ##  A  (e)  e   e  (e)  e | ##|
+    +---+---+   +   +   +   +---+   +
+ f2 | d   d | B   e   e  (e)| a   a |
+    +   +   +---+---+---+---+   +   +
+ f3 | d   d   d   C | b   ##| a   a |
+    +   +   +   +---+   +   +   +   +
+ f4 | d  (d)  ##| b   b   D†| a   a |
+    +   +---+---+   +   +   +   +   +
+ f5 | d | c | b   b   E  (b)| a   a |
+    +---+   +---+---+---+   +---+   +
+ f6 | c   ##| f   f   f | b   ##| F |
+    +   +   +   +   +   +---+---+   +
+ f7 | G   c | f   f  (f) (f)  f | a |
+    +   +   +---+   +   +   +   +   +
+ f8 |(c)  c   c | f   f   f   H | a |
     +---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = la Biblioteca  [armas: el martillo]
-  b = el Baño  [armas: la cuerda]
-  c = el Comedor
-  d = el Vestíbulo  [armas: el cable]
-  e = el Ático
-  f = la Cocina
+  a = el Jardín  [armas: la jeringa]
+  b = el Pasillo
+  c = la Terraza
+  d = el Salón  [armas: las tijeras]
+  e = la Bodega
+  f = el Baño  [armas: el cable]
 
 MUEBLES:
-  el sillón (pisable): f1c5
-  el sillón (pisable): f3c5
-  el sillón (pisable): f2c4
-  la cama (pisable): f5c3, f5c4
-  la alfombra (pisable): f5c8
-  el sillón (pisable): f2c8
-  la caja (bloquea): f8c2
+  el sofá (pisable): f1c3
+  el sofá (pisable): f7c6, f7c5
+  la silla (pisable): f8c1
+  la silla (pisable): f2c6
+  la silla (pisable): f1c6
+  el sofá (pisable): f5c6
+  la silla (pisable): f4c2
+  la mesa (bloquea): f6c2
   la caja (bloquea): f1c8
-  la lavadora (bloquea): f5c2
-  la TV (bloquea): f7c8
-  la planta (bloquea): f2c2
-  la planta (bloquea): f8c7
-  la planta (bloquea): f5c7
-  el arbusto (bloquea): f6c5
+  la caja (bloquea): f3c6
+  la TV (bloquea): f4c3
+  la caja (bloquea): f1c1
+  la TV (bloquea): f6c7
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 7 (la Biblioteca)
-  Bruno: fila 2, col 4 (la Biblioteca)
-  Clara: fila 3, col 1 (el Ático)
-  Dario: fila 4, col 3 (la Biblioteca)
-  Elena: fila 5, col 5 (el Vestíbulo)
-  Franco: fila 6, col 6 (el Comedor)   <- ASESINO
-  Greta: fila 7, col 2 (el Baño)
-  Hugo: fila 8, col 8 (el Comedor)   <- VÍCTIMA
-  Métricas: 8 pistas, 4 pasos de deducción, técnica máx. T2
+  Adela: fila 1, col 2 (la Bodega)
+  Bruno: fila 2, col 3 (la Bodega)
+  Clara: fila 3, col 4 (el Salón)
+  Dario: fila 4, col 6 (el Pasillo)   <- VÍCTIMA
+  Elena: fila 5, col 5 (el Pasillo)   <- ASESINO
+  Franco: fila 6, col 8 (el Jardín)
+  Greta: fila 7, col 1 (la Terraza)
+  Hugo: fila 8, col 7 (el Baño)
+  Métricas: 8 pistas, 6 pasos de deducción, técnica máx. T4
 
 
 
 ================================================================
 CASO: caso-casual-s4
-Mapa: La Galería   Dificultad: casual
+Mapa: El Teatro   Dificultad: casual
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba junto a la alfombra y junto a una barra.
-  B = Bruno: Estaba en el Jardín y junto a una barra.
-  C = Clara (LA VÍCTIMA): Estaba en la Terraza y junto a una cama.
-  D = Dario: Estaba junto a el sillón.
-  E = Elena: Estaba junto a el sofá.
+  A = Adela: Estaba en el Comedor y junto a un sillón.
+  B = Bruno: Era la única persona sobre una alfombra.
+  C = Clara: Estaba en el Dormitorio y junto a una silla.
+  D = Dario: Estaba en el Porche y junto a una planta.
+  E = Elena: Estaba en el Estudio y junto a una planta.
   F = Franco: Estaba a solas con Greta.
-  G = Greta: Estaba en el Ático y junto a una cama.
-  H = Hugo: Estaba en el Salón y junto a una barra.
+  G = Greta: Estaba en la Bodega y junto a un sillón.
+  H = Hugo (LA VÍCTIMA): Estaba junto a la barra.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8 
     +---+---+---+---+---+---+---+---+
- f1 | b   b   b   A  (b)  b | e   ##|
+ f1 | ##  d | A   a   a | ##  e   e |
     +   +   +   +   +   +---+   +   +
- f2 | b   B   ##  ##  ##| e   e   e |
-    +   +   +   +---+---+   +   +   +
- f3 | b   b   b | e   C† (e)  e   e |
-    +---+---+---+   +---+   +   +   +
- f4 | ##  c   c | ##| c |(e)  D   e |
-    +---+---+   +---+   +   +---+---+
- f5 | a   a | E  (c)  c | e | ## (d)|
-    +   +---+   +   +   +---+   +   +
- f6 | a | c   c   c   c | F   d  (d)|
-    +   +   +   +---+---+---+   +   +
- f7 | ##| c   c | a   a   a | d   G |
-    +   +---+---+   +   +   +---+   +
- f8 | H   a   a   a   a   ##  a |(d)|
+ f2 | d   B |(a)  a   a   a | e   e |
+    +   +   +---+---+   +   +   +   +
+ f3 | d   d |(b)  C | a   ##| e   e |
+    +---+---+   +   +   +---+   +   +
+ f4 | ##  c | b   b | ##| f | ##  D |
+    +   +   +   +   +---+   +---+---+
+ f5 | E   c | b   b | f   f   f  (f)|
+    +   +   +   +   +   +   +   +   +
+ f6 | c   c | b  (b)| f   F   f   f |
+    +   +   +   +   +   +   +   +   +
+ f7 | c   c | b   b | f   f   G   f |
+    +   +   +---+   +---+   +   +   +
+ f8 | c   c  (c)| ##  H†| f  (f)  f |
     +---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Salón
-  b = el Jardín  [armas: el frasco de veneno]
-  c = el Comedor
-  d = el Ático
-  e = la Terraza  [armas: la botella rota]
+  a = el Comedor
+  b = el Dormitorio  [armas: el martillo]
+  c = el Estudio  [armas: la botella rota]
+  d = el Salón
+  e = el Porche
+  f = la Bodega  [armas: el abrecartas]
 
 MUEBLES:
-  la cama (pisable): f5c8, f6c8
-  la cama (pisable): f3c6
-  el sofá (pisable): f5c4
-  la alfombra (pisable): f1c5
-  el sillón (pisable): f4c6
-  la cama (pisable): f8c8
-  la barra (bloquea): f2c5
-  la lavadora (bloquea): f4c4
-  la lavadora (bloquea): f1c8
-  la lavadora (bloquea): f4c1
-  la barra (bloquea): f2c3, f2c4
-  el arbusto (bloquea): f8c6
-  el arbusto (bloquea): f5c7
-  la barra (bloquea): f7c1
+  la silla (pisable): f6c4
+  la alfombra (pisable): f2c2
+  la alfombra (pisable): f5c8
+  el sillón (pisable): f8c7
+  la silla (pisable): f3c3
+  el sillón (pisable): f2c3
+  la silla (pisable): f8c3
+  la planta (bloquea): f1c1
+  el arbusto (bloquea): f4c1
+  la planta (bloquea): f3c6
+  la planta (bloquea): f4c5
+  el arbusto (bloquea): f4c7
+  la planta (bloquea): f1c6
+  la barra (bloquea): f8c4
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 4 (el Jardín)
-  Bruno: fila 2, col 2 (el Jardín)
-  Clara: fila 3, col 5 (la Terraza)   <- VÍCTIMA
-  Dario: fila 4, col 7 (la Terraza)   <- ASESINO
-  Elena: fila 5, col 3 (el Comedor)
-  Franco: fila 6, col 6 (el Ático)
-  Greta: fila 7, col 8 (el Ático)
-  Hugo: fila 8, col 1 (el Salón)
-  Métricas: 8 pistas, 7 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 3 (el Comedor)
+  Bruno: fila 2, col 2 (el Salón)
+  Clara: fila 3, col 4 (el Dormitorio)   <- ASESINO
+  Dario: fila 4, col 8 (el Porche)
+  Elena: fila 5, col 1 (el Estudio)
+  Franco: fila 6, col 6 (la Bodega)
+  Greta: fila 7, col 7 (la Bodega)
+  Hugo: fila 8, col 5 (el Dormitorio)   <- VÍCTIMA
+  Métricas: 8 pistas, 11 pasos de deducción, técnica máx. T3
 
 
 
@@ -450,33 +454,33 @@ Mapa: El Teatro   Dificultad: casual
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela (LA VÍCTIMA): Estaba sentada en el sillón.
+  A = Adela: Estaba junto a el sillón.
   B = Bruno: Estaba en la Terraza.
-  C = Clara: Estaba en la Bodega y junto a un sofá.
+  C = Clara: Estaba en la Terraza y junto a una planta.
   D = Dario: Estaba en la Biblioteca y junto a una planta.
-  E = Elena: Estaba junto a una planta y junto a el piano.
-  F = Franco: Estaba sobre la cama.
-  G = Greta: Estaba en el Porche y junto a una alfombra.
-  H = Hugo: Estaba con Elena.
+  E = Elena: Estaba en la Bodega y junto a una alfombra.
+  F = Franco: Estaba junto a una planta y junto a el piano.
+  G = Greta: Estaba junto a la cama.
+  H = Hugo (LA VÍCTIMA): Estaba en la última casilla libre.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8 
     +---+---+---+---+---+---+---+---+
- f1 | d   A†  d   d   ##  d   d | a |
+ f1 | d  (d)  A   d   ##  d   d | a |
     +---+---+   +   +   +   +   +   +
  f2 | c   c | d   ##  d   B   d | a |
     +   +   +---+   +---+---+---+   +
- f3 | ##  c  (c)| d | a  (a)  C   a |
+ f3 | ##  c  (c)| C | a  (a)  a   a |
     +   +   +   +---+   +   +   +   +
  f4 | D   c   c | e | a   a   a   a |
     +   +---+---+   +   +   +   +   +
- f5 | c | ##  E   e | a   a   a  (a)|
+ f5 | c | ##  e   e | a   a   E  (a)|
     +   +   +   +   +---+---+---+---+
- f6 | c | e   ##  e | F  (b) (b) (b)|
+ f6 | c | F   ##  e |(b) (b) (b) (b)|
     +   +   +   +---+   +   +   +   +
- f7 | c | e   ##| b   b   b   ##  G |
+ f7 | c | e   ##| b   G   b   ##  b |
     +   +   +   +---+   +   +   +   +
- f8 | c | e   e   H | b   b   b   b |
+ f8 | c | e   e   e | b   b   b   H†|
     +---+---+---+---+---+---+---+---+
 
 HABITACIONES:
@@ -506,543 +510,547 @@ REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en cel
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 2 (la Terraza)   <- VÍCTIMA
-  Bruno: fila 2, col 6 (la Terraza)   <- ASESINO
-  Clara: fila 3, col 7 (la Bodega)
+  Adela: fila 1, col 3 (la Terraza)
+  Bruno: fila 2, col 6 (la Terraza)
+  Clara: fila 3, col 4 (la Terraza)
   Dario: fila 4, col 1 (la Biblioteca)
-  Elena: fila 5, col 3 (el Estudio)
-  Franco: fila 6, col 5 (el Porche)
-  Greta: fila 7, col 8 (el Porche)
-  Hugo: fila 8, col 4 (el Estudio)
-  Métricas: 8 pistas, 6 pasos de deducción, técnica máx. T3
+  Elena: fila 5, col 7 (la Bodega)
+  Franco: fila 6, col 2 (el Estudio)
+  Greta: fila 7, col 5 (el Porche)   <- ASESINO
+  Hugo: fila 8, col 8 (el Porche)   <- VÍCTIMA
+  Métricas: 8 pistas, 11 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-intermedio-s1
-Mapa: La Galería   Dificultad: intermedio
+Mapa: El Casino   Dificultad: intermedio
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en el Vestíbulo.
-  B = Bruno: Estaba en la Terraza.
-  C = Clara: Estaba en el Dormitorio.
-  D = Dario: Estaba en el Jardín.
-  E = Elena (LA VÍCTIMA): Estaba en el Jardín y junto a una caja.
-  F = Franco: Estaba en la Bodega y sentado en un sillón.
-  G = Greta: Estaba en la Bodega.
-  H = Hugo: Estaba junto a una alfombra y junto a un piano.
-  I = Irene: Estaba junto a un piano y junto a el armario.
+  A = Adela (LA VÍCTIMA): Estaba en la última casilla libre.
+  B = Bruno: Estaba en la Bodega.
+  C = Clara: Estaba en el Porche.
+  D = Dario: Estaba en el Ático y junto a una silla.
+  E = Elena: Estaba en el Dormitorio.
+  F = Franco: Estaba junto a una planta.
+  G = Greta: Estaba en el Comedor y junto a una TV.
+  H = Hugo: Estaba con Greta.
+  I = Irene: Estaba en el Comedor y junto a una cama.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8  c9 
     +---+---+---+---+---+---+---+---+---+
- f1 | d   d   d   d | g   g   g   g   A |
-    +   +   +   +   +   +   +---+---+---+
- f2 | d   d   d   B | g   g | c   c   c |
-    +---+   +---+---+---+   +   +   +   +
- f3 | a | d | a | b   C |(g)| c   c   c |
-    +   +---+   +   +   +---+   +   +   +
- f4 | a   D   a |(b)  b   b | c  (c)  ##|
-    +   +   +   +   +   +---+---+   +   +
- f5 | E†  a   a | b   b | f   f | c   c |
-    +   +   +---+   +   +   +   +   +   +
- f6 | ##  a | ##| ##  b | F   f | ##  ##|
-    +---+---+   +---+   +   +   +   +   +
- f7 | e  (e) (e)  e | b | f   G | ##  ##|
-    +   +   +   +---+---+   +   +---+---+
- f8 |(e)  e   H | f   f   f   f   ##  f |
-    +   +   +   +---+---+   +   +   +   +
- f9 | e   e   ##  e   e | f   ##  I   f |
+ f1 | ##  ##  ##  A†  c |(d) (d)  d   ##|
+    +   +   +---+---+---+   +   +   +   +
+ f2 | c   c | B   b   b | d   d   d   d |
+    +   +   +   +   +---+   +   +---+---+
+ f3 | c   c | b  (b)| ##  d   d | C   e |
+    +   +   +   +   +---+   +   +   +   +
+ f4 | D   c | b   b   ##|(d) (d)| e   e |
+    +   +---+   +   +   +---+---+   +   +
+ f5 |(c)| E |(b) (b)  b   b | e   e   e |
+    +   +   +---+---+   +---+   +   +   +
+ f6 | c | f | g   g | b | ##  e   e   F |
+    +---+   +   +   +---+   +---+---+   +
+ f7 | f   f | g   g   g | e | G   ##| ##|
+    +   +   +   +   +---+---+   +   +---+
+ f8 | f   f | g   g | H   a   a   a   a |
+    +   +   +   +   +---+   +   +   +   +
+ f9 | f   f | g   g   g | I  (a) (a)  a |
     +---+---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Jardín
-  b = el Dormitorio
+  a = el Comedor  [armas: el frasco de veneno]
+  b = la Bodega
   c = el Ático
-  d = la Terraza
-  e = el Pasillo  [armas: el cuchillo de cocina]
-  f = la Bodega  [armas: las tijeras]
-  g = el Vestíbulo
+  d = el Vestíbulo
+  e = el Porche  [armas: la jeringa]
+  f = el Dormitorio
+  g = el Jardín
 
 MUEBLES:
-  la alfombra (pisable): f7c2
-  la alfombra (pisable): f8c1
-  el sillón (pisable): f6c6
-  el sillón (pisable): f4c4
-  la alfombra (pisable): f7c3
-  el sillón (pisable): f3c6
-  el sofá (pisable): f4c8
-  la mesa (bloquea): f7c9, f7c8
-  la caja (bloquea): f6c3
-  el piano (bloquea): f9c3
-  la caja (bloquea): f6c1
-  la mesa (bloquea): f6c8, f6c9
-  el armario (bloquea): f9c7
-  el piano (bloquea): f8c8
-  la mesa (bloquea): f6c4
-  el piano (bloquea): f4c9
+  la silla (pisable): f3c4
+  la cama (pisable): f5c3, f5c4
+  la cama (pisable): f9c7
+  la silla (pisable): f9c8
+  la cama (pisable): f4c6, f4c7
+  la cama (pisable): f1c6, f1c7
+  la silla (pisable): f5c1
+  el arbusto (bloquea): f1c1
+  la TV (bloquea): f4c5
+  la caja (bloquea): f3c5
+  la barra (bloquea): f1c3, f1c2
+  la TV (bloquea): f1c9
+  la caja (bloquea): f6c6
+  el arbusto (bloquea): f7c9
+  la TV (bloquea): f7c8
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 9 (el Vestíbulo)
-  Bruno: fila 2, col 4 (la Terraza)
-  Clara: fila 3, col 5 (el Dormitorio)
-  Dario: fila 4, col 2 (el Jardín)   <- ASESINO
-  Elena: fila 5, col 1 (el Jardín)   <- VÍCTIMA
-  Franco: fila 6, col 6 (la Bodega)
-  Greta: fila 7, col 7 (la Bodega)
-  Hugo: fila 8, col 3 (el Pasillo)
-  Irene: fila 9, col 8 (la Bodega)
-  Métricas: 9 pistas, 6 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 4 (el Ático)   <- VÍCTIMA
+  Bruno: fila 2, col 3 (la Bodega)
+  Clara: fila 3, col 8 (el Porche)
+  Dario: fila 4, col 1 (el Ático)   <- ASESINO
+  Elena: fila 5, col 2 (el Dormitorio)
+  Franco: fila 6, col 9 (el Porche)
+  Greta: fila 7, col 7 (el Comedor)
+  Hugo: fila 8, col 5 (el Comedor)
+  Irene: fila 9, col 6 (el Comedor)
+  Métricas: 9 pistas, 9 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-intermedio-s2
-Mapa: La Posada   Dificultad: intermedio
+Mapa: La Villa   Dificultad: intermedio
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en la Bodega y junto a una planta.
-  B = Bruno: Estaba en el Dormitorio y junto a una alfombra.
-  C = Clara: Estaba sentada en el sillón.
-  D = Dario: Estaba junto a una silla y junto a un piano.
-  E = Elena: Estaba en el Porche.
-  F = Franco (LA VÍCTIMA): Estaba en el Vestíbulo y junto a un piano.
+  A = Adela: Estaba con Clara.
+  B = Bruno (LA VÍCTIMA): Estaba sentado en una silla.
+  C = Clara: Estaba en la Cocina y sentada en un sillón.
+  D = Dario: Estaba en la Terraza y junto a un sillón.
+  E = Elena: Estaba en la Bodega y junto a un sillón.
+  F = Franco: Estaba en el Jardín y junto a un armario.
   G = Greta: Estaba en el Vestíbulo.
-  H = Hugo: Estaba en el Comedor.
-  I = Irene: Estaba en el Salón y junto a un piano.
+  H = Hugo: Estaba junto a un armario y junto a la mesa.
+  I = Irene: Estaba en el Comedor y junto a un sillón.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8  c9 
     +---+---+---+---+---+---+---+---+---+
- f1 | e  (e)  e | c   A | f   f   f   ##|
-    +   +   +---+   +   +   +   +   +   +
- f2 | e   e | c   c   ##| f   f   B   f |
-    +   +---+   +   +   +   +   +   +   +
- f3 | e | ##  c   C   c | f   f  (f)  f |
-    +   +   +   +---+---+   +   +---+   +
- f4 | e | D  (c)| a | ##  f   f | a | ##|
-    +   +---+   +   +---+---+   +   +---+
- f5 | E   e |(c)| a   ##  a | f | a   a |
-    +   +---+---+   +   +   +---+   +   +
- f6 | e | ##|(a)  a   a   a   F†  ##  a |
-    +---+   +---+   +   +---+---+   +   +
- f7 | b   b   b | a   a | d   d | a   G |
-    +   +   +   +---+---+   +   +---+---+
- f8 | b   b   H | d   d   d   d   d   d |
-    +   +   +   +   +   +   +   +   +   +
- f9 | b   b   b |(d)  ##  I   d  (d)  d |
+ f1 | e   e  (e)  e   e   A   e   e | d |
+    +---+---+---+   +   +---+---+---+   +
+ f2 | f   f   f | e   e | ##  B†  d   d |
+    +   +   +   +   +   +---+   +   +   +
+ f3 | f   ##  f | C   e   e | d  (d)  d |
+    +   +   +   +   +   +---+   +   +   +
+ f4 | ##  f   f | e   e | d   d   D   d |
+    +   +   +   +---+---+---+---+---+---+
+ f5 |(f)  E   f | c   ##| a  (a)  a   a |
+    +   +   +   +---+   +---+   +   +   +
+ f6 |(f)  f   f | b | F   c | a   a   a |
+    +---+---+---+   +---+   +---+   +   +
+ f7 | b   b   ##  b   b | c   c | a   G |
+    +   +   +   +   +---+   +   +   +   +
+ f8 | H   ##  b   b | c   c   c | a   a |
+    +   +   +   +   +   +   +   +---+   +
+ f9 | ##  b   I  (b)| ##  c   c   c | a |
     +---+---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Vestíbulo  [armas: el cuchillo de cocina]
-  b = el Comedor  [armas: la botella rota]
-  c = la Bodega
-  d = el Salón
-  e = el Porche
-  f = el Dormitorio
+  a = el Vestíbulo
+  b = el Comedor
+  c = el Jardín  [armas: la jeringa]
+  d = la Terraza  [armas: la botella rota]
+  e = la Cocina
+  f = la Bodega  [armas: el frasco de veneno]
 
 MUEBLES:
-  la alfombra (pisable): f3c8
-  la alfombra (pisable): f1c2
-  la silla (pisable): f9c4
-  la silla (pisable): f5c3
-  la cama (pisable): f6c3
-  la silla (pisable): f9c8
+  el sillón (pisable): f5c1
+  el sillón (pisable): f3c8
+  la silla (pisable): f5c7
+  la silla (pisable): f2c7
+  la silla (pisable): f6c1
+  el sillón (pisable): f1c3
   el sillón (pisable): f3c4
-  la silla (pisable): f4c3
-  el piano (bloquea): f9c5
-  el piano (bloquea): f3c2
-  la lavadora (bloquea): f5c5
-  el piano (bloquea): f4c9
-  el piano (bloquea): f6c8
-  la planta (bloquea): f4c5
-  la planta (bloquea): f2c5
-  el piano (bloquea): f6c2
-  la lavadora (bloquea): f1c9
+  el sillón (pisable): f9c4
+  el armario (bloquea): f5c5
+  el armario (bloquea): f4c1
+  el arbusto (bloquea): f7c3
+  la mesa (bloquea): f8c2
+  el armario (bloquea): f9c1
+  el arbusto (bloquea): f2c6
+  la TV (bloquea): f9c5
+  el arbusto (bloquea): f3c2
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 5 (la Bodega)
-  Bruno: fila 2, col 8 (el Dormitorio)
-  Clara: fila 3, col 4 (la Bodega)
-  Dario: fila 4, col 2 (la Bodega)
-  Elena: fila 5, col 1 (el Porche)
-  Franco: fila 6, col 7 (el Vestíbulo)   <- VÍCTIMA
-  Greta: fila 7, col 9 (el Vestíbulo)   <- ASESINO
-  Hugo: fila 8, col 3 (el Comedor)
-  Irene: fila 9, col 6 (el Salón)
-  Métricas: 9 pistas, 7 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 6 (la Cocina)
+  Bruno: fila 2, col 7 (la Terraza)   <- VÍCTIMA
+  Clara: fila 3, col 4 (la Cocina)
+  Dario: fila 4, col 8 (la Terraza)   <- ASESINO
+  Elena: fila 5, col 2 (la Bodega)
+  Franco: fila 6, col 5 (el Jardín)
+  Greta: fila 7, col 9 (el Vestíbulo)
+  Hugo: fila 8, col 1 (el Comedor)
+  Irene: fila 9, col 3 (el Comedor)
+  Métricas: 9 pistas, 8 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-intermedio-s3
-Mapa: El Club   Dificultad: intermedio
+Mapa: El Casino   Dificultad: intermedio
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en el Comedor y junto a una cama.
-  B = Bruno: Estaba en la Biblioteca y junto a una cama.
-  C = Clara: Estaba sentada en la silla.
-  D = Dario: Estaba junto a la barra.
-  E = Elena: Estaba en el Pasillo y junto a un sofá.
-  F = Franco: Estaba en el Jardín.
-  G = Greta (LA VÍCTIMA): Estaba en la última casilla libre.
-  H = Hugo: Estaba en el Estudio.
-  I = Irene: Era la única persona sobre una cama.
+  A = Adela (LA VÍCTIMA): Estaba en el Ático y junto a una caja.
+  B = Bruno: Estaba en el Ático.
+  C = Clara: Estaba en el Porche.
+  D = Dario: Estaba en el Jardín y junto a una planta.
+  E = Elena: Estaba en el Vestíbulo.
+  F = Franco: Estaba en el Vestíbulo y sobre una alfombra.
+  G = Greta: Estaba en el Vestíbulo y sentada en un sofá.
+  H = Hugo: Estaba en el Comedor y junto a una TV.
+  I = Irene: Estaba en el Dormitorio y junto a un sofá.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8  c9 
     +---+---+---+---+---+---+---+---+---+
- f1 | ##| e   e   e   e   e   e | f   A |
-    +   +---+   +   +   +---+---+   +   +
- f2 | c   c | ## (e)  B | f   f   f  (f)|
-    +   +   +---+   +   +   +   +   +   +
- f3 | C   c   c |(e)  e | f   f   f   f |
-    +   +   +   +   +   +---+   +   +   +
- f4 |(c) (c)  c | D   ##| ##| f   f   f |
-    +   +   +   +---+---+   +---+---+---+
- f5 | c   ##  c | b  (b)|(g)  E   g   g |
-    +   +---+---+   +   +   +   +---+---+
- f6 | c | ##  ##|(b) (b)| g   g | F   d |
-    +---+   +   +   +   +   +   +   +   +
- f7 | a   ##  G†| b   b | g   g | d   d |
-    +   +   +   +   +   +---+   +   +   +
- f8 | a   ##  a | b   b   H | g | d   d |
-    +   +   +   +---+   +---+---+   +   +
- f9 | a   I   a   a | b | d   d   d   d |
+ f1 | e   e   e   A†  ##  e | f   f   f |
+    +---+   +   +   +   +---+   +   +   +
+ f2 | d | e   B   e   ##| f  (f)  f   ##|
+    +   +   +---+---+---+---+   +   +   +
+ f3 | C | e | c  (c)  c   c | ##  f   ##|
+    +   +---+   +   +   +   +---+   +   +
+ f4 | d   d | c   ##  D   c | a | f   f |
+    +   +---+   +   +   +---+   +---+---+
+ f5 | d | c   c   c   c | E   a   a   a |
+    +   +---+---+   +---+   +   +   +   +
+ f6 | d   d | b | c | a   a  (a) (a)  F |
+    +   +---+   +---+---+   +   +---+---+
+ f7 | d | ##  b   b   b | a   G | ##  g |
+    +   +   +   +   +   +---+---+   +   +
+ f8 | d |(b)  b   b   b | g   g   H   g |
+    +---+   +   +---+---+   +   +   +   +
+ f9 | b   I   b | ## (g)  g   g  (g) (g)|
     +---+---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = la Bodega
-  b = el Estudio  [armas: el cuchillo de cocina]
-  c = el Vestíbulo  [armas: el abrecartas]
-  d = el Jardín
-  e = la Biblioteca
-  f = el Comedor
-  g = el Pasillo  [armas: el cable]
+  a = el Vestíbulo  [armas: el martillo]
+  b = el Dormitorio
+  c = el Jardín  [armas: el candelabro]
+  d = el Porche
+  e = el Ático
+  f = la Biblioteca
+  g = el Comedor
 
 MUEBLES:
-  el sofá (pisable): f5c6
-  el sofá (pisable): f4c2, f4c1
-  la cama (pisable): f2c9
-  la silla (pisable): f3c1
-  la cama (pisable): f2c4, f3c4
-  la cama (pisable): f5c5, f6c5
-  la cama (pisable): f6c4
-  la cama (pisable): f9c2
-  el arbusto (bloquea): f2c3
-  el armario (bloquea): f8c2
-  el arbusto (bloquea): f4c6
-  la planta (bloquea): f6c3
-  la planta (bloquea): f1c1
-  la planta (bloquea): f5c2
-  la planta (bloquea): f7c2
-  la barra (bloquea): f4c5
-  la planta (bloquea): f6c2
+  el sofá (pisable): f7c7, f6c7
+  el sofá (pisable): f3c4
+  la cama (pisable): f2c7
+  la alfombra (pisable): f6c8, f6c9
+  la alfombra (pisable): f9c9, f9c8
+  el sofá (pisable): f8c2
+  la silla (pisable): f9c5
+  la TV (bloquea): f7c8
+  la caja (bloquea): f1c5
+  la planta (bloquea): f3c7
+  la planta (bloquea): f4c4
+  la TV (bloquea): f2c5
+  la barra (bloquea): f2c9, f3c9
+  la caja (bloquea): f7c2
+  la planta (bloquea): f9c4
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 9 (el Comedor)
-  Bruno: fila 2, col 5 (la Biblioteca)
-  Clara: fila 3, col 1 (el Vestíbulo)
-  Dario: fila 4, col 4 (la Biblioteca)
-  Elena: fila 5, col 7 (el Pasillo)
-  Franco: fila 6, col 8 (el Jardín)
-  Greta: fila 7, col 3 (la Bodega)   <- VÍCTIMA
-  Hugo: fila 8, col 6 (el Estudio)
-  Irene: fila 9, col 2 (la Bodega)   <- ASESINO
-  Métricas: 9 pistas, 5 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 4 (el Ático)   <- VÍCTIMA
+  Bruno: fila 2, col 3 (el Ático)   <- ASESINO
+  Clara: fila 3, col 1 (el Porche)
+  Dario: fila 4, col 5 (el Jardín)
+  Elena: fila 5, col 6 (el Vestíbulo)
+  Franco: fila 6, col 9 (el Vestíbulo)
+  Greta: fila 7, col 7 (el Vestíbulo)
+  Hugo: fila 8, col 8 (el Comedor)
+  Irene: fila 9, col 2 (el Dormitorio)
+  Métricas: 9 pistas, 8 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-intermedio-s4
-Mapa: La Villa   Dificultad: intermedio
+Mapa: El Hotel   Dificultad: intermedio
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en el Ático y junto a una lavadora.
-  B = Bruno: Estaba en el Dormitorio y junto a una lavadora.
-  C = Clara: Estaba con Adela.
-  D = Dario: Estaba junto a un sofá y junto a una TV.
-  E = Elena: Estaba en el Porche y junto a un sofá.
-  F = Franco: Estaba a solas con Dario.
-  G = Greta: Estaba en el Baño y junto a una lavadora.
-  H = Hugo: Estaba a solas con Elena.
-  I = Irene (LA VÍCTIMA): Estaba en el Baño y junto a una TV.
+  A = Adela: Estaba junto a una silla y junto a una caja.
+  B = Bruno: Estaba en la Terraza y junto a una alfombra.
+  C = Clara: Estaba en el Pasillo y junto a una planta.
+  D = Dario: Estaba junto a el sillón.
+  E = Elena: Estaba en la Cocina.
+  F = Franco: Estaba en el Baño y junto a una alfombra.
+  G = Greta: Estaba junto a una planta.
+  H = Hugo: Estaba en la Cocina y junto a una caja.
+  I = Irene (LA VÍCTIMA): Estaba junto a la mesa.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8  c9 
     +---+---+---+---+---+---+---+---+---+
- f1 | ##  b   b   b | ##  A   e   e   e |
-    +   +   +   +---+   +   +   +---+---+
- f2 | ##  B   b |(a)| ##  e   e | d   d |
-    +   +---+---+   +---+   +   +   +   +
- f3 |(b)| a  (a) (a)  a | e   C | d  (d)|
-    +   +   +   +---+---+---+---+   +   +
- f4 | b | a   D | d   ##  d  (d)  d   d |
-    +   +   +   +---+   +   +   +   +---+
- f5 | b | a   ##  a | d   d   d   d | E |
+ f1 | c  (c)| g |(e)  A   e   e | b   b |
+    +   +---+   +   +   +   +   +---+   +
+ f2 | ##| g   B | e   ##  e   ##  ##| b |
+    +   +   +   +---+   +   +   +   +   +
+ f3 | c | g  (g)  g | e   e   C   e | b |
     +   +   +   +   +---+---+---+---+   +
- f6 | b | a   a   a   F | c   ## (c) (c)|
-    +   +---+---+---+---+   +   +   +   +
- f7 | b | f   ##  G   f | c   c   c   c |
-    +   +---+   +   +   +---+   +   +   +
- f8 | b   b | f   f   f   f | c   H   c |
-    +---+---+   +   +   +   +   +   +   +
- f9 | I†  ##  f   f   f   f | c   c   c |
+ f4 | c | g  (g)  D | f   f   f   f | b |
+    +   +   +   +   +   +   +   +   +   +
+ f5 | E | g   g   g | f   f   f   f |(b)|
+    +   +---+   +---+   +   +---+---+   +
+ f6 | c   ##| g | f   f   f | d | b   F |
+    +   +---+---+---+---+---+   +   +   +
+ f7 | c | a   a   a | d   G   d | b   b |
+    +   +---+   +   +---+   +   +---+---+
+ f8 | c   H | a   a   a | ##  ##  ##  d |
+    +   +   +   +   +   +---+   +   +   +
+ f9 | c   ##|(a)  a  (a)  a | ##  I†  d |
     +---+---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Estudio  [armas: la jeringa]
-  b = el Dormitorio
-  c = el Porche
-  d = la Biblioteca  [armas: el cuchillo de cocina]
-  e = el Ático
-  f = el Baño
+  a = el Salón  [armas: las tijeras]
+  b = el Baño
+  c = la Cocina  [armas: el candelabro]
+  d = el Dormitorio
+  e = el Pasillo
+  f = la Bodega
+  g = la Terraza
 
 MUEBLES:
-  el sofá (pisable): f3c4, f2c4
-  el sofá (pisable): f6c8
-  el sofá (pisable): f6c9
-  el sillón (pisable): f3c9
-  el sofá (pisable): f3c1
-  la silla (pisable): f4c7
-  el sofá (pisable): f3c3
-  la lavadora (bloquea): f1c5
-  la lavadora (bloquea): f2c1
-  la lavadora (bloquea): f2c5
-  la lavadora (bloquea): f7c3
-  la TV (bloquea): f9c2
-  la planta (bloquea): f6c7
-  la lavadora (bloquea): f4c5
-  el piano (bloquea): f1c1
-  la TV (bloquea): f5c3
+  la alfombra (pisable): f3c3
+  la alfombra (pisable): f5c9
+  la alfombra (pisable): f1c2
+  la alfombra (pisable): f9c5
+  la silla (pisable): f1c4
+  el sillón (pisable): f4c3
+  la cama (pisable): f1c5
+  la silla (pisable): f9c3
+  el armario (bloquea): f2c8
+  el armario (bloquea): f6c2
+  la mesa (bloquea): f9c7, f8c7
+  la planta (bloquea): f2c7
+  la planta (bloquea): f2c1
+  el arbusto (bloquea): f8c6
+  la caja (bloquea): f9c2
+  el armario (bloquea): f8c8
+  la caja (bloquea): f2c5
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 6 (el Ático)
-  Bruno: fila 2, col 2 (el Dormitorio)
-  Clara: fila 3, col 7 (el Ático)
-  Dario: fila 4, col 3 (el Estudio)
-  Elena: fila 5, col 9 (el Porche)
-  Franco: fila 6, col 5 (el Estudio)
-  Greta: fila 7, col 4 (el Baño)   <- ASESINO
-  Hugo: fila 8, col 8 (el Porche)
-  Irene: fila 9, col 1 (el Baño)   <- VÍCTIMA
-  Métricas: 9 pistas, 7 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 5 (el Pasillo)
+  Bruno: fila 2, col 3 (la Terraza)
+  Clara: fila 3, col 7 (el Pasillo)
+  Dario: fila 4, col 4 (la Terraza)
+  Elena: fila 5, col 1 (la Cocina)
+  Franco: fila 6, col 9 (el Baño)
+  Greta: fila 7, col 6 (el Dormitorio)   <- ASESINO
+  Hugo: fila 8, col 2 (la Cocina)
+  Irene: fila 9, col 8 (el Dormitorio)   <- VÍCTIMA
+  Métricas: 9 pistas, 9 pasos de deducción, técnica máx. T4
 
 
 
 ================================================================
 CASO: caso-intermedio-s5
-Mapa: La Posada   Dificultad: intermedio
+Mapa: La Cabaña   Dificultad: intermedio
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela (LA VÍCTIMA): Estaba junto a la silla.
-  B = Bruno: Estaba en el Vestíbulo y junto a una planta.
-  C = Clara: Estaba a solas con Elena.
-  D = Dario: Estaba en el Baño.
-  E = Elena: Estaba sentada en el sillón.
-  F = Franco: Estaba a solas con Hugo.
-  G = Greta: Estaba en el Pasillo y sentada en un sofá.
-  H = Hugo: Estaba en la Cocina y sentado en un sofá.
-  I = Irene: Estaba en el Pasillo y junto a una planta.
+  A = Adela: Estaba a solas con Clara.
+  B = Bruno: Estaba en el Baño y junto a una cama.
+  C = Clara: Estaba en el Porche y sobre una cama.
+  D = Dario (LA VÍCTIMA): Estaba junto a la silla.
+  E = Elena: Estaba en el Dormitorio y junto a una planta.
+  F = Franco: Estaba en la Cocina y junto a un sillón.
+  G = Greta: Estaba en el Estudio.
+  H = Hugo: Estaba en el Comedor y junto a un sillón.
+  I = Irene: Estaba en el Comedor y junto a un piano.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6  c7  c8  c9 
     +---+---+---+---+---+---+---+---+---+
- f1 | a   a   a   a | A†  d   d   ## (d)|
+ f1 | a   ##  a  (a)| A   c   c   c   c |
     +   +   +   +   +   +   +   +   +   +
- f2 | a   a   a   a |(d)  ##  ##  B   d |
-    +   +   +   +   +---+---+   +   +   +
- f3 | ##  ##  a   C | c   c | d   d   d |
-    +   +   +   +---+   +   +   +   +---+
- f4 | a   a   a | ##  c   c | d   d | D |
-    +   +   +---+   +   +   +---+---+   +
- f5 | a   E | c   c   c   c | f   f   f |
-    +---+---+   +   +   +---+   +   +   +
- f6 | F | c   c   c   ##| f   f   f   f |
+ f2 | a   a   a   B | c   c   c   c   c |
+    +   +   +   +   +   +   +   +---+---+
+ f3 | a   a   a   ##| c  (c)  C |(f)  f |
     +   +---+---+---+---+---+---+   +   +
- f7 | e   e   e | b  (b)  G  (b)|(f)  f |
-    +   +   +   +   +   +   +   +   +   +
- f8 | e  (e)  H | b   b   b   ##| f   f |
-    +   +   +   +---+   +   +   +---+   +
- f9 | e   e   e   e | b   b   I   b | f |
+ f4 | ##| b   b   b | f   f  (f)  D†  f |
+    +   +   +   +   +---+   +   +   +---+
+ f5 | a | b   b   b   b | E   ##  f | e |
+    +---+   +   +   +   +   +   +---+   +
+ f6 | b   b   b   b   b |(f)  f | e   F |
+    +   +   +---+---+   +---+---+   +   +
+ f7 | b   G | ##  d | b | ##  e   e  (e)|
+    +---+---+   +   +---+---+   +   +   +
+ f8 | d  (d)  H   d   d   d | e   e   e |
+    +   +   +   +   +   +   +---+   +   +
+ f9 | I   ##  ##  ##  d   d   d | e   e |
     +---+---+---+---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Dormitorio  [armas: la botella rota]
-  b = el Pasillo  [armas: el abrecartas]
-  c = el Comedor
-  d = el Vestíbulo
+  a = el Baño
+  b = el Estudio  [armas: el cuchillo de cocina]
+  c = el Porche  [armas: la cuerda]
+  d = el Comedor
   e = la Cocina
-  f = el Baño
+  f = el Dormitorio  [armas: el cable]
 
 MUEBLES:
-  el sofá (pisable): f1c9
-  el sofá (pisable): f7c7
-  la silla (pisable): f2c5
-  la cama (pisable): f7c8
-  el sillón (pisable): f5c2
-  el sofá (pisable): f8c3, f8c2
-  el sofá (pisable): f7c6, f7c5
-  el arbusto (bloquea): f8c7
-  el piano (bloquea): f6c5
-  la barra (bloquea): f2c7, f2c6
-  el arbusto (bloquea): f3c2
-  el arbusto (bloquea): f1c8
-  el arbusto (bloquea): f4c4
-  el piano (bloquea): f3c1
+  la cama (pisable): f3c6, f3c7
+  la cama (pisable): f5c6, f6c6
+  la cama (pisable): f1c4
+  la silla (pisable): f3c8
+  el sillón (pisable): f7c9
+  el sofá (pisable): f9c1
+  el sofá (pisable): f4c8, f4c7
+  el sillón (pisable): f8c2
+  el arbusto (bloquea): f3c4
+  el arbusto (bloquea): f9c3
+  el piano (bloquea): f9c2
+  la planta (bloquea): f4c1
+  la planta (bloquea): f1c2
+  el piano (bloquea): f7c6
+  el arbusto (bloquea): f7c3
+  el piano (bloquea): f9c4
+  el arbusto (bloquea): f5c7
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 5 (el Vestíbulo)   <- VÍCTIMA
-  Bruno: fila 2, col 8 (el Vestíbulo)   <- ASESINO
-  Clara: fila 3, col 4 (el Dormitorio)
-  Dario: fila 4, col 9 (el Baño)
-  Elena: fila 5, col 2 (el Dormitorio)
-  Franco: fila 6, col 1 (la Cocina)
-  Greta: fila 7, col 6 (el Pasillo)
-  Hugo: fila 8, col 3 (la Cocina)
-  Irene: fila 9, col 7 (el Pasillo)
-  Métricas: 9 pistas, 4 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 5 (el Porche)
+  Bruno: fila 2, col 4 (el Baño)
+  Clara: fila 3, col 7 (el Porche)
+  Dario: fila 4, col 8 (el Dormitorio)   <- VÍCTIMA
+  Elena: fila 5, col 6 (el Dormitorio)   <- ASESINO
+  Franco: fila 6, col 9 (la Cocina)
+  Greta: fila 7, col 2 (el Estudio)
+  Hugo: fila 8, col 3 (el Comedor)
+  Irene: fila 9, col 1 (el Comedor)
+  Métricas: 9 pistas, 11 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-principiante-s1
-Mapa: El Hotel   Dificultad: principiante
+Mapa: El Teatro   Dificultad: principiante
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba sentada en el sofá.
-  B = Bruno: Estaba en el Pasillo y junto a una lavadora.
-  C = Clara: Estaba junto a la alfombra.
-  D = Dario: Estaba con Bruno.
-  E = Elena (LA VÍCTIMA): Estaba en la última casilla libre.
-  F = Franco: Era la única persona sobre una cama.
+  A = Adela (LA VÍCTIMA): Estaba en la última casilla libre.
+  B = Bruno: Era la única persona sobre una cama.
+  C = Clara: Estaba en el Dormitorio.
+  D = Dario: Estaba junto a una lavadora.
+  E = Elena: Estaba en el Jardín.
+  F = Franco: Estaba en la Terraza y junto a una planta.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | ##  d   d   d  (d)| A |
-    +---+   +   +   +---+   +
- f2 | a | d   d   d | B   ##|
-    +   +---+   +---+   +   +
- f3 | C  (a)| d | c   ##  c |
-    +   +   +---+   +   +   +
- f4 | a   ##| D   c   c   c |
-    +   +   +---+---+---+---+
- f5 | a   E†| b   b   ##  b |
+ f1 | c | a   A†  a  (a)  a |
     +   +   +   +   +   +   +
- f6 | a   a | b   F  (b)  b |
+ f2 | c | a   ##  ##  B   a |
+    +   +---+---+---+---+---+
+ f3 | C  (c)| b   b   b   b |
+    +   +---+   +   +   +   +
+ f4 | c |(d)| b   D   b   ##|
+    +---+   +   +   +   +   +
+ f5 | d   E |(b)  ##  b   ##|
+    +   +   +   +   +   +   +
+ f6 | d   d | b   ## (b)  F |
     +---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Baño  [armas: las tijeras]
-  b = la Terraza
-  c = el Pasillo  [armas: el abrecartas]
-  d = el Comedor  [armas: el frasco de veneno]
+  a = el Ático  [armas: el cuchillo de cocina]
+  b = la Terraza  [armas: la jeringa]
+  c = el Dormitorio
+  d = el Jardín
 
 MUEBLES:
-  el sofá (pisable): f1c6
-  la cama (pisable): f6c5, f6c4
-  la cama (pisable): f1c5
-  la alfombra (pisable): f3c2
-  la lavadora (bloquea): f3c5
-  la lavadora (bloquea): f2c6
-  la lavadora (bloquea): f1c1
-  la planta (bloquea): f5c5
-  la lavadora (bloquea): f4c2
+  la cama (pisable): f3c2
+  la alfombra (pisable): f6c5
+  la cama (pisable): f5c3
+  la cama (pisable): f1c5, f2c5
+  el sillón (pisable): f4c2
+  el arbusto (bloquea): f5c6
+  el armario (bloquea): f2c3
+  la lavadora (bloquea): f4c6
+  la planta (bloquea): f2c4
+  el armario (bloquea): f6c4
+  la lavadora (bloquea): f5c4
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 6 (el Pasillo)
-  Bruno: fila 2, col 5 (el Pasillo)
-  Clara: fila 3, col 1 (el Baño)   <- ASESINO
-  Dario: fila 4, col 3 (el Pasillo)
-  Elena: fila 5, col 2 (el Baño)   <- VÍCTIMA
-  Franco: fila 6, col 4 (la Terraza)
-  Métricas: 6 pistas, 5 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 3 (el Ático)   <- VÍCTIMA
+  Bruno: fila 2, col 5 (el Ático)   <- ASESINO
+  Clara: fila 3, col 1 (el Dormitorio)
+  Dario: fila 4, col 4 (la Terraza)
+  Elena: fila 5, col 2 (el Jardín)
+  Franco: fila 6, col 6 (la Terraza)
+  Métricas: 6 pistas, 5 pasos de deducción, técnica máx. T4
 
 
 
 ================================================================
 CASO: caso-principiante-s2
-Mapa: La Cabaña   Dificultad: principiante
+Mapa: El Club   Dificultad: principiante
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Era la única persona sentada en una silla.
-  B = Bruno: Estaba en el Salón.
-  C = Clara: Estaba con Franco.
-  D = Dario: Estaba en el Pasillo y junto a una barra.
-  E = Elena (LA VÍCTIMA): Estaba en el Salón y sentada en un sofá.
-  F = Franco: Estaba junto a la caja.
+  A = Adela: Estaba en el Ático y junto a un piano.
+  B = Bruno: Estaba en el Comedor y junto a una silla.
+  C = Clara: Estaba a solas con Dario.
+  D = Dario: Era la única persona sentada en una silla.
+  E = Elena (LA VÍCTIMA): Estaba junto a la cama.
+  F = Franco: Estaba junto a la cama y junto a una lavadora.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | b | d   d | A   a   ##|
-    +   +---+   +   +---+---+
- f2 | B   b | d | a | e  (e)|
-    +   +   +---+---+   +   +
- f3 | b   b | C   c | ##  ##|
-    +   +   +   +   +---+---+
- f4 | b   b | c  (c)  ##  D |
-    +   +   +---+   +   +   +
- f5 | b   E†  b | c   ##  c |
+ f1 | a | d   d   d | A   ##|
+    +   +---+---+   +   +   +
+ f2 | ##  a   B | d |(e)  ##|
+    +---+---+   +   +---+   +
+ f3 | c   C |(a)| d   ##| e |
+    +   +   +   +---+---+   +
+ f4 | D   c | a   a | ##| e |
+    +   +   +---+---+   +---+
+ f5 | c   c | b   b   b   E†|
     +   +   +   +   +   +   +
- f6 | b  (b) (b)| c   F   c |
+ f6 | c   c | ##  F  (b) (b)|
     +---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Jardín  [armas: el candelabro]
-  b = el Salón
-  c = el Pasillo  [armas: el martillo]
-  d = la Terraza
-  e = el Comedor
+  a = el Comedor
+  b = el Jardín
+  c = el Dormitorio  [armas: las tijeras]
+  d = el Porche
+  e = el Ático  [armas: el abrecartas]
 
 MUEBLES:
-  el sofá (pisable): f5c2, f6c2
-  la silla (pisable): f6c3
-  el sofá (pisable): f4c4
-  el sofá (pisable): f2c6
-  la silla (pisable): f1c4
-  la barra (bloquea): f4c5
-  la barra (bloquea): f1c6
-  la caja (bloquea): f5c5
-  la barra (bloquea): f3c6, f3c5
+  la silla (pisable): f2c5
+  la silla (pisable): f3c3
+  la silla (pisable): f4c1
+  la cama (pisable): f6c6, f6c5
+  el piano (bloquea): f2c6
+  el piano (bloquea): f1c6
+  la lavadora (bloquea): f6c3
+  la planta (bloquea): f3c5
+  la lavadora (bloquea): f4c5
+  el piano (bloquea): f2c1
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 4 (el Jardín)
-  Bruno: fila 2, col 1 (el Salón)   <- ASESINO
-  Clara: fila 3, col 3 (el Pasillo)
-  Dario: fila 4, col 6 (el Pasillo)
-  Elena: fila 5, col 2 (el Salón)   <- VÍCTIMA
-  Franco: fila 6, col 5 (el Pasillo)
-  Métricas: 6 pistas, 5 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 5 (el Ático)
+  Bruno: fila 2, col 3 (el Comedor)
+  Clara: fila 3, col 2 (el Dormitorio)
+  Dario: fila 4, col 1 (el Dormitorio)
+  Elena: fila 5, col 6 (el Jardín)   <- VÍCTIMA
+  Franco: fila 6, col 4 (el Jardín)   <- ASESINO
+  Métricas: 6 pistas, 6 pasos de deducción, técnica máx. T3
 
 
 
@@ -1055,9 +1063,9 @@ PERSONAJES Y SUS PISTAS:
   A = Adela: Estaba en la Bodega.
   B = Bruno: Estaba en el Estudio y junto a una lavadora.
   C = Clara: Estaba en el Pasillo y junto a un sofá.
-  D = Dario: Estaba junto a el armario.
+  D = Dario: Estaba en el Porche.
   E = Elena (LA VÍCTIMA): Estaba junto a un sillón y junto a la planta.
-  F = Franco: Estaba junto a el piano y junto a la planta.
+  F = Franco: Estaba junto a el piano.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
@@ -1103,7 +1111,7 @@ SOLUCIÓN (interna — el cliente nunca la recibe):
   Dario: fila 4, col 6 (el Porche)
   Elena: fila 5, col 3 (el Comedor)   <- VÍCTIMA
   Franco: fila 6, col 2 (el Comedor)   <- ASESINO
-  Métricas: 6 pistas, 4 pasos de deducción, técnica máx. T2
+  Métricas: 6 pistas, 7 pasos de deducción, técnica máx. T3
 
 
 
@@ -1113,27 +1121,27 @@ Mapa: El Museo   Dificultad: principiante
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba junto a una alfombra.
-  B = Bruno: Estaba junto a una cama y junto a una lavadora.
-  C = Clara: Era la única persona sobre una alfombra.
-  D = Dario (LA VÍCTIMA): Estaba en la última casilla libre.
-  E = Elena: Estaba junto a la planta.
+  A = Adela: Estaba en la Biblioteca y junto a una cama.
+  B = Bruno: Estaba sobre una alfombra y junto a una alfombra.
+  C = Clara (LA VÍCTIMA): Estaba en el Jardín y junto a una cama.
+  D = Dario: Estaba junto a una lavadora y junto a el piano.
+  E = Elena: Estaba junto a el sillón.
   F = Franco: Estaba en el Salón.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | a   a   A   a | d   ##|
+ f1 | A   a   a   a | d   ##|
     +   +   +   +---+   +   +
- f2 |(a) (a) (a)| B  (d) (d)|
+ f2 |(a) (a)  B | d  (d) (d)|
     +   +   +---+   +   +   +
- f3 | a   C | c | ##  d   d |
+ f3 | a  (a)| c | ##  d   C†|
     +---+   +   +   +   +   +
- f4 | c | a | c | d   ##  D†|
+ f4 | c | a | c | D   ##  d |
     +   +---+   +---+---+---+
  f5 | c   c   c   c | E   ##|
     +   +   +---+---+   +   +
- f6 | F   c | b   b  (b)  ##|
+ f6 | c   F | b   b  (b)  ##|
     +---+---+---+---+---+---+
 
 HABITACIONES:
@@ -1158,13 +1166,13 @@ REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en cel
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 3 (la Biblioteca)
-  Bruno: fila 2, col 4 (el Jardín)   <- ASESINO
-  Clara: fila 3, col 2 (la Biblioteca)
-  Dario: fila 4, col 6 (el Jardín)   <- VÍCTIMA
+  Adela: fila 1, col 1 (la Biblioteca)
+  Bruno: fila 2, col 3 (la Biblioteca)
+  Clara: fila 3, col 6 (el Jardín)   <- VÍCTIMA
+  Dario: fila 4, col 4 (el Jardín)   <- ASESINO
   Elena: fila 5, col 5 (la Cocina)
-  Franco: fila 6, col 1 (el Salón)
-  Métricas: 6 pistas, 6 pasos de deducción, técnica máx. T3
+  Franco: fila 6, col 2 (el Salón)
+  Métricas: 6 pistas, 5 pasos de deducción, técnica máx. T3
 
 
 
@@ -1174,12 +1182,12 @@ Mapa: El Teatro   Dificultad: principiante
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en el Porche y junto a un piano.
+  A = Adela: Estaba junto a un piano.
   B = Bruno (LA VÍCTIMA): Estaba en el Estudio y junto a un piano.
   C = Clara: Estaba junto a la cama.
   D = Dario: Estaba junto a un sofá.
-  E = Elena: Estaba con Dario.
-  F = Franco: Estaba solo.
+  E = Elena: Estaba a solas con Dario.
+  F = Franco: Estaba en el Dormitorio.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
@@ -1225,67 +1233,66 @@ SOLUCIÓN (interna — el cliente nunca la recibe):
   Dario: fila 4, col 4 (el Jardín)
   Elena: fila 5, col 5 (el Jardín)
   Franco: fila 6, col 1 (el Dormitorio)
-  Métricas: 6 pistas, 11 pasos de deducción, técnica máx. T4
+  Métricas: 6 pistas, 7 pasos de deducción, técnica máx. T3
 
 
 
 ================================================================
 CASO: caso-principiante-s6
-Mapa: La Villa   Dificultad: principiante
+Mapa: La Cabaña   Dificultad: principiante
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela (LA VÍCTIMA): Estaba sentada en el sillón.
-  B = Bruno: Estaba en el Pasillo.
-  C = Clara: Estaba en la Terraza y junto a una cama.
-  D = Dario: Estaba en la Biblioteca y junto a una cama.
-  E = Elena: Estaba junto a una barra.
-  F = Franco: Estaba en el Baño y junto a un sofá.
+  A = Adela (LA VÍCTIMA): Estaba en el Porche y sobre una cama.
+  B = Bruno: Estaba en el Porche y junto a un armario.
+  C = Clara: Estaba en la Cocina y junto a un armario.
+  D = Dario: Estaba en el Salón.
+  E = Elena: Estaba en la Cocina y junto a una cama.
+  F = Franco: Estaba en el Vestíbulo.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 |(b) (b)  b   b | A†  d |
-    +---+   +   +   +   +   +
- f2 | a |(b) (b)  b | d   B |
+ f1 | a   A†  a   a | e   e |
+    +   +   +   +   +   +   +
+ f2 | a  (a)  B   ##| ##  e |
+    +---+---+   +   +   +   +
+ f3 | C   ##| a   a | e   e |
     +   +   +---+---+---+   +
- f3 | ##| C | ##  ##| e | d |
-    +   +---+   +---+   +   +
- f4 | ##  a | c | D   e | d |
-    +   +   +   +   +   +---+
- f5 | E   a | c |(e) (e)  e |
-    +   +   +   +---+---+   +
- f6 | a   a | F  (c) (c)| e |
+ f4 | ##  b  (b)  b | d | D |
+    +---+---+   +   +   +---+
+ f5 |(c)  c |(b)  E | d   d |
+    +   +   +---+---+   +   +
+ f6 | c   c   c | d   F   d |
     +---+---+---+---+---+---+
 
 HABITACIONES:
   a = el Porche
-  b = la Terraza
-  c = el Baño  [armas: la cuerda]
-  d = el Pasillo
-  e = la Biblioteca  [armas: las tijeras]
+  b = la Cocina
+  c = el Comedor  [armas: la cuerda]
+  d = el Vestíbulo  [armas: el abrecartas]
+  e = el Salón
 
 MUEBLES:
-  el sofá (pisable): f1c1, f1c2
-  el sofá (pisable): f6c5, f6c4
-  la cama (pisable): f2c2, f2c3
-  el sillón (pisable): f1c5
-  la cama (pisable): f5c5, f5c4
-  la mesa (bloquea): f3c4
-  la barra (bloquea): f3c1
-  la barra (bloquea): f4c1
-  el arbusto (bloquea): f3c3
+  la cama (pisable): f1c2
+  la cama (pisable): f5c3, f4c3
+  la cama (pisable): f2c2
+  el sillón (pisable): f5c1
+  la TV (bloquea): f2c5
+  el armario (bloquea): f2c4
+  la TV (bloquea): f3c2
+  el armario (bloquea): f4c1
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 5 (el Pasillo)   <- VÍCTIMA
-  Bruno: fila 2, col 6 (el Pasillo)   <- ASESINO
-  Clara: fila 3, col 2 (la Terraza)
-  Dario: fila 4, col 4 (la Biblioteca)
-  Elena: fila 5, col 1 (el Porche)
-  Franco: fila 6, col 3 (el Baño)
+  Adela: fila 1, col 2 (el Porche)   <- VÍCTIMA
+  Bruno: fila 2, col 3 (el Porche)   <- ASESINO
+  Clara: fila 3, col 1 (la Cocina)
+  Dario: fila 4, col 6 (el Salón)
+  Elena: fila 5, col 4 (la Cocina)
+  Franco: fila 6, col 5 (el Vestíbulo)
   Métricas: 6 pistas, 4 pasos de deducción, técnica máx. T3
 
 
@@ -1296,27 +1303,27 @@ Mapa: La Galería   Dificultad: principiante
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba en el Ático y junto a un sillón.
-  B = Bruno (LA VÍCTIMA): Estaba en la Cocina y junto a una mesa.
-  C = Clara: Estaba junto a la lavadora.
-  D = Dario: Estaba en el Comedor y sentado en un sillón.
+  A = Adela: Estaba junto a la barra.
+  B = Bruno (LA VÍCTIMA): Estaba en la última casilla libre.
+  C = Clara: Estaba a solas con Dario.
+  D = Dario: Estaba en el Comedor y junto a un sillón.
   E = Elena: Estaba en la Bodega y junto a una mesa.
-  F = Franco: Estaba en la Bodega y sentado en un sillón.
+  F = Franco: Estaba junto a la planta.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | A  (c)  c   ##  c   c |
+ f1 | c  (c)  c   ##  A   c |
     +   +   +---+---+---+---+
- f2 | c   c | B†  ##  ##  ##|
+ f2 | B†  c | d   ##  ##  ##|
     +---+---+   +---+   +   +
- f3 | d   d   d | b | d   C |
+ f3 | d   d   d | C | d   d |
     +---+   +---+   +---+---+
- f4 | ##| d | b   b   D   b |
+ f4 | ##| d | b   b  (b)  D |
     +   +---+---+   +   +   +
  f5 | ##  E   ##| b   b  (b)|
     +   +   +   +---+   +   +
- f6 | a   ##  a   F | b   b |
+ f6 | a   ##  F  (a)| b   b |
     +---+---+---+---+---+---+
 
 HABITACIONES:
@@ -1341,13 +1348,13 @@ REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en cel
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 1 (el Ático)
-  Bruno: fila 2, col 3 (la Cocina)   <- VÍCTIMA
-  Clara: fila 3, col 6 (la Cocina)   <- ASESINO
-  Dario: fila 4, col 5 (el Comedor)
+  Adela: fila 1, col 5 (el Ático)   <- ASESINO
+  Bruno: fila 2, col 1 (el Ático)   <- VÍCTIMA
+  Clara: fila 3, col 4 (el Comedor)
+  Dario: fila 4, col 6 (el Comedor)
   Elena: fila 5, col 2 (la Bodega)
-  Franco: fila 6, col 4 (la Bodega)
-  Métricas: 6 pistas, 3 pasos de deducción, técnica máx. T2
+  Franco: fila 6, col 3 (la Bodega)
+  Métricas: 6 pistas, 6 pasos de deducción, técnica máx. T4
 
 
 
@@ -1357,58 +1364,58 @@ Mapa: La Posada   Dificultad: principiante
 ================================================================
 
 PERSONAJES Y SUS PISTAS:
-  A = Adela: Estaba a solas con Clara.
-  B = Bruno: Estaba en el Vestíbulo y junto a una mesa.
-  C = Clara: Estaba en el Salón y junto a una mesa.
-  D = Dario: Estaba junto a la alfombra.
-  E = Elena (LA VÍCTIMA): Estaba en el Ático y junto a una silla.
-  F = Franco: Estaba en el Ático.
+  A = Adela: Estaba junto a el sofá.
+  B = Bruno: Estaba junto a la lavadora.
+  C = Clara: Estaba junto a un armario.
+  D = Dario: Estaba junto a la cama.
+  E = Elena (LA VÍCTIMA): Estaba en la Terraza.
+  F = Franco: Estaba en el Baño y junto a un armario.
 
 TABLERO (letra = habitación, ## = mueble que bloquea, () = mueble pisable):
       c1  c2  c3  c4  c5  c6 
     +---+---+---+---+---+---+
- f1 | A | d   d | b   ##  ##|
-    +   +---+   +   +   +   +
- f2 | c   ##| d | ##  ##  B |
+ f1 | ##  c  (c)| b | A  (a)|
+    +   +   +---+   +   +   +
+ f2 | B   c | b   b | a  (a)|
+    +   +   +---+   +   +   +
+ f3 | c   C   ##| b | a   ##|
+    +---+   +---+   +   +   +
+ f4 | ##| c | D | b | a   a |
+    +   +---+   +   +---+   +
+ f5 | ## (d) (d)| b   b | E†|
     +   +   +   +   +   +   +
- f3 | c   C | d | b   b   b |
-    +   +---+   +---+---+---+
- f4 |(c)| d   d | D   a   a |
-    +---+---+---+   +---+---+
- f5 | a  (a) (a) (a)| E† (e)|
-    +---+---+---+---+   +   +
- f6 | ##  e   F   e   e   e |
+ f6 |(d)  d   d | F   ##| a |
     +---+---+---+---+---+---+
 
 HABITACIONES:
-  a = el Dormitorio
-  b = el Vestíbulo  [armas: el candelabro]
-  c = el Salón  [armas: el abrecartas]
-  d = la Terraza  [armas: la cuerda]
-  e = el Ático
+  a = la Terraza  [armas: el candelabro]
+  b = el Baño  [armas: la botella rota]
+  c = el Comedor  [armas: el martillo]
+  d = el Pasillo
 
 MUEBLES:
-  la silla (pisable): f5c2
-  la silla (pisable): f4c1
-  la silla (pisable): f5c6
-  la alfombra (pisable): f5c3, f5c4
-  la mesa (bloquea): f1c6
-  la mesa (bloquea): f2c5, f1c5
-  la mesa (bloquea): f2c2
-  la barra (bloquea): f2c4
-  el piano (bloquea): f6c1
+  el sofá (pisable): f2c6, f1c6
+  la alfombra (pisable): f5c2
+  la alfombra (pisable): f1c3
+  la cama (pisable): f5c3
+  el sillón (pisable): f6c1
+  el armario (bloquea): f6c5
+  la lavadora (bloquea): f1c1
+  la barra (bloquea): f5c1, f4c1
+  el armario (bloquea): f3c6
+  el armario (bloquea): f3c3
 
 REGLAS: exactamente una persona por fila y por columna. Nadie puede estar en celdas con muebles que bloquean. El asesino quedó a solas con la víctima en la misma habitación.
 
 ----------------------------------------------------------------
 SOLUCIÓN (interna — el cliente nunca la recibe):
-  Adela: fila 1, col 1 (el Salón)
-  Bruno: fila 2, col 6 (el Vestíbulo)
-  Clara: fila 3, col 2 (el Salón)
-  Dario: fila 4, col 4 (el Dormitorio)
-  Elena: fila 5, col 5 (el Ático)   <- VÍCTIMA
-  Franco: fila 6, col 3 (el Ático)   <- ASESINO
-  Métricas: 6 pistas, 7 pasos de deducción, técnica máx. T3
+  Adela: fila 1, col 5 (la Terraza)   <- ASESINO
+  Bruno: fila 2, col 1 (el Comedor)
+  Clara: fila 3, col 2 (el Comedor)
+  Dario: fila 4, col 3 (el Pasillo)
+  Elena: fila 5, col 6 (la Terraza)   <- VÍCTIMA
+  Franco: fila 6, col 4 (el Baño)
+  Métricas: 6 pistas, 5 pasos de deducción, técnica máx. T3
 
 
 

@@ -1,157 +1,163 @@
 {
   "caseId": "caso-principiante-s2",
-  "mapId": "mapa-principiante-s2-v2",
+  "mapId": "mapa-principiante-s2",
   "map": {
-    "id": "mapa-principiante-s2-v2",
-    "name_es": "La Cabaña",
+    "id": "mapa-principiante-s2",
+    "name_es": "El Club",
     "size": 6,
     "areas": [
       {
-        "id": "jardin",
-        "name_es": "el Jardín",
-        "cells": [
-          3,
-          4,
-          5,
-          9
-        ]
-      },
-      {
-        "id": "salon",
-        "name_es": "el Salón",
+        "id": "comedor",
+        "name_es": "el Comedor",
         "cells": [
           0,
           6,
           7,
-          12,
-          13,
-          18,
-          19,
-          24,
-          25,
-          26,
-          30,
-          31,
-          32
+          8,
+          14,
+          20,
+          21
         ]
       },
       {
-        "id": "pasillo",
-        "name_es": "el Pasillo",
+        "id": "jardin",
+        "name_es": "el Jardín",
         "cells": [
-          14,
-          15,
-          20,
-          21,
           22,
-          23,
+          26,
           27,
           28,
           29,
+          32,
           33,
           34,
           35
         ]
       },
       {
-        "id": "terraza",
-        "name_es": "la Terraza",
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
         "cells": [
-          1,
-          2,
-          8
+          12,
+          13,
+          18,
+          19,
+          24,
+          25,
+          30,
+          31
         ]
       },
       {
-        "id": "comedor",
-        "name_es": "el Comedor",
+        "id": "porche",
+        "name_es": "el Porche",
         "cells": [
+          1,
+          2,
+          3,
+          9,
+          15,
+          16
+        ]
+      },
+      {
+        "id": "atico",
+        "name_es": "el Ático",
+        "cells": [
+          4,
+          5,
           10,
           11,
-          16,
-          17
+          17,
+          23
         ]
       }
     ],
     "objects": [
       {
-        "id": "sofa-1",
-        "type": "sofa",
+        "id": "silla-1",
+        "type": "silla",
         "cells": [
-          25,
-          31
+          10
         ]
       },
       {
         "id": "silla-2",
         "type": "silla",
         "cells": [
-          32
+          14
         ]
       },
       {
-        "id": "sofa-3",
-        "type": "sofa",
+        "id": "silla-3",
+        "type": "silla",
         "cells": [
-          21
+          18
         ]
       },
       {
-        "id": "sofa-4",
-        "type": "sofa",
+        "id": "cama-4",
+        "type": "cama",
+        "cells": [
+          35,
+          34
+        ]
+      },
+      {
+        "id": "piano-5",
+        "type": "piano",
         "cells": [
           11
         ]
       },
       {
-        "id": "silla-5",
-        "type": "silla",
-        "cells": [
-          3
-        ]
-      },
-      {
-        "id": "barra-6",
-        "type": "barra",
-        "cells": [
-          22
-        ]
-      },
-      {
-        "id": "barra-7",
-        "type": "barra",
+        "id": "piano-6",
+        "type": "piano",
         "cells": [
           5
         ]
       },
       {
-        "id": "caja-8",
-        "type": "caja",
+        "id": "lavadora-7",
+        "type": "lavadora",
         "cells": [
-          28
+          32
         ]
       },
       {
-        "id": "barra-9",
-        "type": "barra",
+        "id": "planta-8",
+        "type": "planta",
         "cells": [
-          17,
           16
+        ]
+      },
+      {
+        "id": "lavadora-9",
+        "type": "lavadora",
+        "cells": [
+          22
+        ]
+      },
+      {
+        "id": "piano-10",
+        "type": "piano",
+        "cells": [
+          6
         ]
       }
     ],
     "weapons": [
       {
-        "id": "martillo",
-        "name_es": "el martillo",
-        "category": "contundente",
-        "area": "pasillo"
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "atico"
       },
       {
-        "id": "candelabro",
-        "name_es": "el candelabro",
-        "category": "contundente",
-        "area": "jardin"
+        "id": "tijeras",
+        "name_es": "las tijeras",
+        "category": "cortante",
+        "area": "dormitorio"
       }
     ]
   },
@@ -192,71 +198,82 @@
   ],
   "clues": [
     {
-      "type": "only_one_on",
-      "subject": "c1",
-      "group": "silla"
-    },
-    {
-      "type": "in_area",
-      "subject": "c2",
-      "area": "salon"
-    },
-    {
-      "type": "same_area",
-      "a": "c3",
-      "b": "c6"
-    },
-    {
       "type": "compound",
-      "subject": "c4",
+      "subject": "c1",
       "parts": [
         {
           "type": "in_area",
-          "subject": "c4",
-          "area": "pasillo"
+          "subject": "c1",
+          "area": "atico"
         },
         {
           "type": "beside_object",
-          "subject": "c4",
-          "group": "barra"
+          "subject": "c1",
+          "group": "piano"
         }
       ]
     },
     {
       "type": "compound",
-      "subject": "c5",
+      "subject": "c2",
       "parts": [
         {
           "type": "in_area",
-          "subject": "c5",
-          "area": "salon"
+          "subject": "c2",
+          "area": "comedor"
         },
         {
-          "type": "on_object",
-          "subject": "c5",
-          "group": "sofa"
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "silla"
         }
       ]
     },
     {
+      "type": "alone_with",
+      "a": "c3",
+      "b": "c4"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c4",
+      "group": "silla"
+    },
+    {
       "type": "beside_object",
+      "subject": "c5",
+      "group": "cama"
+    },
+    {
+      "type": "compound",
       "subject": "c6",
-      "group": "caja"
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "cama"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "lavadora"
+        }
+      ]
     }
   ],
   "solution": {
     "positions": {
-      "c1": 3,
-      "c2": 6,
-      "c3": 14,
-      "c4": 23,
-      "c5": 25,
-      "c6": 34
+      "c1": 4,
+      "c2": 8,
+      "c3": 13,
+      "c4": 18,
+      "c5": 29,
+      "c6": 33
     },
-    "murderer": "c2"
+    "murderer": "c6"
   },
   "metrics": {
-    "deductionSteps": 5,
+    "deductionSteps": 6,
     "maxTier": 3,
     "clueCount": 6
   }
