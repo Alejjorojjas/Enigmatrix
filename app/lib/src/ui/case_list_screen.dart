@@ -27,14 +27,40 @@ class CaseListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ENIGMATRIX · banco de pruebas Fase 1',
-            style: TextStyle(letterSpacing: 2)),
+        toolbarHeight: 90,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('ENIGMATRIX',
+                style: TextStyle(
+                    fontFamily: Brand.displayFont,
+                    fontSize: 30,
+                    letterSpacing: 6,
+                    fontWeight: FontWeight.w700,
+                    color: Brand.cream)),
+            Container(
+              margin: const EdgeInsets.only(top: 2),
+              height: 2.5,
+              width: 130,
+              decoration: BoxDecoration(
+                  gradient: Brand.goldGradient,
+                  borderRadius: BorderRadius.circular(2)),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text('Banco de pruebas · Fase 1',
+                  style: TextStyle(
+                      fontSize: 12, color: Brand.muted, letterSpacing: 2)),
+            ),
+          ],
+        ),
         actions: [
           TextButton.icon(
             onPressed: () => _copyFeedback(context, ref),
-            icon: const Icon(Icons.copy_all, color: Brand.gold),
+            icon: const Icon(Icons.copy_all, color: Brand.goldBright),
             label: const Text('Copiar feedback',
-                style: TextStyle(color: Brand.gold)),
+                style: TextStyle(color: Brand.goldBright)),
           ),
           const SizedBox(width: 12),
         ],
@@ -52,13 +78,31 @@ class CaseListScreen extends ConsumerWidget {
             children: [
               for (final e in byDifficulty.entries) ...[
                 Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 8),
-                  child: Text(
-                    e.key.toUpperCase(),
-                    style: const TextStyle(
-                        color: Brand.gold,
-                        letterSpacing: 3,
-                        fontWeight: FontWeight.bold),
+                  padding: const EdgeInsets.only(top: 14, bottom: 10),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                            color: difficultyColor(e.key),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: difficultyColor(e.key)
+                                      .withValues(alpha: .7),
+                                  blurRadius: 8),
+                            ]),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${e.key.toUpperCase()} · ${e.value.first.map.size}×${e.value.first.map.size}',
+                        style: TextStyle(
+                            color: difficultyColor(e.key),
+                            letterSpacing: 3,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ],
                   ),
                 ),
                 Wrap(
@@ -113,26 +157,51 @@ class _CaseCard extends StatelessWidget {
     final done = doneRaw == null ? null : jsonDecode(doneRaw);
     final number = pc.caseId.split('-s').last;
 
+    final diffColor = difficultyColor(pc.difficulty);
     return InkWell(
       onTap: () => context.go('/play/${pc.caseId}'),
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
+      hoverColor: Brand.gold.withValues(alpha: .08),
       child: Container(
-        width: 230,
+        width: 235,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Brand.surface,
-          borderRadius: BorderRadius.circular(12),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Brand.surfaceHigh, Brand.surface],
+          ),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
-              color: done != null ? Brand.success : Brand.gold.withValues(alpha: .35)),
+              color: done != null
+                  ? Brand.success.withValues(alpha: .8)
+                  : diffColor.withValues(alpha: .45)),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black54, blurRadius: 10, offset: Offset(0, 5)),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Text('Caso $number',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16)),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: diffColor.withValues(alpha: .2),
+                    borderRadius: BorderRadius.circular(6),
+                    border:
+                        Border.all(color: diffColor.withValues(alpha: .6)),
+                  ),
+                  child: Text('CASO $number',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 13,
+                          letterSpacing: 1,
+                          color: diffColor)),
+                ),
                 const Spacer(),
                 if (done != null)
                   const Icon(Icons.check_circle,
@@ -142,23 +211,41 @@ class _CaseCard extends StatelessWidget {
                     padding: EdgeInsets.only(left: 6),
                     child: Tooltip(
                       message: 'Incluye arma homicida',
-                      child:
-                          Icon(Icons.colorize, size: 16, color: Brand.gold),
+                      child: Icon(Icons.colorize,
+                          size: 16, color: Brand.goldBright),
                     ),
                   ),
               ],
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 10),
             Text(pc.map.nameEs,
-                style: const TextStyle(color: Brand.muted, fontSize: 13)),
-            Text(
-                '${pc.map.size}×${pc.map.size} · ${pc.characters.length} personajes · ${pc.clues.length} pistas',
-                style: const TextStyle(color: Brand.muted, fontSize: 13)),
+                style: const TextStyle(
+                    fontFamily: Brand.displayFont,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w700,
+                    color: Brand.cream)),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.group_outlined,
+                    size: 14, color: Brand.muted),
+                const SizedBox(width: 4),
+                Text('${pc.characters.length}',
+                    style:
+                        const TextStyle(color: Brand.muted, fontSize: 12.5)),
+                const SizedBox(width: 12),
+                const Icon(Icons.search, size: 14, color: Brand.muted),
+                const SizedBox(width: 4),
+                Text('${pc.clues.length} pistas',
+                    style:
+                        const TextStyle(color: Brand.muted, fontSize: 12.5)),
+              ],
+            ),
             if (done != null)
               Padding(
-                padding: const EdgeInsets.only(top: 6),
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                    'Resuelto en ${done['time']}s · ${done['errors']} errores',
+                    '✓ Resuelto en ${done['time']}s · ${done['errors']} errores',
                     style:
                         const TextStyle(color: Brand.success, fontSize: 12)),
               ),

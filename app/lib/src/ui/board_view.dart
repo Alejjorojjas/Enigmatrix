@@ -1,8 +1,10 @@
-/// Tablero jugable: celdas con áreas/paredes, muebles (pisables y
-/// bloqueantes), marcas y drag & drop.
-/// Interacción 2026-06-11: tap = candidato (letra) · mantener oprimido o
-/// arrastrar = confirmado (círculo con avatar) · X grandes.
+/// Tablero jugable: marco con profundidad, habitaciones con gradiente y
+/// etiqueta de nombre (estilo Murdoku), muebles a color, marcas y drag & drop.
+/// Interacción: tap = candidato (letra) · mantener oprimido o arrastrar =
+/// confirmado (círculo con avatar) · X grandes.
 library;
+
+import 'dart:math' as math;
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +27,7 @@ class BoardElementDrag {
   const BoardElementDrag(this.cell, this.element);
 }
 
-/// Paleta para áreas (modo mapa). En modo lógica se atenúan.
+/// Paleta para habitaciones (modo mapa). En modo lógica se atenúan.
 const areaPalette = [
   Color(0xFF8D6E63),
   Color(0xFF5C6BC0),
@@ -78,6 +80,21 @@ IconData objectIcon(ObjectType type) => switch (type) {
       ObjectType.barra => Icons.countertops,
     };
 
+/// Color propio de cada mueble (madera, tela, vegetación...).
+Color objectColor(ObjectType type) => switch (type) {
+      ObjectType.silla || ObjectType.sillon => const Color(0xFFD7B98E),
+      ObjectType.sofa => const Color(0xFFCF8B6E),
+      ObjectType.cama => const Color(0xFFA8CBEA),
+      ObjectType.alfombra => const Color(0xFFC59BD6),
+      ObjectType.mesa || ObjectType.barra => const Color(0xFFC49A6C),
+      ObjectType.tv => const Color(0xFF86B9D6),
+      ObjectType.planta || ObjectType.arbusto => const Color(0xFF8BC97B),
+      ObjectType.armario => const Color(0xFFB08A5E),
+      ObjectType.caja => const Color(0xFFD0A95E),
+      ObjectType.lavadora => const Color(0xFFA9BCCD),
+      ObjectType.piano => const Color(0xFF9C9CA8),
+    };
+
 class BoardView extends ConsumerWidget {
   final PuzzleCase pc;
 
@@ -93,27 +110,103 @@ class BoardView extends ConsumerWidget {
 
     return AspectRatio(
       aspectRatio: 1,
-      child: IgnorePointer(
-        ignoring: state.locked || state.solved,
-        child: Column(
-          children: [
-            for (var r = 0; r < n; r++)
-              Expanded(
-                child: Row(
-                  children: [
-                    for (var c = 0; c < n; c++)
-                      Expanded(
-                          child: _Cell(
-                              pc: pc,
-                              cell: map.cellAt(r, c),
-                              onPlace: onPlace)),
-                  ],
-                ),
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D0B09),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+              color: Brand.gold.withValues(alpha: .45), width: 1.5),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black87, blurRadius: 30, offset: Offset(0, 12)),
+            BoxShadow(
+                color: Color(0x33E3B341), blurRadius: 60, spreadRadius: -20),
           ],
+        ),
+        padding: const EdgeInsets.all(7),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(11),
+          child: IgnorePointer(
+            ignoring: state.locked || state.solved,
+            child: LayoutBuilder(
+              builder: (context, box) {
+                final cs = box.maxWidth / n;
+                return Stack(
+                  children: [
+                    Column(
+                      children: [
+                        for (var r = 0; r < n; r++)
+                          Expanded(
+                            child: Row(
+                              children: [
+                                for (var c = 0; c < n; c++)
+                                  Expanded(
+                                      child: _Cell(
+                                          pc: pc,
+                                          cell: map.cellAt(r, c),
+                                          onPlace: onPlace)),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                    // Nombres de habitación sobre el mapa (estilo Murdoku).
+                    if (state.mapMode)
+                      for (final label in _areaLabels(map, cs, box.maxWidth))
+                        label,
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  List<Widget> _areaLabels(GameMap map, double cs, double boardW) {
+    final labels = <Widget>[];
+    final fontSize = (cs * .30).clamp(9.0, 15.0);
+    for (final area in map.areas) {
+      // Celda inferior-izquierda de la habitación para anclar la etiqueta.
+      var best = area.cells.first;
+      for (final c in area.cells) {
+        if (map.row(c) > map.row(best) ||
+            (map.row(c) == map.row(best) && map.col(c) < map.col(best))) {
+          best = c;
+        }
+      }
+      final name = area.nameEs
+          .replaceFirst(RegExp(r'^(el|la|los|las)\s', caseSensitive: false), '')
+          .toUpperCase();
+      final estWidth = name.length * fontSize * .68 + 6;
+      final left = math.min(
+          map.col(best) * cs + 3, math.max(0.0, boardW - estWidth));
+      final top = map.row(best) * cs + cs - fontSize - 7;
+      labels.add(Positioned(
+        left: left,
+        top: top,
+        child: IgnorePointer(
+          child: Text(
+            name,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.w900,
+              letterSpacing: .5,
+              color: Colors.white,
+              shadows: const [
+                Shadow(color: Colors.black, blurRadius: 3),
+                Shadow(color: Colors.black, offset: Offset(1.2, 1.2)),
+                Shadow(color: Colors.black, offset: Offset(-1.2, 1.2)),
+                Shadow(color: Colors.black, offset: Offset(1.2, -1.2)),
+                Shadow(color: Colors.black, offset: Offset(-1.2, -1.2)),
+              ],
+            ),
+          ),
+        ),
+      ));
+    }
+    return labels;
   }
 }
 
@@ -139,13 +232,14 @@ class _Cell extends ConsumerWidget {
         !map.inGrid(rr, cc) ||
         map.areaIdOf(map.cellAt(rr, cc)) != map.areaIdOf(cell);
 
-    final wallColor = Brand.gold.withValues(alpha: .8);
-    final gridColor = Brand.cream.withValues(alpha: .12);
+    final wallColor = const Color(0xFF0D0B09);
+    final gridColor = Colors.black.withValues(alpha: .25);
     BorderSide side(bool isWall) => BorderSide(
-        color: isWall ? wallColor : gridColor, width: isWall ? 2.5 : 0.6);
+        color: isWall ? wallColor : gridColor, width: isWall ? 3.0 : 0.7);
 
-    final baseColor = areaPalette[areaIdx % areaPalette.length]
-        .withValues(alpha: state.mapMode ? .30 : .08);
+    final base = areaPalette[areaIdx % areaPalette.length];
+    final hi = state.mapMode ? .40 : .12;
+    final lo = state.mapMode ? .24 : .07;
 
     // Indicador de armas: en la primera celda del área.
     final weapons = map.weaponsInArea(map.areaIdOf(cell));
@@ -170,11 +264,24 @@ class _Cell extends ConsumerWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            color: isError
-                ? Brand.error.withValues(alpha: .45)
-                : hovering.isNotEmpty
-                    ? Brand.gold.withValues(alpha: .35)
-                    : baseColor,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isError
+                  ? [
+                      Brand.error.withValues(alpha: .55),
+                      Brand.error.withValues(alpha: .35)
+                    ]
+                  : hovering.isNotEmpty
+                      ? [
+                          Brand.goldBright.withValues(alpha: .45),
+                          Brand.gold.withValues(alpha: .30)
+                        ]
+                      : [
+                          base.withValues(alpha: hi),
+                          base.withValues(alpha: lo)
+                        ],
+            ),
             border: Border(
               top: side(wall(r - 1, c)),
               bottom: side(wall(r + 1, c)),
@@ -184,17 +291,6 @@ class _Cell extends ConsumerWidget {
           ),
           child: Stack(
             children: [
-              // Letra del área como marca de agua.
-              Positioned(
-                left: 3,
-                bottom: 1,
-                child: Text(
-                  String.fromCharCode('a'.codeUnitAt(0) + areaIdx),
-                  style: TextStyle(
-                      fontSize: state.mapMode ? 10 : 13,
-                      color: Brand.cream.withValues(alpha: .35)),
-                ),
-              ),
               if (isAreaAnchor)
                 Positioned(
                   right: 2,
@@ -202,26 +298,42 @@ class _Cell extends ConsumerWidget {
                   child: Tooltip(
                     message:
                         'Armas: ${weapons.map((w) => w.nameEs).join(', ')}',
-                    child: const Icon(Icons.colorize,
-                        size: 12, color: Brand.goldBright),
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: .45),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.colorize,
+                          size: 11, color: Brand.goldBright),
+                    ),
                   ),
                 ),
-              // Mueble bloqueante: ocupa la celda.
+              // Mueble bloqueante: ficha sólida con color propio.
               if (blocked)
                 Center(
                   child: Tooltip(
                     message: '${obj.type.defEs} (bloquea)',
                     child: FittedBox(
                       child: Padding(
-                        padding: const EdgeInsets.all(6),
-                        child: Icon(objectIcon(obj.type),
-                            color: Brand.cream.withValues(alpha: .55),
-                            size: 22),
+                        padding: const EdgeInsets.all(5),
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: .35),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: objectColor(obj.type)
+                                    .withValues(alpha: .5)),
+                          ),
+                          child: Icon(objectIcon(obj.type),
+                              color: objectColor(obj.type), size: 22),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              // Mueble pisable: se dibuja tenue debajo de las marcas.
+              // Mueble pisable: silueta a color debajo de las marcas.
               if (obj != null && !blocked)
                 Center(
                   child: Tooltip(
@@ -230,9 +342,9 @@ class _Cell extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: Icon(objectIcon(obj.type),
-                            color: Brand.cream
-                                .withValues(alpha: state.mapMode ? .35 : .18),
-                            size: 24),
+                            color: objectColor(obj.type)
+                                .withValues(alpha: state.mapMode ? .65 : .30),
+                            size: 25),
                       ),
                     ),
                   ),
@@ -253,7 +365,6 @@ class _Cell extends ConsumerWidget {
     showDialog<void>(
       context: context,
       builder: (ctx) => SimpleDialog(
-        backgroundColor: Brand.surface,
         title: const Text('Borrar de esta casilla',
             style: TextStyle(fontSize: 16)),
         children: [
@@ -323,25 +434,23 @@ class _CellMarks extends ConsumerWidget {
     // Candidatos: solo letras.
     final letters = [
       for (final id in content.candidates)
-        _draggableMark(CandidateElement(id), _CandidateLetter(pc: pc, charId: id)),
+        _draggableMark(
+            CandidateElement(id), _CandidateLetter(pc: pc, charId: id)),
     ];
 
-    return LayoutBuilder(
-      builder: (context, box) => Stack(
-        children: [
-          if (xWidget != null)
-            Positioned.fill(child: Center(child: xWidget)),
-          if (letters.isNotEmpty)
-            Positioned.fill(
-              child: Center(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Wrap(spacing: 1, children: letters),
-                ),
+    return Stack(
+      children: [
+        if (xWidget != null) Positioned.fill(child: Center(child: xWidget)),
+        if (letters.isNotEmpty)
+          Positioned.fill(
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Wrap(spacing: 1, children: letters),
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
@@ -365,16 +474,29 @@ class _ConfirmedAvatar extends StatelessWidget {
     final isVictim = charId == pc.victimId;
     return LayoutBuilder(
       builder: (context, box) {
-        final d = (box.maxWidth.isFinite ? box.maxWidth : 48) * .78;
+        final d = (box.maxWidth.isFinite ? box.maxWidth : 48) * .80;
         return Container(
-          width: d.clamp(26, 56),
-          height: d.clamp(26, 56),
+          width: d.clamp(26, 58),
+          height: d.clamp(26, 58),
           decoration: BoxDecoration(
-            color: color,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.lerp(color, Colors.white, .25)!,
+                color,
+                Color.lerp(color, Colors.black, .25)!,
+              ],
+            ),
             shape: BoxShape.circle,
-            border: Border.all(color: Brand.cream, width: 2),
-            boxShadow: const [
-              BoxShadow(color: Colors.black45, blurRadius: 4),
+            border: Border.all(color: Colors.white, width: 2.2),
+            boxShadow: [
+              const BoxShadow(
+                  color: Colors.black54, blurRadius: 6, offset: Offset(0, 3)),
+              BoxShadow(
+                  color: color.withValues(alpha: .55),
+                  blurRadius: 14,
+                  spreadRadius: 1),
             ],
           ),
           child: Center(
@@ -408,10 +530,13 @@ class _CandidateLetter extends StatelessWidget {
     return Text(
       isVictim ? '†' : pc.character(charId).nameEs[0],
       style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w800,
-        color: charColor(pc, charId),
-        shadows: const [Shadow(color: Colors.black54, blurRadius: 2)],
+        fontSize: 17,
+        fontWeight: FontWeight.w900,
+        color: Color.lerp(charColor(pc, charId), Colors.white, .25),
+        shadows: const [
+          Shadow(color: Colors.black, blurRadius: 3),
+          Shadow(color: Colors.black87, offset: Offset(1, 1)),
+        ],
       ),
     );
   }
@@ -426,15 +551,18 @@ class _XMark extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, box) {
           final base = box.maxWidth.isFinite ? box.maxWidth : 48;
-          final size = base * (level == XLevel.small ? .5 : .8);
+          final size = base * (level == XLevel.small ? .5 : .82);
           return Text(
             '✕',
             style: TextStyle(
-              fontSize: size.clamp(14, 52),
+              fontSize: size.clamp(14, 54),
               height: 1,
               fontWeight: FontWeight.w900,
-              color: Colors.black.withValues(alpha: isAuto ? .55 : .85),
-              shadows: const [Shadow(color: Colors.white24, blurRadius: 2)],
+              color: Colors.black.withValues(alpha: isAuto ? .50 : .85),
+              shadows: [
+                Shadow(
+                    color: Colors.white.withValues(alpha: .22), blurRadius: 2),
+              ],
             ),
           );
         },
