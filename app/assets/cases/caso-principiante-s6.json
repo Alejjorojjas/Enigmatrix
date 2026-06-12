@@ -1,0 +1,276 @@
+{
+  "caseId": "caso-principiante-s6",
+  "mapId": "mapa-principiante-s6",
+  "map": {
+    "id": "mapa-principiante-s6",
+    "name_es": "La Villa",
+    "size": 6,
+    "areas": [
+      {
+        "id": "porche",
+        "name_es": "el Porche",
+        "cells": [
+          6,
+          12,
+          18,
+          19,
+          24,
+          25,
+          30,
+          31
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          7,
+          8,
+          9,
+          13
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
+          14,
+          15,
+          20,
+          26,
+          32,
+          33,
+          34
+        ]
+      },
+      {
+        "id": "pasillo",
+        "name_es": "el Pasillo",
+        "cells": [
+          4,
+          5,
+          10,
+          11,
+          17,
+          23
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          16,
+          21,
+          22,
+          27,
+          28,
+          29,
+          35
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sofa-1",
+        "type": "sofa",
+        "cells": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "sofa-2",
+        "type": "sofa",
+        "cells": [
+          34,
+          33
+        ]
+      },
+      {
+        "id": "cama-3",
+        "type": "cama",
+        "cells": [
+          7,
+          8
+        ]
+      },
+      {
+        "id": "sillon-4",
+        "type": "sillon",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "cama-5",
+        "type": "cama",
+        "cells": [
+          28,
+          27
+        ]
+      },
+      {
+        "id": "mesa-6",
+        "type": "mesa",
+        "cells": [
+          15
+        ]
+      },
+      {
+        "id": "barra-7",
+        "type": "barra",
+        "cells": [
+          12
+        ]
+      },
+      {
+        "id": "barra-8",
+        "type": "barra",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "arbusto-9",
+        "type": "arbusto",
+        "cells": [
+          14
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "cuerda",
+        "name_es": "la cuerda",
+        "category": "asfixia",
+        "area": "bano"
+      },
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras",
+        "category": "cortante",
+        "area": "biblioteca"
+      }
+    ]
+  },
+  "difficulty": "principiante",
+  "hasWeapon": false,
+  "victim": "c1",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "on_object",
+      "subject": "c1",
+      "group": "sillon"
+    },
+    {
+      "type": "in_area",
+      "subject": "c2",
+      "area": "pasillo"
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "terraza"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "barra"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "bano"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "sofa"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 11,
+      "c3": 13,
+      "c4": 21,
+      "c5": 24,
+      "c6": 32
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 4,
+    "maxTier": 3,
+    "clueCount": 6
+  }
+}

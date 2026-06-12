@@ -6,9 +6,11 @@
 
 **FASE 1 — EN CURSO**. App Flutter en `app/` corriendo como web local: `JUGAR.bat` abre http://localhost:8123.
 
-**2026-06-11 — REDISEÑO MURDOKU del motor** (feedback del usuario jugando murdoku.com + video del cuadernillo): el motor pasó de pistas mecánicas (fila/columna/cardinales) a vocabulario de muebles. Decisiones: una pista por personaje en su tarjeta (+extras desde intermedio, máx 2); muebles pisables (silla/sillón/sofá/cama/alfombra) vs bloqueantes (mesa/TV/planta/armario/caja), multi-celda, con grupos (planta+arbusto); pistas mecánicas ELIMINADAS de V1; tamaño de grilla crece con dificultad; víctima con relleno "última casilla libre" cuando se puede; compuestas desde principiante. Mapas de prueba reamueblados. 44 tests del motor + 9 de la app pasando. 20 casos regenerados (assets de la app + hojas en `production/fase0-casos/`). UI: tarjetas de personaje con su pista, iconos de muebles en el tablero.
+**2026-06-11 — REDISEÑO MURDOKU del motor** (feedback del usuario jugando murdoku.com + video del cuadernillo): vocabulario de muebles, una pista por tarjeta, sin pistas mecánicas (detalle en spec 16 §3 y §7).
 
-Pendiente: que el usuario juegue el nuevo estilo y dé feedback; tutorial; UI definitiva con mockups; build Android.
+**2026-06-11 — SEGUNDA RONDA de playtest**: (1) MAPAS ÚNICOS POR CASO — generador procedural de mapas (`tools/lib/src/map_generator.dart`: habitaciones por crecimiento de regiones, muebles, armas en áreas distintas; el mapa viaja embebido en el JSON del caso vía `CaseFactory`); doc 05 actualizado (autorado a mano = solo piel artística). (2) TAMAÑOS MURDOKU: 6×6/8×8/9×9/12×12/16×16 (referencias por imágenes del usuario). (3) AUTO-X opcional (default on): confirmar tacha fila/columna, se retira al borrar el confirmado (board_state con autoXFrom). (4) Interacción: tap = candidato (letra) · mantener oprimido o arrastrar = confirmado (círculo avatar) · X grandes. 57 tests motor + 15 app. 20 casos regenerados con mapas únicos.
+
+Pendiente: que el usuario juegue y dé feedback; tutorial; UI definitiva con mockups ("quiero que se vea con más imágenes" — necesita los sprites/arte); build Android; experto 12×12 y elite 16×16 (perfiles ya existen, evaluar UI móvil).
 
 FASE 0 — COMPLETADA (2026-06-10, motor rediseñado 06-11).
 

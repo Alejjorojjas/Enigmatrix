@@ -1,0 +1,261 @@
+{
+  "caseId": "caso-principiante-s5",
+  "mapId": "mapa-principiante-s5",
+  "map": {
+    "id": "mapa-principiante-s5",
+    "name_es": "El Teatro",
+    "size": 6,
+    "areas": [
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          3,
+          8,
+          9,
+          10,
+          15,
+          16,
+          21,
+          22,
+          26,
+          27,
+          28
+        ]
+      },
+      {
+        "id": "porche",
+        "name_es": "el Porche",
+        "cells": [
+          4,
+          5,
+          11,
+          17,
+          23,
+          29,
+          32,
+          33,
+          34,
+          35
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          24,
+          25,
+          30,
+          31
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          0,
+          1,
+          2,
+          6,
+          7,
+          12,
+          13,
+          14,
+          18,
+          19,
+          20
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sofa-1",
+        "type": "sofa",
+        "cells": [
+          15
+        ]
+      },
+      {
+        "id": "sofa-2",
+        "type": "sofa",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "sofa-3",
+        "type": "sofa",
+        "cells": [
+          8
+        ]
+      },
+      {
+        "id": "cama-4",
+        "type": "cama",
+        "cells": [
+          20
+        ]
+      },
+      {
+        "id": "armario-5",
+        "type": "armario",
+        "cells": [
+          1
+        ]
+      },
+      {
+        "id": "armario-6",
+        "type": "armario",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "armario-7",
+        "type": "armario",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "armario-8",
+        "type": "armario",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "piano-9",
+        "type": "piano",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "piano-10",
+        "type": "piano",
+        "cells": [
+          4
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "estudio"
+      },
+      {
+        "id": "cuchillo",
+        "name_es": "el cuchillo de cocina",
+        "category": "cortante",
+        "area": "jardin"
+      }
+    ]
+  },
+  "difficulty": "principiante",
+  "hasWeapon": false,
+  "victim": "c2",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "porche"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "piano"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "piano"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "cama"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "sofa"
+    },
+    {
+      "type": "same_area",
+      "a": "c5",
+      "b": "c4"
+    },
+    {
+      "type": "alone",
+      "subject": "c6"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 5,
+      "c2": 7,
+      "c3": 14,
+      "c4": 21,
+      "c5": 28,
+      "c6": 30
+    },
+    "murderer": "c3"
+  },
+  "metrics": {
+    "deductionSteps": 11,
+    "maxTier": 4,
+    "clueCount": 6
+  }
+}

@@ -1,0 +1,381 @@
+{
+  "caseId": "caso-casual-s4",
+  "mapId": "mapa-casual-s4",
+  "map": {
+    "id": "mapa-casual-s4",
+    "name_es": "La Galería",
+    "size": 8,
+    "areas": [
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          32,
+          33,
+          40,
+          48,
+          51,
+          52,
+          53,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62
+        ]
+      },
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          8,
+          9,
+          10,
+          11,
+          12,
+          16,
+          17,
+          18
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          24,
+          25,
+          26,
+          28,
+          34,
+          35,
+          36,
+          41,
+          42,
+          43,
+          44,
+          49,
+          50
+        ]
+      },
+      {
+        "id": "atico",
+        "name_es": "el Ático",
+        "cells": [
+          38,
+          39,
+          45,
+          46,
+          47,
+          54,
+          55,
+          63
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          6,
+          7,
+          13,
+          14,
+          15,
+          19,
+          20,
+          21,
+          22,
+          23,
+          27,
+          29,
+          30,
+          31,
+          37
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "cama-1",
+        "type": "cama",
+        "cells": [
+          39,
+          47
+        ]
+      },
+      {
+        "id": "cama-2",
+        "type": "cama",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "sofa-3",
+        "type": "sofa",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "alfombra-4",
+        "type": "alfombra",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "sillon-5",
+        "type": "sillon",
+        "cells": [
+          29
+        ]
+      },
+      {
+        "id": "cama-6",
+        "type": "cama",
+        "cells": [
+          63
+        ]
+      },
+      {
+        "id": "barra-7",
+        "type": "barra",
+        "cells": [
+          12
+        ]
+      },
+      {
+        "id": "lavadora-8",
+        "type": "lavadora",
+        "cells": [
+          27
+        ]
+      },
+      {
+        "id": "lavadora-9",
+        "type": "lavadora",
+        "cells": [
+          7
+        ]
+      },
+      {
+        "id": "lavadora-10",
+        "type": "lavadora",
+        "cells": [
+          24
+        ]
+      },
+      {
+        "id": "barra-11",
+        "type": "barra",
+        "cells": [
+          10,
+          11
+        ]
+      },
+      {
+        "id": "arbusto-12",
+        "type": "arbusto",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "arbusto-13",
+        "type": "arbusto",
+        "cells": [
+          38
+        ]
+      },
+      {
+        "id": "barra-14",
+        "type": "barra",
+        "cells": [
+          48
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "veneno",
+        "name_es": "el frasco de veneno",
+        "category": "veneno",
+        "area": "jardin"
+      },
+      {
+        "id": "botella",
+        "name_es": "la botella rota",
+        "category": "cortante",
+        "area": "terraza"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c3",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "alfombra"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "barra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "jardin"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "barra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "terraza"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "sillon"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "sofa"
+    },
+    {
+      "type": "alone_with",
+      "a": "c6",
+      "b": "c7"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "atico"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "barra"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 3,
+      "c2": 9,
+      "c3": 20,
+      "c4": 30,
+      "c5": 34,
+      "c6": 45,
+      "c7": 55,
+      "c8": 56
+    },
+    "murderer": "c4"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 3,
+    "clueCount": 8
+  }
+}

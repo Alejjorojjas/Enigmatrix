@@ -73,8 +73,8 @@ class _GameView extends ConsumerWidget {
             ),
           );
           if (yes == true && cell != null && tool is SuspectTool) {
-            controller.place(cell,
-                charId: tool.charId, markState: tool.state, replace: true);
+            controller.placeSuspect(cell,
+                charId: tool.charId, confirm: true, replace: true);
           }
         case ActionFeedback.incompleteBoard:
           showMsg('Confirma a cada personaje exactamente una vez '
@@ -88,10 +88,11 @@ class _GameView extends ConsumerWidget {
       }
     }
 
-    void onPlace(int cell, Tool tool) async {
+    // Tap = candidato (letra) · mantener oprimido o arrastrar = confirmado.
+    void onPlace(int cell, Tool tool, {required bool confirm}) async {
       final fb = switch (tool) {
-        SuspectTool(:final charId, :final state) =>
-          controller.place(cell, charId: charId, markState: state),
+        SuspectTool(:final charId) =>
+          controller.placeSuspect(cell, charId: charId, confirm: confirm),
         XTool(:final level) => controller.placeXMark(cell, level),
       };
       await handleFeedback(fb, cell: cell, tool: tool);
@@ -341,6 +342,21 @@ class _Controls extends ConsumerWidget {
           onSelectionChanged: (_) => controller.toggleMapMode(),
           style: const ButtonStyle(visualDensity: VisualDensity.compact),
         ),
+        Tooltip(
+          message:
+              'Al confirmar a alguien, tacha su fila y columna automáticamente',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Switch(
+                value: state.autoX,
+                onChanged: (_) => controller.toggleAutoX(),
+                activeTrackColor: Brand.gold,
+              ),
+              const Text('Auto-X', style: TextStyle(fontSize: 13)),
+            ],
+          ),
+        ),
         FilledButton.icon(
           style: FilledButton.styleFrom(
             backgroundColor: Brand.gold,
@@ -382,7 +398,8 @@ class _SuspectPanel extends ConsumerWidget {
                 fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         const Text(
-            'Toca el avatar: candidato → confirmado. Arrastra al tablero. '
+            'Toca el avatar para seleccionar. En el tablero: toca = anotar '
+            'la letra · mantén oprimido o arrastra = confirmar. '
             'Toca la pista para destacarla o tacharla.',
             style: TextStyle(color: Brand.muted, fontSize: 12)),
         const SizedBox(height: 10),
@@ -420,7 +437,6 @@ class _SuspectCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final tool = state.tool;
     final selected = tool is SuspectTool && tool.charId == charId;
-    final markState = selected ? tool.state : SuspectMarkState.candidate;
     final isVictim = charId == pc.victimId;
     final color = charColor(pc, charId);
 
@@ -432,7 +448,7 @@ class _SuspectCard extends StatelessWidget {
     final avatarRow = Row(
       children: [
         CircleAvatar(
-          radius: selected && markState == SuspectMarkState.confirmed ? 18 : 14,
+          radius: selected ? 17 : 14,
           backgroundColor: color,
           child: Text(
             isVictim ? '†' : pc.character(charId).nameEs[0],
@@ -456,15 +472,7 @@ class _SuspectCard extends StatelessWidget {
           ),
         ),
         if (selected)
-          Text(
-            markState == SuspectMarkState.candidate ? '?' : '✓',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: markState == SuspectMarkState.candidate
-                    ? Brand.goldBright
-                    : Brand.success),
-          ),
+          const Icon(Icons.touch_app, size: 18, color: Brand.goldBright),
       ],
     );
 
@@ -475,11 +483,7 @@ class _SuspectCard extends StatelessWidget {
         color: selected ? Brand.gold.withValues(alpha: .18) : Brand.surface,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: selected
-              ? (markState == SuspectMarkState.confirmed
-                  ? Brand.success
-                  : Brand.goldBright)
-              : Colors.transparent,
+          color: selected ? Brand.goldBright : Colors.transparent,
           width: 2,
         ),
       ),
@@ -489,11 +493,11 @@ class _SuspectCard extends StatelessWidget {
           GestureDetector(
             onTap: onTapAvatar,
             child: Draggable<PanelDrag>(
-              data: PanelDrag(SuspectTool(charId, markState)),
+              data: PanelDrag(SuspectTool(charId)),
               feedback: Material(
                 color: Colors.transparent,
                 child: CircleAvatar(
-                  radius: 20,
+                  radius: 22,
                   backgroundColor: color,
                   child: Text(isVictim ? '†' : pc.character(charId).nameEs[0],
                       style: const TextStyle(

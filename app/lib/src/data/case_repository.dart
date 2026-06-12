@@ -18,7 +18,8 @@ class CaseRepository {
       final j = jsonDecode(
               _stripBom(await rootBundle.loadString('assets/cases/$name')))
           as Map<String, dynamic>;
-      cases.add(PuzzleCase.fromJson(j, mapById(j['mapId'] as String)));
+      // Cada caso trae su propio mapa embebido (decisión 2026-06-11).
+      cases.add(PuzzleCase.fromJson(j));
     }
     // Orden: por dificultad y luego por id.
     const order = ['principiante', 'casual', 'intermedio', 'experto', 'elite'];

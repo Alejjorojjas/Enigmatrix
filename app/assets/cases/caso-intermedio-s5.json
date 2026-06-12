@@ -1,0 +1,405 @@
+{
+  "caseId": "caso-intermedio-s5",
+  "mapId": "mapa-intermedio-s5",
+  "map": {
+    "id": "mapa-intermedio-s5",
+    "name_es": "La Posada",
+    "size": 9,
+    "areas": [
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          10,
+          11,
+          12,
+          18,
+          19,
+          20,
+          21,
+          27,
+          28,
+          29,
+          36,
+          37
+        ]
+      },
+      {
+        "id": "pasillo",
+        "name_es": "el Pasillo",
+        "cells": [
+          57,
+          58,
+          59,
+          60,
+          66,
+          67,
+          68,
+          69,
+          76,
+          77,
+          78,
+          79
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          22,
+          23,
+          30,
+          31,
+          32,
+          38,
+          39,
+          40,
+          41,
+          46,
+          47,
+          48,
+          49
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          13,
+          14,
+          15,
+          16,
+          17,
+          24,
+          25,
+          26,
+          33,
+          34
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          45,
+          54,
+          55,
+          56,
+          63,
+          64,
+          65,
+          72,
+          73,
+          74,
+          75
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
+          35,
+          42,
+          43,
+          44,
+          50,
+          51,
+          52,
+          53,
+          61,
+          62,
+          70,
+          71,
+          80
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sofa-1",
+        "type": "sofa",
+        "cells": [
+          8
+        ]
+      },
+      {
+        "id": "sofa-2",
+        "type": "sofa",
+        "cells": [
+          60
+        ]
+      },
+      {
+        "id": "silla-3",
+        "type": "silla",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "cama-4",
+        "type": "cama",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "sillon-5",
+        "type": "sillon",
+        "cells": [
+          37
+        ]
+      },
+      {
+        "id": "sofa-6",
+        "type": "sofa",
+        "cells": [
+          65,
+          64
+        ]
+      },
+      {
+        "id": "sofa-7",
+        "type": "sofa",
+        "cells": [
+          59,
+          58
+        ]
+      },
+      {
+        "id": "arbusto-8",
+        "type": "arbusto",
+        "cells": [
+          69
+        ]
+      },
+      {
+        "id": "piano-9",
+        "type": "piano",
+        "cells": [
+          49
+        ]
+      },
+      {
+        "id": "barra-10",
+        "type": "barra",
+        "cells": [
+          15,
+          14
+        ]
+      },
+      {
+        "id": "arbusto-11",
+        "type": "arbusto",
+        "cells": [
+          19
+        ]
+      },
+      {
+        "id": "arbusto-12",
+        "type": "arbusto",
+        "cells": [
+          7
+        ]
+      },
+      {
+        "id": "arbusto-13",
+        "type": "arbusto",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "piano-14",
+        "type": "piano",
+        "cells": [
+          18
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "pasillo"
+      },
+      {
+        "id": "botella",
+        "name_es": "la botella rota",
+        "category": "cortante",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": false,
+  "victim": "c1",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Irene",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "beside_object",
+      "subject": "c1",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c3",
+      "b": "c5"
+    },
+    {
+      "type": "in_area",
+      "subject": "c4",
+      "area": "bano"
+    },
+    {
+      "type": "on_object",
+      "subject": "c5",
+      "group": "sillon"
+    },
+    {
+      "type": "alone_with",
+      "a": "c6",
+      "b": "c8"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "pasillo"
+        },
+        {
+          "type": "on_object",
+          "subject": "c7",
+          "group": "sofa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "cocina"
+        },
+        {
+          "type": "on_object",
+          "subject": "c8",
+          "group": "sofa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c9",
+          "area": "pasillo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "planta"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 16,
+      "c3": 21,
+      "c4": 35,
+      "c5": 37,
+      "c6": 45,
+      "c7": 59,
+      "c8": 65,
+      "c9": 78
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 4,
+    "maxTier": 3,
+    "clueCount": 9
+  }
+}

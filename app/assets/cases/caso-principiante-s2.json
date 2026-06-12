@@ -1,0 +1,263 @@
+{
+  "caseId": "caso-principiante-s2",
+  "mapId": "mapa-principiante-s2-v2",
+  "map": {
+    "id": "mapa-principiante-s2-v2",
+    "name_es": "La Cabaña",
+    "size": 6,
+    "areas": [
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          3,
+          4,
+          5,
+          9
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          0,
+          6,
+          7,
+          12,
+          13,
+          18,
+          19,
+          24,
+          25,
+          26,
+          30,
+          31,
+          32
+        ]
+      },
+      {
+        "id": "pasillo",
+        "name_es": "el Pasillo",
+        "cells": [
+          14,
+          15,
+          20,
+          21,
+          22,
+          23,
+          27,
+          28,
+          29,
+          33,
+          34,
+          35
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          1,
+          2,
+          8
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          10,
+          11,
+          16,
+          17
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sofa-1",
+        "type": "sofa",
+        "cells": [
+          25,
+          31
+        ]
+      },
+      {
+        "id": "silla-2",
+        "type": "silla",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "sofa-3",
+        "type": "sofa",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "sofa-4",
+        "type": "sofa",
+        "cells": [
+          11
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          3
+        ]
+      },
+      {
+        "id": "barra-6",
+        "type": "barra",
+        "cells": [
+          22
+        ]
+      },
+      {
+        "id": "barra-7",
+        "type": "barra",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "caja-8",
+        "type": "caja",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "barra-9",
+        "type": "barra",
+        "cells": [
+          17,
+          16
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "martillo",
+        "name_es": "el martillo",
+        "category": "contundente",
+        "area": "pasillo"
+      },
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "jardin"
+      }
+    ]
+  },
+  "difficulty": "principiante",
+  "hasWeapon": false,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "only_one_on",
+      "subject": "c1",
+      "group": "silla"
+    },
+    {
+      "type": "in_area",
+      "subject": "c2",
+      "area": "salon"
+    },
+    {
+      "type": "same_area",
+      "a": "c3",
+      "b": "c6"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "pasillo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "barra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "salon"
+        },
+        {
+          "type": "on_object",
+          "subject": "c5",
+          "group": "sofa"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "caja"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 3,
+      "c2": 6,
+      "c3": 14,
+      "c4": 23,
+      "c5": 25,
+      "c6": 34
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 5,
+    "maxTier": 3,
+    "clueCount": 6
+  }
+}

@@ -14,7 +14,16 @@ Cubre:
 
 ## Estrategia general
 
-### Modelo recomendado: hibrido
+> **ACTUALIZACIÓN 2026-06-11 (decisión del usuario en playtest):** los mapas
+> TAMBIÉN se generan proceduralmente — cada caso tiene su propia distribución
+> de habitaciones, muebles y armas (dos casos nunca comparten mapa). Lo que
+> se "autora a mano" pasa a ser la PIEL artística de cada mundo (paletas,
+> sprites de muebles, texturas) que se aplica sobre el mapa generado en
+> Fase 2 con los mockups. Los roles editoriales y el resto del pipeline de
+> este documento siguen vigentes. Spec del generador de mapas:
+> `docs/16-spec-puzzle.md` §1.3 y `tools/lib/src/map_generator.dart`.
+
+### Modelo original (superado, se conserva como referencia)
 - Mapas visuales: `autorados a mano`
 - Casos sobre cada mapa: `generados proceduralmente y validados por solver`
 

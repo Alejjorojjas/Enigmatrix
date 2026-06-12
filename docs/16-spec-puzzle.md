@@ -12,7 +12,8 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 
 - El tablero es una grilla **cuadrada de N×N** celdas, donde **N = número de personajes del caso (incluida la víctima)**. [DECISIÓN 2026-06-10]
 - Cada celda se identifica por `(col, row)` con origen `(0,0)` arriba-izquierda, o por índice lineal `idx = row * width + col`.
-- Tamaños derivados de los rangos del doc 05 (sospechosos + víctima): Principiante 4×4, Casual 5×5, Intermedio 6×6, Experto 7×7, Elite 7×7 u 8×8.
+- Tamaños por dificultad (mapeo Murdoku, decidido 2026-06-11 con referencias del usuario): **Principiante 6×6 · Casual 8×8 · Intermedio 9×9 · Experto 12×12 · Elite 16×16**.
+- **Cada caso tiene su propio mapa** (decisión 2026-06-11): la distribución de habitaciones, muebles y armas se genera proceduralmente por caso (`tools/lib/src/map_generator.dart`). Los nombres de habitaciones/lugares salen de pools temáticos; el arte por mundo se aplicará como piel encima (Fase 2).
 
 ### 1.2 Áreas (habitaciones)
 
@@ -190,6 +191,13 @@ Estas marcas son presentación del cliente: la validación oficial solo compara 
 - **La rotación del mapa también rota las pistas**: la pista lógica se guarda en coordenadas canónicas; el renderizador de texto la transforma según la orientación del jugador. Bajo rotación de 90°/270° las referencias de fila/columna se intercambian ("primera fila" → "primera columna") y las cardinales se remapean (oeste→norte, etc.). El servidor valida siempre en coordenadas canónicas; la rotación nunca toca la lógica.
 - "Island" en la versión web es solo vocabulario de resaltado (nombre de zona/objeto de mapas concretos), no una regla del motor. En Enigmatrix los nombres de áreas y objetos son **datos del mapa**, no palabras clave del motor: el renderizador de pistas los toma del mapa autorado.
 - Nomenclatura de marcas del jugador: la del doc 03 (candidato/confirmado/X parcial/X fuerte).
+
+### [DECISIÓN] cerradas (2026-06-11, segunda ronda de playtest)
+
+- **Mapas únicos por caso**: habitaciones, muebles y armas generados proceduralmente; dos casos jamás comparten distribución. Reemplaza el "mapas autorados a mano" del doc 05 — el autorado pasa a ser la piel artística por mundo.
+- **Tamaños = Murdoku**: 6×6 / 8×8 / 9×9 / 12×12 / 16×16 para las 5 dificultades.
+- **Auto-X**: opción del jugador (activada por defecto): al confirmar a alguien se tachan automáticamente su fila y columna; las X automáticas se retiran si se borra el confirmado.
+- **Marcas visuales**: candidato = solo la letra del personaje; confirmado = círculo con avatar (mantener oprimido o arrastrar); X grandes.
 
 ### [DECISIÓN] cerradas (2026-06-11, rediseño Murdoku tras playtest del usuario)
 

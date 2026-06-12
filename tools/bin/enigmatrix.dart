@@ -50,9 +50,8 @@ void _generate(List<String> args) {
   final outDir = _opt(args, 'out') ?? 'out';
   final showSolution = _flag(args, 'solution');
 
-  final map = mapForDifficulty(difficulty);
   final profile = DifficultyProfile.byLabel(difficulty);
-  final generator = Generator(map, profile, withWeapon: weapons);
+  final generator = CaseFactory(profile, withWeapon: weapons);
 
   Directory(outDir).createSync(recursive: true);
   final rejectionTotals = <String, int>{};
@@ -98,7 +97,7 @@ void _generate(List<String> args) {
 
 PuzzleCase _load(String path) {
   final j = jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
-  return PuzzleCase.fromJson(j, mapById(j['mapId'] as String));
+  return PuzzleCase.fromJson(j); // el mapa viene embebido en el caso
 }
 
 void _show(List<String> args) {

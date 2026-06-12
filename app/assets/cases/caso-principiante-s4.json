@@ -1,0 +1,252 @@
+{
+  "caseId": "caso-principiante-s4",
+  "mapId": "mapa-principiante-s4",
+  "map": {
+    "id": "mapa-principiante-s4",
+    "name_es": "El Museo",
+    "size": 6,
+    "areas": [
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7,
+          8,
+          12,
+          13,
+          19
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          28,
+          29,
+          32,
+          33,
+          34,
+          35
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          14,
+          18,
+          20,
+          24,
+          25,
+          26,
+          27,
+          30,
+          31
+        ]
+      },
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          4,
+          5,
+          9,
+          10,
+          11,
+          15,
+          16,
+          17,
+          21,
+          22,
+          23
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sillon-1",
+        "type": "sillon",
+        "cells": [
+          34
+        ]
+      },
+      {
+        "id": "cama-2",
+        "type": "cama",
+        "cells": [
+          10,
+          11
+        ]
+      },
+      {
+        "id": "cama-3",
+        "type": "cama",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "alfombra-4",
+        "type": "alfombra",
+        "cells": [
+          7,
+          13
+        ]
+      },
+      {
+        "id": "alfombra-5",
+        "type": "alfombra",
+        "cells": [
+          8
+        ]
+      },
+      {
+        "id": "lavadora-6",
+        "type": "lavadora",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "armario-7",
+        "type": "armario",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "lavadora-8",
+        "type": "lavadora",
+        "cells": [
+          15
+        ]
+      },
+      {
+        "id": "arbusto-9",
+        "type": "arbusto",
+        "cells": [
+          29
+        ]
+      },
+      {
+        "id": "piano-10",
+        "type": "piano",
+        "cells": [
+          22
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "jeringa",
+        "name_es": "la jeringa",
+        "category": "veneno",
+        "area": "jardin"
+      },
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "biblioteca"
+      }
+    ]
+  },
+  "difficulty": "principiante",
+  "hasWeapon": false,
+  "victim": "c4",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "beside_object",
+      "subject": "c1",
+      "group": "alfombra"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "cama"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "lavadora"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c3",
+      "group": "alfombra"
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c4"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "planta"
+    },
+    {
+      "type": "in_area",
+      "subject": "c6",
+      "area": "salon"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 2,
+      "c2": 9,
+      "c3": 13,
+      "c4": 23,
+      "c5": 28,
+      "c6": 30
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 6,
+    "maxTier": 3,
+    "clueCount": 6
+  }
+}

@@ -116,10 +116,12 @@ class PuzzleCase {
         lethalWeaponId: lethal,
       );
 
-  /// JSON completo del pipeline interno (incluye solución).
+  /// JSON completo del pipeline interno (incluye solución). El mapa viaja
+  /// embebido: cada caso tiene su propio mapa (decisión 2026-06-11).
   Map<String, dynamic> toJson() => {
         'caseId': caseId,
         'mapId': map.id,
+        'map': map.toJson(),
         'difficulty': difficulty,
         'hasWeapon': hasWeapon,
         'victim': victimId,
@@ -137,6 +139,7 @@ class PuzzleCase {
   Map<String, dynamic> toClientJson() => {
         'caseId': caseId,
         'mapId': map.id,
+        'map': map.toJson(),
         'difficulty': difficulty,
         'hasWeapon': hasWeapon,
         'victim': victimId,
@@ -147,10 +150,11 @@ class PuzzleCase {
         'clues': [for (final c in clues) c.toJson()],
       };
 
-  factory PuzzleCase.fromJson(Map<String, dynamic> j, GameMap map) {
-    if (j['mapId'] != map.id) {
-      throw ArgumentError('El caso es del mapa ${j['mapId']}, no de ${map.id}');
-    }
+  /// [mapOverride] solo para fixtures de test; los casos reales traen el
+  /// mapa embebido.
+  factory PuzzleCase.fromJson(Map<String, dynamic> j, {GameMap? mapOverride}) {
+    final map = mapOverride ??
+        GameMap.fromJson((j['map'] as Map).cast<String, dynamic>());
     return PuzzleCase(
       caseId: j['caseId'] as String,
       map: map,

@@ -1,0 +1,376 @@
+{
+  "caseId": "caso-casual-s2",
+  "mapId": "mapa-casual-s2",
+  "map": {
+    "id": "mapa-casual-s2",
+    "name_es": "La Cabaña",
+    "size": 8,
+    "areas": [
+      {
+        "id": "porche",
+        "name_es": "el Porche",
+        "cells": [
+          34,
+          41,
+          42,
+          43,
+          44,
+          50,
+          51,
+          52,
+          58,
+          59,
+          60
+        ]
+      },
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          5,
+          6,
+          7,
+          14,
+          15,
+          22,
+          23,
+          30,
+          31,
+          39,
+          46,
+          47,
+          55
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          8,
+          9,
+          10,
+          11,
+          18
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          32,
+          33,
+          40,
+          48,
+          49,
+          56,
+          57
+        ]
+      },
+      {
+        "id": "atico",
+        "name_es": "el Ático",
+        "cells": [
+          12,
+          13,
+          21,
+          29,
+          36,
+          37,
+          38,
+          45,
+          53,
+          54,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          16,
+          17,
+          19,
+          20,
+          24,
+          25,
+          26,
+          27,
+          28,
+          35
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "cama-1",
+        "type": "cama",
+        "cells": [
+          50,
+          42
+        ]
+      },
+      {
+        "id": "cama-2",
+        "type": "cama",
+        "cells": [
+          12,
+          13
+        ]
+      },
+      {
+        "id": "cama-3",
+        "type": "cama",
+        "cells": [
+          61,
+          53
+        ]
+      },
+      {
+        "id": "cama-4",
+        "type": "cama",
+        "cells": [
+          10,
+          11
+        ]
+      },
+      {
+        "id": "cama-5",
+        "type": "cama",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          55
+        ]
+      },
+      {
+        "id": "cama-7",
+        "type": "cama",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "arbusto-8",
+        "type": "arbusto",
+        "cells": [
+          52
+        ]
+      },
+      {
+        "id": "piano-9",
+        "type": "piano",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "piano-10",
+        "type": "piano",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "lavadora-11",
+        "type": "lavadora",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "piano-12",
+        "type": "piano",
+        "cells": [
+          23
+        ]
+      },
+      {
+        "id": "arbusto-13",
+        "type": "arbusto",
+        "cells": [
+          51
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras",
+        "category": "cortante",
+        "area": "atico"
+      },
+      {
+        "id": "cuerda",
+        "name_es": "la cuerda",
+        "category": "asfixia",
+        "area": "porche"
+      },
+      {
+        "id": "botella",
+        "name_es": "la botella rota",
+        "category": "cortante",
+        "area": "cocina"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c4",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "atico"
+        },
+        {
+          "type": "on_object",
+          "subject": "c2",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "jardin"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c4"
+    },
+    {
+      "type": "in_area",
+      "subject": "c5",
+      "area": "comedor"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "porche"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "cama"
+        }
+      ]
+    },
+    {
+      "type": "on_object",
+      "subject": "c7",
+      "group": "alfombra"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c8",
+      "group": "planta"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 2,
+      "c2": 12,
+      "c3": 22,
+      "c4": 29,
+      "c5": 32,
+      "c6": 41,
+      "c7": 55,
+      "c8": 59
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 4,
+    "clueCount": 8
+  }
+}

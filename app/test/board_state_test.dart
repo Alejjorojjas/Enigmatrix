@@ -61,6 +61,66 @@ void main() {
     });
   });
 
+  group('Auto-X al confirmar (opción 2026-06-11)', () {
+    // Grilla 4x4 de prueba: confirmar en celda 5 (f2,c2) tacha su fila
+    // {4,6,7} y su columna {1,9,13}.
+    test('confirmar tacha fila y columna automáticamente', () {
+      final board = BoardState.empty()
+          .placeConfirmed(5, 'c1', autoXGridSize: 4)
+          .board;
+      for (final cell in [4, 6, 7, 1, 9, 13]) {
+        expect(board.cell(cell).hasX, isTrue, reason: 'celda $cell sin X');
+        expect(board.cell(cell).autoXFrom, {'c1'});
+      }
+      expect(board.cell(5).hasX, isFalse);
+      expect(board.cell(0).hasX, isFalse); // fuera de fila/columna
+    });
+
+    test('borrar el confirmado retira sus X automáticas', () {
+      var board = BoardState.empty()
+          .placeConfirmed(5, 'c1', autoXGridSize: 4)
+          .board;
+      board = board.removeElement(5, const ConfirmedElement('c1'));
+      expect(board.isEmpty, isTrue);
+    });
+
+    test('las X de dos confirmados se superponen y retiran por separado', () {
+      var board = BoardState.empty()
+          .placeConfirmed(0, 'c1', autoXGridSize: 4) // fila 0, col 0
+          .board;
+      board = board.placeConfirmed(5, 'c2', autoXGridSize: 4).board;
+      // La celda 1 (f1,c2) está tachada por ambos (fila de c1, columna de c2).
+      expect(board.cell(1).autoXFrom, {'c1', 'c2'});
+      board = board.removeElement(0, const ConfirmedElement('c1'));
+      expect(board.cell(1).autoXFrom, {'c2'}); // sigue tachada por c2
+      expect(board.cell(2).hasX, isFalse); // solo era de c1
+    });
+
+    test('la X automática no pisa confirmados y convive con candidatos', () {
+      var board = BoardState.empty().placeCandidate(4, 'c3').board;
+      board = board.placeConfirmed(0, 'c2', autoXGridSize: 4).board;
+      board = board.placeConfirmed(5, 'c1', autoXGridSize: 4).board;
+      expect(board.cell(0).confirmed, 'c2'); // misma... celda confirmada intacta
+      expect(board.cell(0).autoXFrom, isEmpty);
+      expect(board.cell(4).candidates, {'c3'}); // candidato convive con X
+      expect(board.cell(4).hasX, isTrue);
+    });
+
+    test('sin autoXGridSize no se tacha nada (opción apagada)', () {
+      final board = BoardState.empty().placeConfirmed(5, 'c1').board;
+      expect(board.cell(4).hasX, isFalse);
+    });
+
+    test('borrar la X de una celda la limpia aunque sea automática', () {
+      var board = BoardState.empty()
+          .placeConfirmed(5, 'c1', autoXGridSize: 4)
+          .board;
+      board = board.removeElement(4, const XElement(XLevel.large));
+      expect(board.cell(4).hasX, isFalse);
+      expect(board.cell(6).hasX, isTrue); // las demás siguen
+    });
+  });
+
   group('Borrado y posiciones', () {
     test('borrar elementos individuales (mini panel / papelera)', () {
       var board = BoardState.empty().placeCandidate(0, 'c1').board;

@@ -246,4 +246,60 @@ class GameMap {
 
   List<WeaponDef> weaponsInArea(String areaId) =>
       [for (final w in weapons) if (w.areaId == areaId) w];
+
+  /// Serialización: el mapa viaja embebido en cada caso (cada caso tiene
+  /// su propio mapa generado — decisión 2026-06-11).
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name_es': nameEs,
+        'size': size,
+        'areas': [
+          for (final a in areas)
+            {'id': a.id, 'name_es': a.nameEs, 'cells': a.cells}
+        ],
+        'objects': [
+          for (final o in objects)
+            {'id': o.id, 'type': o.type.name, 'cells': o.cells}
+        ],
+        'weapons': [
+          for (final w in weapons)
+            {
+              'id': w.id,
+              'name_es': w.nameEs,
+              'category': w.category.name,
+              'area': w.areaId,
+            }
+        ],
+      };
+
+  factory GameMap.fromJson(Map<String, dynamic> j) => GameMap(
+        id: j['id'] as String,
+        nameEs: j['name_es'] as String,
+        size: j['size'] as int,
+        areas: [
+          for (final a in (j['areas'] as List))
+            Area(
+              id: a['id'] as String,
+              nameEs: a['name_es'] as String,
+              cells: (a['cells'] as List).cast<int>(),
+            )
+        ],
+        objects: [
+          for (final o in (j['objects'] as List))
+            MapObject(
+              id: o['id'] as String,
+              type: ObjectType.values.byName(o['type'] as String),
+              cells: (o['cells'] as List).cast<int>(),
+            )
+        ],
+        weapons: [
+          for (final w in (j['weapons'] as List))
+            WeaponDef(
+              id: w['id'] as String,
+              nameEs: w['name_es'] as String,
+              category: WeaponCategory.values.byName(w['category'] as String),
+              areaId: w['area'] as String,
+            )
+        ],
+      );
 }

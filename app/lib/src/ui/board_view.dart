@@ -1,5 +1,7 @@
 /// Tablero jugable: celdas con áreas/paredes, muebles (pisables y
-/// bloqueantes), marcas y drag & drop. Interacción según docs/03 y spec 16 §4.
+/// bloqueantes), marcas y drag & drop.
+/// Interacción 2026-06-11: tap = candidato (letra) · mantener oprimido o
+/// arrastrar = confirmado (círculo con avatar) · X grandes.
 library;
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
@@ -10,7 +12,7 @@ import '../../main.dart';
 import '../game/board_state.dart';
 import '../game/game_controller.dart';
 
-/// Payload de arrastre desde el panel (sospechoso en su estado actual o X).
+/// Payload de arrastre desde el panel. Soltar un sospechoso = CONFIRMARLO.
 class PanelDrag {
   final Tool tool;
   const PanelDrag(this.tool);
@@ -31,6 +33,8 @@ const areaPalette = [
   Color(0xFF26A69A),
   Color(0xFFEC407A),
   Color(0xFFFFA726),
+  Color(0xFF7E57C2),
+  Color(0xFF26C6DA),
 ];
 
 const charPalette = [
@@ -42,6 +46,14 @@ const charPalette = [
   Color(0xFF4DD0E1),
   Color(0xFFF06292),
   Color(0xFFFFD54F),
+  Color(0xFFA1887F),
+  Color(0xFF90CAF9),
+  Color(0xFFFFAB91),
+  Color(0xFFCE93D8),
+  Color(0xFFAED581),
+  Color(0xFF80DEEA),
+  Color(0xFFF48FB1),
+  Color(0xFFFFE082),
 ];
 
 Color charColor(PuzzleCase pc, String charId) =>
@@ -68,7 +80,9 @@ IconData objectIcon(ObjectType type) => switch (type) {
 
 class BoardView extends ConsumerWidget {
   final PuzzleCase pc;
-  final void Function(int cell, Tool tool) onPlace;
+
+  /// La pantalla decide cómo reaccionar (mensajes, diálogo de reemplazo).
+  final void Function(int cell, Tool tool, {required bool confirm}) onPlace;
   const BoardView({super.key, required this.pc, required this.onPlace});
 
   @override
@@ -106,7 +120,7 @@ class BoardView extends ConsumerWidget {
 class _Cell extends ConsumerWidget {
   final PuzzleCase pc;
   final int cell;
-  final void Function(int cell, Tool tool) onPlace;
+  final void Function(int cell, Tool tool, {required bool confirm}) onPlace;
   const _Cell({required this.pc, required this.cell, required this.onPlace});
 
   @override
@@ -140,15 +154,19 @@ class _Cell extends ConsumerWidget {
 
     return DragTarget<PanelDrag>(
       onWillAcceptWithDetails: (_) => !blocked,
-      onAcceptWithDetails: (d) => onPlace(cell, d.data.tool),
+      onAcceptWithDetails: (d) => onPlace(cell, d.data.tool, confirm: true),
       builder: (context, hovering, _) => GestureDetector(
         onTap: () {
           if (blocked) return;
           if (state.tool != null) {
-            onPlace(cell, state.tool!);
+            onPlace(cell, state.tool!, confirm: false);
           } else if (content.elementCount > 0) {
             _showMiniPanel(context, controller, state.board.elementsOf(cell));
           }
+        },
+        onLongPress: () {
+          if (blocked || state.tool == null) return;
+          onPlace(cell, state.tool!, confirm: true);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -173,7 +191,7 @@ class _Cell extends ConsumerWidget {
                 child: Text(
                   String.fromCharCode('a'.codeUnitAt(0) + areaIdx),
                   style: TextStyle(
-                      fontSize: state.mapMode ? 11 : 16,
+                      fontSize: state.mapMode ? 10 : 13,
                       color: Brand.cream.withValues(alpha: .35)),
                 ),
               ),
@@ -185,7 +203,7 @@ class _Cell extends ConsumerWidget {
                     message:
                         'Armas: ${weapons.map((w) => w.nameEs).join(', ')}',
                     child: const Icon(Icons.colorize,
-                        size: 13, color: Brand.goldBright),
+                        size: 12, color: Brand.goldBright),
                   ),
                 ),
               // Mueble bloqueante: ocupa la celda.
@@ -193,8 +211,14 @@ class _Cell extends ConsumerWidget {
                 Center(
                   child: Tooltip(
                     message: '${obj.type.defEs} (bloquea)',
-                    child: Icon(objectIcon(obj.type),
-                        color: Brand.cream.withValues(alpha: .55), size: 22),
+                    child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Icon(objectIcon(obj.type),
+                            color: Brand.cream.withValues(alpha: .55),
+                            size: 22),
+                      ),
+                    ),
                   ),
                 ),
               // Mueble pisable: se dibuja tenue debajo de las marcas.
@@ -202,13 +226,19 @@ class _Cell extends ConsumerWidget {
                 Center(
                   child: Tooltip(
                     message: '${obj.type.defEs} (puedes colocar encima)',
-                    child: Icon(objectIcon(obj.type),
-                        color: Brand.cream
-                            .withValues(alpha: state.mapMode ? .35 : .18),
-                        size: 26),
+                    child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Icon(objectIcon(obj.type),
+                            color: Brand.cream
+                                .withValues(alpha: state.mapMode ? .35 : .18),
+                            size: 24),
+                      ),
+                    ),
                   ),
                 ),
-              if (!blocked) Center(child: _CellMarks(pc: pc, cell: cell)),
+              if (!blocked)
+                Positioned.fill(child: _CellMarks(pc: pc, cell: cell)),
             ],
           ),
         ),
@@ -224,8 +254,8 @@ class _Cell extends ConsumerWidget {
       context: context,
       builder: (ctx) => SimpleDialog(
         backgroundColor: Brand.surface,
-        title:
-            const Text('Borrar de esta casilla', style: TextStyle(fontSize: 16)),
+        title: const Text('Borrar de esta casilla',
+            style: TextStyle(fontSize: 16)),
         children: [
           for (final el in elements)
             SimpleDialogOption(
@@ -249,11 +279,10 @@ class _Cell extends ConsumerWidget {
 
   String _elementLabel(CellElement el) => switch (el) {
         ConfirmedElement(:final charId) =>
-          '${pc.character(charId).nameEs} (confirmado)',
+          '${pc.character(charId).nameEs} (confirmado — quita sus X automáticas)',
         CandidateElement(:final charId) =>
           '${pc.character(charId).nameEs} (candidato)',
-        XElement(:final level) =>
-          level == XLevel.small ? 'X pequeña' : 'X grande',
+        XElement() => 'X',
       };
 }
 
@@ -267,24 +296,52 @@ class _CellMarks extends ConsumerWidget {
     final content =
         ref.watch(gameControllerProvider(pc).select((s) => s.board.cell(cell)));
 
+    // Confirmado: círculo con avatar que llena la celda.
     if (content.confirmed != null) {
-      return _draggableMark(
-        ConfirmedElement(content.confirmed!),
-        _ConfirmedAvatar(pc: pc, charId: content.confirmed!),
+      return Center(
+        child: _draggableMark(
+          ConfirmedElement(content.confirmed!),
+          _ConfirmedAvatar(pc: pc, charId: content.confirmed!),
+        ),
       );
     }
 
-    final marks = <Widget>[
+    final hasMarks = content.candidates.isNotEmpty || content.hasX;
+    if (!hasMarks) return const SizedBox.shrink();
+
+    // X (manual o automática): grande, llenando la celda.
+    final xWidget = content.hasX
+        ? _draggableMark(
+            XElement(content.x ?? XLevel.large),
+            _XMark(
+              level: content.x ?? XLevel.large,
+              isAuto: content.x == null,
+            ),
+          )
+        : null;
+
+    // Candidatos: solo letras.
+    final letters = [
       for (final id in content.candidates)
-        _draggableMark(
-            CandidateElement(id), _CandidateAvatar(pc: pc, charId: id)),
-      if (content.x != null)
-        _draggableMark(XElement(content.x!), _XMark(level: content.x!)),
+        _draggableMark(CandidateElement(id), _CandidateLetter(pc: pc, charId: id)),
     ];
-    if (marks.isEmpty) return const SizedBox.shrink();
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Wrap(spacing: 2, runSpacing: 2, children: marks),
+
+    return LayoutBuilder(
+      builder: (context, box) => Stack(
+        children: [
+          if (xWidget != null)
+            Positioned.fill(child: Center(child: xWidget)),
+          if (letters.isNotEmpty)
+            Positioned.fill(
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Wrap(spacing: 1, children: letters),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -306,46 +363,55 @@ class _ConfirmedAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = charColor(pc, charId);
     final isVictim = charId == pc.victimId;
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        CircleAvatar(
-          radius: 19,
-          backgroundColor: color,
-          child: Text(
-            isVictim ? '†' : pc.character(charId).nameEs[0],
-            style: const TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 18),
+    return LayoutBuilder(
+      builder: (context, box) {
+        final d = (box.maxWidth.isFinite ? box.maxWidth : 48) * .78;
+        return Container(
+          width: d.clamp(26, 56),
+          height: d.clamp(26, 56),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            border: Border.all(color: Brand.cream, width: 2),
+            boxShadow: const [
+              BoxShadow(color: Colors.black45, blurRadius: 4),
+            ],
           ),
-        ),
-        const Positioned(
-          right: -4,
-          bottom: -4,
-          child: Icon(Icons.check_circle, color: Brand.success, size: 16),
-        ),
-      ],
+          child: Center(
+            child: FittedBox(
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Text(
+                  isVictim ? '†' : pc.character(charId).nameEs[0],
+                  style: const TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 22),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
-class _CandidateAvatar extends StatelessWidget {
+class _CandidateLetter extends StatelessWidget {
   final PuzzleCase pc;
   final String charId;
-  const _CandidateAvatar({required this.pc, required this.charId});
+  const _CandidateLetter({required this.pc, required this.charId});
 
   @override
   Widget build(BuildContext context) {
-    final color = charColor(pc, charId);
     final isVictim = charId == pc.victimId;
-    return CircleAvatar(
-      radius: 11,
-      backgroundColor: color.withValues(alpha: .55),
-      child: Text(
-        '${isVictim ? '†' : pc.character(charId).nameEs[0]}?',
-        style: const TextStyle(
-            color: Colors.black87, fontSize: 9, fontWeight: FontWeight.bold),
+    return Text(
+      isVictim ? '†' : pc.character(charId).nameEs[0],
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w800,
+        color: charColor(pc, charId),
+        shadows: const [Shadow(color: Colors.black54, blurRadius: 2)],
       ),
     );
   }
@@ -353,16 +419,24 @@ class _CandidateAvatar extends StatelessWidget {
 
 class _XMark extends StatelessWidget {
   final XLevel level;
-  const _XMark({required this.level});
+  final bool isAuto;
+  const _XMark({required this.level, this.isAuto = false});
 
   @override
-  Widget build(BuildContext context) => Text(
-        '✕',
-        style: TextStyle(
-          fontSize: level == XLevel.small ? 14 : 26,
-          fontWeight: FontWeight.w900,
-          color: Colors.black.withValues(alpha: .85),
-          shadows: const [Shadow(color: Colors.white24, blurRadius: 2)],
-        ),
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, box) {
+          final base = box.maxWidth.isFinite ? box.maxWidth : 48;
+          final size = base * (level == XLevel.small ? .5 : .8);
+          return Text(
+            '✕',
+            style: TextStyle(
+              fontSize: size.clamp(14, 52),
+              height: 1,
+              fontWeight: FontWeight.w900,
+              color: Colors.black.withValues(alpha: isAuto ? .55 : .85),
+              shadows: const [Shadow(color: Colors.white24, blurRadius: 2)],
+            ),
+          );
+        },
       );
 }

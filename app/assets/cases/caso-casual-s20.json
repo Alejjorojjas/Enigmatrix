@@ -1,0 +1,367 @@
+{
+  "caseId": "caso-casual-s20",
+  "mapId": "mapa-casual-s20-v4",
+  "map": {
+    "id": "mapa-casual-s20-v4",
+    "name_es": "La Villa",
+    "size": 8,
+    "areas": [
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          8,
+          9,
+          10,
+          11,
+          16,
+          17,
+          18
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          24,
+          25,
+          26,
+          32,
+          33,
+          40,
+          48,
+          49
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          34,
+          41,
+          42,
+          43,
+          44,
+          50,
+          51,
+          52,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          5,
+          6,
+          7,
+          12,
+          13,
+          14,
+          15,
+          19,
+          20,
+          21,
+          22,
+          23,
+          27,
+          31
+        ]
+      },
+      {
+        "id": "pasillo",
+        "name_es": "el Pasillo",
+        "cells": [
+          28,
+          29,
+          30,
+          35,
+          36,
+          37,
+          38,
+          39,
+          45,
+          46,
+          47,
+          53,
+          54,
+          55,
+          62,
+          63
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sillon-1",
+        "type": "sillon",
+        "cells": [
+          24
+        ]
+      },
+      {
+        "id": "silla-2",
+        "type": "silla",
+        "cells": [
+          54
+        ]
+      },
+      {
+        "id": "sofa-3",
+        "type": "sofa",
+        "cells": [
+          15,
+          14
+        ]
+      },
+      {
+        "id": "sillon-4",
+        "type": "sillon",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          60
+        ]
+      },
+      {
+        "id": "sillon-6",
+        "type": "sillon",
+        "cells": [
+          7
+        ]
+      },
+      {
+        "id": "barra-7",
+        "type": "barra",
+        "cells": [
+          28,
+          29
+        ]
+      },
+      {
+        "id": "barra-8",
+        "type": "barra",
+        "cells": [
+          40,
+          48
+        ]
+      },
+      {
+        "id": "tv-9",
+        "type": "tv",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "tv-10",
+        "type": "tv",
+        "cells": [
+          56
+        ]
+      },
+      {
+        "id": "arbusto-11",
+        "type": "arbusto",
+        "cells": [
+          19
+        ]
+      },
+      {
+        "id": "barra-12",
+        "type": "barra",
+        "cells": [
+          42
+        ]
+      },
+      {
+        "id": "arbusto-13",
+        "type": "arbusto",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "barra-14",
+        "type": "barra",
+        "cells": [
+          51
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "cable",
+        "name_es": "el cable",
+        "category": "asfixia",
+        "area": "dormitorio"
+      },
+      {
+        "id": "botella",
+        "name_es": "la botella rota",
+        "category": "cortante",
+        "area": "bodega"
+      },
+      {
+        "id": "jeringa",
+        "name_es": "la jeringa",
+        "category": "veneno",
+        "area": "biblioteca"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": true,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "in_area",
+      "subject": "c1",
+      "area": "biblioteca"
+    },
+    {
+      "type": "on_object",
+      "subject": "c2",
+      "group": "sofa"
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "terraza"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "sillon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "sillon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "barra"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c6",
+      "b": "c7"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c7",
+      "group": "silla"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c8",
+      "group": "tv"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 3,
+      "c2": 15,
+      "c3": 20,
+      "c4": 25,
+      "c5": 32,
+      "c6": 45,
+      "c7": 54,
+      "c8": 58
+    },
+    "murderer": "c4",
+    "lethalWeapon": "cable"
+  },
+  "metrics": {
+    "deductionSteps": 6,
+    "maxTier": 2,
+    "clueCount": 8
+  }
+}

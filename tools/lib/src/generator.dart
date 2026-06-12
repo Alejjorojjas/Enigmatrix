@@ -24,6 +24,10 @@ import 'validator.dart';
 class DifficultyProfile {
   final String label;
 
+  /// Tamaño de grilla (= número de personajes). Mapeo Murdoku,
+  /// decidido 2026-06-11: 6 · 8 · 9 · 12 · 16.
+  final int size;
+
   /// Permite pistas vagas ("no estaba con...").
   final bool allowVague;
 
@@ -32,21 +36,28 @@ class DifficultyProfile {
 
   const DifficultyProfile({
     required this.label,
+    required this.size,
     required this.allowVague,
     required this.maxExtras,
   });
 
-  static const principiante =
-      DifficultyProfile(label: 'principiante', allowVague: false, maxExtras: 0);
-  static const casual =
-      DifficultyProfile(label: 'casual', allowVague: true, maxExtras: 0);
-  static const intermedio =
-      DifficultyProfile(label: 'intermedio', allowVague: true, maxExtras: 2);
+  static const principiante = DifficultyProfile(
+      label: 'principiante', size: 6, allowVague: false, maxExtras: 0);
+  static const casual = DifficultyProfile(
+      label: 'casual', size: 8, allowVague: true, maxExtras: 0);
+  static const intermedio = DifficultyProfile(
+      label: 'intermedio', size: 9, allowVague: true, maxExtras: 2);
+  static const experto = DifficultyProfile(
+      label: 'experto', size: 12, allowVague: true, maxExtras: 2);
+  static const elite = DifficultyProfile(
+      label: 'elite', size: 16, allowVague: true, maxExtras: 3);
 
   static DifficultyProfile byLabel(String label) => switch (label) {
         'principiante' => principiante,
         'casual' => casual,
         'intermedio' => intermedio,
+        'experto' => experto,
+        'elite' => elite,
         _ => throw ArgumentError('Perfil desconocido: $label'),
       };
 }
@@ -65,7 +76,7 @@ class GenerationResult {
   });
 }
 
-/// (nombre, género femenino) — alternados para textos variados.
+/// (nombre, género femenino) — iniciales únicas A-P, alternados.
 const _namePool = [
   ('Adela', true),
   ('Bruno', false),
@@ -75,6 +86,14 @@ const _namePool = [
   ('Franco', false),
   ('Greta', true),
   ('Hugo', false),
+  ('Irene', true),
+  ('Javier', false),
+  ('Karla', true),
+  ('Lucas', false),
+  ('Marta', true),
+  ('Nico', false),
+  ('Olivia', true),
+  ('Pablo', false),
 ];
 
 /// Pista candidata para una tarjeta, con su poder de poda estimado.
@@ -99,11 +118,15 @@ class Generator {
   final bool withWeapon;
   final int maxAttempts;
 
+  /// Identificador del caso (por defecto derivado del mapa y la semilla).
+  final String? caseIdOverride;
+
   Generator(
     this.map,
     this.profile, {
     this.withWeapon = false,
     this.maxAttempts = 300,
+    this.caseIdOverride,
   }) {
     if (map.size > _namePool.length) {
       throw ArgumentError('Mapa demasiado grande para el pool de nombres');
@@ -113,8 +136,9 @@ class Generator {
     }
   }
 
-  GenerationResult generate(int seed) {
-    final rng = Random(seed);
+  GenerationResult generate(int seed) => generateWith(Random(seed), seed);
+
+  GenerationResult generateWith(Random rng, int seed) {
     final rejections = <String, int>{};
     void reject(String reason) =>
         rejections.update(reason, (v) => v + 1, ifAbsent: () => 1);
@@ -228,7 +252,7 @@ class Generator {
     final extrasPool = _extrasPool(occupants, lethal);
 
     PuzzleCase build() => PuzzleCase(
-          caseId: '${map.id}-${profile.label}-s$seed',
+          caseId: caseIdOverride ?? '${map.id}-${profile.label}-s$seed',
           map: map,
           characters: characters,
           victimId: victimId,

@@ -123,4 +123,70 @@ void main() {
       expect(fillers, greaterThan(0));
     });
   });
+
+  group('CaseFactory (mapa único por caso, tamaños Murdoku)', () {
+    test('determinismo: misma semilla, mismo caso con mismo mapa', () {
+      final f = CaseFactory(DifficultyProfile.principiante);
+      expect(jsonEncode(f.generate(3).puzzle!.toJson()),
+          jsonEncode(f.generate(3).puzzle!.toJson()));
+    });
+
+    test('cada caso tiene SU mapa: habitaciones distintas entre semillas', () {
+      final f = CaseFactory(DifficultyProfile.principiante);
+      final layouts = {
+        for (var seed = 1; seed <= 4; seed++)
+          jsonEncode(
+              [for (final a in f.generate(seed).puzzle!.map.areas) a.cells])
+      };
+      expect(layouts.length, 4);
+    });
+
+    test('JSON con mapa embebido: ida y vuelta completa', () {
+      final pc =
+          CaseFactory(DifficultyProfile.principiante).generate(5).puzzle!;
+      final back = PuzzleCase.fromJson(pc.toJson());
+      expect(jsonEncode(back.toJson()), jsonEncode(pc.toJson()));
+      // El payload del cliente también lleva el mapa (sin solución).
+      final client = pc.toClientJson();
+      expect(client['map'], isNotNull);
+      expect(client.containsKey('solution'), isFalse);
+    });
+
+    for (final (label, seeds) in [
+      ('principiante', 3),
+      ('casual', 2),
+      ('intermedio', 2),
+    ]) {
+      test('$label (${DifficultyProfile.byLabel(label).size}×'
+          '${DifficultyProfile.byLabel(label).size}): casos válidos y únicos',
+          () {
+        final profile = DifficultyProfile.byLabel(label);
+        final f = CaseFactory(profile);
+        for (var seed = 1; seed <= seeds; seed++) {
+          final result = f.generate(seed);
+          final pc = result.puzzle;
+          expect(pc, isNotNull,
+              reason: 'semilla $seed sin caso: ${result.rejections}');
+          expect(pc!.map.size, profile.size);
+          expect(pc.characters.length, profile.size);
+          for (final ch in pc.characters) {
+            expect(pc.clues.where((c) => c.subjectId == ch.id).length, 1);
+          }
+          final v = Validator.validate(pc, pc.solution.positions);
+          expect(v.valid, isTrue, reason: 'semilla $seed: ${v.errors}');
+          expect(DeductionEngine(pc).run().status, DeductionStatus.solved);
+          expect(UniquenessChecker.countSolutions(pc), 1);
+        }
+      });
+    }
+
+    test('con arma: el área del crimen tiene una sola arma (casual)', () {
+      final f = CaseFactory(DifficultyProfile.casual, withWeapon: true);
+      final pc = f.generate(7).puzzle!;
+      expect(pc.hasWeapon, isTrue);
+      final v = Validator.validate(pc, pc.solution.positions);
+      expect(v.valid, isTrue, reason: v.errors.join('; '));
+      expect(v.lethalWeaponId, pc.solution.lethalWeaponId);
+    });
+  });
 }

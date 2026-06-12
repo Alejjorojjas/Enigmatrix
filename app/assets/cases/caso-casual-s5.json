@@ -1,0 +1,369 @@
+{
+  "caseId": "caso-casual-s5",
+  "mapId": "mapa-casual-s5",
+  "map": {
+    "id": "mapa-casual-s5",
+    "name_es": "El Teatro",
+    "size": 8,
+    "areas": [
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          7,
+          15,
+          20,
+          21,
+          22,
+          23,
+          28,
+          29,
+          30,
+          31,
+          36,
+          37,
+          38,
+          39
+        ]
+      },
+      {
+        "id": "porche",
+        "name_es": "el Porche",
+        "cells": [
+          44,
+          45,
+          46,
+          47,
+          51,
+          52,
+          53,
+          54,
+          55,
+          60,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          8,
+          9,
+          16,
+          17,
+          18,
+          24,
+          25,
+          26,
+          32,
+          40,
+          48,
+          56
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          10,
+          11,
+          12,
+          13,
+          14,
+          19
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          27,
+          33,
+          34,
+          35,
+          41,
+          42,
+          43,
+          49,
+          50,
+          57,
+          58,
+          59
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "silla-1",
+        "type": "silla",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "alfombra-2",
+        "type": "alfombra",
+        "cells": [
+          39
+        ]
+      },
+      {
+        "id": "alfombra-3",
+        "type": "alfombra",
+        "cells": [
+          47,
+          46
+        ]
+      },
+      {
+        "id": "sofa-4",
+        "type": "sofa",
+        "cells": [
+          45
+        ]
+      },
+      {
+        "id": "cama-5",
+        "type": "cama",
+        "cells": [
+          44
+        ]
+      },
+      {
+        "id": "sillon-6",
+        "type": "sillon",
+        "cells": [
+          1
+        ]
+      },
+      {
+        "id": "sofa-7",
+        "type": "sofa",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "arbusto-8",
+        "type": "arbusto",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "arbusto-9",
+        "type": "arbusto",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "arbusto-10",
+        "type": "arbusto",
+        "cells": [
+          54
+        ]
+      },
+      {
+        "id": "arbusto-11",
+        "type": "arbusto",
+        "cells": [
+          11
+        ]
+      },
+      {
+        "id": "arbusto-12",
+        "type": "arbusto",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "arbusto-13",
+        "type": "arbusto",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "piano-14",
+        "type": "piano",
+        "cells": [
+          42
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "cuerda",
+        "name_es": "la cuerda",
+        "category": "asfixia",
+        "area": "estudio"
+      },
+      {
+        "id": "cuchillo",
+        "name_es": "el cuchillo de cocina",
+        "category": "cortante",
+        "area": "terraza"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c1",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "on_object",
+      "subject": "c1",
+      "group": "sillon"
+    },
+    {
+      "type": "in_area",
+      "subject": "c2",
+      "area": "terraza"
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "sofa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "planta"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "piano"
+        }
+      ]
+    },
+    {
+      "type": "on_object",
+      "subject": "c6",
+      "group": "cama"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "porche"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "same_area",
+      "a": "c8",
+      "b": "c5"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 1,
+      "c2": 13,
+      "c3": 22,
+      "c4": 24,
+      "c5": 34,
+      "c6": 44,
+      "c7": 55,
+      "c8": 59
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 6,
+    "maxTier": 3,
+    "clueCount": 8
+  }
+}

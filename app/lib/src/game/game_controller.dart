@@ -1,5 +1,7 @@
 /// Controlador de partida: tablero + cronómetro + errores + resolver.
 /// Flujos: docs/02-flujo.md ("Flujo dentro de partida") y docs/03.
+/// Interacción 2026-06-11: tap = candidato (letra), mantener oprimido o
+/// arrastrar = confirmado (círculo con avatar) + auto-X opcional.
 library;
 
 import 'dart:async';
@@ -9,16 +11,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'board_state.dart';
 
-/// Herramienta seleccionada en el panel (interacción por tap; el arrastre
-/// lleva su propio payload).
+/// Herramienta seleccionada en el panel.
 sealed class Tool {
   const Tool();
 }
 
 class SuspectTool extends Tool {
   final String charId;
-  final SuspectMarkState state;
-  const SuspectTool(this.charId, this.state);
+  const SuspectTool(this.charId);
 }
 
 class XTool extends Tool {
@@ -42,6 +42,7 @@ class GameState {
   final String? murdererId; // revelado al resolver correcto
   final String? lethalWeaponId;
   final bool mapMode; // true = mapa · false = vista lógica (notas)
+  final bool autoX; // tachar fila/columna al confirmar (opción)
   final bool canUndo;
   final bool canRedo;
 
@@ -58,6 +59,7 @@ class GameState {
     this.murdererId,
     this.lethalWeaponId,
     this.mapMode = true,
+    this.autoX = true,
     this.canUndo = false,
     this.canRedo = false,
   });
@@ -74,6 +76,7 @@ class GameState {
     String? murdererId,
     String? lethalWeaponId,
     bool? mapMode,
+    bool? autoX,
     bool? canUndo,
     bool? canRedo,
   }) =>
@@ -90,6 +93,7 @@ class GameState {
         murdererId: murdererId ?? this.murdererId,
         lethalWeaponId: lethalWeaponId ?? this.lethalWeaponId,
         mapMode: mapMode ?? this.mapMode,
+        autoX: autoX ?? this.autoX,
         canUndo: canUndo ?? this.canUndo,
         canRedo: canRedo ?? this.canRedo,
       );
@@ -130,20 +134,14 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     );
   }
 
-  // ---- selección de herramienta (tap 1 / tap 2, doc 02) -------------------
+  // ---- selección de herramienta --------------------------------------------
 
   void tapSuspect(String charId) {
     final t = state.tool;
-    if (t is SuspectTool && t.charId == charId) {
-      state = state.copyWith(
-        tool: () => t.state == SuspectMarkState.candidate
-            ? SuspectTool(charId, SuspectMarkState.confirmed)
-            : null,
-      );
-    } else {
-      state = state.copyWith(
-          tool: () => SuspectTool(charId, SuspectMarkState.candidate));
-    }
+    state = state.copyWith(
+      tool: () =>
+          (t is SuspectTool && t.charId == charId) ? null : SuspectTool(charId),
+    );
   }
 
   void tapX() {
@@ -157,28 +155,32 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     }
   }
 
+  void toggleAutoX() => state = state.copyWith(autoX: !state.autoX);
+
   // ---- colocación ----------------------------------------------------------
 
   bool get _editable => !state.locked && !state.solved;
 
-  ActionFeedback placeWithTool(int cell) {
+  /// Coloca con la herramienta seleccionada. [confirm] viene del gesto:
+  /// tap = candidato, mantener oprimido / arrastrar = confirmado.
+  ActionFeedback placeAt(int cell, {required bool confirm}) {
     final t = state.tool;
     if (t == null || !_editable) return ActionFeedback.ok;
     return switch (t) {
-      SuspectTool(:final charId, :final state) =>
-        place(cell, charId: charId, markState: state),
+      SuspectTool(:final charId) =>
+        placeSuspect(cell, charId: charId, confirm: confirm),
       XTool(:final level) => placeXMark(cell, level),
     };
   }
 
-  ActionFeedback place(int cell,
-      {required String charId,
-      required SuspectMarkState markState,
-      bool replace = false}) {
+  ActionFeedback placeSuspect(int cell,
+      {required String charId, required bool confirm, bool replace = false}) {
     if (!_editable) return ActionFeedback.ok;
-    final result = markState == SuspectMarkState.candidate
-        ? state.board.placeCandidate(cell, charId)
-        : state.board.placeConfirmed(cell, charId, replace: replace);
+    final result = confirm
+        ? state.board.placeConfirmed(cell, charId,
+            replace: replace,
+            autoXGridSize: state.autoX ? state.pc.map.size : null)
+        : state.board.placeCandidate(cell, charId);
     return _applyPlace(result);
   }
 
@@ -191,8 +193,8 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     switch (result.outcome) {
       case PlaceOutcome.placed:
         _pushUndo();
-        state = state.copyWith(
-            board: result.board, canUndo: true, canRedo: false);
+        state =
+            state.copyWith(board: result.board, canUndo: true, canRedo: false);
         return ActionFeedback.ok;
       case PlaceOutcome.noChange:
         return ActionFeedback.ok;
@@ -257,8 +259,8 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
   void cycleClue(int index) {
     final next = [...state.clueMarks];
-    next[index] = ClueMark
-        .values[(next[index].index + 1) % ClueMark.values.length];
+    next[index] =
+        ClueMark.values[(next[index].index + 1) % ClueMark.values.length];
     state = state.copyWith(clueMarks: next);
   }
 
@@ -268,8 +270,8 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
   ActionFeedback solve() {
     if (!_editable) return ActionFeedback.ok;
-    final positions = state.board
-        .confirmedPositions(state.pc.characters.map((c) => c.id));
+    final positions =
+        state.board.confirmedPositions(state.pc.characters.map((c) => c.id));
     if (positions == null) return ActionFeedback.incompleteBoard;
 
     final v = Validator.validate(state.pc, positions);

@@ -1,0 +1,424 @@
+{
+  "caseId": "caso-intermedio-s1",
+  "mapId": "mapa-intermedio-s1-v17",
+  "map": {
+    "id": "mapa-intermedio-s1-v17",
+    "name_es": "La Galería",
+    "size": 9,
+    "areas": [
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          18,
+          20,
+          27,
+          28,
+          29,
+          36,
+          37,
+          38,
+          45,
+          46
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          21,
+          22,
+          30,
+          31,
+          32,
+          39,
+          40,
+          48,
+          49,
+          58
+        ]
+      },
+      {
+        "id": "atico",
+        "name_es": "el Ático",
+        "cells": [
+          15,
+          16,
+          17,
+          24,
+          25,
+          26,
+          33,
+          34,
+          35,
+          43,
+          44,
+          52,
+          53,
+          61,
+          62
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          10,
+          11,
+          12,
+          19
+        ]
+      },
+      {
+        "id": "pasillo",
+        "name_es": "el Pasillo",
+        "cells": [
+          47,
+          54,
+          55,
+          56,
+          57,
+          63,
+          64,
+          65,
+          72,
+          73,
+          74,
+          75,
+          76
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          41,
+          42,
+          50,
+          51,
+          59,
+          60,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          13,
+          14,
+          23
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "alfombra-1",
+        "type": "alfombra",
+        "cells": [
+          55
+        ]
+      },
+      {
+        "id": "alfombra-2",
+        "type": "alfombra",
+        "cells": [
+          63
+        ]
+      },
+      {
+        "id": "sillon-3",
+        "type": "sillon",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "sillon-4",
+        "type": "sillon",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "alfombra-5",
+        "type": "alfombra",
+        "cells": [
+          56
+        ]
+      },
+      {
+        "id": "sillon-6",
+        "type": "sillon",
+        "cells": [
+          23
+        ]
+      },
+      {
+        "id": "sofa-7",
+        "type": "sofa",
+        "cells": [
+          34
+        ]
+      },
+      {
+        "id": "mesa-8",
+        "type": "mesa",
+        "cells": [
+          62,
+          61
+        ]
+      },
+      {
+        "id": "caja-9",
+        "type": "caja",
+        "cells": [
+          47
+        ]
+      },
+      {
+        "id": "piano-10",
+        "type": "piano",
+        "cells": [
+          74
+        ]
+      },
+      {
+        "id": "caja-11",
+        "type": "caja",
+        "cells": [
+          45
+        ]
+      },
+      {
+        "id": "mesa-12",
+        "type": "mesa",
+        "cells": [
+          52,
+          53
+        ]
+      },
+      {
+        "id": "armario-13",
+        "type": "armario",
+        "cells": [
+          78
+        ]
+      },
+      {
+        "id": "piano-14",
+        "type": "piano",
+        "cells": [
+          70
+        ]
+      },
+      {
+        "id": "mesa-15",
+        "type": "mesa",
+        "cells": [
+          48
+        ]
+      },
+      {
+        "id": "piano-16",
+        "type": "piano",
+        "cells": [
+          35
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "cuchillo",
+        "name_es": "el cuchillo de cocina",
+        "category": "cortante",
+        "area": "pasillo"
+      },
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras",
+        "category": "cortante",
+        "area": "bodega"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": false,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Irene",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "in_area",
+      "subject": "c1",
+      "area": "vestibulo"
+    },
+    {
+      "type": "in_area",
+      "subject": "c2",
+      "area": "terraza"
+    },
+    {
+      "type": "in_area",
+      "subject": "c3",
+      "area": "dormitorio"
+    },
+    {
+      "type": "in_area",
+      "subject": "c4",
+      "area": "jardin"
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "jardin"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "caja"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "bodega"
+        },
+        {
+          "type": "on_object",
+          "subject": "c6",
+          "group": "sillon"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c7",
+      "area": "bodega"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "alfombra"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "piano"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "piano"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "armario"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 8,
+      "c2": 12,
+      "c3": 22,
+      "c4": 28,
+      "c5": 36,
+      "c6": 50,
+      "c7": 60,
+      "c8": 65,
+      "c9": 79
+    },
+    "murderer": "c4"
+  },
+  "metrics": {
+    "deductionSteps": 6,
+    "maxTier": 3,
+    "clueCount": 9
+  }
+}
