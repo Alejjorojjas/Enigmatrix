@@ -193,42 +193,37 @@ class BoardView extends ConsumerWidget {
         height: h,
         child: Padding(
           padding: EdgeInsets.all(cs * .12),
-          child: Tooltip(
-            message: blocks
-                ? '${obj.type.defEs} (bloquea)'
-                : '${obj.type.defEs} (puedes colocar encima)',
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color.lerp(color, Colors.white, .18)!
-                        .withValues(alpha: blocks ? .95 : .60),
-                    color.withValues(alpha: blocks ? .85 : .45),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(cs * .22),
-                border: Border.all(
-                    color: Color.lerp(color, Colors.black, .35)!
-                        .withValues(alpha: blocks ? .9 : .5),
-                    width: 1.5),
-                boxShadow: blocks
-                    ? const [
-                        BoxShadow(
-                            color: Colors.black54,
-                            blurRadius: 4,
-                            offset: Offset(0, 2)),
-                      ]
-                    : null,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.lerp(color, Colors.white, .25)!
+                      .withValues(alpha: blocks ? .98 : .72),
+                  color.withValues(alpha: blocks ? .90 : .55),
+                ],
               ),
-              child: Center(
-                child: Icon(objectIcon(obj.type),
-                    size: iconSize,
-                    color: blocks
-                        ? Colors.black.withValues(alpha: .65)
-                        : Color.lerp(color, Colors.black, .45)),
-              ),
+              borderRadius: BorderRadius.circular(cs * .22),
+              border: Border.all(
+                  color: Color.lerp(color, Colors.black, .4)!
+                      .withValues(alpha: blocks ? .95 : .6),
+                  width: 1.5),
+              boxShadow: blocks
+                  ? const [
+                      BoxShadow(
+                          color: Colors.black54,
+                          blurRadius: 4,
+                          offset: Offset(0, 2)),
+                    ]
+                  : null,
+            ),
+            child: Center(
+              child: Icon(objectIcon(obj.type),
+                  size: iconSize,
+                  color: blocks
+                      ? Colors.black.withValues(alpha: .70)
+                      : Color.lerp(color, Colors.black, .5)),
             ),
           ),
         ),
@@ -312,21 +307,26 @@ class _Cell extends ConsumerWidget {
       return o != null && o.id == map.objectAt(map.cellAt(rr, cc))?.id;
     }
 
-    final wallColor = const Color(0xFF0D0B09);
-    final gridColor = Colors.black.withValues(alpha: .25);
+    // Paredes negras gruesas entre habitaciones (estilo plano), con un
+    // filo dorado tenue para marcar más el límite.
+    final wallColor = const Color(0xFF080706);
+    final gridColor = Colors.black.withValues(alpha: .22);
     BorderSide side(int rr, int cc) {
       if (sameObject(rr, cc)) return BorderSide.none;
       final isWall = wall(rr, cc);
       return BorderSide(
-          color: isWall ? wallColor : gridColor, width: isWall ? 3.0 : 0.7);
+          color: isWall ? wallColor : gridColor, width: isWall ? 3.5 : 0.6);
     }
 
-    final basePalette = areaPalette[areaIdx % areaPalette.length];
+    // Colores de habitación más vivos: se mezclan hacia el blanco y con
+    // más opacidad para que se distingan bien (feedback 2026-06-12).
+    final basePalette =
+        Color.lerp(areaPalette[areaIdx % areaPalette.length], Colors.white, .12)!;
     // Si hay mueble (dibujado debajo), el fondo de la celda es más tenue
     // para dejarlo ver.
     final hasObj = obj != null;
-    final hi = state.mapMode ? (hasObj ? .12 : .40) : (hasObj ? .05 : .12);
-    final lo = state.mapMode ? (hasObj ? .06 : .24) : (hasObj ? .03 : .07);
+    final hi = state.mapMode ? (hasObj ? .32 : .64) : (hasObj ? .07 : .15);
+    final lo = state.mapMode ? (hasObj ? .20 : .46) : (hasObj ? .04 : .09);
 
     // Indicador de armas: en la primera celda del área.
     final weapons = map.weaponsInArea(map.areaIdOf(cell));
@@ -336,7 +336,8 @@ class _Cell extends ConsumerWidget {
     return DragTarget<PanelDrag>(
       onWillAcceptWithDetails: (_) => !blocked,
       onAcceptWithDetails: (d) => onPlace(cell, d.data.tool, confirm: true),
-      builder: (context, hovering, _) => GestureDetector(
+      builder: (context, hovering, _) {
+        final body = GestureDetector(
         onTap: () {
           if (blocked) return;
           if (state.tool != null) {
@@ -401,7 +402,19 @@ class _Cell extends ConsumerWidget {
             ],
           ),
         ),
-      ),
+        );
+        if (obj == null) return body;
+        // Tooltip con el nombre del mueble al pasar el mouse (el tooltip de
+        // la pieza dibujada quedaba debajo de la celda y no recibía hover).
+        return Tooltip(
+          message: obj.blocks
+              ? obj.type.nameEs[0].toUpperCase() + obj.type.nameEs.substring(1)
+              : '${obj.type.nameEs[0].toUpperCase()}${obj.type.nameEs.substring(1)} · '
+                  'puedes colocar a alguien encima',
+          waitDuration: const Duration(milliseconds: 250),
+          child: body,
+        );
+      },
     );
   }
 

@@ -115,7 +115,13 @@ class _GameView extends ConsumerWidget {
           constraints: const BoxConstraints(maxWidth: 620, maxHeight: 620),
           child: BoardView(pc: pc, onPlace: onPlace),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
+        // Papelera pegada al tablero: arrastrar marcas aquí sin alejarse.
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 620),
+          child: _Trash(pc: pc),
+        ),
+        const SizedBox(height: 10),
         _Controls(pc: pc, onFeedback: handleFeedback),
       ],
     );
@@ -480,8 +486,6 @@ class _SuspectPanel extends ConsumerWidget {
         _XChip(state: state, onTap: controller.tapX),
         const SizedBox(height: 8),
         _EraserChip(state: state, onTap: controller.tapEraser),
-        const SizedBox(height: 14),
-        _Trash(pc: pc),
       ],
     );
   }
@@ -926,23 +930,36 @@ class _Trash extends ConsumerWidget {
     return DragTarget<BoardElementDrag>(
       onAcceptWithDetails: (d) =>
           controller.removeElement(d.data.cell, d.data.element),
-      builder: (context, hovering, _) => Container(
-        height: 72,
+      builder: (context, hovering, _) => AnimatedContainer(
+        duration: const Duration(milliseconds: 120),
+        height: 52,
         decoration: BoxDecoration(
           color: hovering.isNotEmpty
-              ? Brand.error.withValues(alpha: .3)
+              ? Brand.error.withValues(alpha: .35)
               : Brand.surface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
               color: hovering.isNotEmpty ? Brand.error : Brand.muted,
               width: hovering.isNotEmpty ? 2.5 : 1),
+          boxShadow: hovering.isNotEmpty
+              ? [BoxShadow(color: Brand.error.withValues(alpha: .4), blurRadius: 14)]
+              : null,
         ),
-        child: const Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.delete_outline, size: 26),
-            Text('Papelera — arrastra aquí para borrar',
-                style: TextStyle(fontSize: 11, color: Brand.muted)),
+            Icon(Icons.delete_outline,
+                size: 24,
+                color: hovering.isNotEmpty ? Brand.error : Brand.muted),
+            const SizedBox(width: 10),
+            Text(
+              hovering.isNotEmpty
+                  ? 'Suelta para borrar'
+                  : 'Papelera — arrastra marcas aquí',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: hovering.isNotEmpty ? Brand.cream : Brand.muted),
+            ),
           ],
         ),
       ),
