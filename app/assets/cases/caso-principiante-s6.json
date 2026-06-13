@@ -1,134 +1,163 @@
 {
   "caseId": "caso-principiante-s6",
-  "mapId": "mapa-principiante-s6-v7",
+  "mapId": "mapa-principiante-s6",
   "map": {
-    "id": "mapa-principiante-s6-v7",
-    "name_es": "La Cabaña",
+    "id": "mapa-principiante-s6",
+    "name_es": "La Mansión",
     "size": 6,
     "areas": [
       {
         "id": "porche",
         "name_es": "el Porche",
         "cells": [
+          6,
+          12,
+          18,
+          19,
+          24,
+          25,
+          30,
+          31
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
           0,
           1,
           2,
           3,
-          6,
           7,
           8,
           9,
+          13
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
           14,
-          15
-        ]
-      },
-      {
-        "id": "cocina",
-        "name_es": "la Cocina",
-        "cells": [
-          12,
-          13,
-          18,
-          19,
+          15,
           20,
-          21,
           26,
-          27
-        ]
-      },
-      {
-        "id": "comedor",
-        "name_es": "el Comedor",
-        "cells": [
-          24,
-          25,
-          30,
-          31,
-          32
-        ]
-      },
-      {
-        "id": "vestibulo",
-        "name_es": "el Vestíbulo",
-        "cells": [
-          22,
-          28,
-          29,
+          32,
           33,
-          34,
-          35
+          34
         ]
       },
       {
-        "id": "salon",
-        "name_es": "el Salón",
+        "id": "pasillo",
+        "name_es": "el Pasillo",
         "cells": [
           4,
           5,
           10,
           11,
-          16,
           17,
           23
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          16,
+          21,
+          22,
+          27,
+          28,
+          29,
+          35
         ]
       }
     ],
     "objects": [
       {
-        "id": "cama-1",
-        "type": "cama",
+        "id": "planta-1",
+        "type": "planta",
         "cells": [
-          1
+          18
         ]
       },
       {
-        "id": "cama-2",
-        "type": "cama",
+        "id": "planta-2",
+        "type": "planta",
         "cells": [
-          26,
-          20
+          25
         ]
       },
       {
-        "id": "cama-3",
-        "type": "cama",
+        "id": "arbusto-3",
+        "type": "arbusto",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "planta-4",
+        "type": "planta",
+        "cells": [
+          2
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
         "cells": [
           7
         ]
       },
       {
-        "id": "sillon-4",
-        "type": "sillon",
-        "cells": [
-          24
-        ]
-      },
-      {
-        "id": "tv-5",
-        "type": "tv",
-        "cells": [
-          10
-        ]
-      },
-      {
-        "id": "armario-6",
-        "type": "armario",
+        "id": "arbusto-6",
+        "type": "arbusto",
         "cells": [
           9
         ]
       },
       {
-        "id": "tv-7",
-        "type": "tv",
+        "id": "alfombra-7",
+        "type": "alfombra",
         "cells": [
-          13
+          33,
+          32
         ]
       },
       {
-        "id": "armario-8",
-        "type": "armario",
+        "id": "planta-8",
+        "type": "planta",
         "cells": [
-          18
+          20
+        ]
+      },
+      {
+        "id": "planta-9",
+        "type": "planta",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "alfombra-10",
+        "type": "alfombra",
+        "cells": [
+          11,
+          17
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "planta-12",
+        "type": "planta",
+        "cells": [
+          29
         ]
       }
     ],
@@ -137,19 +166,25 @@
         "id": "abrecartas",
         "name_es": "el abrecartas",
         "category": "cortante",
-        "area": "vestibulo"
+        "area": "porche"
       },
       {
-        "id": "cuerda",
-        "name_es": "la cuerda",
+        "id": "tijeras",
+        "name_es": "las tijeras",
+        "category": "cortante",
+        "area": "terraza"
+      },
+      {
+        "id": "cable",
+        "name_es": "el cable",
         "category": "asfixia",
-        "area": "comedor"
+        "area": "bano"
       }
     ]
   },
   "difficulty": "principiante",
   "hasWeapon": false,
-  "victim": "c1",
+  "victim": "c5",
   "characters": [
     {
       "id": "c1",
@@ -190,30 +225,19 @@
         {
           "type": "in_area",
           "subject": "c1",
-          "area": "porche"
+          "area": "pasillo"
         },
         {
-          "type": "on_object",
+          "type": "beside_object",
           "subject": "c1",
-          "group": "cama"
+          "group": "alfombra"
         }
       ]
     },
     {
-      "type": "compound",
+      "type": "in_area",
       "subject": "c2",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c2",
-          "area": "porche"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c2",
-          "group": "armario"
-        }
-      ]
+      "area": "porche"
     },
     {
       "type": "compound",
@@ -222,19 +246,30 @@
         {
           "type": "in_area",
           "subject": "c3",
-          "area": "cocina"
+          "area": "terraza"
         },
         {
           "type": "beside_object",
           "subject": "c3",
-          "group": "armario"
+          "group": "planta"
         }
       ]
     },
     {
-      "type": "in_area",
+      "type": "compound",
       "subject": "c4",
-      "area": "salon"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "planta"
+        }
+      ]
     },
     {
       "type": "compound",
@@ -243,31 +278,31 @@
         {
           "type": "in_area",
           "subject": "c5",
-          "area": "cocina"
+          "area": "bano"
         },
         {
           "type": "beside_object",
           "subject": "c5",
-          "group": "cama"
+          "group": "planta"
         }
       ]
     },
     {
-      "type": "in_area",
+      "type": "only_one_on",
       "subject": "c6",
-      "area": "vestibulo"
+      "group": "alfombra"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 1,
-      "c2": 8,
-      "c3": 12,
-      "c4": 23,
-      "c5": 27,
-      "c6": 34
+      "c1": 5,
+      "c2": 6,
+      "c3": 13,
+      "c4": 22,
+      "c5": 26,
+      "c6": 33
     },
-    "murderer": "c2"
+    "murderer": "c6"
   },
   "metrics": {
     "deductionSteps": 4,

@@ -49,6 +49,14 @@ String _groupText(GameMap map, String group) {
   return map.countOfGroup(group) == 1 ? type.defEs : type.indefEs;
 }
 
+/// "junto a" + objeto, con la contracción del español "a el" → "al".
+String _besideText(GameMap map, String group) {
+  final obj = _groupText(map, group);
+  return obj.startsWith('el ')
+      ? 'junto al ${obj.substring(3)}'
+      : 'junto a $obj';
+}
+
 ObjectType _groupType(String group) => ObjectType.values.byName(group);
 
 sealed class Clue {
@@ -200,7 +208,7 @@ class BesideObjectGroup extends Clue {
 
   @override
   String predicateEs(GameMap map, ClueNames names) =>
-      'estaba junto a ${_groupText(map, group)}';
+      'estaba ${_besideText(map, group)}';
 
   @override
   Map<String, dynamic> toJson() =>

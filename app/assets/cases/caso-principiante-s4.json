@@ -3,7 +3,7 @@
   "mapId": "mapa-principiante-s4",
   "map": {
     "id": "mapa-principiante-s4",
-    "name_es": "El Museo",
+    "name_es": "El Teatro",
     "size": 6,
     "areas": [
       {
@@ -72,93 +72,117 @@
         "id": "sillon-1",
         "type": "sillon",
         "cells": [
-          34
+          3
         ]
       },
       {
-        "id": "cama-2",
-        "type": "cama",
+        "id": "alfombra-2",
+        "type": "alfombra",
         "cells": [
-          10,
-          11
-        ]
-      },
-      {
-        "id": "cama-3",
-        "type": "cama",
-        "cells": [
+          12,
           6
         ]
       },
       {
-        "id": "alfombra-4",
+        "id": "mesa-3",
+        "type": "mesa",
+        "cells": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "mesa-4",
+        "type": "mesa",
+        "cells": [
+          28,
+          29
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "tv-6",
+        "type": "tv",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "alfombra-7",
         "type": "alfombra",
         "cells": [
-          7,
-          13
+          24,
+          30
         ]
       },
       {
-        "id": "alfombra-5",
-        "type": "alfombra",
+        "id": "sofa-8",
+        "type": "sofa",
         "cells": [
-          8
-        ]
-      },
-      {
-        "id": "lavadora-6",
-        "type": "lavadora",
-        "cells": [
-          35
-        ]
-      },
-      {
-        "id": "armario-7",
-        "type": "armario",
-        "cells": [
-          5
-        ]
-      },
-      {
-        "id": "lavadora-8",
-        "type": "lavadora",
-        "cells": [
-          15
+          26,
+          25
         ]
       },
       {
         "id": "arbusto-9",
         "type": "arbusto",
         "cells": [
-          29
+          16
         ]
       },
       {
-        "id": "piano-10",
-        "type": "piano",
+        "id": "arbusto-10",
+        "type": "arbusto",
         "cells": [
           22
+        ]
+      },
+      {
+        "id": "arbusto-11",
+        "type": "arbusto",
+        "cells": [
+          23
+        ]
+      },
+      {
+        "id": "sofa-12",
+        "type": "sofa",
+        "cells": [
+          9,
+          15
         ]
       }
     ],
     "weapons": [
       {
-        "id": "jeringa",
-        "name_es": "la jeringa",
-        "category": "veneno",
-        "area": "jardin"
+        "id": "cable",
+        "name_es": "el cable",
+        "category": "asfixia",
+        "area": "salon"
       },
       {
-        "id": "abrecartas",
-        "name_es": "el abrecartas",
+        "id": "tijeras",
+        "name_es": "las tijeras",
         "category": "cortante",
         "area": "biblioteca"
+      },
+      {
+        "id": "martillo",
+        "name_es": "el martillo",
+        "category": "contundente",
+        "area": "jardin"
       }
     ]
   },
   "difficulty": "principiante",
   "hasWeapon": false,
-  "victim": "c3",
+  "victim": "c5",
   "characters": [
     {
       "id": "c1",
@@ -193,34 +217,23 @@
   ],
   "clues": [
     {
-      "type": "compound",
-      "subject": "c1",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c1",
-          "area": "biblioteca"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c1",
-          "group": "cama"
-        }
-      ]
+      "type": "alone_with",
+      "a": "c1",
+      "b": "c2"
     },
     {
       "type": "compound",
       "subject": "c2",
       "parts": [
         {
-          "type": "on_object",
+          "type": "in_area",
           "subject": "c2",
-          "group": "alfombra"
+          "area": "jardin"
         },
         {
           "type": "beside_object",
           "subject": "c2",
-          "group": "alfombra"
+          "group": "sofa"
         }
       ]
     },
@@ -231,12 +244,12 @@
         {
           "type": "in_area",
           "subject": "c3",
-          "area": "jardin"
+          "area": "biblioteca"
         },
         {
           "type": "beside_object",
           "subject": "c3",
-          "group": "cama"
+          "group": "alfombra"
         }
       ]
     },
@@ -245,42 +258,52 @@
       "subject": "c4",
       "parts": [
         {
-          "type": "beside_object",
+          "type": "in_area",
           "subject": "c4",
-          "group": "lavadora"
+          "area": "salon"
         },
         {
           "type": "beside_object",
           "subject": "c4",
-          "group": "piano"
+          "group": "sofa"
         }
       ]
     },
     {
-      "type": "beside_object",
+      "type": "compound",
       "subject": "c5",
-      "group": "sillon"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "salon"
+        },
+        {
+          "type": "on_object",
+          "subject": "c5",
+          "group": "alfombra"
+        }
+      ]
     },
     {
-      "type": "in_area",
-      "subject": "c6",
-      "area": "salon"
+      "type": "alone",
+      "subject": "c6"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 0,
-      "c2": 8,
-      "c3": 17,
-      "c4": 21,
-      "c5": 28,
-      "c6": 31
+      "c1": 5,
+      "c2": 10,
+      "c3": 13,
+      "c4": 20,
+      "c5": 24,
+      "c6": 33
     },
     "murderer": "c4"
   },
   "metrics": {
-    "deductionSteps": 5,
-    "maxTier": 3,
+    "deductionSteps": 6,
+    "maxTier": 4,
     "clueCount": 6
   }
 }

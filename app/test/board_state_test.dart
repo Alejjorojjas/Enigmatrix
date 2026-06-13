@@ -136,16 +136,20 @@ void main() {
       expect(board.cell(2).hasX, isFalse); // solo era de c1
     });
 
-    test('la X automática NO pisa confirmados NI candidatos', () {
+    test('la X automática descarta candidatos pero no pisa confirmados', () {
       var board = BoardState.empty().placeCandidate(4, 'c3').board;
       board = board.placeConfirmed(0, 'c2', autoXGridSize: 4).board;
-      board = board.placeConfirmed(5, 'c1', autoXGridSize: 4).board;
-      expect(board.cell(0).confirmed, 'c2'); // celda confirmada intacta
+      expect(board.cell(0).confirmed, 'c2');
       expect(board.cell(0).autoXFrom, isEmpty);
-      // La celda 4 (fila de c2@0, columna de c1@5) tenía un candidato:
-      // se respeta la anotación del jugador, sin X encima.
-      expect(board.cell(4).candidates, {'c3'});
-      expect(board.cell(4).hasX, isFalse);
+      // La celda 4 (columna de c2@0) tenía un candidato: la X lo descarta
+      // (regla 2026-06-12: nadie de esa fila/columna puede estar ahí).
+      expect(board.cell(4).hasX, isTrue);
+      expect(board.cell(4).candidates, isEmpty);
+      // Otro confirmado no se toca:
+      board = BoardState.empty().placeConfirmed(3, 'c9').board;
+      board = board.placeConfirmed(0, 'c2', autoXGridSize: 4).board;
+      expect(board.cell(3).confirmed, 'c9');
+      expect(board.cell(3).autoXFrom, isEmpty);
     });
 
     test('sin autoXGridSize no se tacha nada (opción apagada)', () {

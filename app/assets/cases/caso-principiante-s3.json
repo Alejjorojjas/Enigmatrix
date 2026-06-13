@@ -3,7 +3,7 @@
   "mapId": "mapa-principiante-s3",
   "map": {
     "id": "mapa-principiante-s3",
-    "name_es": "La Posada",
+    "name_es": "La Galería",
     "size": 6,
     "areas": [
       {
@@ -75,82 +75,112 @@
     ],
     "objects": [
       {
-        "id": "sofa-1",
-        "type": "sofa",
-        "cells": [
-          5
-        ]
-      },
-      {
-        "id": "sillon-2",
+        "id": "sillon-1",
         "type": "sillon",
         "cells": [
-          0
+          22
         ]
       },
       {
-        "id": "sofa-3",
-        "type": "sofa",
+        "id": "planta-2",
+        "type": "planta",
         "cells": [
-          6,
-          7
+          27
         ]
       },
       {
-        "id": "sillon-4",
-        "type": "sillon",
+        "id": "arbusto-3",
+        "type": "arbusto",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "armario-4",
+        "type": "armario",
+        "cells": [
+          3
+        ]
+      },
+      {
+        "id": "lavadora-5",
+        "type": "lavadora",
+        "cells": [
+          2
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          7,
+          1
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "silla-8",
+        "type": "silla",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "planta-9",
+        "type": "planta",
         "cells": [
           25
         ]
       },
       {
-        "id": "armario-5",
-        "type": "armario",
+        "id": "mesa-10",
+        "type": "mesa",
         "cells": [
-          17
-        ]
-      },
-      {
-        "id": "piano-6",
-        "type": "piano",
-        "cells": [
-          30
-        ]
-      },
-      {
-        "id": "lavadora-7",
-        "type": "lavadora",
-        "cells": [
-          16
-        ]
-      },
-      {
-        "id": "arbusto-8",
-        "type": "arbusto",
-        "cells": [
+          26,
           32
         ]
       },
       {
-        "id": "lavadora-9",
-        "type": "lavadora",
+        "id": "mesa-11",
+        "type": "mesa",
         "cells": [
-          34
+          15,
+          16
+        ]
+      },
+      {
+        "id": "alfombra-12",
+        "type": "alfombra",
+        "cells": [
+          4,
+          5
         ]
       }
     ],
     "weapons": [
       {
-        "id": "jeringa",
-        "name_es": "la jeringa",
+        "id": "veneno",
+        "name_es": "el frasco de veneno",
         "category": "veneno",
+        "area": "estudio"
+      },
+      {
+        "id": "martillo",
+        "name_es": "el martillo",
+        "category": "contundente",
         "area": "porche"
       },
       {
-        "id": "cable",
-        "name_es": "el cable",
-        "category": "asfixia",
-        "area": "estudio"
+        "id": "cuchillo",
+        "name_es": "el cuchillo de cocina",
+        "category": "cortante",
+        "area": "comedor"
       }
     ]
   },
@@ -191,9 +221,20 @@
   ],
   "clues": [
     {
-      "type": "in_area",
+      "type": "compound",
       "subject": "c1",
-      "area": "bodega"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "estudio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
     },
     {
       "type": "compound",
@@ -202,44 +243,33 @@
         {
           "type": "in_area",
           "subject": "c2",
-          "area": "estudio"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c2",
-          "group": "lavadora"
-        }
-      ]
-    },
-    {
-      "type": "compound",
-      "subject": "c3",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c3",
           "area": "pasillo"
         },
         {
-          "type": "beside_object",
-          "subject": "c3",
-          "group": "sofa"
+          "type": "on_object",
+          "subject": "c2",
+          "group": "alfombra"
         }
       ]
     },
     {
       "type": "in_area",
+      "subject": "c3",
+      "area": "bodega"
+    },
+    {
+      "type": "beside_object",
       "subject": "c4",
-      "area": "porche"
+      "group": "sillon"
     },
     {
       "type": "compound",
       "subject": "c5",
       "parts": [
         {
-          "type": "beside_object",
+          "type": "in_area",
           "subject": "c5",
-          "group": "sillon"
+          "area": "comedor"
         },
         {
           "type": "beside_object",
@@ -249,24 +279,24 @@
       ]
     },
     {
-      "type": "beside_object",
+      "type": "only_one_on",
       "subject": "c6",
-      "group": "piano"
+      "group": "silla"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 3,
-      "c2": 10,
-      "c3": 12,
+      "c1": 4,
+      "c2": 7,
+      "c3": 14,
       "c4": 23,
-      "c5": 26,
-      "c6": 31
+      "c5": 24,
+      "c6": 33
     },
     "murderer": "c6"
   },
   "metrics": {
-    "deductionSteps": 7,
+    "deductionSteps": 3,
     "maxTier": 3,
     "clueCount": 6
   }

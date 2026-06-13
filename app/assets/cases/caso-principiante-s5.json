@@ -69,86 +69,102 @@
     ],
     "objects": [
       {
-        "id": "sofa-1",
-        "type": "sofa",
-        "cells": [
-          15
-        ]
-      },
-      {
-        "id": "sofa-2",
-        "type": "sofa",
-        "cells": [
-          10
-        ]
-      },
-      {
-        "id": "sofa-3",
-        "type": "sofa",
+        "id": "silla-1",
+        "type": "silla",
         "cells": [
           8
         ]
       },
       {
-        "id": "cama-4",
-        "type": "cama",
+        "id": "arbusto-2",
+        "type": "arbusto",
         "cells": [
-          20
+          3
         ]
       },
       {
-        "id": "armario-5",
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "silla-4",
+        "type": "silla",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "sillon-5",
+        "type": "sillon",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "planta-6",
+        "type": "planta",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "cama-8",
+        "type": "cama",
+        "cells": [
+          30,
+          24
+        ]
+      },
+      {
+        "id": "sillon-9",
+        "type": "sillon",
+        "cells": [
+          12
+        ]
+      },
+      {
+        "id": "armario-10",
         "type": "armario",
         "cells": [
           1
         ]
       },
       {
-        "id": "armario-6",
+        "id": "armario-11",
         "type": "armario",
         "cells": [
-          16
+          13
         ]
       },
       {
-        "id": "armario-7",
-        "type": "armario",
+        "id": "mesa-12",
+        "type": "mesa",
         "cells": [
-          35
-        ]
-      },
-      {
-        "id": "armario-8",
-        "type": "armario",
-        "cells": [
-          18
-        ]
-      },
-      {
-        "id": "piano-9",
-        "type": "piano",
-        "cells": [
-          6
-        ]
-      },
-      {
-        "id": "piano-10",
-        "type": "piano",
-        "cells": [
-          4
+          6,
+          0
         ]
       }
     ],
     "weapons": [
       {
-        "id": "abrecartas",
-        "name_es": "el abrecartas",
-        "category": "cortante",
-        "area": "estudio"
-      },
-      {
         "id": "cuchillo",
         "name_es": "el cuchillo de cocina",
+        "category": "cortante",
+        "area": "porche"
+      },
+      {
+        "id": "botella",
+        "name_es": "la botella rota",
         "category": "cortante",
         "area": "jardin"
       }
@@ -191,61 +207,49 @@
   ],
   "clues": [
     {
-      "type": "beside_object",
+      "type": "only_one_on",
       "subject": "c1",
-      "group": "piano"
+      "group": "sillon"
     },
     {
-      "type": "compound",
-      "subject": "c2",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c2",
-          "area": "estudio"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c2",
-          "group": "piano"
-        }
-      ]
+      "type": "victim_filler",
+      "subject": "c2"
     },
     {
-      "type": "beside_object",
-      "subject": "c3",
-      "group": "cama"
+      "type": "same_area",
+      "a": "c3",
+      "b": "c6"
     },
     {
       "type": "beside_object",
       "subject": "c4",
-      "group": "sofa"
-    },
-    {
-      "type": "alone_with",
-      "a": "c5",
-      "b": "c4"
+      "group": "sillon"
     },
     {
       "type": "in_area",
+      "subject": "c5",
+      "area": "jardin"
+    },
+    {
+      "type": "beside_object",
       "subject": "c6",
-      "area": "dormitorio"
+      "group": "silla"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 5,
+      "c1": 4,
       "c2": 7,
-      "c3": 14,
-      "c4": 21,
-      "c5": 28,
-      "c6": 30
+      "c3": 17,
+      "c4": 18,
+      "c5": 26,
+      "c6": 33
     },
-    "murderer": "c3"
+    "murderer": "c4"
   },
   "metrics": {
-    "deductionSteps": 7,
-    "maxTier": 3,
+    "deductionSteps": 10,
+    "maxTier": 4,
     "clueCount": 6
   }
 }

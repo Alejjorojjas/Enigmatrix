@@ -64,6 +64,64 @@ void main() {
       });
     }
 
+    test('cama/sofá/mesa/alfombra/barra SIEMPRE ocupan 2 celdas '
+        '(2026-06-12)', () {
+      const twoCell = {
+        ObjectType.cama,
+        ObjectType.sofa,
+        ObjectType.mesa,
+        ObjectType.alfombra,
+        ObjectType.barra,
+      };
+      for (final s in [6, 8, 9]) {
+        for (var seed = 1; seed <= 5; seed++) {
+          for (final o in buildMap(s, seed).objects) {
+            if (twoCell.contains(o.type)) {
+              expect(o.cells.length, 2,
+                  reason: '${o.type.name} debería ocupar 2 celdas '
+                      '(${s}x$s seed $seed)');
+            } else {
+              expect(o.cells.length, 1);
+            }
+          }
+        }
+      }
+    });
+
+    test('coherencia temática: cada mueble pertenece a su habitación '
+        '(jamás una cama en un baño)', () {
+      // Espejo del mapeo interno _furnitureByRoom.
+      const allowed = {
+        'salon': {'sofa', 'sillon', 'alfombra', 'tv', 'piano', 'mesa',
+          'planta'},
+        'cocina': {'mesa', 'silla', 'barra', 'planta'},
+        'dormitorio': {'cama', 'armario', 'alfombra', 'silla', 'tv', 'planta'},
+        'biblioteca': {'silla', 'sillon', 'mesa', 'alfombra', 'planta',
+          'armario'},
+        'comedor': {'mesa', 'silla', 'alfombra', 'planta'},
+        'estudio': {'silla', 'sillon', 'mesa', 'armario', 'planta', 'alfombra'},
+        'bano': {'planta', 'alfombra'},
+        'pasillo': {'planta', 'alfombra', 'armario', 'silla'},
+        'vestibulo': {'planta', 'alfombra', 'armario', 'silla', 'sillon'},
+        'jardin': {'planta', 'arbusto', 'silla', 'sofa'},
+        'porche': {'silla', 'sillon', 'planta', 'arbusto', 'sofa'},
+        'atico': {'caja', 'armario', 'alfombra', 'silla'},
+        'bodega': {'caja', 'armario', 'lavadora'},
+        'terraza': {'silla', 'sofa', 'planta', 'arbusto', 'mesa'},
+      };
+      for (final s in [6, 8, 9]) {
+        for (var seed = 1; seed <= 5; seed++) {
+          final map = buildMap(s, seed);
+          for (final o in map.objects) {
+            final areaId = map.areaIdOf(o.cells.first);
+            expect(allowed[areaId], contains(o.type.name),
+                reason: '${o.type.name} no debería estar en $areaId '
+                    '(${s}x$s seed $seed)');
+          }
+        }
+      }
+    });
+
     test('serialización del mapa: ida y vuelta', () {
       final map = buildMap(6, 9);
       final back = GameMap.fromJson(map.toJson());

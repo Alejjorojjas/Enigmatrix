@@ -208,11 +208,14 @@ class BoardState {
         if (target == index) continue;
         final tc = board.cell(target);
         if (tc.confirmed != null) continue;
-        // No pisa candidatos: el jugador conserva sus anotaciones.
-        if (tc.candidates.isNotEmpty) continue;
-        if (tc.autoXFrom.contains(charId)) continue;
+        if (tc.autoXFrom.contains(charId) && tc.candidates.isEmpty) continue;
+        // La X descarta la celda: borra los candidatos que hubiera
+        // (regla 2026-06-12: nadie de esa fila/columna puede estar ahí).
         board = board._with(
-            target, tc.copyWith(autoXFrom: {...tc.autoXFrom, charId}));
+            target,
+            tc.copyWith(
+                autoXFrom: {...tc.autoXFrom, charId},
+                candidates: const {}));
       }
     }
     return board;

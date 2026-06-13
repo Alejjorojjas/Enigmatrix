@@ -50,14 +50,6 @@ const _weaponPool = [
   ('cuchillo', 'el cuchillo de cocina', WeaponCategory.cortante),
 ];
 
-const _standableTypes = [
-  ObjectType.silla,
-  ObjectType.sillon,
-  ObjectType.sofa,
-  ObjectType.cama,
-  ObjectType.alfombra,
-];
-
 const _blockingTypes = [
   ObjectType.mesa,
   ObjectType.tv,
@@ -70,13 +62,113 @@ const _blockingTypes = [
   ObjectType.barra,
 ];
 
-/// Tipos que pueden ocupar 2 celdas adyacentes.
+/// Tipos que SIEMPRE ocupan 2 celdas adyacentes (decisión 2026-06-12).
+/// Si no hay un par libre, ese mueble no se coloca.
 const _twoCellTypes = {
   ObjectType.cama,
   ObjectType.sofa,
   ObjectType.mesa,
   ObjectType.alfombra,
   ObjectType.barra,
+};
+
+/// Coherencia temática (2026-06-12): qué muebles tienen sentido en cada
+/// tipo de habitación. Una cama nunca aparece en un baño. Las claves son
+/// los ids de habitación de [_roomNamePool].
+const _furnitureByRoom = <String, List<ObjectType>>{
+  'salon': [
+    ObjectType.sofa,
+    ObjectType.sillon,
+    ObjectType.alfombra,
+    ObjectType.tv,
+    ObjectType.piano,
+    ObjectType.mesa,
+    ObjectType.planta,
+  ],
+  'cocina': [
+    ObjectType.mesa,
+    ObjectType.silla,
+    ObjectType.barra,
+    ObjectType.planta,
+  ],
+  'dormitorio': [
+    ObjectType.cama,
+    ObjectType.armario,
+    ObjectType.alfombra,
+    ObjectType.silla,
+    ObjectType.tv,
+    ObjectType.planta,
+  ],
+  'biblioteca': [
+    ObjectType.silla,
+    ObjectType.sillon,
+    ObjectType.mesa,
+    ObjectType.alfombra,
+    ObjectType.planta,
+    ObjectType.armario,
+  ],
+  'comedor': [
+    ObjectType.mesa,
+    ObjectType.silla,
+    ObjectType.alfombra,
+    ObjectType.planta,
+  ],
+  'estudio': [
+    ObjectType.silla,
+    ObjectType.sillon,
+    ObjectType.mesa,
+    ObjectType.armario,
+    ObjectType.planta,
+    ObjectType.alfombra,
+  ],
+  'bano': [
+    ObjectType.planta,
+    ObjectType.alfombra,
+  ],
+  'pasillo': [
+    ObjectType.planta,
+    ObjectType.alfombra,
+    ObjectType.armario,
+    ObjectType.silla,
+  ],
+  'vestibulo': [
+    ObjectType.planta,
+    ObjectType.alfombra,
+    ObjectType.armario,
+    ObjectType.silla,
+    ObjectType.sillon,
+  ],
+  'jardin': [
+    ObjectType.planta,
+    ObjectType.arbusto,
+    ObjectType.silla,
+    ObjectType.sofa,
+  ],
+  'porche': [
+    ObjectType.silla,
+    ObjectType.sillon,
+    ObjectType.planta,
+    ObjectType.arbusto,
+    ObjectType.sofa,
+  ],
+  'atico': [
+    ObjectType.caja,
+    ObjectType.armario,
+    ObjectType.alfombra,
+    ObjectType.silla,
+  ],
+  'bodega': [
+    ObjectType.caja,
+    ObjectType.armario,
+    ObjectType.lavadora,
+  ],
+  'terraza': [
+    ObjectType.silla,
+    ObjectType.sofa,
+    ObjectType.planta,
+    ObjectType.arbusto,
+    ObjectType.mesa,
+  ],
 };
 
 class MapGenerator {
@@ -156,8 +248,11 @@ class MapGenerator {
         ),
     ];
 
-    // 3. Muebles: pisables y bloqueantes, algunos de 2 celdas, con tipos
-    //    repetidos a propósito (la ambigüedad "una silla" es la dificultad).
+    // 3. Muebles POR HABITACIÓN (coherencia temática 2026-06-12): cada
+    //    habitación solo recibe muebles de su lista permitida, y los tipos
+    //    de [_twoCellTypes] siempre ocupan 2 celdas. La repetición de tipos
+    //    entre habitaciones (sillas en cocina, comedor, estudio...) da la
+    //    ambigüedad que necesitan las pistas ("una silla").
     final objects = <MapObject>[];
     final occupiedByObject = <int>{};
     final blockedCount = List<int>.filled(size, 0); // por fila
@@ -186,45 +281,50 @@ class MapGenerator {
       }
     }
 
-    List<int>? findSpot(bool twoCells) {
-      for (var tries = 0; tries < 25; tries++) {
-        final cell = rng.nextInt(total);
-        if (occupiedByObject.contains(cell)) continue;
+    // Celdas libres en un área; para muebles de 2 celdas, busca un par
+    // ortogonal libre dentro de la MISMA área.
+    List<int>? findSpotInArea(List<int> areaCells, bool twoCells) {
+      final free = [
+        for (final c in areaCells)
+          if (!occupiedByObject.contains(c)) c
+      ]..shuffle(rng);
+      for (final cell in free) {
         if (!twoCells) return [cell];
         final partners = [
           for (final n in _orthNeighbors(cell))
-            if (!occupiedByObject.contains(n) && areaOf[n] == areaOf[cell]) n
+            if (!occupiedByObject.contains(n) && areaCells.contains(n)) n
         ];
-        if (partners.isEmpty) continue;
-        return [cell, partners[rng.nextInt(partners.length)]];
+        if (partners.isNotEmpty) {
+          return [cell, partners[rng.nextInt(partners.length)]];
+        }
       }
       return null;
     }
 
     var objSeq = 0;
-    void place(List<ObjectType> pool, int count, {required bool blocking}) {
-      final used = <ObjectType>[];
+    for (final area in areas) {
+      final allowed = _furnitureByRoom[area.id] ??
+          const [ObjectType.silla, ObjectType.planta];
+      // ~1 mueble por cada 3 celdas de la habitación, entre 1 y 4.
+      final count = (area.cells.length / 3).round().clamp(1, 4);
       for (var i = 0; i < count; i++) {
-        // 40% de probabilidad de repetir un tipo ya usado (ambigüedad).
-        final type = used.isNotEmpty && rng.nextInt(10) < 4
-            ? used[rng.nextInt(used.length)]
-            : pool[rng.nextInt(pool.length)];
-        final twoCells = _twoCellTypes.contains(type) && rng.nextInt(10) < 4;
-        final cells = findSpot(twoCells);
-        if (cells == null) continue;
-        if (blocking && !rowColSafe(cells)) continue;
-        objects.add(MapObject(
-            id: '${type.name}-${++objSeq}', type: type, cells: cells));
-        occupiedByObject.addAll(cells);
-        if (blocking) registerBlocked(cells);
-        used.add(type);
+        // Hasta 4 intentos con tipos distintos (un mueble de 2 celdas que
+        // no quepa cede el turno a otro tipo en vez de forzarse a 1 celda).
+        for (var t = 0; t < 4; t++) {
+          final type = allowed[rng.nextInt(allowed.length)];
+          final twoCells = _twoCellTypes.contains(type);
+          final cells = findSpotInArea(area.cells, twoCells);
+          if (cells == null) continue;
+          final blocking = _blockingTypes.contains(type);
+          if (blocking && !rowColSafe(cells)) continue;
+          objects.add(MapObject(
+              id: '${type.name}-${++objSeq}', type: type, cells: cells));
+          occupiedByObject.addAll(cells);
+          if (blocking) registerBlocked(cells);
+          break;
+        }
       }
     }
-
-    final standables = size - 2 + rng.nextInt(2);
-    final blockings = size - 2 + rng.nextInt(3);
-    place(_standableTypes, standables, blocking: false);
-    place(_blockingTypes, blockings, blocking: true);
 
     // 4. Armas potenciales en áreas distintas (así en Casual el área del
     //    crimen siempre tiene una sola arma).
