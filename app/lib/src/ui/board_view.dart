@@ -1,5 +1,7 @@
 /// Tablero jugable: marco con profundidad, habitaciones con gradiente y
-/// etiqueta de nombre (estilo Murdoku), muebles a color, marcas y drag & drop.
+/// etiqueta de nombre (estilo Murdoku), muebles a color dibujados como UNA
+/// pieza continua sobre sus celdas (camas/sofás/mesas/alfombras de 2
+/// casillas se ven alargados), marcas y drag & drop.
 /// Interacción: tap = candidato (letra) · mantener oprimido o arrastrar =
 /// confirmado (círculo con avatar) · X grandes.
 library;
@@ -133,6 +135,12 @@ class BoardView extends ConsumerWidget {
                 final cs = box.maxWidth / n;
                 return Stack(
                   children: [
+                    // Capa 1 — muebles, dibujados como una pieza continua
+                    // sobre sus celdas (van DEBAJO de las marcas).
+                    if (state.mapMode)
+                      for (final furniture in _furniture(map, cs)) furniture,
+                    // Capa 2 — celdas: fondo de habitación tenue, paredes,
+                    // marcas e interacción (drag & drop, taps).
                     Column(
                       children: [
                         for (var r = 0; r < n; r++)
@@ -150,7 +158,7 @@ class BoardView extends ConsumerWidget {
                           ),
                       ],
                     ),
-                    // Nombres de habitación sobre el mapa (estilo Murdoku).
+                    // Capa 3 — nombres de habitación sobre el mapa.
                     if (state.mapMode)
                       for (final label in _areaLabels(map, cs, box.maxWidth))
                         label,
@@ -162,6 +170,71 @@ class BoardView extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Una pieza por mueble, abarcando todas sus celdas (1 o 2).
+  List<Widget> _furniture(GameMap map, double cs) {
+    final widgets = <Widget>[];
+    for (final obj in map.objects) {
+      final rows = obj.cells.map((c) => map.row(c));
+      final cols = obj.cells.map((c) => map.col(c));
+      final minR = rows.reduce(math.min), maxR = rows.reduce(math.max);
+      final minC = cols.reduce(math.min), maxC = cols.reduce(math.max);
+      final w = (maxC - minC + 1) * cs;
+      final h = (maxR - minR + 1) * cs;
+      final color = objectColor(obj.type);
+      final blocks = obj.blocks;
+      final iconSize = (math.min(cs, math.min(w, h)) * .55).clamp(12.0, 40.0);
+
+      widgets.add(Positioned(
+        left: minC * cs,
+        top: minR * cs,
+        width: w,
+        height: h,
+        child: Padding(
+          padding: EdgeInsets.all(cs * .12),
+          child: Tooltip(
+            message: blocks
+                ? '${obj.type.defEs} (bloquea)'
+                : '${obj.type.defEs} (puedes colocar encima)',
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.lerp(color, Colors.white, .18)!
+                        .withValues(alpha: blocks ? .95 : .60),
+                    color.withValues(alpha: blocks ? .85 : .45),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(cs * .22),
+                border: Border.all(
+                    color: Color.lerp(color, Colors.black, .35)!
+                        .withValues(alpha: blocks ? .9 : .5),
+                    width: 1.5),
+                boxShadow: blocks
+                    ? const [
+                        BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 4,
+                            offset: Offset(0, 2)),
+                      ]
+                    : null,
+              ),
+              child: Center(
+                child: Icon(objectIcon(obj.type),
+                    size: iconSize,
+                    color: blocks
+                        ? Colors.black.withValues(alpha: .65)
+                        : Color.lerp(color, Colors.black, .45)),
+              ),
+            ),
+          ),
+        ),
+      ));
+    }
+    return widgets;
   }
 
   List<Widget> _areaLabels(GameMap map, double cs, double boardW) {
@@ -228,18 +301,32 @@ class _Cell extends ConsumerWidget {
     final isError = state.errorCells.contains(cell);
     final content = state.board.cell(cell);
 
+    // Pared (gruesa) entre habitaciones distintas. Entre dos celdas del
+    // MISMO mueble no hay línea, para que se vea como una pieza continua.
     bool wall(int rr, int cc) =>
         !map.inGrid(rr, cc) ||
         map.areaIdOf(map.cellAt(rr, cc)) != map.areaIdOf(cell);
+    bool sameObject(int rr, int cc) {
+      if (!map.inGrid(rr, cc)) return false;
+      final o = map.objectAt(cell);
+      return o != null && o.id == map.objectAt(map.cellAt(rr, cc))?.id;
+    }
 
     final wallColor = const Color(0xFF0D0B09);
     final gridColor = Colors.black.withValues(alpha: .25);
-    BorderSide side(bool isWall) => BorderSide(
-        color: isWall ? wallColor : gridColor, width: isWall ? 3.0 : 0.7);
+    BorderSide side(int rr, int cc) {
+      if (sameObject(rr, cc)) return BorderSide.none;
+      final isWall = wall(rr, cc);
+      return BorderSide(
+          color: isWall ? wallColor : gridColor, width: isWall ? 3.0 : 0.7);
+    }
 
-    final base = areaPalette[areaIdx % areaPalette.length];
-    final hi = state.mapMode ? .40 : .12;
-    final lo = state.mapMode ? .24 : .07;
+    final basePalette = areaPalette[areaIdx % areaPalette.length];
+    // Si hay mueble (dibujado debajo), el fondo de la celda es más tenue
+    // para dejarlo ver.
+    final hasObj = obj != null;
+    final hi = state.mapMode ? (hasObj ? .12 : .40) : (hasObj ? .05 : .12);
+    final lo = state.mapMode ? (hasObj ? .06 : .24) : (hasObj ? .03 : .07);
 
     // Indicador de armas: en la primera celda del área.
     final weapons = map.weaponsInArea(map.areaIdOf(cell));
@@ -278,15 +365,15 @@ class _Cell extends ConsumerWidget {
                           Brand.gold.withValues(alpha: .30)
                         ]
                       : [
-                          base.withValues(alpha: hi),
-                          base.withValues(alpha: lo)
+                          basePalette.withValues(alpha: hi),
+                          basePalette.withValues(alpha: lo)
                         ],
             ),
             border: Border(
-              top: side(wall(r - 1, c)),
-              bottom: side(wall(r + 1, c)),
-              left: side(wall(r, c - 1)),
-              right: side(wall(r, c + 1)),
+              top: side(r - 1, c),
+              bottom: side(r + 1, c),
+              left: side(r, c - 1),
+              right: side(r, c + 1),
             ),
           ),
           child: Stack(
@@ -306,46 +393,6 @@ class _Cell extends ConsumerWidget {
                       ),
                       child: const Icon(Icons.colorize,
                           size: 11, color: Brand.goldBright),
-                    ),
-                  ),
-                ),
-              // Mueble bloqueante: ficha sólida con color propio.
-              if (blocked)
-                Center(
-                  child: Tooltip(
-                    message: '${obj.type.defEs} (bloquea)',
-                    child: FittedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: .35),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: objectColor(obj.type)
-                                    .withValues(alpha: .5)),
-                          ),
-                          child: Icon(objectIcon(obj.type),
-                              color: objectColor(obj.type), size: 22),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              // Mueble pisable: silueta a color debajo de las marcas.
-              if (obj != null && !blocked)
-                Center(
-                  child: Tooltip(
-                    message: '${obj.type.defEs} (puedes colocar encima)',
-                    child: FittedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Icon(objectIcon(obj.type),
-                            color: objectColor(obj.type)
-                                .withValues(alpha: state.mapMode ? .65 : .30),
-                            size: 25),
-                      ),
                     ),
                   ),
                 ),
