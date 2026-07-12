@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 import '../data/case_repository.dart';
 import 'enx_style.dart';
+import 'tutorial_dialog.dart';
 
 final prefsProvider =
     FutureProvider<SharedPreferences>((_) => SharedPreferences.getInstance());
@@ -38,14 +39,31 @@ const _boardTopPad = 6.0;
 /// Desplazamiento horizontal de la culebrita: seno con período de 6 fichas.
 double _snake(int i) => math.sin(i * math.pi / 3);
 
-class CaseListScreen extends ConsumerWidget {
+class CaseListScreen extends ConsumerStatefulWidget {
   const CaseListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CaseListScreen> createState() => _CaseListScreenState();
+}
+
+class _CaseListScreenState extends ConsumerState<CaseListScreen> {
+  bool _tutorialChecked = false;
+
+  void _maybeShowTutorial(SharedPreferences prefs) {
+    if (_tutorialChecked) return;
+    _tutorialChecked = true;
+    if (prefs.getBool(tutorialSeenKey) ?? false) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) showTutorialDialog(context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final cases = ref.watch(casesProvider);
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final pal = ref.watch(paletteProvider);
+    if (prefs != null) _maybeShowTutorial(prefs);
 
     return Scaffold(
       backgroundColor: pal.background,
@@ -202,6 +220,13 @@ class _TopBar extends ConsumerWidget {
                 icon: Icons.folder_special_rounded,
                 text: '$solved / $total',
                 color: solved == total ? Enx.green : Enx.text),
+            const SizedBox(width: 8),
+            squareAction(
+              icon: Icons.help_outline_rounded,
+              color: Enx.goldInk,
+              tooltip: 'Cómo jugar',
+              onTap: () => showTutorialDialog(context),
+            ),
             const SizedBox(width: 8),
             squareAction(
               icon: Icons.copy_all,

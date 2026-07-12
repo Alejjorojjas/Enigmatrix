@@ -34,7 +34,7 @@ void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
 
   testWidgets('el camino de casos construye y pinta', (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({'tutorial:seen': true});
     final cases = await tester.runAsync(_loadRealCases);
 
     await tester.pumpWidget(
@@ -57,7 +57,7 @@ void main() {
 
   testWidgets('tocar un nodo abre la ficha del caso con botón Jugar',
       (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({'tutorial:seen': true});
     final cases = await tester.runAsync(_loadRealCases);
 
     await tester.pumpWidget(
@@ -86,6 +86,7 @@ void main() {
       (tester) async {
     final cases = await tester.runAsync(_loadRealCases);
     SharedPreferences.setMockInitialValues({
+      'tutorial:seen': true,
       'done:${cases!.first.caseId}':
           jsonEncode({'time': 95, 'errors': 1, 'date': '2026-07-11T10:00'}),
     });
@@ -108,7 +109,7 @@ void main() {
 
   testWidgets('la app completa arranca con el camino como pantalla inicial',
       (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferences.setMockInitialValues({'tutorial:seen': true});
     final cases = await tester.runAsync(_loadRealCases);
 
     await tester.pumpWidget(
@@ -120,8 +121,11 @@ void main() {
       ),
     );
     await tester.pump();
+    // Splash: logo + nombre mientras precarga.
+    expect(find.text('Un misterio de papel'), findsOneWidget);
+    // Pasado el temporizador navega al camino de casos.
+    await tester.pump(const Duration(milliseconds: 2000));
     await tester.pump(const Duration(milliseconds: 400));
-
-    expect(find.text('Enigmatrix'), findsOneWidget);
+    expect(find.text('SIGUIENTE CASO'), findsOneWidget);
   });
 }

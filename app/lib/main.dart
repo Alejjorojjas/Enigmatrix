@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'src/data/case_repository.dart';
 import 'src/ui/case_list_screen.dart';
 import 'src/ui/game_screen.dart';
+import 'src/ui/splash_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: EnigmatrixApp()));
@@ -62,7 +63,8 @@ Color difficultyColor(String label) => switch (label) {
 
 final _router = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (_, __) => const CaseListScreen()),
+    GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
+    GoRoute(path: '/casos', builder: (_, __) => const CaseListScreen()),
     GoRoute(
       path: '/play/:id',
       builder: (_, state) => GameScreen(caseId: state.pathParameters['id']!),
