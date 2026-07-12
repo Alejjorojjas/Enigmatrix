@@ -42,10 +42,24 @@ class HomeShell extends ConsumerStatefulWidget {
 
 class _HomeShellState extends ConsumerState<HomeShell> {
   int _tab = 0;
+  bool _tutorialChecked = false;
+
+  /// El tutorial SIEMPRE aparece en el primer arranque tras instalar (o
+  /// reinstalar: allowBackup=false borra las prefs al desinstalar).
+  void _maybeShowTutorial(SharedPreferences prefs) {
+    if (_tutorialChecked) return;
+    _tutorialChecked = true;
+    if (prefs.getBool(tutorialSeenKey) ?? false) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) showTutorialDialog(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final pal = ref.watch(paletteProvider);
+    final prefs = ref.watch(prefsProvider).valueOrNull;
+    if (prefs != null) _maybeShowTutorial(prefs);
     final tabs = [
       const _InicioTab(),
       const _MundosTab(),

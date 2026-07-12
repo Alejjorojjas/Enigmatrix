@@ -127,7 +127,8 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                   onPageChanged: (i) => setState(() => _page = i),
                   itemBuilder: (_, i) {
                     final p = _pages[i];
-                    return Padding(
+                    // Scrolleable: en pantallas bajas el contenido no cabe.
+                    return SingleChildScrollView(
                       padding: const EdgeInsets.fromLTRB(26, 10, 26, 8),
                       child: Column(
                         children: [

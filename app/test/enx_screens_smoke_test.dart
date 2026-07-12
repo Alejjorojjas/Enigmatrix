@@ -107,6 +107,31 @@ void main() {
     expect(find.text('1 / 4'), findsWidgets);
   });
 
+  testWidgets('primer arranque: el tutorial aparece automáticamente',
+      (tester) async {
+    // Sin 'tutorial:seen' (instalación nueva o reinstalación).
+    SharedPreferences.setMockInitialValues({});
+    final cases = await tester.runAsync(_loadRealCases);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          casesProvider.overrideWith((_) async => cases!),
+        ],
+        child: const EnigmatrixApp(),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 2000));
+    // El diálogo llega tras varios awaits (prefs + postFrame + showDialog).
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+
+    expect(find.text('CÓMO JUGAR'), findsOneWidget);
+    expect(find.text('Omitir'), findsOneWidget);
+  });
+
   testWidgets('la app completa arranca en el Inicio del shell',
       (tester) async {
     SharedPreferences.setMockInitialValues({'tutorial:seen': true});
@@ -120,10 +145,9 @@ void main() {
         child: const EnigmatrixApp(),
       ),
     );
+    // El router es global: si otro test ya navegó, este arranque puede no
+    // pasar por el splash — solo se asierta el destino final.
     await tester.pump();
-    // Splash: logo + nombre mientras precarga.
-    expect(find.text('Un misterio de papel'), findsOneWidget);
-    // Pasado el temporizador navega al camino de casos.
     await tester.pump(const Duration(milliseconds: 2000));
     await tester.pump(const Duration(milliseconds: 400));
     // Aterriza en el Inicio del shell (saludo + tarjeta del reto diario).

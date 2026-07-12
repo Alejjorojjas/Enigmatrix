@@ -47,23 +47,11 @@ class CaseListScreen extends ConsumerStatefulWidget {
 }
 
 class _CaseListScreenState extends ConsumerState<CaseListScreen> {
-  bool _tutorialChecked = false;
-
-  void _maybeShowTutorial(SharedPreferences prefs) {
-    if (_tutorialChecked) return;
-    _tutorialChecked = true;
-    if (prefs.getBool(tutorialSeenKey) ?? false) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) showTutorialDialog(context);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final cases = ref.watch(casesProvider);
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final pal = ref.watch(paletteProvider);
-    if (prefs != null) _maybeShowTutorial(prefs);
 
     return Scaffold(
       backgroundColor: pal.background,
