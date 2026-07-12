@@ -197,6 +197,16 @@ class _TopBar extends ConsumerWidget {
         bottom: false,
         child: Row(
           children: [
+            InkWell(
+              onTap: () => context.go('/home'),
+              borderRadius: BorderRadius.circular(10),
+              child: const Padding(
+                padding: EdgeInsets.all(4),
+                child: Icon(Icons.arrow_back_rounded,
+                    size: 24, color: Enx.goldInk),
+              ),
+            ),
+            const SizedBox(width: 6),
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(

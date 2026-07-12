@@ -107,7 +107,7 @@ void main() {
     expect(find.text('1 / 4'), findsWidgets);
   });
 
-  testWidgets('la app completa arranca con el camino como pantalla inicial',
+  testWidgets('la app completa arranca en el Inicio del shell',
       (tester) async {
     SharedPreferences.setMockInitialValues({'tutorial:seen': true});
     final cases = await tester.runAsync(_loadRealCases);
@@ -126,6 +126,8 @@ void main() {
     // Pasado el temporizador navega al camino de casos.
     await tester.pump(const Duration(milliseconds: 2000));
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('SIGUIENTE CASO'), findsOneWidget);
+    // Aterriza en el Inicio del shell (saludo + tarjeta del reto diario).
+    expect(find.text('detective'), findsOneWidget);
+    expect(find.textContaining('RETO DIARIO'), findsOneWidget);
   });
 }

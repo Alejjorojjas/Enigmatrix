@@ -32,7 +32,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       load,
       Future<void>.delayed(const Duration(milliseconds: 1700)),
     ]);
-    if (mounted) context.go('/casos');
+    if (mounted) context.go('/home');
   }
 
   @override
