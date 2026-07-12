@@ -5,16 +5,110 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// Ambiente de color del tablero (el usuario elige desde la app para
+/// comparar en vivo). Lo que NO cambia entre ambientes: latón dorado de
+/// marca, hilo carmesí, papel crema y colores de dificultad.
+class EnxPalette {
+  final String name;
+  final Color background;
+  final Color surface;
+  final Color surfaceHigh;
+  final Color border;
+  final Color muted;
+  final Color lockedNode;
+
+  const EnxPalette({
+    required this.name,
+    required this.background,
+    required this.surface,
+    required this.surfaceHigh,
+    required this.border,
+    required this.muted,
+    required this.lockedNode,
+  });
+
+  static const presets = [
+    EnxPalette(
+      name: 'Medianoche',
+      background: Color(0xFF1B1426),
+      surface: Color(0xFF2A2138),
+      surfaceHigh: Color(0xFF352A47),
+      border: Color(0xFF4A3C64),
+      muted: Color(0xFFA99BC0),
+      lockedNode: Color(0xFF3A2F4E),
+    ),
+    EnxPalette(
+      name: 'Noir',
+      background: Color(0xFF101720),
+      surface: Color(0xFF1B2530),
+      surfaceHigh: Color(0xFF24303E),
+      border: Color(0xFF364656),
+      muted: Color(0xFF8CA0B3),
+      lockedNode: Color(0xFF2C3A4A),
+    ),
+    EnxPalette(
+      name: 'Estudio del detective',
+      background: Color(0xFF1F1710),
+      surface: Color(0xFF2E2318),
+      surfaceHigh: Color(0xFF3A2D1F),
+      border: Color(0xFF55432C),
+      muted: Color(0xFFB3A183),
+      lockedNode: Color(0xFF3D3222),
+    ),
+    EnxPalette(
+      name: 'Bosque',
+      background: Color(0xFF121E17),
+      surface: Color(0xFF1D2F24),
+      surfaceHigh: Color(0xFF263B2E),
+      border: Color(0xFF3A5546),
+      muted: Color(0xFF93AF9F),
+      lockedNode: Color(0xFF2C4034),
+    ),
+    EnxPalette(
+      name: 'Vino tinto',
+      background: Color(0xFF201118),
+      surface: Color(0xFF301B25),
+      surfaceHigh: Color(0xFF3C2430),
+      border: Color(0xFF573447),
+      muted: Color(0xFFB392A2),
+      lockedNode: Color(0xFF422836),
+    ),
+  ];
+}
+
+class PaletteNotifier extends Notifier<EnxPalette> {
+  static const _prefsKey = 'enx:palette';
+
+  @override
+  EnxPalette build() {
+    _load();
+    return EnxPalette.presets[0];
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final i = prefs.getInt(_prefsKey);
+    if (i != null && i >= 0 && i < EnxPalette.presets.length) {
+      state = EnxPalette.presets[i];
+    }
+  }
+
+  Future<void> select(int i) async {
+    state = EnxPalette.presets[i];
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_prefsKey, i);
+  }
+}
+
+final paletteProvider =
+    NotifierProvider<PaletteNotifier, EnxPalette>(PaletteNotifier.new);
 
 abstract final class Enx {
-  // Noche de investigación: violeta profundo, no azul-gris.
-  static const background = Color(0xFF1B1426);
-  static const surface = Color(0xFF2A2138);
-  static const surfaceHigh = Color(0xFF352A47);
-  static const border = Color(0xFF4A3C64);
   static const text = Color(0xFFF5EFE6);
-  static const muted = Color(0xFFA99BC0);
 
   // Marca: latón de lámpara de detective.
   static const gold = Color(0xFFF0B429);
@@ -32,9 +126,6 @@ abstract final class Enx {
   static const green = Color(0xFF7BC950);
   static const blue = Color(0xFF4FA3D1);
   static const red = Color(0xFFD64550);
-
-  /// Ficha pendiente (archivada).
-  static const lockedNode = Color(0xFF3A2F4E);
 
   /// Cuerpo de texto y UI: Quicksand redondeada geométrica.
   static TextStyle font(double size,
@@ -96,7 +187,7 @@ class _EnxButtonState extends State<EnxButton> {
   Widget build(BuildContext context) {
     const edge = 5.0;
     final enabled = widget.onPressed != null;
-    final color = enabled ? widget.color : Enx.lockedNode;
+    final color = enabled ? widget.color : const Color(0xFF4A4453);
     final fg = widget.textColor ?? Colors.white;
 
     return GestureDetector(
@@ -148,33 +239,33 @@ class _EnxButtonState extends State<EnxButton> {
   }
 }
 
-/// Chip informativo pequeño (contadores, metadatos).
-class EnxChip extends StatelessWidget {
+/// Chip informativo pequeño (contadores, metadatos). Toma superficie y
+/// borde del ambiente activo.
+class EnxChip extends ConsumerWidget {
   final IconData icon;
   final String text;
-  final Color color;
+  final Color? color;
 
   const EnxChip(
-      {super.key,
-      required this.icon,
-      required this.text,
-      this.color = Enx.muted});
+      {super.key, required this.icon, required this.text, this.color});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pal = ref.watch(paletteProvider);
+    final fg = color ?? pal.muted;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: Enx.surface,
+        color: pal.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Enx.border, width: 2),
+        border: Border.all(color: pal.border, width: 2),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: color),
+          Icon(icon, size: 16, color: fg),
           const SizedBox(width: 5),
-          Text(text, style: Enx.font(13.5, color: color)),
+          Text(text, style: Enx.font(13.5, color: fg)),
         ],
       ),
     );

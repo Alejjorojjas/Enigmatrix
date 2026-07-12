@@ -1,7 +1,8 @@
 /// Tablero de expedientes (pase Enx 2026-07-11): los casos se recorren como
-/// fichas de expediente clavadas sobre un tablero de evidencias, unidas por
-/// un hilo carmesí punteado y agrupadas por carpeta de dificultad. Conserva
-/// la instrumentación de playtest (progreso guardado y exportar feedback).
+/// fichas de expediente sobre un camino en culebrita, unidas por un hilo
+/// carmesí punteado que sigue la curva, agrupadas por carpeta de dificultad.
+/// Incluye selector de ambiente de color para comparar paletas en vivo.
+/// Conserva la instrumentación de playtest.
 library;
 
 import 'dart:convert';
@@ -21,6 +22,22 @@ import 'enx_style.dart';
 final prefsProvider =
     FutureProvider<SharedPreferences>((_) => SharedPreferences.getInstance());
 
+/// Altura fija de cada fila del camino (permite que el hilo conozca la
+/// posición exacta de cada ficha).
+const _rowHeight = 124.0;
+
+/// Alto del contenido de cada fila (etiqueta + ficha, ficha abajo).
+const _rowContent = 118.0;
+
+/// Centro vertical de la ficha dentro de su fila.
+const _tileCenterY = _rowContent - 39.0;
+
+/// Espacio superior de cada tablero.
+const _boardTopPad = 6.0;
+
+/// Desplazamiento horizontal de la culebrita: seno con período de 6 fichas.
+double _snake(int i) => math.sin(i * math.pi / 3);
+
 class CaseListScreen extends ConsumerWidget {
   const CaseListScreen({super.key});
 
@@ -28,9 +45,10 @@ class CaseListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cases = ref.watch(casesProvider);
     final prefs = ref.watch(prefsProvider).valueOrNull;
+    final pal = ref.watch(paletteProvider);
 
     return Scaffold(
-      backgroundColor: Enx.background,
+      backgroundColor: pal.background,
       body: cases.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error cargando casos: $e')),
@@ -114,8 +132,8 @@ class CaseListScreen extends ConsumerWidget {
   }
 }
 
-/// Barra superior fija: marca + progreso + exportar feedback.
-class _TopBar extends StatelessWidget {
+/// Barra superior fija: marca + progreso + paleta + exportar feedback.
+class _TopBar extends ConsumerWidget {
   final int solved;
   final int total;
   final VoidCallback onCopyFeedback;
@@ -126,12 +144,36 @@ class _TopBar extends StatelessWidget {
       required this.onCopyFeedback});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pal = ref.watch(paletteProvider);
+
+    Widget squareAction(
+            {required IconData icon,
+            required Color color,
+            required String tooltip,
+            required VoidCallback onTap}) =>
+        Tooltip(
+          message: tooltip,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: pal.surface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: pal.border, width: 2),
+              ),
+              child: Icon(icon, size: 18, color: color),
+            ),
+          ),
+        );
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 14, 12, 12),
-      decoration: const BoxDecoration(
-        color: Enx.background,
-        border: Border(bottom: BorderSide(color: Enx.border, width: 2)),
+      decoration: BoxDecoration(
+        color: pal.background,
+        border: Border(bottom: BorderSide(color: pal.border, width: 2)),
       ),
       child: SafeArea(
         bottom: false,
@@ -149,8 +191,8 @@ class _TopBar extends StatelessWidget {
                       blurRadius: 0),
                 ],
               ),
-              child:
-                  const Icon(Icons.search_rounded, size: 18, color: Enx.goldInk),
+              child: const Icon(Icons.search_rounded,
+                  size: 18, color: Enx.goldInk),
             ),
             const SizedBox(width: 10),
             Text('Enigmatrix',
@@ -161,25 +203,100 @@ class _TopBar extends StatelessWidget {
                 text: '$solved / $total',
                 color: solved == total ? Enx.green : Enx.text),
             const SizedBox(width: 8),
-            Tooltip(
-              message: 'Copiar feedback de playtest',
-              child: InkWell(
-                onTap: onCopyFeedback,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                    color: Enx.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Enx.border, width: 2),
-                  ),
-                  child: const Icon(Icons.copy_all,
-                      size: 18, color: Enx.blue),
-                ),
-              ),
+            squareAction(
+              icon: Icons.palette_rounded,
+              color: Enx.gold,
+              tooltip: 'Ambiente de color',
+              onTap: () => _showPalettePicker(context, ref),
+            ),
+            const SizedBox(width: 8),
+            squareAction(
+              icon: Icons.copy_all,
+              color: Enx.blue,
+              tooltip: 'Copiar feedback de playtest',
+              onTap: onCopyFeedback,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showPalettePicker(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: ref.read(paletteProvider).surface,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      constraints: const BoxConstraints(maxWidth: 520),
+      builder: (ctx) => Consumer(
+        builder: (_, sheetRef, __) {
+          final current = sheetRef.watch(paletteProvider);
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Ambiente de color', style: Enx.display(20)),
+                const SizedBox(height: 4),
+                Text('Compara y dime cuál se queda.',
+                    style: Enx.font(13, color: current.muted)),
+                const SizedBox(height: 14),
+                for (final (i, p) in EnxPalette.presets.indexed)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: InkWell(
+                      onTap: () => sheetRef
+                          .read(paletteProvider.notifier)
+                          .select(i),
+                      borderRadius: BorderRadius.circular(14),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: p.background,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                              color: current.name == p.name
+                                  ? Enx.gold
+                                  : p.border,
+                              width: current.name == p.name ? 3 : 2),
+                        ),
+                        child: Row(
+                          children: [
+                            for (final c in [
+                              p.surface,
+                              p.surfaceHigh,
+                              p.border,
+                              Enx.gold,
+                              Enx.crimson,
+                            ])
+                              Container(
+                                width: 18,
+                                height: 18,
+                                margin: const EdgeInsets.only(right: 6),
+                                decoration: BoxDecoration(
+                                    color: c, shape: BoxShape.circle),
+                              ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(p.name,
+                                  style: Enx.font(15,
+                                      weight: FontWeight.w800)),
+                            ),
+                            if (current.name == p.name)
+                              const Icon(Icons.check_circle_rounded,
+                                  color: Enx.gold, size: 22),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -187,7 +304,7 @@ class _TopBar extends StatelessWidget {
 
 /// Cabecera de sección con forma de carpeta de expediente: pestaña de color
 /// arriba y cuerpo oscuro con el detalle.
-class _CaseFolderHeader extends StatelessWidget {
+class _CaseFolderHeader extends ConsumerWidget {
   final int index;
   final String difficulty;
   final int size;
@@ -202,7 +319,8 @@ class _CaseFolderHeader extends StatelessWidget {
       required this.solved});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pal = ref.watch(paletteProvider);
     final color = difficultyColor(difficulty);
     return Center(
       child: ConstrainedBox(
@@ -234,7 +352,7 @@ class _CaseFolderHeader extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 18, vertical: 14),
                 decoration: BoxDecoration(
-                  color: Enx.surface,
+                  color: pal.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: color, width: 2.5),
                   boxShadow: [
@@ -250,7 +368,7 @@ class _CaseFolderHeader extends StatelessWidget {
                       child: Text(
                           '${difficulty[0].toUpperCase()}${difficulty.substring(1)}'
                           ' · tablero $size×$size',
-                          style: Enx.display(18, color: Enx.text)),
+                          style: Enx.display(18)),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -275,8 +393,8 @@ class _CaseFolderHeader extends StatelessWidget {
   }
 }
 
-/// Tablero de evidencias de una sección: hilo punteado carmesí detrás y
-/// fichas inclinadas encima.
+/// Tablero de evidencias de una sección: hilo carmesí punteado que serpentea
+/// siguiendo la culebrita de fichas.
 class _EvidenceBoard extends StatelessWidget {
   final List<PuzzleCase> cases;
   final Map<String, Map<String, dynamic>> done;
@@ -287,68 +405,99 @@ class _EvidenceBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        // Hilo del tablero de evidencias.
-        Positioned.fill(
-          child: CustomPaint(painter: _ThreadPainter()),
-        ),
-        Column(
-          children: [
-            for (final (i, pc) in cases.indexed)
-              Padding(
-                padding: EdgeInsets.only(top: i == 0 ? 20 : 14),
-                child: Transform.translate(
-                  offset: Offset(_waveOffset(i) * 58, 0),
-                  child: _CaseFile(
-                    pc: pc,
-                    number: i + 1,
-                    tilt: (i.isEven ? -1 : 1) * 0.045,
-                    doneInfo: done[pc.caseId],
-                    isCurrent: pc.caseId == currentId,
-                  ),
+    return LayoutBuilder(
+      builder: (context, box) {
+        // Amplitud de la culebrita limitada por el ancho disponible.
+        final amplitude =
+            math.min(120.0, math.max(0.0, box.maxWidth / 2 - 70));
+        final height = _boardTopPad + cases.length * _rowHeight + 10;
+
+        return SizedBox(
+          height: height,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _ThreadPainter(
+                      count: cases.length, amplitude: amplitude),
                 ),
               ),
-          ],
-        ),
-      ],
+              for (final (i, pc) in cases.indexed)
+                Positioned(
+                  top: _boardTopPad + i * _rowHeight,
+                  child: Transform.translate(
+                    offset: Offset(_snake(i) * amplitude, 0),
+                    child: _CaseFile(
+                      pc: pc,
+                      number: i + 1,
+                      tilt: (i.isEven ? -1 : 1) * 0.045,
+                      doneInfo: done[pc.caseId],
+                      isCurrent: pc.caseId == currentId,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
-  }
-
-  double _waveOffset(int i) {
-    const pattern = [0.0, 1.0, 1.0, 0.0, -1.0, -1.0];
-    return pattern[i % pattern.length];
   }
 }
 
-/// Hilo punteado vertical, como la cuerda roja de un corcho de detective.
+/// Hilo punteado que pasa por el centro de cada ficha, con curvas suaves
+/// entre una y la siguiente — la cuerda roja del corcho de detective.
 class _ThreadPainter extends CustomPainter {
+  final int count;
+  final double amplitude;
+
+  _ThreadPainter({required this.count, required this.amplitude});
+
   @override
   void paint(Canvas canvas, Size size) {
+    if (count < 2) return;
+    final cx = size.width / 2;
+
+    Offset center(int i) => Offset(cx + _snake(i) * amplitude,
+        _boardTopPad + i * _rowHeight + _tileCenterY);
+
+    // Curva suave: cúbicas con controles verticales a mitad de camino.
+    final path = Path()..moveTo(center(0).dx, center(0).dy);
+    for (var i = 1; i < count; i++) {
+      final a = center(i - 1);
+      final b = center(i);
+      final midY = (a.dy + b.dy) / 2;
+      path.cubicTo(a.dx, midY, b.dx, midY, b.dx, b.dy);
+    }
+
     final paint = Paint()
-      ..color = Enx.crimson.withValues(alpha: .38)
+      ..color = Enx.crimson.withValues(alpha: .42)
+      ..style = PaintingStyle.stroke
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
+
+    // Punteado a mano sobre la curva.
     const dash = 9.0, gap = 9.0;
-    final x = size.width / 2;
-    double y = 6;
-    while (y < size.height - 6) {
-      canvas.drawLine(
-          Offset(x, y), Offset(x, math.min(y + dash, size.height - 6)), paint);
-      y += dash + gap;
+    for (final metric in path.computeMetrics()) {
+      double d = 0;
+      while (d < metric.length) {
+        canvas.drawPath(
+            metric.extractPath(d, math.min(d + dash, metric.length)), paint);
+        d += dash + gap;
+      }
     }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _ThreadPainter old) =>
+      old.count != count || old.amplitude != amplitude;
 }
 
 /// Ficha de expediente: cuadrado redondeado inclinado con efecto 3D.
 /// Resuelta = color de dificultad con check; actual = borde dorado con
 /// etiqueta SIGUIENTE CASO; pendiente = carpeta archivada oscura.
 /// Todas son jugables (banco de pruebas).
-class _CaseFile extends StatefulWidget {
+class _CaseFile extends ConsumerStatefulWidget {
   final PuzzleCase pc;
   final int number;
   final double tilt;
@@ -363,10 +512,10 @@ class _CaseFile extends StatefulWidget {
       required this.isCurrent});
 
   @override
-  State<_CaseFile> createState() => _CaseFileState();
+  ConsumerState<_CaseFile> createState() => _CaseFileState();
 }
 
-class _CaseFileState extends State<_CaseFile>
+class _CaseFileState extends ConsumerState<_CaseFile>
     with SingleTickerProviderStateMixin {
   bool _pressed = false;
 
@@ -404,13 +553,14 @@ class _CaseFileState extends State<_CaseFile>
 
   @override
   Widget build(BuildContext context) {
+    final pal = ref.watch(paletteProvider);
     final isDone = widget.doneInfo != null;
     final diffColor = difficultyColor(widget.pc.difficulty);
     final fileColor = isDone
         ? diffColor
         : widget.isCurrent
-            ? Enx.surfaceHigh
-            : Enx.lockedNode;
+            ? pal.surfaceHigh
+            : pal.lockedNode;
     const fileSize = 78.0;
     const edge = 6.0;
 
@@ -454,7 +604,7 @@ class _CaseFileState extends State<_CaseFile>
                   ? Colors.white
                   : widget.isCurrent
                       ? Enx.gold
-                      : Enx.muted,
+                      : pal.muted,
               size: 32,
             ),
             if (widget.pc.hasWeapon)
@@ -471,7 +621,7 @@ class _CaseFileState extends State<_CaseFile>
                       weight: FontWeight.w800,
                       color: isDone
                           ? Colors.white.withValues(alpha: .85)
-                          : Enx.muted,
+                          : pal.muted,
                       spacing: .5)),
             ),
           ],
@@ -481,41 +631,49 @@ class _CaseFileState extends State<_CaseFile>
 
     final tilted = Transform.rotate(angle: widget.tilt, child: tile);
 
-    if (!widget.isCurrent) return tilted;
+    if (!widget.isCurrent) {
+      // Reserva el mismo alto que la ficha actual para que la fila sea fija.
+      return SizedBox(
+          height: _rowContent,
+          child: Align(alignment: Alignment.bottomCenter, child: tilted));
+    }
 
     // La ficha actual lleva una etiqueta de papel que rebota.
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AnimatedBuilder(
-          animation: _bounce!,
-          builder: (_, child) => Transform.translate(
-            offset: Offset(0, -3 * math.sin(_bounce!.value * math.pi)),
-            child: child,
-          ),
-          child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Enx.paper,
-              borderRadius: BorderRadius.circular(9),
-              boxShadow: [
-                BoxShadow(
-                    color: enxDarken(Enx.paper, .35),
-                    offset: const Offset(0, 3),
-                    blurRadius: 0),
-              ],
+    return SizedBox(
+      height: _rowContent,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          AnimatedBuilder(
+            animation: _bounce!,
+            builder: (_, child) => Transform.translate(
+              offset: Offset(0, -3 * math.sin(_bounce!.value * math.pi)),
+              child: child,
             ),
-            child: Text('SIGUIENTE CASO',
-                style: Enx.font(12,
-                    weight: FontWeight.w800,
-                    color: Enx.ink,
-                    spacing: 1.2)),
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Enx.paper,
+                borderRadius: BorderRadius.circular(9),
+                boxShadow: [
+                  BoxShadow(
+                      color: enxDarken(Enx.paper, .35),
+                      offset: const Offset(0, 3),
+                      blurRadius: 0),
+                ],
+              ),
+              child: Text('SIGUIENTE CASO',
+                  style: Enx.font(12,
+                      weight: FontWeight.w800,
+                      color: Enx.ink,
+                      spacing: 1.2)),
+            ),
           ),
-        ),
-        const SizedBox(height: 7),
-        tilted,
-      ],
+          const SizedBox(height: 7),
+          tilted,
+        ],
+      ),
     );
   }
 
@@ -523,10 +681,11 @@ class _CaseFileState extends State<_CaseFile>
     final pc = widget.pc;
     final diffColor = difficultyColor(pc.difficulty);
     final done = widget.doneInfo;
+    final pal = ref.read(paletteProvider);
 
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Enx.surface,
+      backgroundColor: pal.surface,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       constraints: const BoxConstraints(maxWidth: 520),
@@ -541,7 +700,7 @@ class _CaseFileState extends State<_CaseFile>
                 width: 44,
                 height: 5,
                 decoration: BoxDecoration(
-                    color: Enx.border,
+                    color: pal.border,
                     borderRadius: BorderRadius.circular(3)),
               ),
             ),

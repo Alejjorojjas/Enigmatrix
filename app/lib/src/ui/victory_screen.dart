@@ -36,9 +36,11 @@ Future<void> showVictoryScreen(
   await showDialog<void>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => Dialog.fullscreen(
-      backgroundColor: Enx.background,
-      child: _VictoryView(pc: pc, prefs: prefs),
+    builder: (_) => Consumer(
+      builder: (_, dialogRef, __) => Dialog.fullscreen(
+        backgroundColor: dialogRef.watch(paletteProvider).background,
+        child: _VictoryView(pc: pc, prefs: prefs),
+      ),
     ),
   );
 }
@@ -69,6 +71,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final pal = ref.watch(paletteProvider);
     final pc = widget.pc;
     final state = ref.read(gameControllerProvider(pc));
     final murderer =
@@ -126,7 +129,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                     style: Enx.display(19, color: Enx.gold)),
                 Text(pc.map.nameEs,
                     textAlign: TextAlign.center,
-                    style: Enx.font(15, color: Enx.muted)),
+                    style: Enx.font(15, color: pal.muted)),
                 const SizedBox(height: 22),
 
                 // Informe del caso en papel.
@@ -211,9 +214,9 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Enx.surface,
+                    color: pal.surface,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Enx.border, width: 2),
+                    border: Border.all(color: pal.border, width: 2),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +224,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                       Text('FEEDBACK DE PLAYTEST',
                           style: Enx.font(11,
                               weight: FontWeight.w800,
-                              color: Enx.muted,
+                              color: pal.muted,
                               spacing: 2)),
                       const SizedBox(height: 8),
                       TextField(
@@ -231,20 +234,20 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
-                          fillColor: Enx.background,
+                          fillColor: pal.background,
                           hintText:
                               '¿Pistas confusas? ¿Dificultad justa?…',
                           hintStyle: Enx.font(14,
-                              weight: FontWeight.w600, color: Enx.muted),
+                              weight: FontWeight.w600, color: pal.muted),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: Enx.border, width: 2),
+                            borderSide:
+                                BorderSide(color: pal.border, width: 2),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: Enx.border, width: 2),
+                            borderSide:
+                                BorderSide(color: pal.border, width: 2),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -272,7 +275,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                   onPressed: () =>
                       _saveAnd(() => Navigator.of(context).pop()),
                   child: Text('Seguir mirando el tablero',
-                      style: Enx.font(14, color: Enx.muted)),
+                      style: Enx.font(14, color: pal.muted)),
                 ),
               ],
             ),
