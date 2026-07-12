@@ -101,21 +101,26 @@ class _PaperLogoPainter extends CustomPainter {
     canvas.drawPath(gleam, fill(Colors.white.withValues(alpha: .55)));
     canvas.restore();
 
-    // Signo de interrogación de papel dentro del cristal.
-    final tp = TextPainter(
-      text: TextSpan(
-        text: '?',
-        style: TextStyle(
-          fontSize: r * 1.15,
-          fontWeight: FontWeight.w900,
-          color: const Color(0xFF3D2F1C),
-          fontFamily: 'Arial',
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(
-        canvas, c - Offset(tp.width / 2, tp.height / 2 + r * .02));
+    // Signo de interrogación vectorial dentro del cristal (sin fuentes,
+    // para poder rasterizar el icono en tests).
+    final ink = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = r * .17
+      ..strokeCap = StrokeCap.round
+      ..color = const Color(0xFF3D2F1C);
+    final qc = Offset(c.dx, c.dy - r * .22);
+    final qr = r * .26;
+    final qPath = Path()
+      ..addArc(Rect.fromCircle(center: qc, radius: qr), math.pi * .85,
+          math.pi * 1.4)
+      ..moveTo(c.dx + qr * math.cos(math.pi * .25),
+          qc.dy + qr * math.sin(math.pi * .25));
+    canvas.drawPath(qPath, ink);
+    // Tallo y punto.
+    canvas.drawLine(Offset(c.dx + qr * .7, qc.dy + qr * .7),
+        Offset(c.dx, c.dy + r * .18), ink);
+    canvas.drawCircle(Offset(c.dx, c.dy + r * .52), r * .10,
+        Paint()..color = const Color(0xFF3D2F1C));
 
     // Hilo carmesí: entra por la esquina, da una vuelta y sale.
     final thread = Paint()
