@@ -10,33 +10,41 @@ void main() {
   runApp(const ProviderScope(child: EnigmatrixApp()));
 }
 
-/// Identidad visual base del Design System
-/// (docs/Enigmatrix Design System - Standalone.html) + pase de diseño
-/// 2026-06-11: profundidad, gradientes y tarjetas estilo Murdoku.
+/// Identidad visual PAPER CRAFT (elegida por el usuario 2026-07-12 entre 6
+/// mockups — ver docs/mockups/estilos/05-paper-craft.html): todo el juego es
+/// una maqueta de papel y cartón. Fondo kraft claro, tinta oscura, sombras
+/// duras de capas de papel, acentos de chincheta carmesí.
+/// Los nombres de los tokens se conservan por compatibilidad; el significado
+/// es semántico (cream = color de TEXTO principal, hoy tinta).
 abstract final class Brand {
-  static const background = Color(0xFF1A1816);
-  static const backgroundDeep = Color(0xFF121009);
-  static const surface = Color(0xFF26221E);
-  static const surfaceHigh = Color(0xFF322C26);
-  static const gold = Color(0xFFB8860B);
-  static const goldBright = Color(0xFFE3B341);
-  static const cream = Color(0xFFF0EBE0);
-  static const muted = Color(0xFFA09890);
-  static const error = Color(0xFFCF5C5C);
-  static const success = Color(0xFF5CA86B);
+  static const background = Color(0xFFE9DCBE); // kraft claro
+  static const backgroundDeep = Color(0xFFDCCBA2); // kraft sombreado
+  static const surface = Color(0xFFF7F0DC); // papel crema
+  static const surfaceHigh = Color(0xFFFFFBEA); // papel blanco cálido
+  static const gold = Color(0xFFB3821F); // dorado tinta (legible en claro)
+  static const goldBright = Color(0xFF8A5C2E); // marrón cálido de titular
+  static const cream = Color(0xFF3D2F1C); // TEXTO principal (tinta)
+  static const muted = Color(0xFF8A7A5C); // texto secundario
+  static const error = Color(0xFFB3452E); // rojo chincheta
+  static const success = Color(0xFF4A7A34); // verde papel
 
   /// Tarjetas claras estilo "polaroid" para los sospechosos.
-  static const cardLight = Color(0xFFF3EDDF);
-  static const cardLightShade = Color(0xFFE5DCC8);
-  static const inkOnLight = Color(0xFF2B241C);
+  static const cardLight = Color(0xFFFFFBEA);
+  static const cardLightShade = Color(0xFFE8D9B4);
+  static const inkOnLight = Color(0xFF3D2F1C);
+
+  /// Sombra dura de papel recortado.
+  static const paperShadow = Color(0x59473418);
 
   static const goldGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFE3B341), Color(0xFFB8860B)],
+    colors: [Color(0xFFD9A030), Color(0xFFB3821F)],
   );
 
-  /// Fuentes (web): serif elegante para títulos, script para nombres.
+  /// Fuentes: Baloo 2 para títulos y Patrick Hand para lo manuscrito se
+  /// obtienen vía google_fonts (Enx.display / Enx.hand). Estos fallbacks
+  /// quedan para los pocos usos por fontFamily directa.
   static const displayFont = 'Georgia';
   static const scriptFont = 'Segoe Script';
 }
@@ -76,18 +84,18 @@ class EnigmatrixApp extends ConsumerWidget {
       builder: (context, child) => DecoratedBox(
         decoration: const BoxDecoration(
           gradient: RadialGradient(
-            center: Alignment(-0.5, -0.8),
-            radius: 1.6,
-            colors: [Color(0xFF2C2620), Brand.backgroundDeep],
+            center: Alignment(0, -0.9),
+            radius: 1.7,
+            colors: [Color(0xFFF2E7C9), Brand.backgroundDeep],
           ),
         ),
         child: child!,
       ),
       theme: ThemeData(
         useMaterial3: true,
-        brightness: Brightness.dark,
+        brightness: Brightness.light,
         scaffoldBackgroundColor: Colors.transparent,
-        colorScheme: const ColorScheme.dark(
+        colorScheme: const ColorScheme.light(
           primary: Brand.gold,
           secondary: Brand.goldBright,
           surface: Brand.surface,
@@ -99,7 +107,7 @@ class EnigmatrixApp extends ConsumerWidget {
           centerTitle: false,
           elevation: 0,
         ),
-        textTheme: Typography.whiteMountainView.apply(
+        textTheme: Typography.blackMountainView.apply(
           bodyColor: Brand.cream,
           displayColor: Brand.cream,
         ),

@@ -31,51 +31,17 @@ class EnxPalette {
     required this.lockedNode,
   });
 
+  /// Estilo elegido por el usuario (2026-07-12): PAPER CRAFT. Se conserva
+  /// la infraestructura de paletas por si en el futuro entra un modo oscuro.
   static const presets = [
     EnxPalette(
-      name: 'Medianoche',
-      background: Color(0xFF1B1426),
-      surface: Color(0xFF2A2138),
-      surfaceHigh: Color(0xFF352A47),
-      border: Color(0xFF4A3C64),
-      muted: Color(0xFFA99BC0),
-      lockedNode: Color(0xFF3A2F4E),
-    ),
-    EnxPalette(
-      name: 'Noir',
-      background: Color(0xFF101720),
-      surface: Color(0xFF1B2530),
-      surfaceHigh: Color(0xFF24303E),
-      border: Color(0xFF364656),
-      muted: Color(0xFF8CA0B3),
-      lockedNode: Color(0xFF2C3A4A),
-    ),
-    EnxPalette(
-      name: 'Estudio del detective',
-      background: Color(0xFF1F1710),
-      surface: Color(0xFF2E2318),
-      surfaceHigh: Color(0xFF3A2D1F),
-      border: Color(0xFF55432C),
-      muted: Color(0xFFB3A183),
-      lockedNode: Color(0xFF3D3222),
-    ),
-    EnxPalette(
-      name: 'Bosque',
-      background: Color(0xFF121E17),
-      surface: Color(0xFF1D2F24),
-      surfaceHigh: Color(0xFF263B2E),
-      border: Color(0xFF3A5546),
-      muted: Color(0xFF93AF9F),
-      lockedNode: Color(0xFF2C4034),
-    ),
-    EnxPalette(
-      name: 'Vino tinto',
-      background: Color(0xFF201118),
-      surface: Color(0xFF301B25),
-      surfaceHigh: Color(0xFF3C2430),
-      border: Color(0xFF573447),
-      muted: Color(0xFFB392A2),
-      lockedNode: Color(0xFF422836),
+      name: 'Papel',
+      background: Color(0xFFE9DCBE),
+      surface: Color(0xFFF7F0DC),
+      surfaceHigh: Color(0xFFFFFBEA),
+      border: Color(0xFFC9B48A),
+      muted: Color(0xFF8A7A5C),
+      lockedNode: Color(0xFFD9CBA8),
     ),
   ];
 }
@@ -108,24 +74,25 @@ final paletteProvider =
     NotifierProvider<PaletteNotifier, EnxPalette>(PaletteNotifier.new);
 
 abstract final class Enx {
-  static const text = Color(0xFFF5EFE6);
+  /// Texto principal: tinta sobre papel.
+  static const text = Color(0xFF3D2F1C);
 
-  // Marca: latón de lámpara de detective.
+  // Marca: latón, con variante tinta para texto sobre claro.
   static const gold = Color(0xFFF0B429);
-  static const goldInk = Color(0xFF4A3200);
+  static const goldInk = Color(0xFF8A5C2E);
 
-  // Hilo del tablero de evidencias y sellos.
-  static const crimson = Color(0xFFD64550);
+  // Chinchetas, hilo del corcho y sellos.
+  static const crimson = Color(0xFFB3452E);
 
   // Papel de expediente (tarjetas claras).
-  static const paper = Color(0xFFF5EFE6);
-  static const paperShade = Color(0xFFEDE4D3);
-  static const ink = Color(0xFF2B2118);
-  static const inkMuted = Color(0xFF7A6C58);
+  static const paper = Color(0xFFFFFBEA);
+  static const paperShade = Color(0xFFE8D9B4);
+  static const ink = Color(0xFF3D2F1C);
+  static const inkMuted = Color(0xFF8A7A5C);
 
-  static const green = Color(0xFF7BC950);
-  static const blue = Color(0xFF4FA3D1);
-  static const red = Color(0xFFD64550);
+  static const green = Color(0xFF4A7A34);
+  static const blue = Color(0xFF2E5D8A);
+  static const red = Color(0xFFB3452E);
 
   /// Cuerpo de texto y UI: Quicksand redondeada geométrica.
   static TextStyle font(double size,
@@ -148,6 +115,12 @@ abstract final class Enx {
           fontWeight: weight,
           color: color,
           letterSpacing: spacing);
+
+  /// Manuscrita: Patrick Hand, para nombres, etiquetas y notas de papel.
+  static TextStyle hand(double size,
+          {Color color = text, double spacing = 0}) =>
+      GoogleFonts.patrickHand(
+          fontSize: size, color: color, letterSpacing: spacing);
 }
 
 /// Oscurece un color para el borde inferior 3D.
@@ -187,7 +160,7 @@ class _EnxButtonState extends State<EnxButton> {
   Widget build(BuildContext context) {
     const edge = 5.0;
     final enabled = widget.onPressed != null;
-    final color = enabled ? widget.color : const Color(0xFF4A4453);
+    final color = enabled ? widget.color : const Color(0xFFD9CBA8);
     final fg = widget.textColor ?? Colors.white;
 
     return GestureDetector(

@@ -126,7 +126,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 const SizedBox(height: 18),
                 Text('Buen trabajo, detective.',
                     textAlign: TextAlign.center,
-                    style: Enx.display(19, color: Enx.gold)),
+                    style: Enx.display(19, color: Enx.goldInk)),
                 Text(pc.map.nameEs,
                     textAlign: TextAlign.center,
                     style: Enx.font(15, color: pal.muted)),

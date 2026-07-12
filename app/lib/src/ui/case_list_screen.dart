@@ -196,19 +196,12 @@ class _TopBar extends ConsumerWidget {
             ),
             const SizedBox(width: 10),
             Text('Enigmatrix',
-                style: Enx.display(22, color: Enx.gold, spacing: .5)),
+                style: Enx.display(22, color: Enx.goldInk, spacing: .5)),
             const Spacer(),
             EnxChip(
                 icon: Icons.folder_special_rounded,
                 text: '$solved / $total',
                 color: solved == total ? Enx.green : Enx.text),
-            const SizedBox(width: 8),
-            squareAction(
-              icon: Icons.palette_rounded,
-              color: Enx.gold,
-              tooltip: 'Ambiente de color',
-              onTap: () => _showPalettePicker(context, ref),
-            ),
             const SizedBox(width: 8),
             squareAction(
               icon: Icons.copy_all,
@@ -222,84 +215,6 @@ class _TopBar extends ConsumerWidget {
     );
   }
 
-  void _showPalettePicker(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: ref.read(paletteProvider).surface,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      constraints: const BoxConstraints(maxWidth: 520),
-      builder: (ctx) => Consumer(
-        builder: (_, sheetRef, __) {
-          final current = sheetRef.watch(paletteProvider);
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Ambiente de color', style: Enx.display(20)),
-                const SizedBox(height: 4),
-                Text('Compara y dime cuál se queda.',
-                    style: Enx.font(13, color: current.muted)),
-                const SizedBox(height: 14),
-                for (final (i, p) in EnxPalette.presets.indexed)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: InkWell(
-                      onTap: () => sheetRef
-                          .read(paletteProvider.notifier)
-                          .select(i),
-                      borderRadius: BorderRadius.circular(14),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: p.background,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                              color: current.name == p.name
-                                  ? Enx.gold
-                                  : p.border,
-                              width: current.name == p.name ? 3 : 2),
-                        ),
-                        child: Row(
-                          children: [
-                            for (final c in [
-                              p.surface,
-                              p.surfaceHigh,
-                              p.border,
-                              Enx.gold,
-                              Enx.crimson,
-                            ])
-                              Container(
-                                width: 18,
-                                height: 18,
-                                margin: const EdgeInsets.only(right: 6),
-                                decoration: BoxDecoration(
-                                    color: c, shape: BoxShape.circle),
-                              ),
-                            const SizedBox(width: 6),
-                            Expanded(
-                              child: Text(p.name,
-                                  style: Enx.font(15,
-                                      weight: FontWeight.w800)),
-                            ),
-                            if (current.name == p.name)
-                              const Icon(Icons.check_circle_rounded,
-                                  color: Enx.gold, size: 22),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
 }
 
 /// Cabecera de sección con forma de carpeta de expediente: pestaña de color
@@ -603,7 +518,7 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               color: isDone
                   ? Colors.white
                   : widget.isCurrent
-                      ? Enx.gold
+                      ? Enx.goldInk
                       : pal.muted,
               size: 32,
             ),

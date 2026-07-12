@@ -30,16 +30,17 @@ class BoardElementDrag {
   const BoardElementDrag(this.cell, this.element);
 }
 
-/// Paleta para habitaciones (modo mapa). En modo lógica se atenúan.
+/// Paleta para habitaciones (modo mapa): papeles de colores del estilo
+/// paper craft (mockup 05). En modo lógica se atenúan.
 const areaPalette = [
-  Color(0xFF8D6E63),
-  Color(0xFF5C6BC0),
-  Color(0xFF66BB6A),
-  Color(0xFF26A69A),
-  Color(0xFFEC407A),
-  Color(0xFFFFA726),
-  Color(0xFF7E57C2),
-  Color(0xFF26C6DA),
+  Color(0xFFCE9455), // kraft tostado
+  Color(0xFF6FA3B8), // papel azul
+  Color(0xFFC77E66), // papel terracota
+  Color(0xFF84AE5C), // papel verde
+  Color(0xFFB088C9), // papel lila
+  Color(0xFFD9A93C), // papel mostaza
+  Color(0xFF5CA88C), // papel menta
+  Color(0xFFC9708A), // papel rosa
 ];
 
 const charPalette = [
@@ -114,19 +115,20 @@ class BoardView extends ConsumerWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
+        // Marco de corcho/cartón del tablero de evidencias.
         decoration: BoxDecoration(
-          color: const Color(0xFF0D0B09),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-              color: Brand.gold.withValues(alpha: .45), width: 1.5),
+          color: const Color(0xFF8A6C46),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFF6E5432), width: 3),
           boxShadow: const [
             BoxShadow(
-                color: Colors.black87, blurRadius: 30, offset: Offset(0, 12)),
-            BoxShadow(
-                color: Color(0x33E3B341), blurRadius: 60, spreadRadius: -20),
+                color: Color(0x664A3A26),
+                blurRadius: 18,
+                offset: Offset(0, 10)),
+            BoxShadow(color: Color(0x338A6C46), blurRadius: 0, spreadRadius: 0),
           ],
         ),
-        padding: const EdgeInsets.all(7),
+        padding: const EdgeInsets.all(8),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(11),
           child: IgnorePointer(
@@ -136,6 +138,9 @@ class BoardView extends ConsumerWidget {
                 final cs = box.maxWidth / n;
                 return Stack(
                   children: [
+                    // Capa 0 — hoja de papel base del plano.
+                    Positioned.fill(
+                        child: Container(color: const Color(0xFFF2E7CD))),
                     // Capa 1 — muebles, dibujados como una pieza continua
                     // sobre sus celdas (van DEBAJO de las marcas).
                     if (state.mapMode)
@@ -282,10 +287,10 @@ class _Cell extends ConsumerWidget {
       return o != null && o.id == map.objectAt(map.cellAt(rr, cc))?.id;
     }
 
-    // Paredes negras gruesas entre habitaciones (estilo plano), con un
-    // filo dorado tenue para marcar más el límite.
-    final wallColor = const Color(0xFF080706);
-    final gridColor = Colors.black.withValues(alpha: .22);
+    // Paredes de tinta gruesas entre habitaciones (plano dibujado a
+    // marcador sobre papel); grilla interior como costura tenue.
+    final wallColor = const Color(0xFF3D2C14);
+    final gridColor = const Color(0xFF3D2C14).withValues(alpha: .25);
     BorderSide side(int rr, int cc) {
       if (sameObject(rr, cc)) return BorderSide.none;
       final isWall = wall(rr, cc);
@@ -562,15 +567,15 @@ class _CandidateLetter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isVictim = charId == pc.victimId;
+    // Letra "a lápiz" sobre el papel: color del personaje oscurecido.
     return Text(
       isVictim ? '†' : pc.character(charId).nameEs[0],
       style: TextStyle(
         fontSize: 17,
         fontWeight: FontWeight.w900,
-        color: Color.lerp(charColor(pc, charId), Colors.white, .25),
+        color: Color.lerp(charColor(pc, charId), const Color(0xFF3D2C14), .45),
         shadows: const [
-          Shadow(color: Colors.black, blurRadius: 3),
-          Shadow(color: Colors.black87, offset: Offset(1, 1)),
+          Shadow(color: Color(0x66FFFBEA), offset: Offset(1, 1)),
         ],
       ),
     );
@@ -587,17 +592,15 @@ class _XMark extends StatelessWidget {
         builder: (context, box) {
           final base = box.maxWidth.isFinite ? box.maxWidth : 48;
           final size = base * (level == XLevel.small ? .5 : .82);
+          // Trazo de marcador rojo sobre el papel (auto-X más tenue).
           return Text(
             '✕',
             style: TextStyle(
               fontSize: size.clamp(14, 54),
               height: 1,
               fontWeight: FontWeight.w900,
-              color: Colors.black.withValues(alpha: isAuto ? .50 : .85),
-              shadows: [
-                Shadow(
-                    color: Colors.white.withValues(alpha: .22), blurRadius: 2),
-              ],
+              color: const Color(0xFF8A2F1B)
+                  .withValues(alpha: isAuto ? .45 : .88),
             ),
           );
         },

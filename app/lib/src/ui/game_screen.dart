@@ -198,7 +198,7 @@ class _Header extends ConsumerWidget {
               color: (border ?? Brand.gold).withValues(alpha: .45)),
           boxShadow: const [
             BoxShadow(
-                color: Colors.black45, blurRadius: 8, offset: Offset(0, 3)),
+                color: Brand.paperShadow, blurRadius: 8, offset: Offset(0, 3)),
           ],
         ),
         child: Row(
@@ -524,7 +524,7 @@ class _SuspectCard extends StatelessWidget {
         ),
         boxShadow: [
           const BoxShadow(
-              color: Colors.black54, blurRadius: 8, offset: Offset(0, 4)),
+              color: Brand.paperShadow, blurRadius: 6, offset: Offset(0, 4)),
           if (selected)
             BoxShadow(
                 color: Brand.goldBright.withValues(alpha: .5),
@@ -648,7 +648,7 @@ class _InfoPanel extends ConsumerWidget {
           border: Border.all(color: Brand.gold.withValues(alpha: .25)),
           boxShadow: const [
             BoxShadow(
-                color: Colors.black45, blurRadius: 10, offset: Offset(0, 4)),
+                color: Brand.paperShadow, blurRadius: 10, offset: Offset(0, 4)),
           ],
         ),
         child: Column(

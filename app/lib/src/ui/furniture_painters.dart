@@ -32,13 +32,14 @@ class FurniturePainter extends CustomPainter {
       h = t;
     }
 
-    // Sombra suave bajo la pieza (profundidad de tablero).
+    // Sombra dura de papel recortado (estilo paper craft): la pieza se ve
+    // "pegada" unos milímetros por encima de la hoja.
     final shadow = Paint()
-      ..color = Colors.black.withValues(alpha: .30)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
+      ..color = const Color(0xFF473418).withValues(alpha: .35)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, .8);
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            Rect.fromLTWH(w * .03, h * .06, w * .94, h * .92),
+            Rect.fromLTWH(w * .04, h * .08, w * .94, h * .92),
             Radius.circular(h * .16)),
         shadow);
 
