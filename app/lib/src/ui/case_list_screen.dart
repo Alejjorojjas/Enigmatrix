@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../main.dart';
 import '../data/case_repository.dart';
 import 'enx_style.dart';
+import 'tutorial_coach.dart';
 import 'tutorial_dialog.dart';
 
 final prefsProvider =
@@ -86,6 +87,11 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
                 child: ListView(
                   padding: const EdgeInsets.only(bottom: 60),
                   children: [
+                    _TutorialNode(
+                      firstCaseId: list.first.caseId,
+                      played:
+                          prefs?.getBool(tutorialPlayedKey) ?? false,
+                    ),
                     for (final (i, e) in sections.entries.indexed) ...[
                       _CaseFolderHeader(
                         index: i + 1,
@@ -687,6 +693,70 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               },
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+/// Nodo TUTORIAL: aparece ANTES del Caso Nº1. Abre el primer caso en modo
+/// guiado paso a paso (TutorialCoach).
+class _TutorialNode extends ConsumerWidget {
+  final String firstCaseId;
+  final bool played;
+  const _TutorialNode(
+      {required this.firstCaseId, required this.played});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 560),
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Enx.paper,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Enx.gold, width: 2.5),
+            boxShadow: const [
+              BoxShadow(
+                  color: Color(0x59473418),
+                  offset: Offset(0, 5),
+                  blurRadius: 2),
+            ],
+          ),
+          child: Row(children: [
+            Text(played ? '🎓' : '🎓',
+                style: const TextStyle(fontSize: 32)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('TUTORIAL',
+                        style: Enx.font(11,
+                            weight: FontWeight.w800,
+                            color: Enx.goldInk,
+                            spacing: 2)),
+                    Text('Aprende paso a paso con tu primer caso',
+                        style: Enx.hand(16, color: Enx.ink)),
+                    if (played)
+                      Text('✓ completado — puedes repetirlo',
+                          style: Enx.font(12, color: Enx.green)),
+                  ]),
+            ),
+            EnxButton(
+              label: played ? 'Repetir' : 'Empezar',
+              color: played ? Enx.paperShade : Enx.gold,
+              textColor:
+                  played ? Enx.ink : const Color(0xFF4A3200),
+              expand: false,
+              onPressed: () =>
+                  context.go('/play/$firstCaseId?tutorial=1'),
+            ),
+          ]),
         ),
       ),
     );

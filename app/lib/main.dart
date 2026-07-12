@@ -69,7 +69,10 @@ final _router = GoRouter(
     GoRoute(path: '/casos', builder: (_, __) => const CaseListScreen()),
     GoRoute(
       path: '/play/:id',
-      builder: (_, state) => GameScreen(caseId: state.pathParameters['id']!),
+      builder: (_, state) => GameScreen(
+        caseId: state.pathParameters['id']!,
+        tutorial: state.uri.queryParameters['tutorial'] == '1',
+      ),
     ),
   ],
 );

@@ -13,11 +13,13 @@ import '../data/case_repository.dart';
 import '../game/board_state.dart';
 import '../game/game_controller.dart';
 import 'board_view.dart';
+import 'tutorial_coach.dart';
 import 'victory_screen.dart';
 
 class GameScreen extends ConsumerWidget {
   final String caseId;
-  const GameScreen({super.key, required this.caseId});
+  final bool tutorial;
+  const GameScreen({super.key, required this.caseId, this.tutorial = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,13 +27,14 @@ class GameScreen extends ConsumerWidget {
     if (pc == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    return _GameView(pc: pc);
+    return _GameView(pc: pc, tutorial: tutorial);
   }
 }
 
 class _GameView extends ConsumerWidget {
   final PuzzleCase pc;
-  const _GameView({required this.pc});
+  final bool tutorial;
+  const _GameView({required this.pc, this.tutorial = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -148,7 +151,8 @@ class _GameView extends ConsumerWidget {
             ),
         ],
       ),
-      body: LayoutBuilder(
+      body: Stack(children: [
+        Positioned.fill(child: LayoutBuilder(
         builder: (context, box) {
           if (box.maxWidth > 1150) {
             return Row(
@@ -175,7 +179,10 @@ class _GameView extends ConsumerWidget {
             ),
           );
         },
-      ),
+      )),
+        // Guía paso a paso cuando se entra desde el nodo TUTORIAL.
+        if (tutorial) TutorialCoach(pc: pc),
+      ]),
     );
   }
 
