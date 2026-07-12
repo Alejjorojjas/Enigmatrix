@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.6.1
   go_router: ^16.0.0
+  google_fonts: ^6.2.1
   shared_preferences: ^2.3.0
   enigmatrix_engine:
     path: ../tools

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enigmatrix — Mockup: Inicio</title>
+<style>
+  :root{
+    --bg:#1A1816; --bg-deep:#121009; --surface:#26221E; --surface-hi:#322C26;
+    --gold:#B8860B; --gold-br:#E3B341; --cream:#F0EBE0; --muted:#A09890;
+    --error:#CF5C5C; --success:#5CA86B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  body{background:#0c0a08;min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;gap:18px;padding:30px 12px;color:var(--cream)}
+  .caption{color:#7d7367;font-size:13px;letter-spacing:1px}
+  /* Marco de teléfono */
+  .phone{width:390px;max-width:100%;height:800px;background:
+    radial-gradient(120% 80% at 30% 0%, #2c2620 0%, var(--bg-deep) 70%);
+    border:10px solid #050403;border-radius:42px;overflow:hidden;position:relative;
+    box-shadow:0 30px 80px rgba(0,0,0,.7), 0 0 0 2px rgba(227,179,65,.15)}
+  .scroll{position:absolute;inset:0;overflow-y:auto;padding-bottom:84px}
+  .scroll::-webkit-scrollbar{display:none}
+
+  /* Barra superior persistente */
+  .topbar{display:flex;align-items:center;gap:10px;padding:16px 16px 12px}
+  .avatar{width:42px;height:42px;border-radius:50%;flex:none;
+    background:linear-gradient(135deg,#e9c46a,#b8860b);border:2px solid var(--cream);
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:#2b241c;font-size:18px}
+  .who{flex:1;min-width:0}
+  .nick{font-weight:700;font-size:15px;display:flex;align-items:center;gap:6px}
+  .flag{font-size:14px}
+  .sub{color:var(--muted);font-size:11px}
+  .lives{display:flex;align-items:center;gap:5px;background:var(--surface);
+    padding:7px 11px;border-radius:30px;border:1px solid rgba(207,92,92,.4)}
+  .heart{color:var(--error);font-size:15px}
+  .lives b{font-size:15px}
+  .lives small{color:var(--muted);font-size:10px;margin-left:3px}
+
+  .section-h{padding:6px 18px 4px;color:var(--gold-br);font-size:11px;
+    letter-spacing:2.5px;font-weight:800}
+
+  /* Tarjetas */
+  .card{margin:8px 16px;border-radius:18px;padding:16px;position:relative;overflow:hidden;
+    box-shadow:0 8px 22px rgba(0,0,0,.45)}
+  .card .tag{font-size:10px;letter-spacing:1.5px;font-weight:800;opacity:.85}
+  .card h3{font-family:Georgia,serif;font-size:21px;margin:4px 0 2px;font-weight:700}
+  .card p{font-size:13px;color:var(--cream);opacity:.8;line-height:1.45}
+  .card .go{position:absolute;right:14px;bottom:14px;width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800}
+  .icon-badge{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;
+    justify-content:center;font-size:24px;margin-bottom:8px}
+
+  .c-verify{background:linear-gradient(135deg,#3a2a2a,#2a2018);border:1px solid rgba(207,92,92,.5)}
+  .c-verify .tag{color:var(--error)}
+  .c-daily{background:linear-gradient(135deg,#3a3220,#2a2416);border:1px solid rgba(227,179,65,.55)}
+  .c-daily .tag{color:var(--gold-br)}
+  .c-daily .go{background:var(--gold-br);color:#2b241c}
+  .c-pending{background:linear-gradient(135deg,#2c2a34,#221f28);border:1px solid rgba(124,107,194,.5)}
+  .c-pending .tag{color:#b3a4e6}
+  .c-world{background:linear-gradient(135deg,#2a2620,#211d18);border:1px solid rgba(184,134,11,.4)}
+  .c-world .tag{color:var(--gold)}
+  .badge-new{position:absolute;top:14px;right:14px;background:var(--error);color:#fff;
+    font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:1px}
+  .progress{height:7px;background:rgba(0,0,0,.4);border-radius:10px;margin-top:10px;overflow:hidden}
+  .progress > i{display:block;height:100%;width:30%;
+    background:linear-gradient(90deg,#b8860b,#e3b341);border-radius:10px}
+
+  /* Menú inferior */
+  .tabbar{position:absolute;left:0;right:0;bottom:0;height:72px;background:rgba(12,10,8,.96);
+    border-top:1px solid rgba(184,134,11,.3);display:flex;backdrop-filter:blur(8px)}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    color:var(--muted);font-size:10px;letter-spacing:.5px}
+  .tab .i{font-size:21px}
+  .tab.active{color:var(--gold-br)}
+  .tab.active .i{filter:drop-shadow(0 0 6px rgba(227,179,65,.6))}
+</style>
+</head>
+<body>
+  <div class="caption">ENIGMATRIX · Mockup pantalla 12 — Inicio (390×800)</div>
+  <div class="phone">
+    <div class="scroll">
+
+      <!-- Barra superior persistente -->
+      <div class="topbar">
+        <div class="avatar">D</div>
+        <div class="who">
+          <div class="nick">DetectiveDiego <span class="flag">🇨🇴</span></div>
+          <div class="sub">Investigador</div>
+        </div>
+        <div class="lives">
+          <span class="heart">♥</span><b>4</b><small>/5 · 23:14</small>
+        </div>
+      </div>
+
+      <div class="section-h">TU INVESTIGACIÓN</div>
+
+      <!-- 1. Verifica tu correo -->
+      <div class="card c-verify">
+        <div class="icon-badge" style="background:rgba(207,92,92,.18)">✉️</div>
+        <div class="tag">ACCIÓN REQUERIDA</div>
+        <h3>Verifica tu correo</h3>
+        <p>Necesario para el reto diario y los rankings.</p>
+        <div class="go" style="background:rgba(207,92,92,.25);color:var(--error)">›</div>
+      </div>
+
+      <!-- 2. Reto diario -->
+      <div class="card c-daily">
+        <div class="badge-new">HOY</div>
+        <div class="icon-badge" style="background:rgba(227,179,65,.2)">🗓️</div>
+        <div class="tag">RETO DIARIO · INTERMEDIO</div>
+        <h3>El club de lectura</h3>
+        <p>Racha de 12 días · cierra en 8 h 42 m</p>
+        <div class="go">›</div>
+      </div>
+
+      <!-- 3. Continuar partida pendiente -->
+      <div class="card c-pending">
+        <div class="icon-badge" style="background:rgba(124,107,194,.22)">⏸️</div>
+        <div class="tag">PARTIDA PENDIENTE</div>
+        <h3>La Mansión · Caso 4</h3>
+        <p>02:14 transcurridos · toca para continuar</p>
+        <div class="go" style="background:rgba(124,107,194,.3);color:#b3a4e6">›</div>
+      </div>
+
+      <!-- 4. Mundo actual -->
+      <div class="card c-world">
+        <div class="icon-badge" style="background:rgba(184,134,11,.18)">🏛️</div>
+        <div class="tag">MUNDO 1 · LA MANSIÓN</div>
+        <h3>Continuar campaña</h3>
+        <p>3 de 10 casos resueltos</p>
+        <div class="progress"><i></i></div>
+        <div class="go" style="background:rgba(184,134,11,.25);color:var(--gold-br)">›</div>
+      </div>
+
+    </div>
+
+    <!-- Menú inferior -->
+    <div class="tabbar">
+      <div class="tab active"><span class="i">🏠</span>Inicio</div>
+      <div class="tab"><span class="i">🗺️</span>Mundos</div>
+      <div class="tab"><span class="i">🗓️</span>Reto</div>
+      <div class="tab"><span class="i">🏆</span>Ranking</div>
+    </div>
+  </div>
+  <div class="caption">Mockup de referencia · estética del Design System de Enigmatrix</div>
+</body>
+</html>

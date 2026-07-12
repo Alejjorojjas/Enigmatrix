@@ -3,19 +3,17 @@
 /// limpiar, resolver.
 library;
 
-import 'dart:convert';
-
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
 import '../data/case_repository.dart';
 import '../game/board_state.dart';
 import '../game/game_controller.dart';
 import 'board_view.dart';
+import 'victory_screen.dart';
 
 class GameScreen extends ConsumerWidget {
   final String caseId;
@@ -88,7 +86,7 @@ class _GameView extends ConsumerWidget {
         case ActionFeedback.wrongSolution:
           showMsg('Hay errores en el tablero: revisa las casillas marcadas');
         case ActionFeedback.solvedOk:
-          if (context.mounted) _showSummary(context, ref);
+          if (context.mounted) showVictoryScreen(context, ref, pc);
         case ActionFeedback.ok:
           break;
       }
@@ -144,7 +142,7 @@ class _GameView extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(right: 16),
               child: FilledButton(
-                onPressed: () => _showSummary(context, ref),
+                onPressed: () => showVictoryScreen(context, ref, pc),
                 child: const Text('Ver resumen'),
               ),
             ),
@@ -181,84 +179,6 @@ class _GameView extends ConsumerWidget {
     );
   }
 
-  Future<void> _showSummary(BuildContext context, WidgetRef ref) async {
-    final state = ref.read(gameControllerProvider(pc));
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'done:${pc.caseId}',
-        jsonEncode({
-          'time': state.elapsedSeconds,
-          'errors': state.errorCount,
-          'date': DateTime.now().toIso8601String().substring(0, 16),
-        }));
-    final fbController =
-        TextEditingController(text: prefs.getString('fb:${pc.caseId}') ?? '');
-
-    if (!context.mounted) return;
-    final murderer =
-        state.murdererId == null ? null : pc.character(state.murdererId!);
-    final weapon = state.lethalWeaponId == null
-        ? null
-        : pc.map.weapons.firstWhere((w) => w.id == state.lethalWeaponId);
-
-    await showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Brand.surface,
-        title: const Text('🎉 ¡Caso resuelto!'),
-        content: SizedBox(
-          width: 420,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('El asesino era ${murderer?.nameEs ?? '?'}, que quedó a '
-                  'solas con la víctima.'),
-              if (weapon != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text('Arma homicida: ${weapon.nameEs}.'),
-                ),
-              const SizedBox(height: 12),
-              Text('Tiempo: ${_fmt(state.elapsedSeconds)}   ·   '
-                  'Errores de resolver: ${state.errorCount}'),
-              const SizedBox(height: 16),
-              const Text('Feedback de playtest (¿pistas confusas? '
-                  '¿dificultad justa?):'),
-              const SizedBox(height: 8),
-              TextField(
-                controller: fbController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Tus notas sobre este caso...',
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              await prefs.setString('fb:${pc.caseId}', fbController.text);
-              if (ctx.mounted) Navigator.pop(ctx);
-            },
-            child: const Text('Guardar y seguir mirando'),
-          ),
-          FilledButton(
-            onPressed: () async {
-              await prefs.setString('fb:${pc.caseId}', fbController.text);
-              if (ctx.mounted) {
-                Navigator.pop(ctx);
-                ctx.go('/');
-              }
-            },
-            child: const Text('Guardar y volver a la lista'),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 String _fmt(int seconds) =>
