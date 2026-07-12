@@ -1,6 +1,7 @@
-/// Pantalla de victoria (pase Duo 2026-07-11): celebración a pantalla
-/// completa al resolver un caso — insignia animada, revelación del asesino,
-/// tarjetas de estadísticas y feedback de playtest.
+/// Pantalla de victoria (pase Enx 2026-07-11 v2): al resolver un caso se
+/// estampa el sello CASO CERRADO sobre un informe en papel crema con la
+/// revelación del asesino, los datos de la partida y el feedback de
+/// playtest.
 library;
 
 import 'dart:convert';
@@ -12,14 +13,13 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/game_controller.dart';
-import 'duo_widgets.dart';
+import 'enx_style.dart';
 
 String _fmt(int seconds) =>
     '${(seconds ~/ 60).toString().padLeft(2, '0')}:'
     '${(seconds % 60).toString().padLeft(2, '0')}';
 
-/// Guarda el resultado y muestra la celebración. Reemplaza al viejo
-/// AlertDialog de resumen.
+/// Guarda el resultado y muestra la celebración.
 Future<void> showVictoryScreen(
     BuildContext context, WidgetRef ref, PuzzleCase pc) async {
   final state = ref.read(gameControllerProvider(pc));
@@ -37,7 +37,7 @@ Future<void> showVictoryScreen(
     context: context,
     barrierDismissible: false,
     builder: (_) => Dialog.fullscreen(
-      backgroundColor: Duo.background,
+      backgroundColor: Enx.background,
       child: _VictoryView(pc: pc, prefs: prefs),
     ),
   );
@@ -87,80 +87,84 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Insignia que entra con rebote.
+                // Sello que se estampa con rebote.
                 TweenAnimationBuilder<double>(
-                  tween: Tween(begin: .4, end: 1),
-                  duration: const Duration(milliseconds: 650),
+                  tween: Tween(begin: 2.2, end: 1),
+                  duration: const Duration(milliseconds: 550),
                   curve: Curves.elasticOut,
                   builder: (_, v, child) =>
                       Transform.scale(scale: v, child: child),
                   child: Center(
-                    child: Container(
-                      width: 110,
-                      height: 110,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFFFFD75E), Duo.gold],
+                    child: Transform.rotate(
+                      angle: -0.09,
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Enx.crimson, width: 4),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              color: duoDarken(Duo.gold),
-                              offset: const Offset(0, 7),
-                              blurRadius: 0),
-                          BoxShadow(
-                              color: Duo.gold.withValues(alpha: .35),
-                              blurRadius: 40,
-                              spreadRadius: 6),
-                        ],
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Enx.crimson, width: 2),
+                            borderRadius: BorderRadius.circular(11),
+                          ),
+                          child: Text('CASO CERRADO',
+                              style: Enx.display(30,
+                                  color: Enx.crimson, spacing: 3)),
+                        ),
                       ),
-                      child: const Icon(Icons.check_rounded,
-                          size: 64, color: Colors.white),
                     ),
                   ),
                 ),
-                const SizedBox(height: 22),
-                Text('¡CASO RESUELTO!',
+                const SizedBox(height: 18),
+                Text('Buen trabajo, detective.',
                     textAlign: TextAlign.center,
-                    style: Duo.font(28,
-                        weight: FontWeight.w900,
-                        color: Duo.gold,
-                        spacing: 1.5)),
-                const SizedBox(height: 6),
+                    style: Enx.display(19, color: Enx.gold)),
                 Text(pc.map.nameEs,
                     textAlign: TextAlign.center,
-                    style: Duo.font(16, color: Duo.muted)),
-                const SizedBox(height: 24),
+                    style: Enx.font(15, color: Enx.muted)),
+                const SizedBox(height: 22),
 
-                // Revelación del asesino.
+                // Informe del caso en papel.
                 Container(
-                  padding: const EdgeInsets.all(18),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Duo.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Duo.border, width: 2),
+                    color: Enx.paper,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                          color: enxDarken(Enx.paper, .4),
+                          offset: const Offset(0, 6),
+                          blurRadius: 0),
+                    ],
                   ),
                   child: Column(
                     children: [
-                      Text('LA REVELACIÓN',
-                          style: Duo.font(11,
-                              color: Duo.muted, spacing: 2.5)),
-                      const SizedBox(height: 8),
+                      Text('INFORME DEL CASO',
+                          style: Enx.font(11,
+                              weight: FontWeight.w800,
+                              color: Enx.inkMuted,
+                              spacing: 2.5)),
+                      const SizedBox(height: 4),
+                      Container(height: 2, color: Enx.paperShade),
+                      const SizedBox(height: 12),
                       Text.rich(
                         TextSpan(children: [
                           const TextSpan(text: 'El asesino era '),
                           TextSpan(
                               text: murderer?.nameEs ?? '?',
-                              style: Duo.font(16,
-                                  weight: FontWeight.w900,
-                                  color: Duo.red)),
+                              style: Enx.font(16,
+                                  weight: FontWeight.w800,
+                                  color: Enx.crimson)),
                           const TextSpan(
                               text: ', que quedó a solas con la víctima.'),
                         ]),
                         textAlign: TextAlign.center,
-                        style: Duo.font(16, weight: FontWeight.w600),
+                        style: Enx.font(16, color: Enx.ink),
                       ),
                       if (weapon != null)
                         Padding(
@@ -170,38 +174,36 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                               const TextSpan(text: 'Arma homicida: '),
                               TextSpan(
                                   text: weapon.nameEs,
-                                  style: Duo.font(15,
-                                      weight: FontWeight.w900,
-                                      color: Duo.gold)),
+                                  style: Enx.font(15,
+                                      weight: FontWeight.w800,
+                                      color: Enx.goldInk)),
                             ]),
-                            style:
-                                Duo.font(15, weight: FontWeight.w600),
+                            style: Enx.font(15, color: Enx.ink),
                           ),
                         ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          EnxReportStat(
+                              label: 'Tiempo',
+                              value: _fmt(state.elapsedSeconds),
+                              icon: Icons.timer_outlined,
+                              color: Enx.blue),
+                          const SizedBox(width: 12),
+                          EnxReportStat(
+                              label: 'Errores',
+                              value: '${state.errorCount}',
+                              icon: state.errorCount == 0
+                                  ? Icons.verified_outlined
+                                  : Icons.close_rounded,
+                              color: state.errorCount == 0
+                                  ? Enx.green
+                                  : Enx.crimson),
+                        ],
+                      ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 18),
-
-                // Estadísticas.
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DuoStatCard(
-                        label: 'Tiempo',
-                        value: _fmt(state.elapsedSeconds),
-                        icon: Icons.timer_outlined,
-                        color: Duo.blue),
-                    const SizedBox(width: 12),
-                    DuoStatCard(
-                        label: 'Errores',
-                        value: '${state.errorCount}',
-                        icon: state.errorCount == 0
-                            ? Icons.verified_outlined
-                            : Icons.close_rounded,
-                        color:
-                            state.errorCount == 0 ? Duo.green : Duo.red),
-                  ],
                 ),
                 const SizedBox(height: 18),
 
@@ -209,43 +211,45 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Duo.surface,
+                    color: Enx.surface,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Duo.border, width: 2),
+                    border: Border.all(color: Enx.border, width: 2),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('FEEDBACK DE PLAYTEST',
-                          style: Duo.font(11,
-                              color: Duo.muted, spacing: 2)),
+                          style: Enx.font(11,
+                              weight: FontWeight.w800,
+                              color: Enx.muted,
+                              spacing: 2)),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _fb,
                         maxLines: 3,
-                        style: Duo.font(14, weight: FontWeight.w600),
+                        style: Enx.font(14, weight: FontWeight.w600),
                         decoration: InputDecoration(
                           isDense: true,
                           filled: true,
-                          fillColor: Duo.background,
+                          fillColor: Enx.background,
                           hintText:
                               '¿Pistas confusas? ¿Dificultad justa?…',
-                          hintStyle: Duo.font(14,
-                              weight: FontWeight.w600, color: Duo.muted),
+                          hintStyle: Enx.font(14,
+                              weight: FontWeight.w600, color: Enx.muted),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                                color: Duo.border, width: 2),
+                                color: Enx.border, width: 2),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                                color: Duo.border, width: 2),
+                                color: Enx.border, width: 2),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                                color: Duo.blue, width: 2),
+                                color: Enx.gold, width: 2),
                           ),
                         ),
                       ),
@@ -254,9 +258,10 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 ),
                 const SizedBox(height: 22),
 
-                DuoButton(
+                EnxButton(
                   label: 'Continuar',
-                  color: Duo.green,
+                  color: Enx.gold,
+                  textColor: Enx.goldInk,
                   onPressed: () => _saveAnd(() {
                     Navigator.of(context).pop();
                     context.go('/');
@@ -267,7 +272,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                   onPressed: () =>
                       _saveAnd(() => Navigator.of(context).pop()),
                   child: Text('Seguir mirando el tablero',
-                      style: Duo.font(14, color: Duo.muted)),
+                      style: Enx.font(14, color: Enx.muted)),
                 ),
               ],
             ),

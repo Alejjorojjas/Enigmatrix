@@ -45,13 +45,14 @@ void main() {
         child: const MaterialApp(home: CaseListScreen()),
       ),
     );
-    // La burbuja EMPEZAR anima en bucle: pumps fijos, no pumpAndSettle.
+    // La etiqueta SIGUIENTE CASO anima en bucle: pumps fijos, no
+    // pumpAndSettle.
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(find.text('ENIGMATRIX'), findsOneWidget);
-    expect(find.text('EMPEZAR'), findsOneWidget); // nodo actual
-    expect(find.textContaining('SECCIÓN'), findsWidgets);
+    expect(find.text('Enigmatrix'), findsOneWidget);
+    expect(find.text('SIGUIENTE CASO'), findsOneWidget); // ficha actual
+    expect(find.textContaining('EXPEDIENTE'), findsWidgets);
   });
 
   testWidgets('tocar un nodo abre la ficha del caso con botón Jugar',
@@ -70,13 +71,14 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
-    // El primer nodo es el actual (icono lupa).
-    await tester.tap(find.byIcon(Icons.search_rounded).first,
+    // La primera ficha es la actual (icono lupa; la barra superior usa
+    // otro tamaño del mismo icono, por eso .last = la ficha).
+    await tester.tap(find.byIcon(Icons.search_rounded).last,
         warnIfMissed: false);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
-    expect(find.text('JUGAR'), findsOneWidget);
+    expect(find.text('INVESTIGAR'), findsOneWidget);
     expect(find.textContaining('sospechosos'), findsOneWidget);
   });
 
@@ -100,7 +102,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.byIcon(Icons.check_rounded), findsWidgets);
-    expect(find.text('1 / 4'), findsOneWidget);
+    // Aparece en la barra superior y en la carpeta de la sección.
+    expect(find.text('1 / 4'), findsWidgets);
   });
 
   testWidgets('la app completa arranca con el camino como pantalla inicial',
@@ -119,6 +122,6 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(find.text('ENIGMATRIX'), findsOneWidget);
+    expect(find.text('Enigmatrix'), findsOneWidget);
   });
 }

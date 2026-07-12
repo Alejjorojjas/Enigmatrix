@@ -41,13 +41,14 @@ abstract final class Brand {
   static const scriptFont = 'Segoe Script';
 }
 
-/// Color identificador por dificultad.
+/// Color identificador por dificultad (paleta vintage detective,
+/// pase Enx 2026-07-11).
 Color difficultyColor(String label) => switch (label) {
-      'principiante' => const Color(0xFF66BB6A),
-      'casual' => const Color(0xFF42A5F5),
-      'intermedio' => const Color(0xFFFFA726),
-      'experto' => const Color(0xFFEF5350),
-      'elite' => const Color(0xFFAB47BC),
+      'principiante' => const Color(0xFF7BC950), // verde salvia
+      'casual' => const Color(0xFF4FA3D1), // azul empolvado
+      'intermedio' => const Color(0xFFE8871E), // calabaza
+      'experto' => const Color(0xFFD64550), // ladrillo
+      'elite' => const Color(0xFF9B5DE5), // violeta
       _ => Brand.muted,
     };
 
