@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
 import '../game/board_state.dart';
 import '../game/game_controller.dart';
+import 'furniture_painters.dart';
 
 /// Payload de arrastre desde el panel. Soltar un sospechoso = CONFIRMARLO.
 class PanelDrag {
@@ -172,7 +173,10 @@ class BoardView extends ConsumerWidget {
     );
   }
 
-  /// Una pieza por mueble, abarcando todas sus celdas (1 o 2).
+  /// Una pieza por mueble, abarcando todas sus celdas (1 o 2), dibujada
+  /// como ilustración top-down (cama con almohada, sofá con cojines...).
+  /// Los muebles pisables van levemente atenuados para que las marcas del
+  /// jugador se lean bien encima.
   List<Widget> _furniture(GameMap map, double cs) {
     final widgets = <Widget>[];
     for (final obj in map.objects) {
@@ -182,9 +186,6 @@ class BoardView extends ConsumerWidget {
       final minC = cols.reduce(math.min), maxC = cols.reduce(math.max);
       final w = (maxC - minC + 1) * cs;
       final h = (maxR - minR + 1) * cs;
-      final color = objectColor(obj.type);
-      final blocks = obj.blocks;
-      final iconSize = (math.min(cs, math.min(w, h)) * .55).clamp(12.0, 40.0);
 
       widgets.add(Positioned(
         left: minC * cs,
@@ -192,38 +193,12 @@ class BoardView extends ConsumerWidget {
         width: w,
         height: h,
         child: Padding(
-          padding: EdgeInsets.all(cs * .12),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.lerp(color, Colors.white, .25)!
-                      .withValues(alpha: blocks ? .98 : .72),
-                  color.withValues(alpha: blocks ? .90 : .55),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(cs * .22),
-              border: Border.all(
-                  color: Color.lerp(color, Colors.black, .4)!
-                      .withValues(alpha: blocks ? .95 : .6),
-                  width: 1.5),
-              boxShadow: blocks
-                  ? const [
-                      BoxShadow(
-                          color: Colors.black54,
-                          blurRadius: 4,
-                          offset: Offset(0, 2)),
-                    ]
-                  : null,
-            ),
-            child: Center(
-              child: Icon(objectIcon(obj.type),
-                  size: iconSize,
-                  color: blocks
-                      ? Colors.black.withValues(alpha: .70)
-                      : Color.lerp(color, Colors.black, .5)),
+          padding: EdgeInsets.all(cs * .09),
+          child: Opacity(
+            opacity: obj.blocks ? 1 : .88,
+            child: CustomPaint(
+              painter: FurniturePainter(obj.type),
+              size: Size(w - cs * .18, h - cs * .18),
             ),
           ),
         ),
