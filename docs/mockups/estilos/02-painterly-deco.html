@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estilo 2 — Painterly Art Déco (June's Journey)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Poiret+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:radial-gradient(1000px 700px at 50% -10%, #3d2b22, #17100c 75%);
+         min-height:100vh; display:flex; flex-direction:column; align-items:center;
+         font-family:'Quicksand',sans-serif; color:#efe2cd; padding:28px 12px; }
+  h1 { font-family:'Poiret One'; font-size:30px; letter-spacing:4px; color:#d9b06a; }
+  p.desc { max-width:540px; text-align:center; opacity:.75; margin:6px 0 22px; font-size:14px; }
+  .phone { width:392px; height:790px; border-radius:42px; position:relative; overflow:hidden;
+           background:linear-gradient(170deg,#2b1e16,#1a120c 60%);
+           box-shadow:0 40px 80px rgba(0,0,0,.75), inset 0 0 0 3px #0d0805, inset 0 0 0 5px #6a5334; }
+  .inner { position:absolute; inset:0; padding:16px 14px 12px; display:flex; flex-direction:column; gap:10px; }
+  /* luz de atardecer */
+  .inner::before { content:''; position:absolute; inset:0; pointer-events:none; z-index:5;
+      background:radial-gradient(600px 380px at 78% 8%, rgba(255,190,110,.20), transparent 60%),
+                 radial-gradient(900px 700px at 50% 115%, rgba(0,0,0,.55), transparent 55%); }
+
+  .hud { display:flex; justify-content:space-between; align-items:center; z-index:2; }
+  .deco { padding:6px 14px; font-size:13.5px; font-weight:700; color:#e8cf9c; position:relative;
+          background:linear-gradient(180deg,#33241a,#241811); border:1px solid #8a6c3c; border-radius:4px;
+          box-shadow:0 3px 10px rgba(0,0,0,.5), inset 0 1px 0 #ffffff22; }
+  .deco::before,.deco::after { content:'◆'; color:#8a6c3c; font-size:8px; position:absolute; top:50%; transform:translateY(-50%); }
+  .deco::before { left:4px; } .deco::after { right:4px; }
+
+  .clue { position:relative; padding:12px 16px 12px 44px; font-size:13.5px; line-height:1.4; color:#3a2a17;
+          background:linear-gradient(180deg,#f4e8cd,#e7d4a8); border-radius:6px;
+          box-shadow:0 8px 20px rgba(0,0,0,.55), inset 0 0 40px rgba(160,120,60,.25); z-index:2;
+          border:1px solid #c8ab72; }
+  .clue::before { content:'❝'; position:absolute; left:12px; top:6px; font-family:'Cormorant Garamond'; font-size:34px; color:#a67c3b; }
+  .clue b { color:#7c4a12; } .clue .who { font-family:'Cormorant Garamond'; font-weight:700; font-size:16px; color:#8c2f1b; }
+
+  .boardWrap { position:relative; padding:12px; border-radius:10px; z-index:2;
+      background:linear-gradient(160deg,#4a3620,#2e2113);
+      box-shadow:0 24px 50px rgba(0,0,0,.65), inset 0 0 0 1px #8a6c3c, inset 0 0 0 6px #241811, inset 0 0 0 7px #8a6c3c55; }
+  .corner { position:absolute; width:26px; height:26px; border:2px solid #d9b06a; z-index:3; }
+  .corner.tl{ top:5px; left:5px; border-right:none; border-bottom:none; }
+  .corner.tr{ top:5px; right:5px; border-left:none; border-bottom:none; }
+  .corner.bl{ bottom:5px; left:5px; border-right:none; border-top:none; }
+  .corner.br{ bottom:5px; right:5px; border-left:none; border-top:none; }
+  svg.board { display:block; width:100%; border-radius:4px; }
+
+  .suspects { display:flex; gap:8px; justify-content:center; z-index:2; }
+  .sus { text-align:center; }
+  .sus .frame { width:60px; height:72px; padding:4px 4px 0; position:relative;
+      background:linear-gradient(180deg,#f4e8cd,#dcc596); border-radius:3px;
+      box-shadow:0 6px 14px rgba(0,0,0,.6); transform:rotate(-2deg); }
+  .sus:nth-child(2n) .frame { transform:rotate(2deg); }
+  .sus .face { width:52px; height:50px; display:flex; align-items:center; justify-content:center;
+      font-family:'Cormorant Garamond'; font-weight:700; font-size:28px; color:#f4e8cd;
+      box-shadow:inset 0 0 18px rgba(0,0,0,.55); border-radius:2px;
+      background-blend-mode:multiply; }
+  .sus .name { font-family:'Cormorant Garamond'; font-size:13px; color:#3a2a17; font-weight:700; }
+  .sus.sel .frame { outline:2px solid #d9b06a; box-shadow:0 6px 22px rgba(217,176,106,.55); transform:rotate(0) translateY(-4px); }
+
+  .actions { display:flex; gap:10px; align-items:center; z-index:2; }
+  .btnIcon { width:50px; height:50px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:19px;
+      background:linear-gradient(180deg,#33241a,#241811); border:1px solid #8a6c3c;
+      box-shadow:0 3px 10px rgba(0,0,0,.5); }
+  .resolver { flex:1; height:54px; display:flex; align-items:center; justify-content:center; position:relative;
+      font-family:'Poiret One'; font-size:22px; letter-spacing:6px; color:#2b1c08; border-radius:6px;
+      background:linear-gradient(180deg,#e8c886,#c99f52 60%,#a87c33);
+      box-shadow:0 5px 0 #5e441c, 0 14px 30px rgba(201,159,82,.35), inset 0 1px 0 #fff7; }
+  .resolver::before,.resolver::after { content:'◆◆'; font-size:8px; letter-spacing:2px; color:#5e441c; position:absolute; top:50%; transform:translateY(-50%); }
+  .resolver::before { left:12px; } .resolver::after { right:12px; }
+  .caption { margin-top:18px; font-size:13px; opacity:.65; max-width:460px; text-align:center; }
+</style>
+</head>
+<body>
+<h1>2 · PAINTERLY ART DÉCO</h1>
+<p class="desc">La liga de <b>June's Journey</b>: ilustración pintada, luz dorada de atardecer, viñeta dramática,
+marcos art déco, textura de lienzo. El look "novela de misterio de los años 20".</p>
+
+<div class="phone"><div class="inner">
+  <div class="hud">
+    <div class="deco">✦ 04:12</div>
+    <div class="deco">1 250 pts</div>
+    <div class="deco" style="color:#e08a72">1 error</div>
+  </div>
+
+  <div class="clue"><span class="who">DALIA</span> — Ella estaba <b>sobre una alfombra</b>, junto a <b>una planta</b>.</div>
+
+  <div class="boardWrap">
+    <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+    <svg class="board" viewBox="0 0 360 360">
+      <defs>
+        <filter id="paint"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" result="n"/>
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .06 0" result="na"/>
+          <feComposite in="na" in2="SourceGraphic" operator="over"/></filter>
+        <filter id="canvas"><feTurbulence type="fractalNoise" baseFrequency=".08 .12" numOctaves="3" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter>
+        <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#1a0e05" flood-opacity=".55"/></filter>
+        <linearGradient id="pwood" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#b98a55"/><stop offset=".5" stop-color="#9c6f3e"/><stop offset="1" stop-color="#7c5228"/></linearGradient>
+        <linearGradient id="pwood2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#a1743f"/><stop offset="1" stop-color="#6e4a22"/></linearGradient>
+        <linearGradient id="ptile" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#9fb4a6"/><stop offset="1" stop-color="#6e8878"/></linearGradient>
+        <linearGradient id="pgrass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7e9a4e"/><stop offset="1" stop-color="#55702f"/></linearGradient>
+        <radialGradient id="sunlight" cx=".75" cy=".05" r="1.1">
+          <stop offset="0" stop-color="#ffd9a0" stop-opacity=".5"/><stop offset=".4" stop-color="#ffd9a0" stop-opacity=".12"/><stop offset="1" stop-color="#120a04" stop-opacity=".55"/></radialGradient>
+      </defs>
+
+      <g filter="url(#canvas)">
+        <rect x="0" y="0" width="180" height="180" fill="url(#pwood)"/>
+        <rect x="180" y="0" width="180" height="180" fill="url(#ptile)"/>
+        <rect x="0" y="180" width="180" height="180" fill="url(#pwood2)"/>
+        <rect x="180" y="180" width="180" height="180" fill="url(#pgrass)"/>
+        <g stroke="#00000033" stroke-width="1.6">
+          <path d="M0 30h180M0 62h180M0 92h180M0 124h180M0 152h180"/>
+          <path d="M180 45h180M180 90h180M180 135h180M225 0v180M270 0v180M315 0v180" opacity=".7"/>
+        </g>
+        <g stroke="#f0e2c144" stroke-width="1"><path d="M0 31h180M0 63h180M0 93h180"/></g>
+        <g fill="#42581f66"><ellipse cx="215" cy="210" rx="14" ry="5"/><ellipse cx="320" cy="255" rx="12" ry="5"/><ellipse cx="250" cy="340" rx="16" ry="6"/></g>
+      </g>
+
+      <g stroke="#00000038" stroke-width="1"><path d="M60 0v360M120 0v360M180 0v360M240 0v360M300 0v360M0 60h360M0 120h360M0 180h360M0 240h360M0 300h360"/></g>
+
+      <!-- CAMA pintada -->
+      <g filter="url(#soft)">
+        <rect x="8" y="8" width="44" height="104" rx="6" fill="#6e4a22"/>
+        <rect x="12" y="13" width="36" height="95" rx="4" fill="#e9dcc0"/>
+        <rect x="12" y="46" width="36" height="62" rx="4" fill="#7c3f34"/>
+        <rect x="12" y="46" width="36" height="9" fill="#5e2c24"/>
+        <path d="M14 66q11 -5 32 0M14 84q11 -5 32 0M14 98q11 -5 32 0" stroke="#5e2c2488" stroke-width="2.4" fill="none"/>
+        <rect x="16" y="17" width="28" height="21" rx="4" fill="#f4ecd8"/>
+        <path d="M18 27q12 4 24 0" stroke="#c9b98f" stroke-width="2" fill="none"/>
+      </g>
+      <!-- ARMARIO -->
+      <g filter="url(#soft)">
+        <rect x="128" y="8" width="46" height="44" rx="4" fill="#5e3d1c"/>
+        <rect x="132" y="12" width="18" height="36" rx="2" fill="#7c5228"/>
+        <rect x="152" y="12" width="18" height="36" rx="2" fill="#7c5228"/>
+        <path d="M136 16v28M156 16v28" stroke="#00000033" stroke-width="2"/>
+        <circle cx="148" cy="30" r="2" fill="#d9b06a"/><circle cx="156" cy="30" r="2" fill="#d9b06a"/>
+      </g>
+      <!-- LAVADORA -->
+      <g filter="url(#soft)">
+        <rect x="308" y="8" width="44" height="44" rx="5" fill="#c9cfc9"/>
+        <rect x="311" y="11" width="38" height="8" rx="3" fill="#8a958c"/>
+        <circle cx="330" cy="37" r="11.5" fill="#5c6a63"/><circle cx="330" cy="37" r="8" fill="#39443f"/>
+        <path d="M325 32a7 7 0 0 1 8 -1" stroke="#e6ded0" stroke-width="2" fill="none"/>
+      </g>
+      <!-- PLANTA -->
+      <g filter="url(#soft)">
+        <path d="M198 156q12 8 24 0l-3 -12h-18z" fill="#8c5230"/>
+        <g fill="#43632c"><path d="M210 148q-16 -10 -12 -30q14 8 12 30z"/><path d="M210 148q16 -10 12 -30q-14 8 -12 30z"/><path d="M210 148q0 -20 0 -34q6 16 0 34z" fill="#5c8140"/></g>
+      </g>
+      <!-- SOFÁ -->
+      <g filter="url(#soft)">
+        <rect x="66" y="304" width="108" height="48" rx="8" fill="#7c3f34"/>
+        <rect x="66" y="302" width="108" height="13" rx="6" fill="#5e2c24"/>
+        <rect x="70" y="316" width="13" height="32" rx="6" fill="#93544a"/>
+        <rect x="157" y="316" width="13" height="32" rx="6" fill="#93544a"/>
+        <rect x="87" y="316" width="31" height="30" rx="5" fill="#a4655c"/>
+        <rect x="122" y="316" width="31" height="30" rx="5" fill="#a4655c"/>
+        <path d="M90 322q12 6 25 0M125 322q12 6 25 0" stroke="#5e2c2477" stroke-width="2" fill="none"/>
+      </g>
+      <!-- MESA -->
+      <g filter="url(#soft)">
+        <ellipse cx="90" cy="224" rx="27" ry="20" fill="#4a2e12"/>
+        <ellipse cx="90" cy="220" rx="27" ry="20" fill="#8a5f30"/>
+        <ellipse cx="90" cy="220" rx="18" ry="12" fill="none" stroke="#5e3d1c" stroke-width="1.6"/>
+      </g>
+      <!-- ALFOMBRA -->
+      <g filter="url(#soft)">
+        <rect x="188" y="248" width="104" height="44" rx="6" fill="#7d5a8c"/>
+        <rect x="194" y="254" width="92" height="32" rx="4" fill="none" stroke="#c9b06a" stroke-width="2"/>
+        <path d="M240 258l8 12l-8 12l-8 -12z" fill="#c9b06a" opacity=".8"/>
+      </g>
+      <!-- ARBUSTOS -->
+      <g filter="url(#soft)" fill="#3e5c26">
+        <circle cx="330" cy="212" r="16"/><circle cx="317" cy="220" r="11"/><circle cx="341" cy="221" r="10"/>
+        <circle cx="318" cy="332" r="14"/><circle cx="331" cy="338" r="10"/>
+      </g>
+      <g fill="#6c8f45"><circle cx="324" cy="207" r="6"/><circle cx="336" cy="216" r="4"/><circle cx="314" cy="328" r="5"/></g>
+
+      <!-- MARCAS -->
+      <g filter="url(#soft)">
+        <circle cx="240" cy="270" r="20" fill="#8c2f1b"/>
+        <circle cx="240" cy="270" r="20" fill="none" stroke="#e8cf9c" stroke-width="2.5"/>
+        <text x="240" y="279" text-anchor="middle" font-family="Cormorant Garamond" font-weight="700" font-size="26" fill="#f4e8cd">D</text>
+        <circle cx="255" cy="255" r="7.5" fill="#5c8140" stroke="#f4e8cd" stroke-width="1.6"/>
+        <path d="M251.5 255l2.6 2.6 5 -5" stroke="#f4e8cd" stroke-width="2" fill="none"/>
+      </g>
+      <text x="90" y="98" text-anchor="middle" font-family="Cormorant Garamond" font-weight="700" font-size="24" fill="#f4e8cd" opacity=".85">B</text>
+      <text x="270" y="98" text-anchor="middle" font-family="Cormorant Garamond" font-weight="700" font-size="24" fill="#f4e8cd" opacity=".85">A</text>
+      <g stroke="#2a1a0c" stroke-width="5" stroke-linecap="round" opacity=".7">
+        <path d="M132 252l26 26M158 252l-26 26"/><path d="M12 192l26 26M38 192l-26 26"/>
+      </g>
+
+      <!-- luz pintada + grano -->
+      <rect x="0" y="0" width="360" height="360" fill="url(#sunlight)"/>
+      <rect x="0" y="0" width="360" height="360" filter="url(#paint)" opacity=".8"/>
+
+      <g font-family="Poiret One" font-size="15" fill="#f4e8cd" letter-spacing="2" stroke="#1a0e05" stroke-width="3" paint-order="stroke">
+        <text x="12" y="172">DORMITORIO</text><text x="288" y="172" text-anchor="end">BAÑO</text>
+        <text x="12" y="202">SALA</text><text x="348" y="202" text-anchor="end">JARDÍN</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="suspects">
+    <div class="sus"><div class="frame"><div class="face" style="background:radial-gradient(circle at 35% 30%,#4a7ba6,#243d54)">A</div><div class="name">Aldo</div></div></div>
+    <div class="sus"><div class="frame"><div class="face" style="background:radial-gradient(circle at 35% 30%,#7a5a96,#3c2a4e)">B</div><div class="name">Bella</div></div></div>
+    <div class="sus sel"><div class="frame"><div class="face" style="background:radial-gradient(circle at 35% 30%,#a64a5e,#54202b)">D</div><div class="name">Dalia</div></div></div>
+    <div class="sus"><div class="frame"><div class="face" style="background:radial-gradient(circle at 35% 30%,#b07c3a,#5c3c14)">E</div><div class="name">Elio</div></div></div>
+    <div class="sus"><div class="frame"><div class="face" style="background:radial-gradient(circle at 35% 30%,#6a6a72,#2e2e34)">†</div><div class="name">Víctima</div></div></div>
+  </div>
+
+  <div class="actions">
+    <div class="btnIcon">🕯️</div>
+    <div class="btnIcon">↩</div>
+    <div class="btnIcon">🗑</div>
+    <div class="resolver">RESOLVER</div>
+  </div>
+</div></div>
+
+<p class="caption">Tecnología: texturas de lienzo (feTurbulence → en Flutter, shader de grano), iluminación radial pintada,
+viñeta dinámica, paleta terracota-oro. El estándar del líder del género detective.</p>
+</body>
+</html>

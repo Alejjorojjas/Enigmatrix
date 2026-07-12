@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estilo 3 — Diorama isométrico (Monument Valley)</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:linear-gradient(180deg,#2a2547 0%,#413366 45%,#8c5d8c 100%);
+         min-height:100vh; display:flex; flex-direction:column; align-items:center;
+         font-family:'Quicksand',sans-serif; color:#f3edff; padding:28px 12px; }
+  h1 { font-family:'Baloo 2'; font-size:26px; color:#ffd9a0; }
+  p.desc { max-width:540px; text-align:center; opacity:.8; margin:6px 0 22px; font-size:14px; }
+  .phone { width:392px; height:790px; border-radius:42px; position:relative; overflow:hidden;
+           background:linear-gradient(180deg,#332c5c 0%,#4b3a72 55%,#7c5484 100%);
+           box-shadow:0 40px 80px rgba(0,0,0,.6), inset 0 0 0 3px #171233, inset 0 0 0 5px #5c4d8c; }
+  .inner { position:absolute; inset:0; padding:16px 14px 12px; display:flex; flex-direction:column; gap:10px; }
+  /* estrellas */
+  .inner::before { content:''; position:absolute; inset:0; pointer-events:none;
+      background-image:radial-gradient(2px 2px at 40px 60px, #fff9, transparent),
+        radial-gradient(1.6px 1.6px at 150px 30px, #fff7, transparent),
+        radial-gradient(2px 2px at 320px 90px, #fff8, transparent),
+        radial-gradient(1.4px 1.4px at 250px 50px, #fff6, transparent),
+        radial-gradient(1.8px 1.8px at 90px 110px, #fff6, transparent); }
+
+  .hud { display:flex; justify-content:space-between; z-index:2; }
+  .pill { padding:7px 14px; border-radius:20px; font-weight:700; font-size:14px;
+      background:rgba(255,255,255,.10); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.22); box-shadow:0 6px 18px rgba(0,0,0,.3); }
+  .amber { color:#ffd9a0; } .rose { color:#ff9db0; }
+
+  .clue { border-radius:16px; padding:11px 15px; font-size:13.5px; line-height:1.4; z-index:2;
+      background:rgba(255,255,255,.12); backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.25); box-shadow:0 10px 26px rgba(0,0,0,.35); }
+  .clue b { color:#ffd9a0; } .clue .who { font-family:'Baloo 2'; color:#ff9db0; }
+
+  .stage { position:relative; height:420px; z-index:2; display:flex; align-items:center; justify-content:center; }
+  svg.iso { width:400px; overflow:visible; animation:float 6s ease-in-out infinite; }
+  @keyframes float { 50% { transform:translateY(-8px); } }
+
+  .suspects { display:flex; gap:9px; justify-content:center; z-index:2; }
+  .sus { text-align:center; }
+  .sus .tile { width:58px; height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center;
+      font-family:'Baloo 2'; font-size:26px; color:#fff; position:relative;
+      box-shadow:0 8px 0 rgba(0,0,0,.28), 0 14px 24px rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.4); }
+  .sus .name { font-size:11.5px; font-weight:700; margin-top:6px; opacity:.9; }
+  .sus.sel .tile { outline:3px solid #ffd9a0; transform:translateY(-5px); box-shadow:0 13px 0 rgba(0,0,0,.28), 0 0 26px #ffd9a0aa; }
+
+  .actions { display:flex; gap:10px; align-items:center; z-index:2; }
+  .btnIcon { width:50px; height:50px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:19px;
+      background:rgba(255,255,255,.10); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.22); }
+  .resolver { flex:1; height:54px; border-radius:18px; display:flex; align-items:center; justify-content:center;
+      font-family:'Baloo 2'; font-size:20px; letter-spacing:2px; color:#4b2a10;
+      background:linear-gradient(180deg,#ffe3b3,#ffbe76); box-shadow:0 7px 0 #a06a34, 0 16px 30px rgba(255,190,118,.35); }
+  .caption { margin-top:18px; font-size:13px; opacity:.7; max-width:460px; text-align:center; }
+</style>
+</head>
+<body>
+<h1>3 · DIORAMA ISOMÉTRICO</h1>
+<p class="desc">La habitación como maqueta 3D flotante estilo <b>Monument Valley / Merge Mansion</b>:
+paredes recortadas, profundidad real, atardecer violeta y UI de vidrio (glassmorphism).</p>
+
+<div class="phone"><div class="inner">
+  <div class="hud">
+    <div class="pill amber">⏱ 04:12</div>
+    <div class="pill amber">✦ 1 250</div>
+    <div class="pill rose">✕ 1</div>
+  </div>
+
+  <div class="clue"><span class="who">■ DALIA</span> — Ella estaba <b>sobre una alfombra</b>, junto a <b>una planta</b>.</div>
+
+  <div class="stage">
+  <svg class="iso" viewBox="-40 -40 480 420">
+    <defs>
+      <linearGradient id="wallL" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#8678c9"/><stop offset="1" stop-color="#6a5cab"/></linearGradient>
+      <linearGradient id="wallR" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#5a4d99"/><stop offset="1" stop-color="#473b80"/></linearGradient>
+      <linearGradient id="floorA" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e8b98a"/><stop offset="1" stop-color="#cf9a66"/></linearGradient>
+      <linearGradient id="floorB" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#b7d9c8"/><stop offset="1" stop-color="#8fbCA8"/></linearGradient>
+      <linearGradient id="floorC" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d9a1b0"/><stop offset="1" stop-color="#bd7d92"/></linearGradient>
+      <linearGradient id="floorD" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#9ecf84"/><stop offset="1" stop-color="#77ad60"/></linearGradient>
+      <filter id="isoShadow" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#1c1440" flood-opacity=".55"/></filter>
+    </defs>
+
+    <!-- sombra del diorama -->
+    <ellipse cx="200" cy="360" rx="190" ry="30" fill="#1c1440" opacity=".45"/>
+
+    <!-- base isométrica: rombo de 4 habitaciones (cada mitad 2 celdas iso) -->
+    <g filter="url(#isoShadow)">
+      <!-- lados del bloque -->
+      <path d="M200 20 L390 145 L390 190 L200 315 L10 190 L10 145 Z" fill="#392f6b"/>
+      <path d="M10 145 L200 270 L200 315 L10 190 Z" fill="#2c2455"/>
+      <path d="M390 145 L200 270 L200 315 L390 190 Z" fill="#241d47"/>
+
+      <!-- pisos -->
+      <path d="M200 20 L295 82 L200 145 L105 82 Z" fill="url(#floorA)"/>
+      <path d="M295 82 L390 145 L295 207 L200 145 Z" fill="url(#floorB)"/>
+      <path d="M105 82 L200 145 L105 207 L10 145 Z" fill="url(#floorC)"/>
+      <path d="M200 145 L295 207 L200 270 L105 207 Z" fill="url(#floorD)"/>
+
+      <!-- grilla iso -->
+      <g stroke="#00000026" stroke-width="1.4">
+        <path d="M152.5 51 L342.5 176 M247.5 51 L57.5 176 M105 82 L295 207 M295 82 L105 207 M152.5 238.5 L342.5 113.5 M57.5 113.5 L247.5 238.5"/>
+      </g>
+
+      <!-- paredes traseras recortadas -->
+      <path d="M200 20 L105 82 L105 40 L200 -22 Z" fill="url(#wallL)"/>
+      <path d="M200 20 L295 82 L295 40 L200 -22 Z" fill="url(#wallR)"/>
+      <path d="M105 82 L10 145 L10 103 L105 40 Z" fill="url(#wallL)" opacity=".92"/>
+      <path d="M295 82 L390 145 L390 103 L295 40 Z" fill="url(#wallR)" opacity=".92"/>
+      <!-- ventana con luz -->
+      <path d="M150 30 L182 9 L182 -8 L150 13 Z" fill="#ffd9a0"/>
+      <path d="M150 30 L182 9 L182 -8 L150 13 Z" fill="#fff" opacity=".35"/>
+      <path d="M228 6 L258 26 L258 9 L228 -11 Z" fill="#ffd9a0" opacity=".85"/>
+    </g>
+
+    <!-- CAMA iso (dormitorio, piso A) -->
+    <g filter="url(#isoShadow)">
+      <path d="M172 62 L212 88 L188 104 L148 78 Z" fill="#f5eddc"/>
+      <path d="M148 78 L188 104 L188 115 L148 89 Z" fill="#c9b394"/>
+      <path d="M188 104 L212 88 L212 99 L188 115 Z" fill="#a98f6e"/>
+      <path d="M186 82 L212 99 L196 110 L170 93 Z" fill="#7f9fd4"/>
+      <path d="M170 61 L186 71 L176 78 L160 68 Z" fill="#fff"/>
+    </g>
+    <!-- planta baño -->
+    <g filter="url(#isoShadow)">
+      <path d="M312 118 L328 128 L320 140 L304 130 Z" fill="#b56238"/>
+      <circle cx="316" cy="112" r="13" fill="#4c8a3f"/><circle cx="308" cy="118" r="8" fill="#6bb457"/><circle cx="325" cy="119" r="7" fill="#5e9f4d"/>
+    </g>
+    <!-- lavadora baño -->
+    <g filter="url(#isoShadow)">
+      <path d="M338 120 L366 138 L366 162 L338 144 Z" fill="#cfd9df"/>
+      <path d="M338 120 L366 138 L378 130 L350 112 Z" fill="#eef3f6"/>
+      <path d="M366 138 L378 130 L378 154 L366 162 Z" fill="#9fb0ba"/>
+      <circle cx="352" cy="140" r="8" fill="#5e7686"/><circle cx="352" cy="140" r="5" fill="#38505e"/>
+    </g>
+    <!-- sofá sala (piso C) -->
+    <g filter="url(#isoShadow)">
+      <path d="M55 130 L120 172 L98 187 L33 145 Z" fill="#e07a50"/>
+      <path d="M33 145 L98 187 L98 200 L33 158 Z" fill="#b3543a"/>
+      <path d="M55 122 L120 164 L120 176 L55 134 Z" fill="#8f4028"/>
+      <path d="M62 138 L88 155 L76 163 L50 146 Z" fill="#ff9e74"/>
+      <path d="M88 155 L112 170 L100 178 L76 163 Z" fill="#ff9e74"/>
+    </g>
+    <!-- mesa sala -->
+    <g filter="url(#isoShadow)">
+      <path d="M92 196 L124 217 L104 230 L72 209 Z" fill="#c79a5e"/>
+      <path d="M72 209 L104 230 L104 238 L72 217 Z" fill="#8a5a2e"/>
+      <path d="M104 230 L124 217 L124 225 L104 238 Z" fill="#6e4522"/>
+    </g>
+    <!-- alfombra jardín (piso D) con CONFIRMADO -->
+    <g>
+      <path d="M185 190 L245 229 L215 249 L155 210 Z" fill="#b48cc8" filter="url(#isoShadow)"/>
+      <path d="M192 194 L238 224 L212 241 L166 211 Z" fill="none" stroke="#e6d1f2" stroke-width="2.4"/>
+    </g>
+    <!-- arbustos jardín -->
+    <g filter="url(#isoShadow)">
+      <circle cx="268" cy="212" r="14" fill="#4c8a3f"/><circle cx="257" cy="219" r="9" fill="#6bb457"/><circle cx="277" cy="220" r="8" fill="#5e9f4d"/>
+      <circle cx="228" cy="252" r="11" fill="#4c8a3f"/><circle cx="238" cy="257" r="7" fill="#6bb457"/>
+    </g>
+
+    <!-- MARCAS: confirmado en alfombra -->
+    <g filter="url(#isoShadow)">
+      <ellipse cx="200" cy="228" rx="14" ry="7" fill="#00000044"/>
+      <circle cx="200" cy="207" r="17" fill="#e85c9d"/>
+      <circle cx="200" cy="207" r="17" fill="none" stroke="#fff" stroke-width="2.6"/>
+      <text x="200" y="214" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="19" fill="#fff">D</text>
+      <circle cx="213" cy="194" r="6.5" fill="#41c463" stroke="#fff" stroke-width="1.8"/>
+      <path d="M210 194l2.3 2.3 4.4 -4.4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- candidatos flotando -->
+    <g font-family="Baloo 2" font-weight="800" font-size="18" text-anchor="middle">
+      <text x="248" y="112" fill="#fff" opacity=".95">A?</text>
+      <text x="96" y="120" fill="#fff" opacity=".95">B?</text>
+    </g>
+    <!-- X iso -->
+    <g stroke="#2c2455" stroke-width="5" stroke-linecap="round" opacity=".8">
+      <path d="M138 148 l20 13 M158 148 l-20 13"/>
+    </g>
+
+    <!-- etiquetas -->
+    <g font-family="Baloo 2" font-weight="800" font-size="12.5" fill="#fff" stroke="#241d47" stroke-width="3" paint-order="stroke" letter-spacing="1" text-anchor="middle">
+      <text x="200" y="58">DORMITORIO</text>
+      <text x="322" y="170">BAÑO</text>
+      <text x="76" y="170">SALA</text>
+      <text x="200" y="266">JARDÍN</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="suspects">
+    <div class="sus"><div class="tile" style="background:linear-gradient(180deg,#6aaef0,#3f7fc4)">A</div><div class="name">Aldo</div></div>
+    <div class="sus"><div class="tile" style="background:linear-gradient(180deg,#ab7fe8,#7e54c4)">B</div><div class="name">Bella</div></div>
+    <div class="sus sel"><div class="tile" style="background:linear-gradient(180deg,#f58cc0,#e85c9d)">D</div><div class="name">Dalia</div></div>
+    <div class="sus"><div class="tile" style="background:linear-gradient(180deg,#f7b46a,#e0812f)">E</div><div class="name">Elio</div></div>
+    <div class="sus"><div class="tile" style="background:linear-gradient(180deg,#9a9aac,#6a6a7e)">†</div><div class="name">Víctima</div></div>
+  </div>
+
+  <div class="actions">
+    <div class="btnIcon">💡</div>
+    <div class="btnIcon">↩️</div>
+    <div class="btnIcon">🗑️</div>
+    <div class="resolver">RESOLVER</div>
+  </div>
+</div></div>
+
+<p class="caption">Tecnología: proyección isométrica real (transform matrices en Flutter), diorama que "flota" con parallax
+al mover el dedo, luz de ventana, glassmorphism (BackdropFilter). El look más premiado visualmente.</p>
+</body>
+</html>

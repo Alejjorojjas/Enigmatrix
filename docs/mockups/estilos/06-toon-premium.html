@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estilo 6 — Toon Premium (outline grueso)</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Quicksand:wght @600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:linear-gradient(180deg,#2e86c1 0%,#1b5e8f 100%);
+      min-height:100vh; display:flex; flex-direction:column; align-items:center;
+      font-family:'Quicksand',sans-serif; color:#fff; padding:28px 12px; }
+  h1 { font-family:'Baloo 2'; font-size:26px; text-shadow:0 3px 0 rgba(0,0,0,.3); }
+  p.desc { max-width:540px; text-align:center; opacity:.9; margin:6px 0 22px; font-size:14px; }
+  .phone { width:392px; height:790px; border-radius:42px; position:relative; overflow:hidden;
+      background:linear-gradient(180deg,#4aa3d8 0%,#2e86c1 45%,#20638f 100%);
+      box-shadow:0 40px 80px rgba(0,0,0,.5), inset 0 0 0 4px #123c5a, inset 0 0 0 7px #6fc0ea; }
+  .inner { position:absolute; inset:0; padding:16px 14px 12px; display:flex; flex-direction:column; gap:10px; }
+  /* nubes -->
+  */
+  .inner::before { content:''; position:absolute; inset:0; pointer-events:none; opacity:.5;
+      background:radial-gradient(80px 34px at 15% 6%, #ffffff55, transparent 70%),
+                 radial-gradient(110px 40px at 85% 10%, #ffffff44, transparent 70%),
+                 radial-gradient(70px 30px at 55% 3%, #ffffff3c, transparent 70%); }
+
+  .hud { display:flex; justify-content:space-between; z-index:2; }
+  .bub { display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:22px; font-family:'Baloo 2';
+      font-size:15px; background:#fff; color:#1b5e8f; border:3.5px solid #123c5a;
+      box-shadow:0 5px 0 #123c5a; }
+  .bub.red { color:#d6453a; }
+
+  .clue { border-radius:20px; padding:11px 15px; font-size:14px; line-height:1.35; z-index:2; color:#3a2c10;
+      background:#ffe9a8; border:3.5px solid #123c5a; box-shadow:0 6px 0 #123c5a;
+      font-weight:700; }
+  .clue b { color:#b3452e; } .clue .who { font-family:'Baloo 2'; color:#7a4f9e; }
+
+  .boardWrap { position:relative; z-index:2; padding:10px; border-radius:26px; background:#8ad06e;
+      border:4px solid #123c5a; box-shadow:0 9px 0 #123c5a, 0 22px 40px rgba(0,0,0,.35); }
+  svg.board { display:block; width:100%; border-radius:16px; }
+
+  .suspects { display:flex; gap:9px; justify-content:center; z-index:2; }
+  .sus { text-align:center; }
+  .sus .blob { width:60px; height:60px; border-radius:22px; display:flex; align-items:center; justify-content:center;
+      font-family:'Baloo 2'; font-size:27px; color:#fff; border:3.5px solid #123c5a;
+      box-shadow:0 6px 0 #123c5a, inset 0 4px 0 rgba(255,255,255,.4);
+      text-shadow:0 2px 0 rgba(0,0,0,.3); }
+  .sus .name { font-family:'Baloo 2'; font-size:12px; margin-top:5px; text-shadow:0 2px 0 rgba(0,0,0,.3); }
+  .sus.sel .blob { transform:translateY(-6px) scale(1.06); box-shadow:0 11px 0 #123c5a, 0 0 0 4px #ffe9a8; animation:wob 1.4s ease-in-out infinite; }
+  @keyframes wob { 50% { transform:translateY(-8px) scale(1.09) rotate(2deg); } }
+
+  .actions { display:flex; gap:10px; align-items:center; z-index:2; }
+  .btnIcon { width:52px; height:52px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:20px;
+      background:#fff; border:3.5px solid #123c5a; box-shadow:0 5px 0 #123c5a; }
+  .resolver { flex:1; height:58px; border-radius:20px; display:flex; align-items:center; justify-content:center;
+      font-family:'Baloo 2'; font-size:23px; letter-spacing:1.5px; color:#fff; text-shadow:0 2.5px 0 #7c2c1c;
+      background:linear-gradient(180deg,#ff8a5c,#e05a3a); border:4px solid #123c5a;
+      box-shadow:0 8px 0 #123c5a, inset 0 4px 0 rgba(255,255,255,.35); }
+  .caption { margin-top:18px; font-size:13px; opacity:.85; max-width:470px; text-align:center; }
+</style>
+</head>
+<body>
+<h1>6 · TOON PREMIUM</h1>
+<p class="desc">Cartoon de <b>outline grueso y color saturado</b> estilo Toon Blast / Angry Birds 2 elevado:
+todo rebota, todo brilla, contornos azul-tinta gruesos, energía máxima. El más "juguetón" de los seis.</p>
+
+<div class="phone"><div class="inner">
+  <div class="hud">
+    <div class="bub">⏱ 04:12</div>
+    <div class="bub">⭐ 1 250</div>
+    <div class="bub red">✕ 1</div>
+  </div>
+
+  <div class="clue"><span class="who">■ DALIA</span> — Ella estaba <b>sobre una alfombra</b>, junto a <b>una planta</b>.</div>
+
+  <div class="boardWrap">
+  <svg class="board" viewBox="0 0 360 360">
+    <defs>
+      <linearGradient id="tWood" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f2c98a"/><stop offset="1" stop-color="#e0a95e"/></linearGradient>
+      <linearGradient id="tTile" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#aee3ea"/><stop offset="1" stop-color="#7cc4d1"/></linearGradient>
+      <linearGradient id="tWood2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#e8b072"/><stop offset="1" stop-color="#cf8f4a"/></linearGradient>
+      <linearGradient id="tGrass" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#a8dd7c"/><stop offset="1" stop-color="#7cbc52"/></linearGradient>
+      <filter id="toonShadow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="4" stdDeviation="0" flood-color="#123c5a" flood-opacity=".9"/></filter>
+    </defs>
+
+    <!-- pisos -->
+    <rect x="0" y="0" width="180" height="180" fill="url(#tWood)"/>
+    <rect x="180" y="0" width="180" height="180" fill="url(#tTile)"/>
+    <rect x="0" y="180" width="180" height="180" fill="url(#tWood2)"/>
+    <rect x="180" y="180" width="180" height="180" fill="url(#tGrass)"/>
+    <g stroke="#123c5a22" stroke-width="2">
+      <path d="M0 36h180M0 74h180M0 110h180M0 146h180M180 45h360M180 90h180M180 135h180M225 0v180M270 0v180M315 0v180"/>
+      <path d="M0 216h180M0 252h180M0 288h180M0 324h180"/>
+    </g>
+    <g fill="#ffffff59"><circle cx="200" cy="22" r="6"/><circle cx="298" cy="64" r="5"/></g>
+    <g fill="#5d9a3d66"><path d="M204 208q5 -10 10 0zM250 340q5 -10 10 0zM330 246q5 -10 10 0z"/></g>
+
+    <!-- grilla -->
+    <g stroke="#123c5a3d" stroke-width="1.6"><path d="M60 0v360M120 0v360M240 0v360M300 0v360M0 60h360M0 120h360M0 240h360M0 300h360"/></g>
+    <g stroke="#123c5a" stroke-width="4"><path d="M180 0v360M0 180h360"/></g>
+
+    <!-- CAMA toon -->
+    <g filter="url(#toonShadow)">
+      <rect x="8" y="8" width="44" height="104" rx="13" fill="#c97f3c" stroke="#123c5a" stroke-width="3.4"/>
+      <rect x="13" y="14" width="34" height="93" rx="9" fill="#fff6e0" stroke="#123c5a" stroke-width="2.6"/>
+      <rect x="13" y="46" width="34" height="61" rx="9" fill="#6ea8e8" stroke="#123c5a" stroke-width="2.6"/>
+      <path d="M13 57h34" stroke="#4a7fc4" stroke-width="7"/>
+      <rect x="17" y="18" width="26" height="20" rx="7" fill="#fff" stroke="#123c5a" stroke-width="2.4"/>
+      <ellipse cx="24" cy="24" rx="4" ry="2.6" fill="#fff" opacity=".9"/>
+      <path d="M17 72q13 -6 26 0M17 90q13 -6 26 0" stroke="#4a7fc4" stroke-width="2.6" fill="none"/>
+    </g>
+    <!-- ARMARIO toon -->
+    <g filter="url(#toonShadow)">
+      <rect x="127" y="8" width="47" height="44" rx="10" fill="#b3763e" stroke="#123c5a" stroke-width="3.4"/>
+      <rect x="132" y="13" width="17" height="34" rx="5" fill="#dc9c5c" stroke="#123c5a" stroke-width="2.2"/>
+      <rect x="152" y="13" width="17" height="34" rx="5" fill="#dc9c5c" stroke="#123c5a" stroke-width="2.2"/>
+      <circle cx="147" cy="30" r="2.8" fill="#123c5a"/><circle cx="157" cy="30" r="2.8" fill="#123c5a"/>
+      <ellipse cx="138" cy="17" rx="5" ry="2.4" fill="#fff" opacity=".55"/>
+    </g>
+    <!-- LAVADORA toon -->
+    <g filter="url(#toonShadow)">
+      <rect x="307" y="8" width="45" height="44" rx="10" fill="#f2f6f8" stroke="#123c5a" stroke-width="3.4"/>
+      <rect x="312" y="13" width="35" height="8" rx="4" fill="#a8bcc9" stroke="#123c5a" stroke-width="2"/>
+      <circle cx="330" cy="37" r="11.5" fill="#7ca4ba" stroke="#123c5a" stroke-width="2.6"/>
+      <circle cx="330" cy="37" r="7" fill="#3f6c86"/>
+      <circle cx="327" cy="34" r="2.6" fill="#fff" opacity=".85"/>
+    </g>
+    <!-- PLANTA toon -->
+    <g filter="url(#toonShadow)">
+      <path d="M197 158 L223 158 L218 138 L202 138 Z" fill="#e0703c" stroke="#123c5a" stroke-width="3"/>
+      <g stroke="#123c5a" stroke-width="2.6">
+        <ellipse cx="199" cy="128" rx="10" ry="6" fill="#66b446" transform="rotate(-38 199 128)"/>
+        <ellipse cx="221" cy="128" rx="10" ry="6" fill="#66b446" transform="rotate(38 221 128)"/>
+        <ellipse cx="210" cy="120" rx="7" ry="11" fill="#7ecc58"/>
+      </g>
+      <ellipse cx="207" cy="115" rx="2.6" ry="4" fill="#fff" opacity=".6"/>
+    </g>
+    <!-- SOFÁ toon -->
+    <g filter="url(#toonShadow)">
+      <rect x="65" y="303" width="110" height="49" rx="13" fill="#e0703c" stroke="#123c5a" stroke-width="3.4"/>
+      <rect x="65" y="301" width="110" height="14" rx="7" fill="#b3492a" stroke="#123c5a" stroke-width="2.6"/>
+      <rect x="69" y="316" width="14" height="33" rx="7" fill="#f2915c" stroke="#123c5a" stroke-width="2.4"/>
+      <rect x="157" y="316" width="14" height="33" rx="7" fill="#f2915c" stroke="#123c5a" stroke-width="2.4"/>
+      <rect x="87" y="317" width="31" height="30" rx="9" fill="#ffb480" stroke="#123c5a" stroke-width="2.4"/>
+      <rect x="122" y="317" width="31" height="30" rx="9" fill="#ffb480" stroke="#123c5a" stroke-width="2.4"/>
+      <ellipse cx="95" cy="322" rx="7" ry="3" fill="#fff" opacity=".55"/>
+      <ellipse cx="130" cy="322" rx="7" ry="3" fill="#fff" opacity=".55"/>
+    </g>
+    <!-- MESA toon -->
+    <g filter="url(#toonShadow)">
+      <ellipse cx="90" cy="224" rx="27" ry="20" fill="#a86a34" stroke="#123c5a" stroke-width="3"/>
+      <ellipse cx="90" cy="219" rx="27" ry="20" fill="#dc9c5c" stroke="#123c5a" stroke-width="3"/>
+      <ellipse cx="80" cy="212" rx="9" ry="4.5" fill="#fff" opacity=".5"/>
+    </g>
+    <!-- ALFOMBRA toon -->
+    <g filter="url(#toonShadow)">
+      <rect x="187" y="247" width="106" height="46" rx="12" fill="#b087d6" stroke="#123c5a" stroke-width="3.4"/>
+      <rect x="195" y="255" width="90" height="30" rx="8" fill="none" stroke="#e2ccf2" stroke-width="3.4"/>
+      <path d="M240 259l9 12 -9 12 -9 -12z" fill="#e2ccf2" stroke="#123c5a" stroke-width="2"/>
+    </g>
+    <!-- ARBUSTOS toon -->
+    <g filter="url(#toonShadow)" stroke="#123c5a" stroke-width="2.8">
+      <circle cx="330" cy="212" r="16" fill="#66b446"/><circle cx="317" cy="220" r="11" fill="#7ecc58"/><circle cx="342" cy="221" r="9" fill="#57a038"/>
+      <circle cx="318" cy="332" r="14" fill="#66b446"/><circle cx="331" cy="338" r="9" fill="#7ecc58"/>
+    </g>
+    <g fill="#fff" opacity=".6"><ellipse cx="324" cy="206" rx="4.5" ry="2.6"/><ellipse cx="313" cy="327" rx="4" ry="2.4"/></g>
+
+    <!-- MARCAS toon -->
+    <g filter="url(#toonShadow)">
+      <circle cx="240" cy="270" r="21" fill="#e85c9d" stroke="#123c5a" stroke-width="3.4"/>
+      <ellipse cx="233" cy="262" rx="7" ry="4" fill="#fff" opacity=".5"/>
+      <text x="240" y="279" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="24" fill="#fff" style="text-shadow:0 2px 0 #7c2c5a">D</text>
+      <circle cx="257" cy="253" r="8.5" fill="#57c452" stroke="#123c5a" stroke-width="2.6"/>
+      <path d="M253 253l3 3 6 -6" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    </g>
+    <g font-family="Baloo 2" font-weight="800" font-size="23" text-anchor="middle" stroke="#123c5a" stroke-width="4" paint-order="stroke">
+      <text x="90" y="99" fill="#c9a0f2">B?</text>
+      <text x="270" y="99" fill="#8ad4f2">A?</text>
+    </g>
+    <g stroke="#123c5a" stroke-width="7" stroke-linecap="round" opacity=".85">
+      <path d="M133 253l24 24M157 253l-24 24"/>
+      <path d="M13 193l24 24M37 193l-24 24"/>
+    </g>
+
+    <!-- nombres -->
+    <g font-family="Baloo 2" font-weight="800" font-size="15" fill="#fff" stroke="#123c5a" stroke-width="4.5" paint-order="stroke" letter-spacing="1">
+      <text x="12" y="171">DORMITORIO</text><text x="287" y="171" text-anchor="end">BAÑO</text>
+      <text x="12" y="203">SALA</text><text x="348" y="203" text-anchor="end">JARDÍN</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="suspects">
+    <div class="sus"><div class="blob" style="background:linear-gradient(180deg,#6ec4f7,#3f96d6)">A</div><div class="name">Aldo</div></div>
+    <div class="sus"><div class="blob" style="background:linear-gradient(180deg,#c9a0f2,#9a6ad9)">B</div><div class="name">Bella</div></div>
+    <div class="sus sel"><div class="blob" style="background:linear-gradient(180deg,#f78cc4,#e85c9d)">D</div><div class="name">Dalia</div></div>
+    <div class="sus"><div class="blob" style="background:linear-gradient(180deg,#ffc46e,#f2953c)">E</div><div class="name">Elio</div></div>
+    <div class="sus"><div class="blob" style="background:linear-gradient(180deg,#a8a8b8,#7c7c90)">†</div><div class="name">Víctima</div></div>
+  </div>
+
+  <div class="actions">
+    <div class="btnIcon">💡</div>
+    <div class="btnIcon">↩️</div>
+    <div class="btnIcon">🗑️</div>
+    <div class="resolver">¡RESOLVER!</div>
+  </div>
+</div></div>
+
+<p class="caption">Tecnología: outline grueso uniforme (shader de contorno), squash & stretch en cada tap,
+partículas de confeti (Flame), rebotes elásticos. El estilo con mejor conversión en casual puro.</p>
+</body>
+</html>

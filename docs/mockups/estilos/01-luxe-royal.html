@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estilo 1 — Luxe Royal (glossy premium)</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: radial-gradient(1200px 800px at 30% 0%, #2b1d3d, #120b1d 70%);
+         min-height:100vh; display:flex; flex-direction:column; align-items:center;
+         font-family:'Quicksand',sans-serif; color:#efe6d8; padding:28px 12px; }
+  h1 { font-family:'Baloo 2'; font-size:26px; color:#f3c14b; letter-spacing:.5px; }
+  p.desc { max-width:520px; text-align:center; opacity:.75; margin:6px 0 22px; font-size:14px; }
+  .phone { width:392px; height:790px; border-radius:42px; position:relative; overflow:hidden;
+           background:linear-gradient(160deg,#33244d 0%,#1c1230 55%,#140c22 100%);
+           box-shadow:0 40px 80px rgba(0,0,0,.7), inset 0 0 0 3px #0b0714, inset 0 0 0 5px #47356b; }
+  .inner { position:absolute; inset:0; padding:18px 14px 12px; display:flex; flex-direction:column; gap:10px; }
+
+  /* HEADER */
+  .hud { display:flex; justify-content:space-between; align-items:center; }
+  .pill { display:flex; align-items:center; gap:6px; padding:7px 13px; border-radius:20px;
+          background:linear-gradient(180deg,#4b3670,#332352);
+          box-shadow:0 4px 0 #1d1233, inset 0 1px 0 rgba(255,255,255,.25); font-weight:700; font-size:14px; }
+  .pill .ico { font-size:15px; }
+  .gold { color:#f3c14b; } .red { color:#ff7a6e; }
+
+  /* CLUE */
+  .clue { border-radius:18px; padding:11px 14px; font-size:13.5px; line-height:1.35;
+          background:linear-gradient(180deg,#fdf6e4,#f3e3bd);
+          color:#4a3413; box-shadow:0 5px 0 #b3924e, 0 12px 24px rgba(0,0,0,.45), inset 0 1px 0 #fff;
+          border:2px solid #e8cf94; }
+  .clue b { color:#8a5a00; }
+  .clue .who { font-family:'Baloo 2'; color:#a0341f; }
+
+  /* BOARD */
+  .boardWrap { position:relative; border-radius:26px; padding:10px;
+       background:linear-gradient(160deg,#7a5a2e,#4f3517 60%,#3a250e);
+       box-shadow:0 10px 0 #241505, 0 30px 50px rgba(0,0,0,.6), inset 0 2px 3px rgba(255,235,180,.55); }
+  .boardWrap::before { content:''; position:absolute; inset:4px; border-radius:22px;
+       border:2px solid rgba(255,222,140,.4); pointer-events:none; }
+  svg.board { display:block; width:100%; border-radius:16px; }
+
+  /* SUSPECTS */
+  .suspects { display:flex; gap:9px; justify-content:center; }
+  .sus { width:62px; text-align:center; }
+  .sus .frame { width:62px; height:66px; border-radius:14px; position:relative;
+       background:linear-gradient(180deg,#fdf6e4,#efdcae);
+       box-shadow:0 5px 0 #b3924e, 0 8px 16px rgba(0,0,0,.5); padding:5px 5px 0; }
+  .sus .face { width:52px; height:44px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+       font-family:'Baloo 2'; font-size:24px; color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.35);
+       box-shadow:inset 0 -8px 12px rgba(0,0,0,.28), inset 0 3px 4px rgba(255,255,255,.5); }
+  .sus .name { font-family:'Baloo 2'; font-size:11.5px; margin-top:3px; color:#3d2c10; }
+  .sus.sel .frame { outline:3px solid #f3c14b; box-shadow:0 5px 0 #8a6a1e, 0 0 22px #f3c14bcc; transform:translateY(-4px); }
+
+  /* ACTIONS */
+  .actions { display:flex; gap:10px; align-items:center; }
+  .btnIcon { width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+       font-size:21px; background:linear-gradient(180deg,#4b3670,#332352);
+       box-shadow:0 5px 0 #1d1233, inset 0 1px 0 rgba(255,255,255,.25); }
+  .resolver { flex:1; height:56px; border-radius:18px; display:flex; align-items:center; justify-content:center;
+       font-family:'Baloo 2'; font-size:21px; letter-spacing:1.5px; color:#5a3c00;
+       background:linear-gradient(180deg,#ffe08a,#f3c14b 55%,#d99a1f);
+       box-shadow:0 6px 0 #8a6011, 0 14px 30px rgba(243,193,75,.4), inset 0 2px 0 #fff8;
+       animation:glow 2.4s ease-in-out infinite; }
+  @keyframes glow { 50% { box-shadow:0 6px 0 #8a6011, 0 14px 44px rgba(243,193,75,.75), inset 0 2px 0 #fff8; } }
+  .caption { margin-top:18px; font-size:13px; opacity:.65; max-width:430px; text-align:center; }
+</style>
+</head>
+<body>
+<h1>1 · LUXE ROYAL</h1>
+<p class="desc">Acabado glossy premium estilo <b>Royal Match</b>: materiales brillantes, marco de madera dorada,
+volumen exagerado con luces especulares, UI con relieve 3D y botones "candy".</p>
+
+<div class="phone"><div class="inner">
+  <div class="hud">
+    <div class="pill"><span class="ico">⏱️</span><span class="gold">04:12</span></div>
+    <div class="pill"><span class="ico">💎</span><span class="gold">1 250</span></div>
+    <div class="pill"><span class="ico">❌</span><span class="red">1</span></div>
+  </div>
+
+  <div class="clue"><span class="who">■ DALIA</span> — Ella estaba <b>sobre una alfombra</b>, junto a <b>una planta</b>.</div>
+
+  <div class="boardWrap">
+  <svg class="board" viewBox="0 0 360 360">
+    <defs>
+      <linearGradient id="fWood" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#e9c795"/><stop offset="1" stop-color="#c79a5e"/>
+      </linearGradient>
+      <linearGradient id="fWood2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#d9b07c"/><stop offset="1" stop-color="#b3854a"/>
+      </linearGradient>
+      <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#bfe3e8"/><stop offset="1" stop-color="#93c4cd"/>
+      </linearGradient>
+      <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#9fd36f"/><stop offset="1" stop-color="#6faf49"/>
+      </linearGradient>
+      <linearGradient id="bedSheet" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#9dbef0"/><stop offset="1" stop-color="#6c93cf"/>
+      </linearGradient>
+      <linearGradient id="sofaFab" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f28f68"/><stop offset="1" stop-color="#cf6a45"/>
+      </linearGradient>
+      <radialGradient id="gloss" cx=".3" cy=".2" r="1">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".85"/><stop offset=".35" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#000" flood-opacity=".45"/>
+      </filter>
+      <filter id="dsBig" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000" flood-opacity=".5"/>
+      </filter>
+    </defs>
+
+    <!-- pisos por habitación -->
+    <rect x="0" y="0" width="180" height="180" fill="url(#fWood)"/>
+    <rect x="180" y="0" width="180" height="180" fill="url(#tile)"/>
+    <rect x="0" y="180" width="180" height="180" fill="url(#fWood2)"/>
+    <rect x="180" y="180" width="180" height="180" fill="url(#grass)"/>
+
+    <!-- textura piso: tablones / baldosa / césped -->
+    <g stroke="#00000022" stroke-width="1.4">
+      <path d="M0 30h180M0 60h180M0 90h180M0 120h180M0 150h180"/>
+      <path d="M60 0v180M120 0v180" stroke-dasharray="26 34"/>
+      <path d="M180 45h180M180 90h180M180 135h180M225 0v180M270 0v180M315 0v180"/>
+      <path d="M0 210h180M0 240h180M0 270h180M0 300h180M0 330h180M60 180v180M120 180v180" stroke-dasharray="20 40"/>
+    </g>
+    <g fill="#ffffff2e"><circle cx="205" cy="20" r="5"/><circle cx="295" cy="65" r="4"/><circle cx="340" cy="25" r="3.5"/></g>
+    <g fill="#5d9a3d55"><ellipse cx="210" cy="205" rx="9" ry="4"/><ellipse cx="330" cy="240" rx="8" ry="4"/><ellipse cx="255" cy="345" rx="10" ry="4"/></g>
+
+    <!-- grilla sutil -->
+    <g stroke="#00000030" stroke-width="1"><path d="M60 0v360M120 0v360M180 0v360M240 0v360M300 0v360M0 60h360M0 120h360M0 180h360M0 240h360M0 300h360"/></g>
+
+    <!-- CAMA 2 celdas vertical, glossy -->
+    <g filter="url(#dsBig)">
+      <rect x="8" y="8" width="44" height="104" rx="12" fill="#8a5a2e"/>
+      <rect x="12" y="14" width="36" height="94" rx="9" fill="#f5efdf"/>
+      <rect x="12" y="44" width="36" height="64" rx="9" fill="url(#bedSheet)"/>
+      <rect x="12" y="44" width="36" height="10" fill="#54779f"/>
+      <rect x="16" y="18" width="28" height="20" rx="7" fill="#ffffff"/>
+      <rect x="16" y="18" width="28" height="20" rx="7" fill="url(#gloss)"/>
+      <path d="M18 70q12 -6 24 0M18 88q12 -6 24 0" stroke="#54779f" stroke-width="2" fill="none" opacity=".7"/>
+      <rect x="8" y="8" width="44" height="104" rx="12" fill="url(#gloss)" opacity=".5"/>
+    </g>
+
+    <!-- ARMARIO -->
+    <g filter="url(#ds)">
+      <rect x="128" y="8" width="46" height="44" rx="8" fill="#9a6a38"/>
+      <rect x="132" y="12" width="18" height="36" rx="4" fill="#b98a50"/>
+      <rect x="152" y="12" width="18" height="36" rx="4" fill="#b98a50"/>
+      <circle cx="148" cy="30" r="2.4" fill="#ffe08a"/><circle cx="156" cy="30" r="2.4" fill="#ffe08a"/>
+      <rect x="128" y="8" width="46" height="44" rx="8" fill="url(#gloss)" opacity=".45"/>
+    </g>
+
+    <!-- LAVADORA baño -->
+    <g filter="url(#ds)">
+      <rect x="308" y="8" width="44" height="44" rx="9" fill="#eef3f6"/>
+      <rect x="312" y="12" width="36" height="9" rx="4" fill="#b9c6cf"/>
+      <circle cx="330" cy="38" r="12" fill="#8fa0ac"/><circle cx="330" cy="38" r="8.5" fill="#5e7686"/>
+      <circle cx="327" cy="35" r="3" fill="#ffffff88"/>
+      <rect x="308" y="8" width="44" height="44" rx="9" fill="url(#gloss)" opacity=".6"/>
+    </g>
+
+    <!-- PLANTA baño -->
+    <g filter="url(#ds)">
+      <circle cx="210" cy="150" r="13" fill="#c1663b"/>
+      <g fill="#4c8a3f"><ellipse cx="210" cy="132" rx="7" ry="14"/><ellipse cx="196" cy="142" rx="13" ry="7" transform="rotate(-35 196 142)"/><ellipse cx="224" cy="142" rx="13" ry="7" transform="rotate(35 224 142)"/></g>
+      <g fill="#6bb457"><ellipse cx="210" cy="138" rx="5" ry="10"/><ellipse cx="201" cy="146" rx="9" ry="5" transform="rotate(-30 201 146)"/><ellipse cx="219" cy="146" rx="9" ry="5" transform="rotate(30 219 146)"/></g>
+      <circle cx="210" cy="150" r="13" fill="url(#gloss)" opacity=".5"/>
+    </g>
+
+    <!-- SOFÁ sala 2 celdas -->
+    <g filter="url(#dsBig)">
+      <rect x="66" y="308" width="108" height="44" rx="12" fill="url(#sofaFab)"/>
+      <rect x="66" y="304" width="108" height="14" rx="7" fill="#a94f30"/>
+      <rect x="70" y="318" width="14" height="30" rx="7" fill="#e07a50"/>
+      <rect x="156" y="318" width="14" height="30" rx="7" fill="#e07a50"/>
+      <rect x="88" y="318" width="30" height="28" rx="8" fill="#ff9e74"/>
+      <rect x="122" y="318" width="30" height="28" rx="8" fill="#ff9e74"/>
+      <rect x="66" y="304" width="108" height="48" rx="12" fill="url(#gloss)" opacity=".5"/>
+    </g>
+
+    <!-- MESA sala -->
+    <g filter="url(#ds)">
+      <ellipse cx="90" cy="222" rx="26" ry="20" fill="#8a5a2e"/>
+      <ellipse cx="90" cy="218" rx="26" ry="20" fill="#c79a5e"/>
+      <ellipse cx="90" cy="218" rx="26" ry="20" fill="url(#gloss)" opacity=".7"/>
+      <path d="M72 218q18 -8 36 0" stroke="#8a5a2e55" stroke-width="2" fill="none"/>
+    </g>
+
+    <!-- ALFOMBRA jardín-sala con marca CONFIRMADO -->
+    <g filter="url(#ds)">
+      <rect x="188" y="248" width="104" height="44" rx="12" fill="#b48cc8"/>
+      <rect x="194" y="254" width="92" height="32" rx="9" fill="none" stroke="#e6d1f2" stroke-width="3"/>
+      <path d="M240 254v32M214 270h52" stroke="#e6d1f255" stroke-width="2"/>
+    </g>
+
+    <!-- ARBUSTOS jardín -->
+    <g filter="url(#ds)">
+      <circle cx="330" cy="210" r="16" fill="#4c8a3f"/><circle cx="318" cy="218" r="12" fill="#5e9f4d"/><circle cx="340" cy="220" r="11" fill="#6bb457"/>
+      <circle cx="326" cy="206" r="4" fill="#ffffff44"/>
+      <circle cx="318" cy="330" r="15" fill="#4c8a3f"/><circle cx="332" cy="336" r="11" fill="#6bb457"/><circle cx="312" cy="338" r="9" fill="#5e9f4d"/>
+    </g>
+
+    <!-- MARCAS DE JUEGO -->
+    <!-- confirmado: avatar glossy sobre la alfombra -->
+    <g filter="url(#dsBig)">
+      <circle cx="240" cy="270" r="21" fill="#e85c9d"/>
+      <circle cx="240" cy="270" r="21" fill="url(#gloss)"/>
+      <circle cx="240" cy="270" r="21" fill="none" stroke="#fff" stroke-width="3"/>
+      <text x="240" y="279" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="24" fill="#fff">D</text>
+      <circle cx="256" cy="254" r="8" fill="#41c463" stroke="#fff" stroke-width="2"/>
+      <path d="M252 254l3 3 6 -6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- candidatos -->
+    <text x="90" y="98" text-anchor="middle" font-family="Baloo 2" font-size="22" font-weight="800" fill="#7f4fc9" filter="url(#ds)">B?</text>
+    <text x="270" y="98" text-anchor="middle" font-family="Baloo 2" font-size="22" font-weight="800" fill="#2e86c1" filter="url(#ds)">A?</text>
+    <!-- X auto -->
+    <g stroke="#3d2c10" stroke-width="6" stroke-linecap="round" opacity=".75">
+      <path d="M132 252l26 26M158 252l-26 26"/>
+      <path d="M12 192l26 26M38 192l-26 26"/>
+    </g>
+
+    <!-- nombres de habitación -->
+    <g font-family="Baloo 2" font-weight="800" font-size="14" fill="#fff" stroke="#000" stroke-width="3.4" paint-order="stroke" letter-spacing="1">
+      <text x="12" y="172">DORMITORIO</text><text x="286" y="172" text-anchor="end">BAÑO</text>
+      <text x="12" y="200">SALA</text><text x="348" y="200" text-anchor="end">JARDÍN</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="suspects">
+    <div class="sus"><div class="frame"><div class="face" style="background:linear-gradient(180deg,#5aa9e6,#2e86c1)">A</div></div><div class="name" style="color:#efe6d8">Aldo</div></div>
+    <div class="sus"><div class="frame"><div class="face" style="background:linear-gradient(180deg,#a06ee0,#7f4fc9)">B</div></div><div class="name" style="color:#efe6d8">Bella</div></div>
+    <div class="sus sel"><div class="frame"><div class="face" style="background:linear-gradient(180deg,#f27ab5,#e85c9d)">D</div></div><div class="name" style="color:#efe6d8">Dalia</div></div>
+    <div class="sus"><div class="frame"><div class="face" style="background:linear-gradient(180deg,#f2a65a,#e0812f)">E</div></div><div class="name" style="color:#efe6d8">Elio</div></div>
+    <div class="sus"><div class="frame"><div class="face" style="background:linear-gradient(180deg,#8d8d99,#5e5e6b)">†</div></div><div class="name" style="color:#efe6d8">Víctima</div></div>
+  </div>
+
+  <div class="actions">
+    <div class="btnIcon">💡</div>
+    <div class="btnIcon">↩️</div>
+    <div class="btnIcon">🗑️</div>
+    <div class="resolver">RESOLVER</div>
+  </div>
+</div></div>
+
+<p class="caption">Tecnología en Flutter: gradientes + sombras duras nativas, brillos con shaders Impeller,
+partículas doradas al confirmar (Flame), micro-rebotes con curvas elásticas.</p>
+</body>
+</html>
