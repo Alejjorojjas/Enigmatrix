@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Necesario para descargar tipografias (google_fonts) y para el
+         backend de Fase 2. Permiso normal, sin implicaciones de Data Safety. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Enigmatrix"
         android:allowBackup="false"

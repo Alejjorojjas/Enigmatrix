@@ -12,3 +12,8 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Firma de subida a Play Store: NUNCA commitear
+key.properties
+**/*.jks
+**/*.keystore
