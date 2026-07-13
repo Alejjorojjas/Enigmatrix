@@ -394,9 +394,10 @@ class _Controls extends ConsumerWidget {
   }
 }
 
-/// Barra de pistas fija bajo el tablero: siempre visibles mientras juegas
-/// (pedido del usuario: pistas + tablero a la vez, sin scroll). Tap en una
-/// pista = destacar → tachar → normal, igual que en las tarjetas.
+/// PISTAS: las tarjetas de los personajes en versión compacta horizontal,
+/// fijas bajo el tablero (pedido del usuario: pistas + tablero a la vez,
+/// 100% funcionales — tocar selecciona, arrastrar confirma, tocar la
+/// pista la destaca/tacha). Sustituye al bloque PERSONAJES.
 class _ClueStrip extends ConsumerWidget {
   final PuzzleCase pc;
   const _ClueStrip({required this.pc});
@@ -411,7 +412,7 @@ class _ClueStrip extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(left: 2, bottom: 3),
+          padding: EdgeInsets.only(left: 2, bottom: 2),
           child: Text('PISTAS',
               style: TextStyle(
                   color: Brand.gold,
@@ -419,87 +420,33 @@ class _ClueStrip extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 11)),
         ),
+        const Padding(
+          padding: EdgeInsets.only(left: 2, bottom: 5),
+          child: Text(
+              'Toca la tarjeta para seleccionar. En el tablero: toca = '
+              'anotar la letra · mantén oprimido o arrastra = confirmar. '
+              'Toca la pista para destacarla o tacharla.',
+              style: TextStyle(color: Brand.muted, fontSize: 11)),
+        ),
         SizedBox(
-      height: 64,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          for (final ch in pc.characters)
-            if (pc.clueFor(ch.id) != null)
-              Builder(builder: (context) {
-                final clue = pc.clueFor(ch.id)!;
-                final i = pc.clues.indexOf(clue);
-                final mark =
-                    i >= 0 ? state.clueMarks[i] : ClueMark.normal;
-                final color = charColor(pc, ch.id);
-                final struck = mark == ClueMark.struck;
-                final hi = mark == ClueMark.highlighted;
-                return GestureDetector(
-                  onTap: i >= 0 ? () => controller.cycleClue(i) : null,
-                  child: Container(
-                    width: 235,
-                    margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 9, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: hi
-                          ? Brand.goldBright.withValues(alpha: .30)
-                          : Brand.cardLight,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: hi
-                              ? Brand.gold
-                              : Colors.black.withValues(alpha: .18),
-                          width: hi ? 2 : 1),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Brand.paperShadow,
-                            blurRadius: 4,
-                            offset: Offset(0, 2)),
-                      ],
-                    ),
-                    child: Row(children: [
-                      Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                            color: color, shape: BoxShape.circle),
-                        child: Center(
-                          child: Text(
-                            ch.id == pc.victimId ? '†' : ch.nameEs[0],
-                            style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.black87),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 7),
-                      Expanded(
-                        child: Text(
-                          clue.cardTextEs(pc.map, pc.names),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11,
-                            height: 1.15,
-                            color: struck
-                                ? Brand.inkOnLight.withValues(alpha: .35)
-                                : Brand.inkOnLight,
-                            decoration: struck
-                                ? TextDecoration.lineThrough
-                                : null,
-                            fontWeight:
-                                hi ? FontWeight.w700 : FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ]),
+          height: 118,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (final ch in pc.characters)
+                SizedBox(
+                  width: 205,
+                  child: _SuspectCard(
+                    pc: pc,
+                    charId: ch.id,
+                    state: state,
+                    compact: true,
+                    onTapAvatar: () => controller.tapSuspect(ch.id),
+                    onTapClue: (i) => controller.cycleClue(i),
                   ),
-                );
-              }),
-        ],
-      ),
+                ),
+            ],
+          ),
         ),
       ],
     );
@@ -524,7 +471,8 @@ class _SuspectPanel extends ConsumerWidget {
       physics: shrink ? const NeverScrollableScrollPhysics() : null,
       padding: const EdgeInsets.all(16),
       children: [
-        // HERRAMIENTAS primero (pedido del usuario: son más importantes).
+        // Solo HERRAMIENTAS: los personajes viven en el deslizador PISTAS
+        // bajo el tablero (el bloque anterior quedó redundante).
         const Text('HERRAMIENTAS',
             style: TextStyle(
                 color: Brand.gold,
@@ -535,27 +483,6 @@ class _SuspectPanel extends ConsumerWidget {
         _XChip(state: state, onTap: controller.tapX),
         const SizedBox(height: 8),
         _EraserChip(state: state, onTap: controller.tapEraser),
-        const Divider(height: 28),
-        const Text('PERSONAJES',
-            style: TextStyle(
-                color: Brand.gold,
-                letterSpacing: 3,
-                fontWeight: FontWeight.bold)),
-        const SizedBox(height: 4),
-        const Text(
-            'Toca la tarjeta para seleccionar. En el tablero: toca = anotar '
-            'la letra · mantén oprimido o arrastra = confirmar. '
-            'Toca una pista (aquí o bajo el tablero) para destacarla o '
-            'tacharla.',
-            style: TextStyle(color: Brand.muted, fontSize: 12)),
-        const SizedBox(height: 10),
-        for (final ch in pc.characters)
-          _SuspectCard(
-              pc: pc,
-              charId: ch.id,
-              state: state,
-              onTapAvatar: () => controller.tapSuspect(ch.id),
-              onTapClue: (i) => controller.cycleClue(i)),
       ],
     );
   }
@@ -608,12 +535,14 @@ class _SuspectCard extends StatelessWidget {
   final GameState state;
   final VoidCallback onTapAvatar;
   final void Function(int clueIndex) onTapClue;
+  final bool compact;
   const _SuspectCard({
     required this.pc,
     required this.charId,
     required this.state,
     required this.onTapAvatar,
     required this.onTapClue,
+    this.compact = false,
   });
 
   @override
@@ -667,7 +596,9 @@ class _SuspectCard extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTapAvatar,
       child: Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: compact
+          ? const EdgeInsets.only(right: 8)
+          : const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: isVictim ? const Color(0xFFF2E3DD) : Brand.cardLight,
         borderRadius: BorderRadius.circular(12),
@@ -686,8 +617,9 @@ class _SuspectCard extends StatelessWidget {
                 blurRadius: 16),
         ],
       ),
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(compact ? 7 : 10),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
@@ -698,18 +630,18 @@ class _SuspectCard extends StatelessWidget {
                   Material(color: Colors.transparent, child: avatar(24)),
               child: Row(
                 children: [
-                  avatar(selected ? 19 : 17),
-                  const SizedBox(width: 10),
+                  avatar(compact ? (selected ? 16 : 14) : (selected ? 19 : 17)),
+                  SizedBox(width: compact ? 7 : 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           pc.character(charId).nameEs,
-                          style: const TextStyle(
-                            fontSize: 17,
+                          style: TextStyle(
+                            fontSize: compact ? 14.5 : 17,
                             fontFamily: Brand.scriptFont,
-                            fontFamilyFallback: ['cursive', 'Georgia'],
+                            fontFamilyFallback: const ['cursive', 'Georgia'],
                             fontWeight: FontWeight.w600,
                             color: Brand.inkOnLight,
                             height: 1.1,
@@ -746,9 +678,10 @@ class _SuspectCard extends StatelessWidget {
               onTap: clueIndex >= 0 ? () => onTapClue(clueIndex) : null,
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                margin: const EdgeInsets.only(top: 8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+                margin: EdgeInsets.only(top: compact ? 5 : 8),
+                padding: EdgeInsets.symmetric(
+                    horizontal: compact ? 7 : 9,
+                    vertical: compact ? 4 : 6),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: switch (clueMark) {
@@ -764,8 +697,10 @@ class _SuspectCard extends StatelessWidget {
                 ),
                 child: Text(
                   clue.cardTextEs(pc.map, pc.names),
+                  maxLines: compact ? 3 : null,
+                  overflow: compact ? TextOverflow.ellipsis : null,
                   style: TextStyle(
-                    fontSize: 12.5,
+                    fontSize: compact ? 11.5 : 12.5,
                     height: 1.3,
                     color: clueMark == ClueMark.struck
                         ? Brand.inkOnLight.withValues(alpha: .4)
