@@ -406,7 +406,20 @@ class _ClueStrip extends ConsumerWidget {
     final state = ref.watch(gameControllerProvider(pc));
     final controller = ref.read(gameControllerProvider(pc).notifier);
 
-    return SizedBox(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 2, bottom: 3),
+          child: Text('PISTAS',
+              style: TextStyle(
+                  color: Brand.gold,
+                  letterSpacing: 3,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11)),
+        ),
+        SizedBox(
       height: 64,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -487,6 +500,8 @@ class _ClueStrip extends ConsumerWidget {
               }),
         ],
       ),
+        ),
+      ],
     );
   }
 }
@@ -509,6 +524,18 @@ class _SuspectPanel extends ConsumerWidget {
       physics: shrink ? const NeverScrollableScrollPhysics() : null,
       padding: const EdgeInsets.all(16),
       children: [
+        // HERRAMIENTAS primero (pedido del usuario: son más importantes).
+        const Text('HERRAMIENTAS',
+            style: TextStyle(
+                color: Brand.gold,
+                letterSpacing: 3,
+                fontWeight: FontWeight.bold,
+                fontSize: 12)),
+        const SizedBox(height: 8),
+        _XChip(state: state, onTap: controller.tapX),
+        const SizedBox(height: 8),
+        _EraserChip(state: state, onTap: controller.tapEraser),
+        const Divider(height: 28),
         const Text('PERSONAJES',
             style: TextStyle(
                 color: Brand.gold,
@@ -529,17 +556,6 @@ class _SuspectPanel extends ConsumerWidget {
               state: state,
               onTapAvatar: () => controller.tapSuspect(ch.id),
               onTapClue: (i) => controller.cycleClue(i)),
-        const Divider(height: 28),
-        const Text('HERRAMIENTAS',
-            style: TextStyle(
-                color: Brand.gold,
-                letterSpacing: 3,
-                fontWeight: FontWeight.bold,
-                fontSize: 12)),
-        const SizedBox(height: 8),
-        _XChip(state: state, onTap: controller.tapX),
-        const SizedBox(height: 8),
-        _EraserChip(state: state, onTap: controller.tapEraser),
       ],
     );
   }
