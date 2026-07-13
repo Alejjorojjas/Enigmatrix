@@ -110,24 +110,28 @@ class _GameView extends ConsumerWidget {
     final boardColumn = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _Header(pc: pc),
-        const SizedBox(height: 10),
+        _Header(pc: pc, onFeedback: handleFeedback),
+        const SizedBox(height: 8),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 620, maxHeight: 620),
           child: BoardView(pc: pc, onPlace: onPlace),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 6),
+        // Pistas SIEMPRE visibles junto al tablero (pedido del usuario:
+        // verlas sin perder el tablero de vista). Tap = destacar/tachar.
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 620),
+          child: _ClueStrip(pc: pc),
+        ),
+        const SizedBox(height: 6),
         // Papelera pegada al tablero: arrastrar marcas aquí sin alejarse.
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 620),
           child: _Trash(pc: pc),
         ),
-        const SizedBox(height: 10),
-        _Controls(pc: pc, onFeedback: handleFeedback),
       ],
     );
 
-    final infoPanel = _InfoPanel(pc: pc, shrink: false);
     final suspectPanel = _SuspectPanel(pc: pc, shrink: false);
 
     return Scaffold(
@@ -141,6 +145,21 @@ class _GameView extends ConsumerWidget {
             '${pc.hasWeapon ? ' · caso con arma' : ''}',
             style: const TextStyle(fontSize: 16)),
         actions: [
+          IconButton(
+            tooltip: 'Leyenda: habitaciones, muebles y reglas',
+            icon: const Icon(Icons.menu_book_rounded),
+            onPressed: () => showModalBottomSheet<void>(
+              context: context,
+              backgroundColor: Brand.surface,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(20))),
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * .8),
+              builder: (_) => _InfoPanel(pc: pc, shrink: false),
+            ),
+          ),
           if (state.solved)
             Padding(
               padding: const EdgeInsets.only(right: 16),
@@ -162,9 +181,12 @@ class _GameView extends ConsumerWidget {
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: boardColumn,
+                  child: Column(children: [
+                    Expanded(child: boardColumn),
+                    _Controls(pc: pc),
+                    const SizedBox(height: 8),
+                  ]),
                 )),
-                SizedBox(width: 280, child: infoPanel),
               ],
             );
           }
@@ -173,8 +195,11 @@ class _GameView extends ConsumerWidget {
             child: Column(
               children: [
                 boardColumn,
+                const SizedBox(height: 4),
+                // Personajes justo después del tablero (pedido del usuario).
                 _SuspectPanel(pc: pc, shrink: true),
-                _InfoPanel(pc: pc, shrink: true),
+                _Controls(pc: pc),
+                const SizedBox(height: 16),
               ],
             ),
           );
@@ -194,7 +219,9 @@ String _fmt(int seconds) =>
 
 class _Header extends ConsumerWidget {
   final PuzzleCase pc;
-  const _Header({required this.pc});
+  final Future<void> Function(ActionFeedback, {int? cell, Tool? tool})
+      onFeedback;
+  const _Header({required this.pc, required this.onFeedback});
 
   Widget _chip(Widget icon, String text, {Color? border}) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
@@ -246,6 +273,42 @@ class _Header extends ConsumerWidget {
           _chip(const Icon(Icons.lock_clock, size: 17, color: Brand.error),
               'Bloqueado…',
               border: Brand.error),
+        // RESOLVER arriba, junto a los errores (pedido del usuario):
+        // siempre visible sin scroll.
+        if (!state.solved)
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: Brand.goldGradient,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: const [
+                BoxShadow(
+                    color: Brand.paperShadow,
+                    blurRadius: 8,
+                    offset: Offset(0, 3)),
+              ],
+            ),
+            child: FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                foregroundColor: Colors.white,
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 18, vertical: 9),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+              ),
+              onPressed: () {
+                final controller =
+                    ref.read(gameControllerProvider(pc).notifier);
+                onFeedback(controller.solve());
+              },
+              icon: const Icon(Icons.gavel, size: 17),
+              label: const Text('RESOLVER',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900, letterSpacing: 1.2)),
+            ),
+          ),
       ],
     );
   }
@@ -253,9 +316,7 @@ class _Header extends ConsumerWidget {
 
 class _Controls extends ConsumerWidget {
   final PuzzleCase pc;
-  final Future<void> Function(ActionFeedback, {int? cell, Tool? tool})
-      onFeedback;
-  const _Controls({required this.pc, required this.onFeedback});
+  const _Controls({required this.pc});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -328,39 +389,104 @@ class _Controls extends ConsumerWidget {
             ],
           ),
         ),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: state.solved ? null : Brand.goldGradient,
-            color: state.solved ? Brand.surface : null,
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: state.solved
-                ? null
-                : [
-                    BoxShadow(
-                        color: Brand.gold.withValues(alpha: .45),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4)),
-                  ],
-          ),
-          child: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              foregroundColor: Colors.black,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30, vertical: 18),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
-            ),
-            onPressed:
-                state.solved ? null : () => onFeedback(controller.solve()),
-            icon: const Icon(Icons.gavel),
-            label: const Text('RESOLVER',
-                style: TextStyle(
-                    fontWeight: FontWeight.w900, letterSpacing: 1.5)),
-          ),
-        ),
       ],
+    );
+  }
+}
+
+/// Barra de pistas fija bajo el tablero: siempre visibles mientras juegas
+/// (pedido del usuario: pistas + tablero a la vez, sin scroll). Tap en una
+/// pista = destacar → tachar → normal, igual que en las tarjetas.
+class _ClueStrip extends ConsumerWidget {
+  final PuzzleCase pc;
+  const _ClueStrip({required this.pc});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(gameControllerProvider(pc));
+    final controller = ref.read(gameControllerProvider(pc).notifier);
+
+    return SizedBox(
+      height: 64,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (final ch in pc.characters)
+            if (pc.clueFor(ch.id) != null)
+              Builder(builder: (context) {
+                final clue = pc.clueFor(ch.id)!;
+                final i = pc.clues.indexOf(clue);
+                final mark =
+                    i >= 0 ? state.clueMarks[i] : ClueMark.normal;
+                final color = charColor(pc, ch.id);
+                final struck = mark == ClueMark.struck;
+                final hi = mark == ClueMark.highlighted;
+                return GestureDetector(
+                  onTap: i >= 0 ? () => controller.cycleClue(i) : null,
+                  child: Container(
+                    width: 235,
+                    margin: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 9, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: hi
+                          ? Brand.goldBright.withValues(alpha: .30)
+                          : Brand.cardLight,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: hi
+                              ? Brand.gold
+                              : Colors.black.withValues(alpha: .18),
+                          width: hi ? 2 : 1),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Brand.paperShadow,
+                            blurRadius: 4,
+                            offset: Offset(0, 2)),
+                      ],
+                    ),
+                    child: Row(children: [
+                      Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                            color: color, shape: BoxShape.circle),
+                        child: Center(
+                          child: Text(
+                            ch.id == pc.victimId ? '†' : ch.nameEs[0],
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.black87),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 7),
+                      Expanded(
+                        child: Text(
+                          clue.cardTextEs(pc.map, pc.names),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11,
+                            height: 1.15,
+                            color: struck
+                                ? Brand.inkOnLight.withValues(alpha: .35)
+                                : Brand.inkOnLight,
+                            decoration: struck
+                                ? TextDecoration.lineThrough
+                                : null,
+                            fontWeight:
+                                hi ? FontWeight.w700 : FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ),
+                );
+              }),
+        ],
+      ),
     );
   }
 }
@@ -390,9 +516,10 @@ class _SuspectPanel extends ConsumerWidget {
                 fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         const Text(
-            'Toca el avatar para seleccionar. En el tablero: toca = anotar '
+            'Toca la tarjeta para seleccionar. En el tablero: toca = anotar '
             'la letra · mantén oprimido o arrastra = confirmar. '
-            'Toca la pista para destacarla o tacharla.',
+            'Toca una pista (aquí o bajo el tablero) para destacarla o '
+            'tacharla.',
             style: TextStyle(color: Brand.muted, fontSize: 12)),
         const SizedBox(height: 10),
         for (final ch in pc.characters)
@@ -517,8 +644,13 @@ class _SuspectCard extends StatelessWidget {
         );
 
     // Tarjeta estilo "polaroid" del cuadernillo Murdoku: fondo claro,
-    // nombre manuscrito, pista en burbuja.
-    return Container(
+    // nombre manuscrito, pista en burbuja. TODA la tarjeta selecciona
+    // (pedido del usuario); la burbuja de la pista conserva su propio tap
+    // para destacar/tachar.
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTapAvatar,
+      child: Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: isVictim ? const Color(0xFFF2E3DD) : Brand.cardLight,
@@ -633,6 +765,7 @@ class _SuspectCard extends StatelessWidget {
               ),
             ),
         ],
+      ),
       ),
     );
   }
