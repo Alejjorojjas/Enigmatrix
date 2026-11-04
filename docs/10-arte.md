@@ -1,5 +1,36 @@
 # Enigmatrix - Art Bible
 
+> ACTUALIZACIÓN 04-11-2026: **SUPERADO PARCIALMENTE, EN REVISIÓN hasta la etapa 2 (prueba de concepto gráfica).** Este documento describe la dirección visual de junio de 2026 ("cartoon limpio"), que nunca se llegó a implementar tal cual. No lo uses como guía visual vigente. Cuando Alejandro decida la dirección gráfica y termine la etapa 2, se reescribirá como Art Bible vigente (referencias, paleta, tipografía, perspectiva y flujo de producción de arte) enlazado desde un registro de decisión (ADR) de estilo. Hallazgo de la auditoría: H-37.
+>
+> Informe de la investigación gráfica (04-11-2026): [2026-11-04-investigacion-grafica.md](../production/revisiones/2026-11-04-investigacion-grafica.md).
+>
+> **Condiciones de la prueba de concepto gráfica (etapa 2).**
+>
+> - **DECIDIDO 04-11-2026** (Alejandro; ver ADR-0012): la prueba de concepto está autorizada.
+> - **DECIDIDO 04-11-2026**: meta visual "pocas pantallas muy pulidas", al nivel de Paper Trail o Hidden Folks, sin intentar igualar a Royal Match.
+> - **DECIDIDO 04-11-2026**: la prueba muestra AMBAS opciones de estilo para compararlas: papel recortado tipo maqueta e ilustración 2D sin papel.
+> - **DECIDIDO 04-11-2026**: arte provisional gratuito (CC0, hecho por código o con texturas de papel fotografiadas por Alejandro). El arte de pago se decide después de la prueba.
+> - **DECIDIDO 04-11-2026**: el teléfono de prueba es un Android de gama media de Alejandro.
+> - **PENDIENTE DE DECISIÓN**: referencias visuales. Alejandro pidió ver ejemplos antes de elegir; todavía no hay referencias aprobadas.
+>
+> Qué sigue siendo útil como idea, aunque cambie el estilo: los colores de feedback con significado fijo, la regla de que el feedback nunca dependa solo del color (forma o icono además), las paletas por mundo y las reglas de accesibilidad. Lo demás está en el historial de más abajo.
+
+## Estado real al 04-11-2026
+
+- **Estilo elegido: Paper Craft.** Alejandro lo eligió el 12-07-2026 entre seis mockups de estilos (`docs/mockups/estilos/`; el elegido es `05-paper-craft.html`). No quedó escrito en este documento de arte; consta en la bitácora (`production/session-state/active.md`) y en `CLAUDE.md`.
+- **Claude Design se abandonó.** La interfaz se hace directamente en Flutter, sin mockups previos. Los mockups de `docs/mockups/` y el archivo `docs/Enigmatrix Design System - Standalone.html` quedan como referencia histórica y no mandan.
+- **Qué hay hoy en el código** (comprobado el 04-11-2026):
+  - La identidad visual está en `app/lib/src/ui/enx_style.dart`. Tiene una sola paleta, llamada "Papel" (tonos crema y marrones); el resto de paletas y el modo oscuro del plan original no existen.
+  - Las tipografías son Quicksand, Baloo 2 y Patrick Hand, que la app descarga de Google Fonts la primera vez que se abre (ver `docs/15-legal.md` y `docs/20-checklist-tiendas.md` sobre las consecuencias). No son las tipografías que propone este documento (Inter, DM Sans o Manrope; Fraunces o Playfair; Caveat o Kalam).
+  - El tablero es una cuadrícula de widgets de Flutter con un contenedor por casilla (`board_view.dart`). Los muebles se dibujan con código (`CustomPainter`, en `furniture_painters.dart`) y no hay ilustraciones: la carpeta `app/assets/` solo tiene los casos y el icono. La vista es plana desde arriba, sin la perspectiva 3/4 ni las texturas de materiales que pide el texto original.
+  - Los sospechosos son círculos de color con una inicial, no retratos tipo polaroid. La víctima es una ficha con una † (ver `docs/13-narrativa.md`).
+  - No hay animación de personajes, sonido ni vibración (ver `docs/12-audio.md`).
+- **Qué se decide después.** Si el estilo se mantiene, cómo se produce el arte, y con qué herramientas, lo define la etapa 2 (prueba de concepto gráfica, opción A del informe: quedarse en Flutter con Flame y Rive). Hasta entonces, cualquier decisión de arte pasa por Alejandro.
+
+## Historial: Art Bible original, "cartoon limpio" (10-06-2026)
+
+Todo lo que sigue, hasta el final del documento, es el texto original, conservado sin cambios como historial. Tiene valor como referencia de ideas, no como especificación vigente.
+
 ## Objetivo de este documento
 Definir la direccion visual de Enigmatrix para que el equipo de arte, diseno y producto tomen decisiones consistentes.
 
@@ -253,7 +284,7 @@ Cada mundo tiene una paleta secundaria propia que tine fondos, ilustraciones y h
 
 ### Reglas de accesibilidad
 - el feedback de exito y error nunca depende solo del color
-- las casillas resaltadas por error usan tambien una textura o borde
+- las casillas resaltadas por error usan tambien una textura o borde (Nota 04-11-2026: por la regla 9 del ADR-0012, el resaltado exacto de casillas solo existe en el tutorial)
 - el modo daltonico se contempla con paleta alterna
 
 ## Iconografia de UI

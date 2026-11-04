@@ -1,5 +1,9 @@
 # Enigmatrix - Legal y compliance
 
+> ACTUALIZACIÓN 04-11-2026 (auditoría 04-11-2026, hallazgos H-36, H-35, H-09, H-07 y H-08): **este documento describe la intención para el lanzamiento con cuentas, anuncios y compras (Fase 2 en adelante), no lo que hace la app hoy.** Lo que existe de verdad hoy (comprobado en el código el 04-11-2026): la app funciona sin cuentas ni registro; guarda el progreso solo en el teléfono (`shared_preferences`); no tiene anuncios, no tiene compras reales y no abre enlaces externos; no tiene botón que abra la política de privacidad; y descarga las tipografías de Google Fonts la primera vez que se abre, por lo que declara el permiso INTERNET. Con datos fijos: Tienda, Premium, Ranking, Configuración y los puntos de la semana del Reto llevan DEMO; vidas, racha y estadísticas del perfil se simulan sin etiqueta (H-62) (`app/lib/src/ui/home_shell.dart`). Todo lo demás (cuentas, consentimiento, anuncios, compras, eliminación de cuenta, moderación) aún no existe. Este documento no reemplaza la revisión de un abogado.
+>
+> Temas abiertos que se marcan más abajo y que decide Alejandro: edad mínima (pregunta 16), cómo se representa a la víctima (pregunta 8), identidad legal del responsable (pregunta 17) y qué se ve en el build de tiendas (pregunta 18).
+
 ## Objetivo de este documento
 Definir los requisitos legales y de cumplimiento que Enigmatrix debe cubrir para lanzar V1.
 
@@ -34,10 +38,18 @@ Cubre:
 - la categoria Google Play sugerida es Teen
 - la categoria App Store sugerida es 12 o superior
 
+> ACTUALIZACIÓN 04-11-2026: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 16, H-09): edad mínima. Versiones en conflicto:
+> - **Versión A, "mayores de 12":** líneas de arriba, la categoría App Store de arriba, la sección de anuncios ("la app es para mayores de 12"), `docs/20-checklist-tiendas.md` ("12+", "Everyone 10+/Teen"), `docs/13-narrativa.md` y la política de privacidad (`docs/legal/politica-privacidad.md`).
+> - **Versión B, "no dirigido a menores de 13":** la sección "COPPA y politica con menores" de abajo.
+> - Problemas que encontró la auditoría, a confirmar con un abogado y en la documentación vigente de cada tienda: "mayores de 12" incluye a los de 12 años, que quedan fuera de la regla de 13; según lo investigado, Apple ya no ofrece la categoría "12 o superior" (usa 4+, 9+, 13+, 16+ y 18+); y en Google Play un usuario de 12 años cae en el grupo "de 9 a 12", lo que podría activar las reglas de apps para niños (Familias y COPPA). La clasificación final la calcula cada tienda con su cuestionario.
+> - Alejandro decide una sola edad. Los documentos 13, 15, 20 y la política se alinean después, sin adelantarse. Mientras tanto no se declara ninguna edad en las consolas.
+
 ### Justificacion
 - el juego es de misterio detectivesco con violencia ficticia implicita
-- no hay sangre, no hay representacion grafica de victimas
+- no hay sangre, no hay representacion grafica de victimas (ver la nota de abajo, pregunta 8)
 - no hay lenguaje vulgar, no hay contenido sexual
+
+> ACTUALIZACIÓN 04-11-2026: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 8, H-35): la frase "no hay representacion grafica de victimas" no coincide con el juego. Hoy el jugador ubica a la víctima en el tablero como a cualquier otro personaje: su ficha es un círculo de color con una † y su tarjeta lleva la cinta "LA VÍCTIMA" (`app/lib/src/ui/board_view.dart`, `app/lib/src/ui/game_screen.dart`). No se muestra cuerpo, sangre ni escena del crimen. La redacción definitiva la decide Alejandro y debe ser la misma en los documentos 13, 15 y 20, porque esta frase sustenta la clasificación de edad y el cuestionario IARC. Ver `docs/13-narrativa.md`.
 - las armas son objetos cotidianos, no armas reales
 
 ### Etiquetas de dificultad
@@ -174,6 +186,8 @@ Cubre:
 - pais de residencia o constitucion
 - responsable de proteccion de datos cuando aplique segun GDPR
 
+> ACTUALIZACIÓN 04-11-2026: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 17, H-08): identidad legal. La decisión "persona natural" de abajo (julio de 2026) se tomó antes de la auditoría y está en revisión: la auditoría advierte que, con compras o suscripciones, el desarrollador se considera comerciante y sus datos de contacto (para una persona natural, su domicilio) se pueden publicar en las fichas de tienda de la Unión Europea. Alternativas que plantea la auditoría: persona natural con apartado postal u oficina alquilada, o constituir una SAS. Alejandro decide antes de crear las cuentas de desarrollador, y debe confirmarse con un abogado. Nombre, correo y dirección del responsable siguen sin completarse.
+
 ### Decisiones tomadas para V1
 - figura juridica: persona natural, el creador firma la app a su nombre
 - nombre comercial publico en los stores: `Enigmatrix`
@@ -247,6 +261,8 @@ Cubre:
 
 ## Compras dentro de la app
 
+> ACTUALIZACIÓN 04-11-2026 (H-36): hoy no hay compras reales. La Tienda y Premium de la app son hojas simuladas con la etiqueta "DEMO", con precios fijos en dólares; sus botones solo muestran un aviso de "función simulada". La app no incluye ninguna librería de compras (`app/pubspec.yaml`). **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 18): qué se ve en el build de tiendas. No declarar "con compras" ni "sin compras" en las consolas hasta decidirlo.
+
 ### Reglas
 - todas las compras se realizan a traves de Google Play o App Store
 - los precios se muestran en moneda local del store
@@ -268,7 +284,7 @@ Cubre:
 - el proveedor de anuncios cumple con las regulaciones de privacidad aplicables
 - los anuncios respetan el consentimiento del usuario
 - los anuncios no son personalizados si el usuario no consintio
-- los anuncios para menores estan deshabilitados ya que la app es para mayores de 12
+- los anuncios para menores estan deshabilitados ya que la app es para mayores de 12 (**PENDIENTE DE DECISIÓN**, auditoría 04-11-2026, pregunta 16: ver la edad mínima más arriba)
 
 ### Tipos de anuncios prohibidos
 - anuncios enganosos
@@ -302,8 +318,10 @@ Cubre:
 
 ## Permisos del sistema
 
+> ACTUALIZACIÓN 04-11-2026 (H-36, H-07): lo de abajo es la intención para la Fase 2. Hoy la app declara solo el permiso INTERNET (`app/android/app/src/main/AndroidManifest.xml`) y el juego en sí NO necesita red: se juega sin conexión. El permiso se usa únicamente para que `google_fonts` descargue las tipografías (Quicksand, Baloo 2 y Patrick Hand) la primera vez que se abre la app; sin red en esa primera apertura se muestra la fuente por defecto. Esa descarga hace que cada dispositivo contacte a servidores de Google y su dirección IP les llegue; según lo investigado, un tribunal alemán (2022) la trató como dato personal, así que la política de privacidad y el formulario de seguridad de datos de Play deben revisarse (ver `docs/20-checklist-tiendas.md` y `docs/legal/politica-privacidad.md`). Empaquetar las tipografías dentro de la app evitaría la descarga y permitiría quitar INTERNET hasta la Fase 2; es un cambio de código que no está hecho ni autorizado todavía. No hay solicitud de notificaciones, ni FLAG_SECURE, ni otros permisos.
+
 ### Permisos solicitados
-- internet: requerido para todo el juego
+- internet: requerido para todo el juego (en la Fase 2; hoy solo para descargar tipografías, ver la nota de arriba)
 - notificaciones: opcional, opt in
 - almacenamiento solo para datos propios de la app
 - en Android, FLAG_SECURE para bloqueo de capturas en partida oficial
@@ -330,7 +348,7 @@ Cubre:
 
 ### Activos licenciados
 - toda libreria de codigo de terceros respeta su licencia
-- toda fuente tipografica licenciada se documenta con prueba de licencia
+- toda fuente tipografica licenciada se documenta con prueba de licencia (04-11-2026, H-07: Quicksand, Baloo 2 y Patrick Hand son tipografías con licencia abierta OFL, según lo investigado; esa prueba de licencia aún no está guardada en el proyecto)
 - toda musica y SFX licenciados se documentan con prueba de licencia
 - ninguna referencia a personajes reales sin autorizacion
 - ninguna referencia a marcas reales sin autorizacion
@@ -400,6 +418,7 @@ Cubre:
 - registro interno del incidente y aprendizaje
 
 ## Pendientes a confirmar con abogado
+> Nota 04-11-2026: esta lista sigue sin tocar desde julio de 2026. Se añaden las dos preguntas abiertas de la auditoría: la edad mínima (pregunta 16, H-09) y la identidad legal (pregunta 17, H-08), además de cómo se describe a la víctima ante el cuestionario de clasificación (pregunta 8, H-35).
 - forma juridica del responsable: persona natural o sociedad
 - correo y direccion oficiales para politicas
 - ley aplicable y tribunal competente para los terminos: recomendado Colombia como base

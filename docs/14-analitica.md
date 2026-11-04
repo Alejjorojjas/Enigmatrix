@@ -1,5 +1,11 @@
 # Enigmatrix - Analitica
 
+> ACTUALIZACIÓN 04-11-2026: **este documento es la intención futura, no lo que existe hoy.** El cuerpo se conserva sin cambios.
+>
+> - **Hoy no hay analítica.** La app no mide ni envía nada.
+> - **Depende de la etapa 5 y del doc 15.** Solo se puede instalar cuando exista Firebase (ADR-0010, etapa 5) y, antes, cuando la política de privacidad, el consentimiento y los formularios de las tiendas (`docs/15-legal.md`) estén resueltos.
+> - **La prueba de juego de la etapa 1 usa el feedback local exportable**: lo que se observa y se anota en el propio teléfono y se exporta a mano, sin enviar datos a ningún servidor.
+
 ## Objetivo de este documento
 Definir que se mide en Enigmatrix, con que herramienta, y como se usa esa informacion para tomar decisiones.
 

@@ -1,5 +1,20 @@
 # Enigmatrix - Balance numerico
 
+> ACTUALIZACIÓN 04-11-2026: **documento EN REVISIÓN.** Los números de abajo siguen siendo propuestas y no se cambió ninguno. Cuatro temas estaban en conflicto o sin definir; el 04-11-2026 Alejandro decidió el de 0 vidas (pregunta 5) y siguen pendientes los otros tres (preguntas 6, 7 y 13), que no se resuelven aquí porque los decide Alejandro (auditoría 04-11-2026, sección 5, en `production/revisiones/2026-11-04-auditoria-proyecto.md`):
+>
+> - **DECIDIDO 04-11-2026** (auditoría, pregunta 5, H-26; ver ADR-0012): con 0 vidas no se puede pulsar Resolver ni empezar casos nuevos. La partida queda guardada para seguir cuando se recupere una vida o se vea un anuncio.
+> - ~~Versión anterior~~ (SUPERADO 04-11-2026): ~~este documento no definía qué pasa al quedar con 0 vidas; solo decía que un error de Resolver cuesta 1 vida y que el cronómetro oficial no se detiene. No decía si se podía seguir jugando, si se bloqueaba solo Resolver o si se esperaba la recarga.~~
+> - Regla relacionada, **DECIDIDO 04-11-2026** (auditoría, pregunta 10; ver ADR-0012): la partida se guarda siempre; al salir, el reloj se pausa y el tablero se oculta durante la pausa. Vale mientras no haya ranking real y se revisa antes de la etapa 5. Esto supera lo de "el cronómetro oficial no se detiene" de este documento.
+> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 6, H-26): vidas de Premium. En la sección "Vidas extra" dice "premium elimina el limite de 5" (versión A: vidas ilimitadas, y así también lo dice `docs/01-mvp-v1.md`). En "Beneficios premium" dice "sin limite de 5 vidas activas" y a la vez "recarga de vidas instantanea hasta el cap" (versión B: un tope que sigue existiendo, con recarga instantánea). Las dos versiones no pueden ser ciertas a la vez.
+> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 7, H-27): hora en que cambia el reto diario. Aquí la semana cierra "en hora del servidor", recomendado domingo 23:59 UTC; `docs/03-reglas-del-juego.md` dice "dentro del día local". Además, la distribución semanal ("Casual x2, Intermedio x3, Experto x1, Elite x1, sin Principiante") no se puede cumplir hoy: la app trae solo 20 casos (8 Principiante, 7 Casual y 5 Intermedio, ninguno Experto ni Élite) y la pantalla de Reto del juego elige el caso según los días transcurridos desde el 01-01-2026 (con la hora local del teléfono) sin mirar la dificultad (hoy es una simulación DEMO).
+> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 13, H-39): si Experto (12×12) y Élite (16×16) entran al lanzamiento. El generador define esos tamaños pero nunca se han generado casos de ese tamaño. Mientras no se decida, todo lo que aquí dependa de ellos (bases, pisos, tiempos objetivo y la distribución del reto) queda sin comprobar.
+>
+> Otros dos puntos en revisión que no cambian ningún número:
+> - **Rangos de dificultad por recalibrar.** Hoy el generador no controla la dificultad de cada caso (H-40): hay un caso Principiante que el solver resuelve en 10 pasos y uno Intermedio en 4. Los tiempos objetivo y la tabla de factor de velocidad de este documento se recalibran con los datos de la prueba de juego (etapa 1) y el motor se ajusta en la etapa 3.
+> - **Ayudas y puntuación.** (**PENDIENTE DE DECISIÓN**, auditoría 04-11-2026, pregunta 12, H-30.) La sección "Penalizacion por ayudas" describe ayudas que la app no tiene hoy, ni tampoco puntuación: la especificación (`docs/16-spec-puzzle.md`) no define cómo se calculan. La prueba de juego se hará sin ayudas.
+>
+> Lo demás (vidas, anuncios, tienda, protectores) es la intención de la Fase 2 en adelante; en el juego de hoy esas pantallas son simuladas.
+
 ## Objetivo de este documento
 Cerrar los numeros que estaban como `pendiente` en docs anteriores para que el juego sea construible y testeable.
 

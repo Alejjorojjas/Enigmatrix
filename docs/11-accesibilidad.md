@@ -1,5 +1,17 @@
 # Enigmatrix - Accesibilidad
 
+> ACTUALIZACIÓN 04-11-2026: este documento fija los requisitos de accesibilidad de la **V1 final**; el prototipo de la Fase 1 casi no los cumple todavía y el arreglo de fondo va con el diseño nuevo (etapa 4 del plan). Se conserva todo el texto. Auditoría: `production/revisiones/2026-11-04-auditoria-proyecto.md` (H-25, H-31, H-56).
+>
+> **Estado real hoy, comprobado en el código de `app/lib/`:**
+> - No hay soporte para lectores de pantalla: el código no usa `Semantics` ni etiquetas accesibles en ninguna parte, y los íconos de la barra inferior no tienen etiqueta ni tooltip.
+> - Las casillas con error se marcan **solo con un tinte de color rojo** (sin borde, patrón ni ícono), y los textos de ayuda y de las pistas llegan a medir unos 11 px, por debajo del mínimo de este documento.
+> - No hay audio ni vibración en la app. Los interruptores de sonido, música y vibración de Configuración se guardan pero no hacen nada.
+> - Los textos están fijos en español (no hay traducción preparada).
+> - No existen el modo daltónico, "reducir animaciones" ni "desactivar rotación" (el mapa tampoco rota).
+> - Un arreglo mínimo, ver la pista completa al tocarla, está previsto en la versión de prueba de la etapa 1 (H-56).
+>
+> **Decisiones de Alejandro del 04-11-2026 que tocan este documento:** ninguna cambia sus requisitos. La meta visual del rediseño ("pocas pantallas muy pulidas") deberá cumplirlos.
+
 ## Objetivo de este documento
 Definir los requisitos minimos de accesibilidad de Enigmatrix V1, para que el juego sea jugable por la mayor cantidad posible de personas sin sacrificar el diseno.
 
@@ -58,6 +70,8 @@ Cubre:
 ### Reglas de juego asociadas
 - las casillas con error siempre se diferencian con borde y patron, no solo color
 - los avatares confirmados siempre llevan flecha, no solo verde
+
+> ACTUALIZACIÓN 04-11-2026 (H-25): el confirmado de hoy es un círculo con la ficha del personaje, sin la "flecha verde" del modelo anterior (`docs/03-reglas-del-juego.md`, sección superada). Cuando se rediseñe el tablero hay que fijar qué refuerzo no cromático lleva, y el marcado de casillas con error está sujeto a la pregunta 9 (**DECIDIDA 04-11-2026**, ver ADR-0012: en el juego normal solo se muestra cuántas casillas no cuadran; el marcado exacto de casillas con error queda solo para el tutorial, y ahí debe llevar borde y patrón, no solo color).
 - las pistas destacadas siempre llevan icono, no solo color
 
 ## Texto y escala
@@ -95,7 +109,16 @@ Cubre:
 - la opcion se activa desde configuracion y no penaliza al jugador
 - esta opcion debe estar disponible en V1
 
+> **DECIDIDO 04-11-2026** (auditoría, pregunta 20; ver ADR-0012): al tocar una casilla sin sospechoso elegido aparece el aviso "Elige primero a un sospechoso". Hay un modo alternativo de tocar dos veces (elegir y tocar el destino) además de mantener oprimido o arrastrar. Se diseña en la prueba de concepto (etapa 2).
+>
+> Requisitos de accesibilidad que se derivan: el modo de tocar dos veces es la alternativa por toque que pide este documento y debe poder usarse sin mantener oprimido ni arrastrar; el aviso "Elige primero a un sospechoso" se anuncia a los lectores de pantalla y no depende solo del color ni de un texto pequeño; y el modo alternativo queda disponible desde la V1 (ver arriba). El diseño exacto se hace en la prueba de concepto gráfica (etapa 2).
+>
+> (SUPERADO 04-11-2026) Versión anterior, conservada como historial: Antes pendiente (auditoría 04-11-2026, pregunta 20, H-25): gesto para confirmar a un personaje. Versión de este documento: "toque para seleccionar más toque para colocar" como alternativa al arrastre. Versión del juego de hoy (`docs/16-spec-puzzle.md`, sección 4): **tocar una casilla anota un candidato y confirmar exige mantener oprimido o arrastrar la ficha**. Ese gesto es poco descubrible, puede parecer que la app no responde, y no hay una alternativa por toque, así que hoy **no se cumple** la alternativa que pide este documento. Tocar una casilla sin sospechoso elegido tampoco da respuesta (solo hay un párrafo gris de 11 px con la explicación). Recomendación de la auditoría (solo recomendación): mostrar el aviso "Elige primero a un sospechoso" y agregar un modo alternativo de tocar dos veces, diseñado en la prueba de concepto gráfica. Falta que Alejandro decida.
+
 ### Tap repetido
+
+> ACTUALIZACIÓN 04-11-2026 (H-25): hoy el ciclo por toques repetidos existe solo para la **X** (X pequeña, X grande, sin herramienta). Para los sospechosos tocar la ficha solo la selecciona o la deselecciona; el paso de candidato a confirmado ya no es un segundo toque (ver el pendiente de arriba).
+
 - los ciclos de estado para sospechoso y X tienen feedback inmediato
 - doble tap accidental no provoca acciones destructivas sin confirmacion
 
@@ -142,7 +165,7 @@ Cubre:
 - al activarse:
   - desaparece la animacion de desbloqueo de mundo larga
   - las transiciones largas se reemplazan por fades cortos
-  - el feedback de error pulsante se reemplaza por un parpadeo unico
+  - el feedback de error pulsante se reemplaza por un parpadeo unico (nota 04-11-2026: el parpadeo de la pista en conflicto solo existe en el tutorial, pregunta 9)
 - las animaciones esenciales para entender una accion se mantienen
 
 ### Vibracion y haptics
@@ -169,7 +192,10 @@ Cubre:
 - la opcion se documenta como ayuda de accesibilidad, no como ventaja
 
 ### Tiempo siempre corriendo
-- el tiempo no se pausa, pero el sistema reconoce automaticamente bloqueos del propio servidor y los descuenta
+
+> ACTUALIZACIÓN 04-11-2026: el reloj y qué pasa al salir de la partida quedaron **DECIDIDOS 04-11-2026** (auditoría, pregunta 10; ver ADR-0012): la partida se guarda siempre y, al salir, el reloj se pausa y el tablero se oculta durante la pausa. Vale mientras no haya ranking real; se revisa antes de la etapa 5 (con ranking real, la regla de abajo de que el tiempo no se pausa y descuenta bloqueos del servidor puede volver). Ver `docs/03-reglas-del-juego.md`, sección "Tiempo".
+
+- ~~el tiempo no se pausa~~ (SUPERADO 04-11-2026 mientras no haya ranking real; se revisa antes de la etapa 5), pero el sistema reconoce automaticamente bloqueos del propio servidor y los descuenta
 - nunca se descuenta tiempo manualmente por peticion
 
 ## Opciones del jugador en configuracion

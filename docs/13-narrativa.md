@@ -32,6 +32,7 @@ Cubre:
 - no graphic, no gore
 - no cinico, no nihilista
 - accesible para audiencia amplia mayor de 12 anos
+- **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 16, H-09): edad mínima. Este documento dice "mayor de 12 años"; `docs/15-legal.md` dice a la vez "mayores de 12" y "no dirigido a menores de 13". Ver ese documento.
 
 ### Inspiraciones
 - novela detectivesca clasica modernizada
@@ -170,6 +171,11 @@ Cada caso tiene:
 - la causa de muerte se enuncia neutra: hallada sin vida, fallecida en circunstancias sospechosas
 - ninguna descripcion grafica
 - el jugador no ve representacion grafica de la victima en el mapa
+
+> ACTUALIZACIÓN 04-11-2026: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 8, H-35): cómo se representa a la víctima.
+> - **Versión de este documento:** la víctima no se ve en el mapa (línea de arriba). Lo mismo dicen `docs/15-legal.md` y `docs/20-checklist-tiendas.md`, y el segundo la usa para responder el cuestionario de clasificación de edad.
+> - **Lo que hace hoy el juego** (comprobado en `app/lib/src/ui/board_view.dart` y `app/lib/src/ui/game_screen.dart`): el jugador ubica a la víctima en el tablero como a cualquier otro personaje, porque así lo exigen la regla de oro del juego y la especificación (`docs/16-spec-puzzle.md`, sección 2.1). Su ficha es un círculo de color con una † en lugar de la inicial, y su tarjeta en el panel lleva la cinta roja "LA VÍCTIMA". No se muestra cuerpo, sangre ni escena del crimen.
+> - Las dos descripciones no coinciden y no se resuelven aquí. La redacción final (por ejemplo, "la víctima es un personaje con ficha normal marcada con †; nunca se muestra cuerpo, sangre ni escena del crimen") la decide Alejandro, y debe quedar igual en los documentos 13, 15 y 20 y en el cuestionario de la tienda.
 
 ### Reglas para armas
 - las armas son objetos cotidianos del mundo

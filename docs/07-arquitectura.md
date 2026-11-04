@@ -1,5 +1,13 @@
 # Enigmatrix - Arquitectura
 
+> ACTUALIZACIÓN 04-11-2026: **este documento es la intención de junio de 2026, no lo que existe hoy.** El cuerpo se conserva sin reescribir. Lo que ya está decidido o comprobado en el código, y que manda sobre el texto de abajo:
+>
+> - **Almacenamiento real: `shared_preferences`** (ADR-0009, `docs/adr/0009-almacenamiento-local-shared-preferences-y-tipografias.md`), no Hive ni Isar.
+> - **Estado: Riverpod** (ADR-0002, `docs/adr/0002-estado-riverpod.md`), no "Riverpod o Bloc".
+> - **No hay servidor.** Firebase queda aplazado para la etapa 5 (ADR-0010, `docs/adr/0010-aplazamiento-de-firebase-a-la-etapa-5.md`).
+> - **La validación de soluciones en el servidor necesita un ADR propio antes de la etapa 5** (H-41). Hoy la solución viaja dentro de la app (ADR-0008).
+> - **El tablero hoy es una cuadrícula de widgets** de Flutter, un contenedor por casilla (`app/lib/src/ui/board_view.dart`), no un motor de juego.
+
 ## Objetivo de este documento
 Definir las decisiones tecnicas base para construir Enigmatrix V1.
 

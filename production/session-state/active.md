@@ -1,79 +1,62 @@
 # Estado de sesión — Enigmatrix
 
-> Archivo de checkpoint. Toda sesión de trabajo lo lee al empezar y lo actualiza al cerrar un hito.
+> Archivo de checkpoint. Toda sesión de trabajo lo lee al empezar y lo actualiza al cerrar un hito. Se mantiene corto a propósito: el historial completo está en [historial.md](historial.md).
 
-## Fase actual
+## Estado hoy (04-11-2026)
 
-**FASE 1 — EN CURSO**. App Flutter en `app/` corriendo como web local: `JUGAR.bat` abre http://localhost:8123.
+- **Etapa actual:** etapa 0, "Orden y protección", del plan por etapas 0 a 6 (aprobado; detalle en [docs/17-roadmap.md](../../docs/17-roadmap.md)). Sin tocar código.
+- **Dónde está el proyecto:** Fase 0 cerrada; Fase 1 hecha en gran parte (app Flutter con 20 casos, tutorial, shell con pantallas simuladas DEMO, Paper Craft). Último commit: `84835be` (12-07-2026). Hay cambios sin commit del 01-11-2026.
+- **Protección:** Alejandro creó el repositorio privado `https://github.com/Alejjorojjas/Enigmatrix` y autorizó los commits el 04-11-2026. Los commits llevan solo su autoría, sin coautoría de Claude. Siguen sin autorizar: sacar el proyecto de OneDrive, versionar `app/pubspec.lock` y cambiar la firma.
+- **Documentos:** puestos al día el 04-11-2026 y revisados por el arquitecto y por dos verificadores independientes. El índice con el estado de cada documento está en [docs/README.md](../../docs/README.md) y hay registros de decisión nuevos (ADR 0003 a 0012).
+- **Decididas el 04-11-2026:** reglas 5, 9, 10, 11 y 20; pregunta 21 (3 a 5 personas); prueba de concepto gráfica autorizada con ambos estilos y arte gratuito; Mac confirmado desde el 12-07-2026 (ver "Decisiones vigentes").
+- **Preguntas abiertas:** 6, 7, 8, 12, 13, 14, 15, 16, 17, 18, 19, 22 (solo el iPhone) y 23 (nueva). Detalle en la [sección 5 de la auditoría](../revisiones/2026-11-04-auditoria-proyecto.md#5-decisiones-que-necesito-de-ti) y abajo.
+- **Cómo se juega hoy:** `JUGAR.bat` abre http://localhost:8123 (web local). `COMPILAR-ANDROID.bat` genera el APK.
+- **Estado verificado en el código:** 54 tests en `tools/test` y 26 en `app/test`; tableros 6×6, 8×8, 9×9, 12×12 y 16×16 (solo los tres primeros tienen casos); `shared_preferences`; sin audio, vibración, traducciones ni lectores de pantalla.
+- **Próximos pasos:**
+  1. ~~Alejandro crea el repositorio privado en GitHub y Claude sube el historial.~~ Hecho el 04-11-2026.
+  2. Alejandro consigue sus propias referencias visuales: las 5 sugeridas no le gustaron.
+  3. Preparar la versión de prueba de la etapa 1 (cambios pequeños de código que hay que autorizar, con las reglas decididas) y la guía de la prueba de juego.
+  4. Arrancar la prueba de concepto gráfica (etapa 2), escalonada unos días después de la prueba de juego.
 
-**2026-07-12 — LOGO + SPLASH + TUTORIAL (commit 86f5925)** — primera ronda de feedback del usuario jugando el APK: (1) logo ✅ ui/logo.dart PaperLogo lupa de papel (dirección elegida vía AskUserQuestion); (2) splash ✅ ui/splash_screen.dart en ruta '/' (lista pasó a '/casos'); (3) tutorial primera vez ✅ ui/tutorial_dialog.dart, 5 páginas paginadas, Omitir, prefs 'tutorial:seen', botón ? en top bar de la lista. DECISIONES DEL USUARIO (AskUserQuestion): pantallas completas PRIMERO con datos locales simulados, Firebase después; monetización INCLUIDA ya simulada (tienda/premium fake); campaña: SOLO Mundo 1 (Mansión, 10 casos dificultad creciente) para calibrar; después los otros 4 mundos.
+### Preguntas abiertas (sin decidir; ninguna se resuelve en los documentos)
 
-**2026-07-12 — UX DE PARTIDA v2 (commit 0bde190)** — 2ª ronda de feedback jugando en teléfono: (1) RESOLVER movido ARRIBA junto al chip de errores (decisión del usuario "arriba al lado de errores"), compacto dorado en el _Header; quitado de _Controls. (2) _ClueStrip nuevo: barra de pistas FIJA bajo el tablero (64px, scroll horizontal, 235px por chip, tap=cycleClue destacar/tachar sincronizado con tarjetas) — sustituyó la idea del botón mantener-presionado porque ocuparía el dedo y no dejaría marcar el tablero. (3) Toda la tarjeta del sospechoso selecciona (GestureDetector opaque alrededor; burbuja de pista conserva su tap). (4) Leyenda (_InfoPanel habitaciones/muebles/reglas) fuera del scroll → botón menu_book en AppBar abre bottom sheet (80% alto). (5) Orden móvil: header+RESOLVER / tablero / pistas / papelera / PERSONAJES / controles compactos (deshacer·rehacer·limpiar·Mapa-Notas·Auto-X). Layout ancho >1150: panel lateral + columna central con controles abajo, sin panel derecho. 26 tests.
+Cada número es el de la [sección 5 de la auditoría](../revisiones/2026-11-04-auditoria-proyecto.md#5-decisiones-que-necesito-de-ti).
 
-**2026-07-12 — ICONO DE APP (commit 54dced2)**: el usuario reportó que el APK instala con icono default. Resuelto: '?' del logo pasado a vectorial, test/generate_icon_test.dart rasteriza PaperLogo a assets/icon/icon_full.png + icon_fg.png (1024), flutter_launcher_icons genera mipmaps Android (adaptive, fondo #E9DCBE) + iOS. Icono verificado visualmente: lupa dorada + ? + hilo carmesí sobre kraft. REFERENCIA UX del usuario (captura Duolingo): barra inferior SOLO ICONOS sin texto, gorditos, pestaña activa enmarcada con borde redondeado — aplicar así en el shell de navegación (versión papel: recortes + marco de chincheta).
+- **Después de las pruebas:** 12 (ayudas y puntuación), 13 (si Experto y Élite entran al lanzamiento).
+- **Cuando quiera:** 6 (vidas de premium), 7 (hora del reto diario), 8 (representación de la víctima), 14 (contenido de lanzamiento), 15 (inglés y formato de las pistas), 16 (edad mínima), 17 (identidad legal), 18 (qué se ve en el build de tiendas), 19 (uso del arma), 22 (solo si el iPhone entra al lanzamiento).
+- **PENDIENTE DE DECISIÓN (pregunta 23, nueva):** si se muestran los mundos bloqueados. Hoy la app muestra los 5 mundos, 4 con candado, y el doc 06 dice que solo se muestran los desbloqueados.
+- **Pendiente sin número:** referencias visuales para la prueba de concepto. El 04-11-2026 se le mostraron Lumino City, Paper Trail, Hidden Folks, The Case of the Golden Idol y Monument Valley, y **ninguna le gustó**. Él va a conseguir sus propias referencias. La dirección de arte de la prueba de concepto espera a esas referencias.
 
-**2026-07-12 — SHELL DE NAVEGACIÓN (commit f6f2d1d)**: ui/home_shell.dart — barra inferior solo-iconos con pestaña activa enmarcada (patrón Duolingo del usuario, versión papel), 5 tabs: Inicio (saludo por hora, vidas mock 4/5, tarjetas reto/mundo con progreso REAL/tienda), Mundos (Mansión activa + 4 bloqueados), Reto (racha mock, semana en circulitos, caso del día determinista: cases[díasDesde2026-01-01 % n]), Ranking (bots detectives + fila usuario, DEMO), Perfil (nickname editable persistido 'profile:nick', stats, menú → Tienda/Premium/Config como bottom sheets DEMO con precios doc 08; toggles config persistidos 'cfg:*'). Rutas: '/' splash → '/home' shell; '/casos' = camino Mundo 1 con flecha de vuelta. Mock centralizado en constantes al inicio de home_shell.dart (reemplazar por repos Firebase en Fase 2). 25 tests. PENDIENTE PRÓXIMO: generar Mundo 1 real (10 casos Mansión temáticos, dificultad creciente) para reemplazar el banco de 20; vidas funcionales locales (doc 08); reto diario con estado real local (intento único/día); racha real local.
+## Decisiones vigentes
 
-**PLAN DEL PRÓXIMO BLOQUE (todo local/simulado, doc 06 como guía)**: (a) generar Mundo 1 con tools (10 casos mansión, nombres temáticos, dificultad creciente) reemplazando el banco de 20; (b) Inicio (pantalla 12) con tarjetas: reto diario / continuar / mundo actual + navegación inferior Inicio·Mundos·Reto·Ranking·Perfil; (c) reto diario local (caso del día determinista por fecha desde pool, racha local + protectores, pantalla 32-35); (d) vidas locales (5 máx, -1 por error al Resolver, recarga 1/h con timestamps, doc 08); (e) perfil local editable (nickname/avatar de papel/bandera, stats); (f) ranking simulado (bots con nombres + score del usuario); (g) tienda/premium SIMULADAS (compras fake marcadas "DEMO"); (h) icono Android/iOS desde PaperLogo (pendiente rasterizar; sin ImageMagick — opción: screenshot del widget vía test golden o flutter_launcher_icons con PNG generado por test). Todo detrás de la MISMA estética paper craft (Enx). Los datos simulados se diseñan detrás de interfaces/repositorios para recablear a Firebase en Fase 2 sin tocar UI.
+Las decisiones técnicas importantes se registran como ADR en [docs/adr/](../../docs/adr/); los ADR retroactivos de decisiones ya tomadas empiezan en el número 0003. Todo lo anterior a esta lista está en el [historial](historial.md).
 
-**2026-07-12 — CUMPLIMIENTO DE TIENDAS (commit 28bbde9)**: keystore de subida generado (android/upload-keystore.jks + key.properties, GITIGNORADOS — el usuario debe respaldarlos fuera del PC) y cableado en build.gradle.kts (fallback a debug si no existe key.properties); .aab firmado compilado (41.2MB, PUBLICAR-PLAYSTORE.bat) y APK re-firmado con la clave de subida (verificado con apksigner: CN=Enigmatrix); INTERNET declarado en manifest release (bug latente de google_fonts); version 0.1.0+1; iOS: ITSAppUsesNonExemptEncryption=false + PrivacyInfo.xcprivacy (agregar al target en Xcode); docs/legal/politica-privacidad.md (faltan nombre+correo del responsable) y docs/20-checklist-tiendas.md (estado de cada requisito; ojo: Play exige 12 testers × 14 días a cuentas nuevas; icono default de Flutter pendiente de diseño). Usuario confirmó: tiene acceso a Mac; plan = jugar y corregir ahora, publicar al final.
+- 10-06-2026: Flutter y Riverpod como base de la app (ADR 0001 y 0002 en [docs/adr/](../../docs/adr/); el resto del stack ha cambiado, ver CLAUDE.md).
+- 10-06-2026: el proyecto avanza por fases; monetización, 5 mundos y herramientas internas se recortaron a fases posteriores ([docs/17-roadmap.md](../../docs/17-roadmap.md)).
+- 10-06-2026: la grilla es de N×N casillas y hay tantos personajes como casillas por lado ([spec 16](../../docs/16-spec-puzzle.md)).
+- 11-06-2026: rediseño "Murdoku" del motor: vocabulario de muebles, una pista por tarjeta, sin pistas mecánicas; regla del mínimo 2 (ninguna pista deja sola una casilla posible); mapas únicos generados por caso; tamaños 6×6, 8×8, 9×9, 12×12 y 16×16; Auto-X opcional (spec 16).
+- 11-07-2026: se abandona Claude Design y la interfaz se hace directo en Flutter.
+- 12-07-2026: estilo Paper Craft elegido entre los mockups de `docs/mockups/estilos/`. Desde el 01-11-2026 la dirección gráfica está en revisión (etapa 2, [informe gráfico](../revisiones/2026-11-04-investigacion-grafica.md)).
+- 12-07-2026: pantallas completas primero con datos locales simulados (DEMO), Firebase después. La monetización entra ya simulada. La campaña es solo el Mundo 1 (La Mansión, 10 casos) para calibrar. Es una excepción explícita a "no adelantar fases" (ver [docs/17-roadmap.md](../../docs/17-roadmap.md)).
+- 12-07-2026: riesgo aceptado de la Fase 1: la solución viaja dentro del JSON del caso y se valida en el teléfono ([doc 18](../../docs/18-revision-seguridad-fase1.md)). Caduca en la etapa 5.
+- 12-07-2026: Android primero, iPhone después; se juega y corrige ahora y se publica al final ([doc 20](../../docs/20-checklist-tiendas.md)). **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 22, reducida el 04-11-2026): solo si el iPhone entra al lanzamiento; el acceso a un Mac ya está confirmado (ver abajo).
+- 12-07-2026: ajustes de la partida pedidos por Alejandro jugando en el teléfono: Resolver arriba junto al contador de errores, barra de pistas fija bajo el tablero y pistas como tarjetas de personaje compactas.
+- 01-11-2026: la sesión principal es el arquitecto (Opus); todo lo delegado corre en Sonnet, o Haiku para lo mecánico. Claude Code se abre siempre en la carpeta del proyecto, no en la carpeta padre.
+- 04-11-2026: plan por etapas 0 a 6 aprobado por Alejandro: protección y documentos, prueba de juego, prueba de concepto gráfica, motor y contenido, producción visual, servidor y tiendas. El arte grande espera a las dos pruebas.
+- 04-11-2026: las excepciones de la Fase 1 quedan escritas en CLAUDE.md (solución local, datos simulados DEMO, sin servidor) y caducan en la etapa 5.
+- 04-11-2026: Alejandro aprobó el **plan por etapas 0 a 6** (ya registrado arriba) y autorizó **poner los documentos al día**.
+- 04-11-2026: **protección autorizada solo en parte.** Autorizó el repositorio privado en GitHub, que aún no existe (lo crea él en github.com). **No** autorizó todavía el commit, sacar el proyecto de OneDrive, versionar `app/pubspec.lock` ni cambiar la configuración de firma.
+- 04-11-2026: **prueba de concepto gráfica (etapa 2) autorizada** con estas condiciones: meta visual "pocas pantallas muy pulidas", al nivel de Paper Trail o Hidden Folks, sin intentar igualar a Royal Match; la prueba muestra **ambas** opciones (papel recortado tipo maqueta e ilustración 2D sin papel) para compararlas; arte provisional gratuito (CC0, por código o con texturas de papel fotografiadas por Alejandro), el arte de pago se decide después. Las referencias visuales están **pendientes**: Alejandro pidió ver ejemplos (ADR-0005).
+- 04-11-2026: teléfono de prueba: Alejandro tiene un Android de gama media.
+- 04-11-2026: **pregunta 21 resuelta:** Alejandro puede conseguir de 3 a 5 personas para la prueba de juego.
+- 04-11-2026: **Mac confirmado.** El 12-07-2026 Alejandro confirmó que tiene acceso a uno. La pregunta 22 queda reducida a si el iPhone entra al lanzamiento (sigue pendiente).
+- 04-11-2026: **reglas decididas** (aceptó las recomendaciones de la auditoría; ver [ADR-0012](../../docs/adr/0012-reglas-decididas-antes-de-la-prueba-de-juego.md)):
+  - **Pregunta 5:** con 0 vidas no se puede pulsar Resolver ni empezar casos nuevos. La partida queda guardada para seguir cuando se recupere una vida o se vea un anuncio.
+  - **Pregunta 9:** al fallar en Resolver se muestra solo cuántas casillas no cuadran, no cuáles. El resaltado exacto y el parpadeo de la pista en conflicto quedan solo para el tutorial.
+  - **Pregunta 10:** la partida se guarda siempre. Al salir, el reloj se pausa y el tablero se oculta durante la pausa. Vale mientras no haya ranking real y se revisa antes de la etapa 5. Reemplaza lo de "el tiempo sigue corriendo si la app se minimiza" del doc 03 (SUPERADO 04-11-2026).
+  - **Pregunta 11:** el tutorial es un caso propio pequeño (4×4 o 5×5) que no cuenta como Caso 1; enseña también la X, las notas, la papelera y un Resolver fallido. Es obligatorio la primera vez, con un botón Saltar visible.
+  - **Pregunta 20:** al tocar una casilla sin sospechoso elegido aparece el aviso "Elige primero a un sospechoso". Hay un modo alternativo de tocar dos veces (elegir y tocar el destino) además de mantener oprimido o arrastrar. Se diseña en la prueba de concepto.
 
-**2026-07-12 — PAPER CRAFT + ANDROID/iOS (commit 561c11e)**: el usuario eligió el estilo 5 (Paper Craft). Aplicado a TODA la app: Brand en main.dart pasó a tema CLARO kraft/tinta (cream ahora significa texto tinta #3D2F1C), EnxPalette reducida a preset único 'Papel' (selector eliminado, infra conservada), tablero con marco de corcho + hoja de papel base + pisos pastel (areaPalette papel) + paredes tinta + X marcador carmesí #8A2F1B + candidatos a lápiz, muebles con sombra dura de recorte, Enx.hand() = Patrick Hand. PLATAFORMAS: android/ e ios/ generados (flutter create --org com.enigmatrix); applicationId com.enigmatrix.app, label Enigmatrix, iOS CFBundleDisplayName listo (compilar iOS requiere Mac). APK RELEASE COMPILADO: `app/build/app/outputs/flutter-apk/app-release.apk` (49.5MB, firma debug — keystore propio pendiente antes de publicar). SEGURIDAD (doc 18): allowBackup=false, usesCleartextTraffic=false, sin permisos extra, sin logs de solución; riesgo aceptado Fase 1 = solución en JSON local. QA: analyzer limpio, 24 tests. PREGUNTAS ABIERTAS AL USUARIO: crear proyecto Firebase (Fase 2), cuenta Google Play (US$25), acceso a Mac para iOS.
+## Historial
 
-**2026-07-12 — 6 MOCKUPS DE ESTILO VISUAL** (commit 02d1e26): al usuario no le convenció el estilo cartoon plano de los muebles ilustrados — pidió "gráficos complejos, modernos, de última tecnología, mínimo 6 mockups". Investigación: tendencias 2025-26 = tactile minimalism, glossy premium (Royal Match), painterly (June's Journey líder del género detective); Flutter con Impeller + shaders GLSL 120fps + Flame/Rive viabilizan efectos de lujo. Creados en `docs/mockups/estilos/`: 01-luxe-royal (glossy Royal Match), 02-painterly-deco (June's Journey años 20), 03-diorama-iso (Monument Valley isométrico + glassmorphism), 04-neon-noir (holográfico forense, neón), 05-paper-craft (Lumino City papel/cartón), 06-toon-premium (Toon Blast outline grueso) + index.html galería comparativa. Todos muestran la MISMA pantalla de partida (mismo caso/tablero/marcas). PENDIENTE: usuario elige estilo (o mezcla) → ese estilo se implementa en el tablero real de Flutter.
-
-**2026-07-12 — MUEBLES ILUSTRADOS** (commit 99507b8, feedback: "la cama es solo un rectángulo, quiero ver los objetos de verdad"): nuevo `ui/furniture_painters.dart` — FurniturePainter dibuja cada ObjectType como ilustración vectorial top-down cartoon (cama con marco/colchón/almohada/cobija con doblez, sofá/sillón con respaldo/brazos/cojines, silla con barrotes, mesa con veta, barra con encimera de piedra, alfombra con cenefa/rombo/flecos, planta con matera y hojas radiales, arbusto, TV con reflejo, armario con puertas y manijas, caja con solapas y cinta, lavadora con ojo de buey, piano con teclado). Piezas verticales rotan el lienzo 90°; sombra difusa propia; pisables a opacidad .88. board_view._furniture ahora usa CustomPaint (el gradiente+icono viejo se eliminó; objectIcon/objectColor siguen vivos para la leyenda de game_screen). 24 tests. PENDIENTE del usuario: elegir ambiente de color definitivo + feedback de los muebles.
-
-**2026-07-12 — CULEBRITA + SELECTOR DE AMBIENTES** (commit 2d016f7): al usuario le gustó el pase Enx; pidió (1) camino en culebrita — ahora las fichas siguen una onda seno (período 6, amplitud hasta 120px según ancho) con filas de altura fija (_rowHeight 124) y el hilo carmesí punteado SIGUE la curva (cúbicas entre centros de ficha + punteado por PathMetrics en _ThreadPainter); (2) más opciones de color — selector en vivo (icono paleta en top bar) con 5 ambientes persistidos en prefs (`enx:palette`): Medianoche (violeta, default), Noir (azul-negro), Estudio del detective (sepia), Bosque (verde botella), Vino tinto. EnxPalette + paletteProvider (Notifier) en enx_style.dart; lo fijo entre ambientes: latón dorado, hilo carmesí, papel crema, colores de dificultad. PENDIENTE: el usuario elige ambiente definitivo → luego llevar el estilo Enx al tablero de partida (game_screen aún dorado viejo).
-
-**2026-07-11 — PASE ENX v2 (identidad propia)**: feedback del usuario al pase Duo: "demasiado parecido a Duolingo — mantener lo redondeado pero hacerlo único". Reemplazo completo: `ui/duo_widgets.dart` eliminado → `ui/enx_style.dart` (clase Enx: fondo violeta medianoche #1B1426, latón dorado #F0B429 como marca con tinta #4A3200, hilo carmesí #D64550, papel crema #F5EFE6; tipografías Baloo 2 display + Quicksand body — ya no Nunito). La lista es un TABLERO DE EVIDENCIAS: fichas cuadradas redondeadas inclinadas (±0.045 rad) unidas por hilo carmesí punteado (_ThreadPainter), carpetas "EXPEDIENTE NºN" con pestaña por dificultad, ficha actual con borde dorado + etiqueta de papel "SIGUIENTE CASO" rebotando, pendientes como carpeta archivada. Victoria = sello "CASO CERRADO" carmesí estampado (doble borde, rotado, elasticOut desde 2.2) sobre informe en papel crema con EnxReportStat. Paleta de dificultad retonada a vintage (salvia/empolvado/calabaza/ladrillo/violeta) en main.dart. Botón del sheet: "Investigar"/"Reabrir caso". Tests renombrados a enx_screens_smoke_test.dart, 24 pasando. Commit 09b3e4b.
-
-**2026-07-11 — PASE DUO (dirección visual Duolingo, SUSTITUIDO por el pase Enx)**: el usuario decidió abandonar Claude Design y hacer la UI directo en Flutter con el lenguaje visual de Duolingo (referencias: racha, camino de nodos, perfil) adaptado a la identidad detective. Nuevo `ui/duo_widgets.dart` (paleta Duo fondo #131F24, botones 3D presionables con borde inferior duro, Nunito vía google_fonts, DuoStatCard, DuoChip). `case_list_screen.dart` REESCRITA como camino de nodos en zigzag agrupado por sección de dificultad (banner de color, nodo actual con anillo + burbuja EMPEZAR animada, resueltos con check, ficha de caso en bottom-sheet con botón JUGAR; todos los nodos siguen jugables por ser banco de pruebas). Resumen de victoria movido de AlertDialog a `ui/victory_screen.dart` a pantalla completa (insignia dorada con rebote, revelación del asesino/arma, DuoStatCards de tiempo y errores, feedback de playtest conservado, botón CONTINUAR verde). Bug real corregido: el AnimationController lazy del nodo explotaba en dispose de nodos no-actuales (ahora se crea solo si isCurrent, con didUpdateWidget). 24 tests (20 previos + 4 smoke de las pantallas nuevas en `test/duo_screens_smoke_test.dart`; pumps fijos porque la burbuja anima en bucle). El tablero de partida AÚN tiene el estilo dorado viejo — si al usuario le gusta el pase Duo, extenderlo a game_screen/board_view. Nota entorno: el Browser pane de Claude quedó con la pestaña hidden (rAF congelado) y no renderiza Flutter — verificar visualmente vía JUGAR.bat.
-
-**2026-06-11 — REDISEÑO MURDOKU del motor** (feedback del usuario jugando murdoku.com + video del cuadernillo): vocabulario de muebles, una pista por tarjeta, sin pistas mecánicas (detalle en spec 16 §3 y §7).
-
-**2026-06-11 — SEGUNDA RONDA de playtest**: (1) MAPAS ÚNICOS POR CASO — generador procedural de mapas (`tools/lib/src/map_generator.dart`: habitaciones por crecimiento de regiones, muebles, armas en áreas distintas; el mapa viaja embebido en el JSON del caso vía `CaseFactory`); doc 05 actualizado (autorado a mano = solo piel artística). (2) TAMAÑOS MURDOKU: 6×6/8×8/9×9/12×12/16×16 (referencias por imágenes del usuario). (3) AUTO-X opcional (default on): confirmar tacha fila/columna, se retira al borrar el confirmado (board_state con autoXFrom). (4) Interacción: tap = candidato (letra) · mantener oprimido o arrastrar = confirmado (círculo avatar) · X grandes. 57 tests motor + 15 app. 20 casos regenerados con mapas únicos.
-
-**2026-06-11 — PASE DE DISEÑO VISUAL** (commit e91cfe2, feedback "se ve muy plano"): fondo con gradiente radial; tablero enmarcado (borde dorado, sombra, resplandor) con paredes gruesas estilo plano, gradientes por habitación y NOMBRES de habitación sobre el mapa; muebles con color propio; confirmados con gradiente+anillo+glow; tarjetas de sospechosos estilo polaroid (claras, nombre manuscrito Segoe Script, cinta LA VÍCTIMA, pista en burbuja); chips pill en header; RESOLVER con gradiente dorado; paneles en tarjetas; lista de casos con cabecera serif y colores por dificultad (difficultyColor en main.dart). El arte FINAL sigue pendiente de los mockups del usuario.
-
-**2026-06-11 — REGLA DEL MÍNIMO 2** (tercer feedback del usuario): ninguna pista de tarjeta deja una sola casilla posible por sí sola (mín. 2, también compuestas) — el descarte nace de cruzar pistas, no de pistas que regalan posición. Filtro en `_candidatesFor` del generador + test `REGLA MURDOKU`. Efecto medible: pasos de deducción subieron de 3-7 a 5-14. Spec 16 §3.2 actualizada. 58 tests.
-
-Pendiente: que el usuario juegue y dé feedback; tutorial; UI definitiva con mockups ("quiero que se vea con más imágenes" — necesita los sprites/arte); build Android; experto 12×12 y elite 16×16 (perfiles ya existen, evaluar UI móvil).
-
-FASE 0 — COMPLETADA (2026-06-10, motor rediseñado 06-11).
-
-## El motor (tools/) — estado
-
-- `lib/src/model.dart` — grilla, áreas, objetos, armas, esquinas, adyacencia
-- `lib/src/clue.dart` — 16 tipos de pista con semántica formal + JSON + texto ES
-- `lib/src/validator.dart` — validación de asignación completa (ESTA lógica se porta a Cloud Functions en Fase 2)
-- `lib/src/deduction.dart` — motor de deducción: 8 técnicas en 4 niveles (T1 pista directa → T4 conteo de áreas/asesino/arma)
-- `lib/src/uniqueness.dart` — verificador de unicidad por backtracking
-- `lib/src/generator.dart` — generador con minimización a conjunto irreducible
-- `lib/src/maps/test_maps.dart` — 3 mapas de prueba (4×4, 5×5, 6×6); NO son contenido final
-- `bin/enigmatrix.dart` — CLI: generate / show / validate
-- 38 tests pasando (`dart test` en tools/)
-
-Comandos útiles:
-```
-cd tools
-dart test
-dart run bin/enigmatrix.dart generate --difficulty casual --count 5 --seed 1 --out out
-dart run bin/enigmatrix.dart show out/<caso>.json --solution
-dart run bin/enigmatrix.dart validate out/<caso>.json
-```
-
-## Decisiones y hallazgos recientes
-
-- 2026-06-10 (sesión 3 — Fase 0): motor completo. Hallazgos clave (en spec 16 §3.2):
-  - Pistas solo de área NUNCA dan solución única (simetría de intercambio víctima/asesino) → toda dificultad lleva pistas de celda.
-  - Rangos de pistas reales: 4×4≈4-6, 5×5≈8-9, 6×6≈10-12 (doc 05 quedó corto, se recalibra con playtest).
-  - Semántica cardinal corregida en spec 1.4: comparación estricta de coordenada (dos personas nunca comparten fila/columna).
-- 2026-06-10 (sesión 2): grilla N×N = personajes; ayudas no penalizan en Tutorial/Principiante; la rotación rota también el texto de las pistas.
-- 2026-06-10 (sesión 1): estructura, docs migrados, 6 agentes, ADRs 0001-0002.
-
-## Preguntas abiertas para el usuario
-
-- Jugar 2-3 casos en papel y dar feedback (¿se sienten justos? ¿la dificultad escala?).
-- Tutorial: ¿mecánica completa en 4×4 guiado? (decidir al diseñar Fase 1)
-- Mockups de Claude Design → `docs/mockups/` cuando estén.
+Todo lo anterior (entradas de sesión, decisiones y hallazgos desde el 10-06-2026, estado del motor y comandos útiles) está en [historial.md](historial.md).

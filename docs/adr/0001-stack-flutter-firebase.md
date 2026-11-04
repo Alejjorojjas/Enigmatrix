@@ -1,5 +1,7 @@
 # ADR-0001: Stack Flutter + Firebase
 
+> **Parcialmente superado**: Hive/Isar → shared_preferences (ver ADR-0009). Además, Firebase se aplazó a la etapa 5 (ver ADR-0010); la elección de Firebase sigue vigente.
+
 - **Estado**: Aceptado
 - **Fecha**: 2026-06-10 (formaliza la decisión del doc 07, 2026-05-01)
 - **Decisores**: usuario / análisis del doc 07-arquitectura.md
