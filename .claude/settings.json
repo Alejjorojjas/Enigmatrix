@@ -1,0 +1,15 @@
+{
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "permissions": {
+    "deny": [
+      "Agent(apx-batch)",
+      "Agent(apx-online)",
+      "Agent(aso)",
+      "Agent(lrba)",
+      "Agent(documentador)",
+      "Agent(arquitecto)"
+    ]
+  }
+}
