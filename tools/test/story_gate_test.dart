@@ -274,6 +274,12 @@ void main() {
 
   group('runContentGate con historias', () {
     late Directory tmp;
+
+    // Estas pruebas hablan de historias, no de muebles: los fixtures de la
+    // cabaña no cumplen las reglas de mapa de La Mansión, así que se eximen.
+    ContentGateReport gate(Directory d) => runContentGate(
+        casesDir: d, mapRulesExemptMundos: {kBancoDePruebas, kMundoMansion});
+
     setUp(() => tmp = Directory.systemTemp.createTempSync('enx_gate2_'));
     tearDown(() => tmp.deleteSync(recursive: true));
 
@@ -301,20 +307,20 @@ void main() {
 
     test('un mundo real con historia propia pasa', () {
       write('a', conHistoria(historia(), id: 'a'));
-      final r = runContentGate(casesDir: tmp);
+      final r = gate(tmp);
       expect(r.allProblems, isEmpty);
     });
 
     test('un mundo real sin historia falla', () {
       write('a', cabanaCase(cabanaPin, caseId: 'a'));
-      final r = runContentGate(casesDir: tmp);
+      final r = gate(tmp);
       expect(r.passed, isFalse);
       expect(r.allProblems.join(' '), contains('no tiene historia'));
     });
 
     test('la historia de otro mundo falla', () {
       write('a', conHistoria(historia(world: 'hotel'), id: 'a'));
-      final r = runContentGate(casesDir: tmp);
+      final r = gate(tmp);
       expect(r.passed, isFalse);
       expect(r.allProblems.join(' '), contains('su historia dice "hotel"'));
     });
@@ -324,7 +330,7 @@ void main() {
           'a',
           conHistoria(historia(premise: 'Hay sangre en la alfombra.'),
               id: 'a'));
-      final r = runContentGate(casesDir: tmp);
+      final r = gate(tmp);
       expect(r.passed, isFalse);
       expect(r.allProblems.join(' '), contains('"sangre"'));
     });
@@ -335,10 +341,10 @@ void main() {
           mundo: kBancoDePruebas, orden: 2);
       File('${tmp.path}/index.json')
           .writeAsStringSync(jsonEncode(['a.json', 'b.json']));
-      final r = runContentGate(casesDir: tmp);
+      final r = gate(tmp);
       expect(r.allProblems.join(' '), contains('no es del banco de pruebas'));
       File('${tmp.path}/index.json').writeAsStringSync(jsonEncode(['b.json']));
-      expect(runContentGate(casesDir: tmp).allProblems, isEmpty);
+      expect(gate(tmp).allProblems, isEmpty);
     });
   });
 }

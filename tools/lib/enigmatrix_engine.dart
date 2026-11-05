@@ -11,6 +11,7 @@ export 'src/deduction.dart';
 export 'src/difficulty_ranges.dart';
 export 'src/generator.dart';
 export 'src/map_generator.dart';
+export 'src/map_rules.dart';
 export 'src/measure.dart';
 export 'src/maps/test_maps.dart';
 export 'src/model.dart';

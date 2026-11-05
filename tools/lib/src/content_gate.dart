@@ -6,6 +6,7 @@
 library;
 
 import 'deduction.dart';
+import 'map_rules.dart';
 import 'puzzle_case.dart';
 import 'uniqueness.dart';
 import 'validator.dart';
@@ -33,11 +34,34 @@ class CaseCheck {
   });
 
   bool get passed => problems.isEmpty;
+
+  /// Copia con problemas adicionales (por ejemplo, los de coherencia del
+  /// mapa que se evalúan una vez conocido el mundo del caso).
+  CaseCheck withProblems(List<String> extra) => extra.isEmpty
+      ? this
+      : CaseCheck(
+          caseId: caseId,
+          validatorOk: validatorOk,
+          unique: unique,
+          pureDeduction: pureDeduction,
+          steps: steps,
+          tier: tier,
+          problems: [...problems, ...extra],
+        );
 }
 
+/// Problemas de coherencia del mapa de un caso (familias de objetos, únicos
+/// por habitación y habitación permitida), con el prefijo "mapa:".
+List<String> mapCoherenceProblems(PuzzleCase pc, MapRules rules) =>
+    [for (final p in rules.problemsOf(pc.map)) 'mapa: $p'];
+
+/// [mapRules]: si se da, el mapa también debe cumplir las reglas de
+/// coherencia (05-11-2026). Null = no se comprueban (banco de pruebas,
+/// tutorial y fixtures a mano).
 CaseCheck checkCaseContent(PuzzleCase pc,
-    {SolverLimits limits = SolverLimits.standard}) {
+    {SolverLimits limits = SolverLimits.standard, MapRules? mapRules}) {
   final problems = <String>[];
+  if (mapRules != null) problems.addAll(mapCoherenceProblems(pc, mapRules));
 
   final v = Validator.validate(pc, pc.solution.positions);
   if (!v.valid) problems.add('el Validator rechaza la solución: ${v.errors}');

@@ -90,24 +90,11 @@ void main() {
 
     test('coherencia temática: cada mueble pertenece a su habitación '
         '(jamás una cama en un baño)', () {
-      // Espejo del mapeo interno _furnitureByRoom.
-      const allowed = {
-        'salon': {'sofa', 'sillon', 'alfombra', 'tv', 'piano', 'mesa',
-          'planta'},
-        'cocina': {'mesa', 'silla', 'barra', 'planta'},
-        'dormitorio': {'cama', 'armario', 'alfombra', 'silla', 'tv', 'planta'},
-        'biblioteca': {'silla', 'sillon', 'mesa', 'alfombra', 'planta',
-          'armario'},
-        'comedor': {'mesa', 'silla', 'alfombra', 'planta'},
-        'estudio': {'silla', 'sillon', 'mesa', 'armario', 'planta', 'alfombra'},
-        'bano': {'planta', 'alfombra'},
-        'pasillo': {'planta', 'alfombra', 'armario', 'silla'},
-        'vestibulo': {'planta', 'alfombra', 'armario', 'silla', 'sillon'},
-        'jardin': {'planta', 'arbusto', 'silla', 'sofa'},
-        'porche': {'silla', 'sillon', 'planta', 'arbusto', 'sofa'},
-        'atico': {'caja', 'armario', 'alfombra', 'silla'},
-        'bodega': {'caja', 'armario', 'lavadora'},
-        'terraza': {'silla', 'sofa', 'planta', 'arbusto', 'mesa'},
+      // La tabla pactada completa vive en map_rules_test.dart; aquí se usa
+      // la tabla canónica del motor (kRoomFurniture).
+      final allowed = {
+        for (final e in kRoomFurniture.entries)
+          e.key: {for (final t in e.value) t.name}
       };
       for (final s in [6, 8, 9]) {
         for (var seed = 1; seed <= 5; seed++) {

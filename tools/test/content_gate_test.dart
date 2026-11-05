@@ -10,6 +10,7 @@ import 'package:enigmatrix_engine/enigmatrix_tools.dart';
 import 'package:test/test.dart';
 
 import 'support/cabana_cases.dart';
+import 'support/regeneracion_pendiente.dart';
 
 final casesDir = Directory('../app/assets/cases');
 final tutorialDir = Directory('../app/assets/tutorial');
@@ -47,11 +48,34 @@ void main() {
 
     test('la puerta completa (casos, catálogo e índice) pasa sin problemas',
         () {
-      final report =
-          runContentGate(casesDir: casesDir, tutorialDir: tutorialDir);
+      final report = runContentGate(
+          casesDir: casesDir,
+          tutorialDir: tutorialDir,
+          mapRulesExemptMundos: mundosExentosDeReglasDeMapa);
       expect(report.allProblems, isEmpty);
       expect(report.passed, isTrue);
       expect(report.checks.length, 61);
+    });
+
+    test(
+        'el interruptor de regeneración pendiente es coherente con los '
+        'assets (ver support/regeneracion_pendiente.dart)', () {
+      // Con la exención por defecto (solo el banco de pruebas y el
+      // tutorial), ¿los casos de la Mansión incumplen las reglas de mapa?
+      final estricta =
+          runContentGate(casesDir: casesDir, tutorialDir: tutorialDir);
+      final deMapa = [
+        for (final p in estricta.allProblems)
+          if (p.contains('mapa:')) p
+      ];
+      if (kMundo1PendienteDeRegenerar) {
+        expect(deMapa, isNotEmpty,
+            reason: 'los casos ya cumplen las reglas: pon '
+                'kMundo1PendienteDeRegenerar = false y reactiva las pruebas '
+                'de reproducibilidad');
+      } else {
+        expect(deMapa, isEmpty);
+      }
     });
 
     test('el catálogo lista exactamente los archivos que existen', () {

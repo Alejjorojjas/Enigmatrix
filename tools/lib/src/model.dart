@@ -15,21 +15,40 @@ enum WeaponCategory { cortante, contundente, veneno, asfixia }
 ///
 /// [group] agrupa tipos equivalentes para las pistas
 /// (planta y arbusto se leen ambos como "una planta").
+///
+/// Reglas de coherencia visual (05-11-2026, decisión de Alejandro tras la
+/// prueba de juego n.º 1):
+/// - [family]: tipos que se pueden confundir a la vista o al leer la pista
+///   ("silla" frente a "sillón" y "sofá"). Un mapa usa COMO MUCHO UN tipo por
+///   familia.
+/// - [uniquePerRoom]: objetos únicos por naturaleza (una cama, una TV...).
+///   Una habitación no tiene dos.
 enum ObjectType {
-  silla('silla', female: true, standable: true, seated: true),
-  sillon('sillón', female: false, standable: true, seated: true),
-  sofa('sofá', female: false, standable: true, seated: true),
-  cama('cama', female: true, standable: true),
-  alfombra('alfombra', female: true, standable: true),
-  mesa('mesa', female: true),
-  tv('TV', female: true),
-  planta('planta', female: true),
-  arbusto('arbusto', female: false, groupOverride: 'planta'),
-  armario('armario', female: false),
-  caja('caja', female: true),
-  lavadora('lavadora', female: true),
-  piano('piano', female: false),
-  barra('barra', female: true);
+  silla('silla',
+      female: true, standable: true, seated: true, family: kFamilySeats),
+  sillon('sillón',
+      female: false, standable: true, seated: true, family: kFamilySeats),
+  sofa('sofá',
+      female: false, standable: true, seated: true, family: kFamilySeats),
+  cama('cama', female: true, standable: true, uniquePerRoom: true),
+  alfombra('alfombra', female: true, standable: true, uniquePerRoom: true),
+  mesa('mesa', female: true, family: kFamilySurfaces),
+  tv('TV', female: true, uniquePerRoom: true),
+  planta('planta', female: true, family: kFamilyPlants),
+  arbusto('arbusto',
+      female: false, groupOverride: 'planta', family: kFamilyPlants),
+  armario('armario', female: false, family: kFamilyStorage),
+  caja('caja', female: true, family: kFamilyStorage),
+  lavadora('lavadora',
+      female: true, uniquePerRoom: true, family: kFamilyAppliances),
+  piano('piano', female: false, uniquePerRoom: true),
+  barra('barra', female: true, uniquePerRoom: true, family: kFamilySurfaces),
+  // Objetos nuevos (05-11-2026): todos bloquean la casilla y ocupan 1 casilla.
+  perchero('perchero', female: false, uniquePerRoom: true),
+  banera('bañera', female: true, uniquePerRoom: true),
+  nevera('nevera',
+      female: true, uniquePerRoom: true, family: kFamilyAppliances),
+  chimenea('chimenea', female: true, uniquePerRoom: true);
 
   final String nameEs;
   final bool female;
@@ -41,12 +60,21 @@ enum ObjectType {
   final bool seated;
   final String? groupOverride;
 
+  /// Familia de objetos parecidos (null = no tiene parecidos). Un mapa usa
+  /// como mucho un tipo de cada familia.
+  final String? family;
+
+  /// true: una habitación no puede tener dos de este tipo.
+  final bool uniquePerRoom;
+
   const ObjectType(
     this.nameEs, {
     required this.female,
     this.standable = false,
     this.seated = false,
     this.groupOverride,
+    this.family,
+    this.uniquePerRoom = false,
   });
 
   /// Grupo de pista: planta y arbusto comparten "planta".
@@ -55,6 +83,18 @@ enum ObjectType {
   String get indefEs => '${female ? 'una' : 'un'} $nameEs';
   String get defEs => '${female ? 'la' : 'el'} $nameEs';
 }
+
+/// Familias de objetos que se confunden (ver [ObjectType.family]).
+/// - asientos: silla, sillón, sofá ("junto a una silla": ¿cuenta el sillón?)
+/// - superficies: mesa, barra (las dos son un tablero largo a media altura)
+/// - plantas: planta, arbusto (la pista dice "planta" para ambos)
+/// - almacenaje: armario, caja (cuerpos cúbicos que se leen igual en 1 casilla)
+/// - electrodomésticos: nevera, lavadora (cuerpos blancos con puerta)
+const kFamilySeats = 'asientos';
+const kFamilySurfaces = 'superficies';
+const kFamilyPlants = 'plantas';
+const kFamilyStorage = 'almacenaje';
+const kFamilyAppliances = 'electrodomesticos';
 
 class Area {
   final String id;
@@ -179,8 +219,10 @@ class GameMap {
 
   bool isOccupiable(int cell) => !(_objectByCell[cell]?.blocks ?? false);
 
-  List<int> get occupiableCells =>
-      [for (var i = 0; i < size * size; i++) if (isOccupiable(i)) i];
+  List<int> get occupiableCells => [
+        for (var i = 0; i < size * size; i++)
+          if (isOccupiable(i)) i
+      ];
 
   bool sameArea(int a, int b) => _areaIdByCell[a] == _areaIdByCell[b];
 
@@ -201,8 +243,10 @@ class GameMap {
 
   // ---- Consultas de muebles (vocabulario de pistas Murdoku) ----------------
 
-  List<MapObject> objectsOfGroup(String group) =>
-      [for (final o in objects) if (o.type.group == group) o];
+  List<MapObject> objectsOfGroup(String group) => [
+        for (final o in objects)
+          if (o.type.group == group) o
+      ];
 
   /// Cuántos muebles del grupo hay en el mapa (decide "la silla" vs
   /// "una silla" en el texto de la pista).
@@ -244,8 +288,10 @@ class GameMap {
   /// Grupos de mueble presentes en el mapa.
   Set<String> get objectGroups => {for (final o in objects) o.type.group};
 
-  List<WeaponDef> weaponsInArea(String areaId) =>
-      [for (final w in weapons) if (w.areaId == areaId) w];
+  List<WeaponDef> weaponsInArea(String areaId) => [
+        for (final w in weapons)
+          if (w.areaId == areaId) w
+      ];
 
   /// Serialización: el mapa viaja embebido en cada caso (cada caso tiene
   /// su propio mapa generado — decisión 2026-06-11).

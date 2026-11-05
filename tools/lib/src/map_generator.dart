@@ -5,6 +5,7 @@ library;
 
 import 'dart:math';
 
+import 'map_rules.dart';
 import 'model.dart';
 import 'world.dart';
 
@@ -51,18 +52,6 @@ const _weaponPool = [
   ('cuchillo', 'el cuchillo de cocina', WeaponCategory.cortante),
 ];
 
-const _blockingTypes = [
-  ObjectType.mesa,
-  ObjectType.tv,
-  ObjectType.planta,
-  ObjectType.arbusto,
-  ObjectType.armario,
-  ObjectType.caja,
-  ObjectType.lavadora,
-  ObjectType.piano,
-  ObjectType.barra,
-];
-
 /// Tipos que SIEMPRE ocupan 2 celdas adyacentes (decisión 2026-06-12).
 /// Si no hay un par libre, ese mueble no se coloca.
 const _twoCellTypes = {
@@ -71,105 +60,6 @@ const _twoCellTypes = {
   ObjectType.mesa,
   ObjectType.alfombra,
   ObjectType.barra,
-};
-
-/// Coherencia temática (2026-06-12): qué muebles tienen sentido en cada
-/// tipo de habitación. Una cama nunca aparece en un baño. Las claves son
-/// los ids de habitación de [_roomNamePool].
-const _furnitureByRoom = <String, List<ObjectType>>{
-  'salon': [
-    ObjectType.sofa,
-    ObjectType.sillon,
-    ObjectType.alfombra,
-    ObjectType.tv,
-    ObjectType.piano,
-    ObjectType.mesa,
-    ObjectType.planta,
-  ],
-  'cocina': [
-    ObjectType.mesa,
-    ObjectType.silla,
-    ObjectType.barra,
-    ObjectType.planta,
-  ],
-  'dormitorio': [
-    ObjectType.cama,
-    ObjectType.armario,
-    ObjectType.alfombra,
-    ObjectType.silla,
-    ObjectType.tv,
-    ObjectType.planta,
-  ],
-  'biblioteca': [
-    ObjectType.silla,
-    ObjectType.sillon,
-    ObjectType.mesa,
-    ObjectType.alfombra,
-    ObjectType.planta,
-    ObjectType.armario,
-  ],
-  'comedor': [
-    ObjectType.mesa,
-    ObjectType.silla,
-    ObjectType.alfombra,
-    ObjectType.planta,
-  ],
-  'estudio': [
-    ObjectType.silla,
-    ObjectType.sillon,
-    ObjectType.mesa,
-    ObjectType.armario,
-    ObjectType.planta,
-    ObjectType.alfombra,
-  ],
-  'bano': [
-    ObjectType.planta,
-    ObjectType.alfombra,
-  ],
-  'pasillo': [
-    ObjectType.planta,
-    ObjectType.alfombra,
-    ObjectType.armario,
-    ObjectType.silla,
-  ],
-  'vestibulo': [
-    ObjectType.planta,
-    ObjectType.alfombra,
-    ObjectType.armario,
-    ObjectType.silla,
-    ObjectType.sillon,
-  ],
-  'jardin': [
-    ObjectType.planta,
-    ObjectType.arbusto,
-    ObjectType.silla,
-    ObjectType.sofa,
-  ],
-  'porche': [
-    ObjectType.silla,
-    ObjectType.sillon,
-    ObjectType.planta,
-    ObjectType.arbusto,
-    ObjectType.sofa,
-  ],
-  'atico': [
-    ObjectType.caja,
-    ObjectType.armario,
-    ObjectType.alfombra,
-    ObjectType.silla,
-  ],
-  'bodega': [
-    ObjectType.caja,
-    ObjectType.armario,
-    ObjectType.lavadora,
-  ],
-  'terraza': [
-    ObjectType.silla,
-    ObjectType.sofa,
-    ObjectType.planta,
-    ObjectType.arbusto,
-    ObjectType.mesa,
-  ],
 };
 
 class MapGenerator {
@@ -255,7 +145,7 @@ class MapGenerator {
           'para $k');
     }
     final furnitureByRoom = w == null
-        ? _furnitureByRoom
+        ? kRoomFurniture
         : {for (final r in w.rooms) r.id: r.furniture};
     final areas = [
       for (var a = 0; a < k; a++)
@@ -269,8 +159,11 @@ class MapGenerator {
     // 3. Muebles POR HABITACIÓN (coherencia temática 2026-06-12): cada
     //    habitación solo recibe muebles de su lista permitida, y los tipos
     //    de [_twoCellTypes] siempre ocupan 2 celdas. La repetición de tipos
-    //    entre habitaciones (sillas en cocina, comedor, estudio...) da la
-    //    ambigüedad que necesitan las pistas ("una silla").
+    //    entre habitaciones (mesas en cocina, comedor, estudio...) da la
+    //    ambigüedad que necesitan las pistas ("una mesa").
+    //    Reglas del 05-11-2026 (map_rules.dart): un solo tipo por familia de
+    //    objetos parecidos en todo el mapa, y los objetos únicos por
+    //    naturaleza (cama, TV, piano...) una sola vez por habitación.
     final objects = <MapObject>[];
     final occupiedByObject = <int>{};
     final blockedCount = List<int>.filled(size, 0); // por fila
@@ -320,25 +213,36 @@ class MapGenerator {
     }
 
     var objSeq = 0;
+    final familyChoice = <String, ObjectType>{}; // familia -> tipo del mapa
     for (final area in areas) {
       final allowed = furnitureByRoom[area.id] ??
           const [ObjectType.silla, ObjectType.planta];
+      final inRoom = <ObjectType>{};
       // ~1 mueble por cada 3 celdas de la habitación, entre 1 y 4.
       final count = (area.cells.length / 3).round().clamp(1, 4);
       for (var i = 0; i < count; i++) {
-        // Hasta 4 intentos con tipos distintos (un mueble de 2 celdas que
-        // no quepa cede el turno a otro tipo en vez de forzarse a 1 celda).
-        for (var t = 0; t < 4; t++) {
-          final type = allowed[rng.nextInt(allowed.length)];
+        // Tipos que aún caben según las reglas de coherencia. Si un mueble
+        // no cabe (p. ej. uno de 2 celdas sin par libre) se prueba otro
+        // tipo en vez de forzarlo a 1 celda.
+        final candidates = [
+          for (final t in allowed)
+            if (!(t.uniquePerRoom && inRoom.contains(t)) &&
+                (t.family == null || (familyChoice[t.family] ?? t) == t))
+              t
+        ];
+        while (candidates.isNotEmpty) {
+          final type = candidates.removeAt(rng.nextInt(candidates.length));
           final twoCells = _twoCellTypes.contains(type);
           final cells = findSpotInArea(area.cells, twoCells);
           if (cells == null) continue;
-          final blocking = _blockingTypes.contains(type);
+          final blocking = !type.standable;
           if (blocking && !rowColSafe(cells)) continue;
           objects.add(MapObject(
               id: '${type.name}-${++objSeq}', type: type, cells: cells));
           occupiedByObject.addAll(cells);
           if (blocking) registerBlocked(cells);
+          inRoom.add(type);
+          if (type.family != null) familyChoice[type.family!] = type;
           break;
         }
       }

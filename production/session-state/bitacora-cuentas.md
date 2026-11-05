@@ -11,6 +11,23 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 05-11-2026 · cuenta secundaria · resultados de la prueba de juego n.º 1 (EN CURSO)
+
+- **Lo que trajo Alejandro de sus probadores:**
+  - **Dificultad:** "está bien por ahora". Los rangos de `tools/lib/src/difficulty_ranges.dart` se mantienen.
+  - **Confusión de muebles:** "silla" se confunde con el sillón y el sofá, porque casi todos los casos los mezclan (8 de 10 del Mundo 1, 27 de 30 retos y 18 de 21 casos de prueba).
+  - **Coherencia de las habitaciones:** les extrañó ver dos camas en una habitación o una cama en una cocina.
+- **Decisión de Alejandro:**
+  - un solo tipo por familia de muebles parecidos en cada mapa, revisando todas las familias, no solo los asientos;
+  - objetos nuevos coherentes con cada habitación (perchero y similares);
+  - coherencia por habitación.
+- **Plan:**
+  1. `puzzle-engineer`: reglas en el generador, objetos nuevos, puerta de contenido y spec 16.
+  2. `frontend`: dibujos de los objetos nuevos en las dos pieles.
+  3. `contenido-puzzles`: regenerar el Mundo 1 y los 30 retos con la misma dificultad.
+  4. QA, revisión visual, 0.7.0+7, APK, commit y push.
+- Si esta entrada sigue "EN CURSO", la sesión se cortó: revisa `git status` y `git diff` en la rama `claude/traspaso-ronda-4-3b-2b34df`.
+
 ## 05-11-2026 · cuenta secundaria · medición de FPS
 
 - **Qué se hizo:** Alejandro midió los FPS con la 0.6.0+6 en su teléfono, un Samsung Galaxy A52: **siempre anduvo a 60 fps**. Queda cerrada la medición de FPS de la ronda 4.3. Falta probar TalkBack en el teléfono.

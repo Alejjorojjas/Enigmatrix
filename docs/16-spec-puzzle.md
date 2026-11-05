@@ -2,6 +2,8 @@
 
 > ACTUALIZACIÓN 04-11-2026 (auditoría H-33, H-39, H-40, H-42, H-43): este documento se puso al día contra el código de `tools/` (comprobado leyendo `generator.dart`, `clue.dart`, `deduction.dart`, `case_factory.dart`, `puzzle_case.dart` y un caso real de `app/assets/cases`). Lo vigente está en el cuerpo. Lo superado quedó marcado **SUPERADO** en su sitio y reunido en la sección final "Historial de decisiones superadas". Lo que la spec prometía y el código no hace está marcado **NO IMPLEMENTADO**. Lo que depende de Alejandro está marcado **PENDIENTE DE DECISIÓN**.
 
+> ACTUALIZACIÓN 05-11-2026 (decisión de Alejandro tras la prueba de juego n.º 1): el vocabulario de muebles tiene reglas de coherencia nuevas (familias de objetos parecidos, objetos únicos por habitación, tabla habitación → muebles) y cuatro objetos nuevos (perchero, bañera, nevera, chimenea). Ver §1.3.1. La semántica de las pistas NO cambió.
+
 ## Objetivo de este documento
 
 Definir SIN ambigüedad el modelo lógico del puzzle: qué es un tablero, qué es un caso, qué significa cada pista, cómo se valida una solución y cómo funciona el solver. Este es el documento que `puzzle-engineer` implementa primero (Fase 0 del roadmap).
@@ -29,14 +31,56 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 ### 1.3 Muebles (modelo Murdoku, decidido 2026-06-11)
 
 - El mapa está **amueblado**: los muebles son protagonistas del vocabulario de pistas (pillar 5).
-- Cada mueble tiene **tipo** (silla, sillón, sofá, cama, alfombra, mesa, TV, planta, arbusto, armario, caja, lavadora, piano, barra...) y puede ocupar **varias celdas** (cama de 2 celdas, mesa larga).
+- Cada mueble tiene **tipo** (silla, sillón, sofá, cama, alfombra, mesa, TV, planta, arbusto, armario, caja, lavadora, piano, barra, perchero, bañera, nevera, chimenea) y puede ocupar **varias celdas** (cama de 2 celdas, mesa larga).
 - Dos clases de mueble:
   - **Pisables** (silla, sillón, sofá, cama, alfombra): la gente puede estar ENCIMA → pistas "estaba sentada en una silla", "sobre una cama".
-  - **Bloqueantes** (mesa, TV, planta, armario, caja...): nadie puede ocupar sus celdas → pistas "junto a la mesa".
+  - **Bloqueantes** (mesa, TV, planta, arbusto, armario, caja, lavadora, piano, barra, perchero, bañera, nevera, chimenea): nadie puede ocupar sus celdas → pistas "junto a la mesa". No generan pistas de "sobre" ni "sentado".
 - Los tipos se agrupan para las pistas: planta y arbusto comparten el grupo "planta" ("junto a una planta").
 - Artículo en los textos: si el mapa tiene UN solo mueble del grupo → "la silla"; si hay varios → "una silla".
 - La repetición de muebles es la palanca de dificultad: "junto a una TV" con dos TVs deja más candidatas que con una.
 - Las **armas potenciales** son objetos pequeños visibles que NO bloquean; lógicamente pertenecen al **área**, no a una celda exacta (doc 03).
+
+### 1.3.1 Coherencia del mapa (05-11-2026, decisión de Alejandro tras la prueba de juego n.º 1)
+
+Los probadores confundían "silla" con "sillón" y "sofá" (¿"al lado de una silla" cuenta el sillón?) y vieron mapas incoherentes (dos camas en una habitación, una cama en una cocina). Tres reglas, definidas en UN solo lugar (`tools/lib/src/map_rules.dart` y las propiedades de `ObjectType` en `model.dart`), que el generador cumple por construcción y la puerta de contenido verifica:
+
+1. **Una variante por familia en cada mapa.** Un mapa usa como mucho UN tipo de cada familia de objetos parecidos (pueden ser varios muebles del mismo tipo: tres sillas están bien; una silla y un sillón no):
+
+   | Familia (`ObjectType.family`) | Tipos | Por qué |
+   |---|---|---|
+   | `asientos` | silla, sillón, sofá | "una silla" puede entenderse como cualquier asiento; es la confusión detectada |
+   | `superficies` | mesa, barra | las dos son un tablero largo de 2 casillas |
+   | `plantas` | planta, arbusto | la pista dice "planta" para ambos (mismo grupo de pista); si conviven, el jugador duda de si el arbusto cuenta |
+   | `almacenaje` | armario, caja | cuerpos cúbicos que en 1 casilla se leen casi igual |
+   | `electrodomesticos` | nevera, lavadora | cuerpos blancos con puerta |
+
+   Sin familia (se pueden mezclar con todo): cama, alfombra, TV, piano, perchero, bañera, chimenea.
+2. **Objetos únicos por habitación** (`ObjectType.uniquePerRoom`): una habitación no repite cama, alfombra, TV, lavadora, piano, barra, perchero, bañera, nevera ni chimenea. Silla, sillón, sofá, mesa, planta, arbusto, armario y caja sí pueden repetirse dentro de una habitación (entre habitaciones, todo puede repetirse: esa repetición es la ambigüedad que necesitan las pistas).
+3. **Cada objeto en su habitación** (`kRoomFurniture`, ids de habitación). Un mundo (`tools/data/mundos/<id>.json`) puede usar solo un subconjunto de esta tabla (`WorldData.problems()` lo comprueba):
+
+   | Habitación | Muebles permitidos |
+   |---|---|
+   | salón | sofá, sillón, alfombra, TV, piano, mesa, planta, chimenea |
+   | cocina | mesa, silla, barra, planta, nevera |
+   | dormitorio | cama, armario, alfombra, silla, TV, planta, perchero |
+   | biblioteca | silla, sillón, mesa, alfombra, planta, armario, chimenea |
+   | comedor | mesa, silla, alfombra, planta |
+   | estudio | silla, sillón, mesa, armario, planta, alfombra |
+   | baño | bañera, planta, alfombra, lavadora |
+   | pasillo | planta, alfombra, armario, silla, perchero |
+   | vestíbulo | planta, alfombra, armario, silla, sillón, perchero |
+   | jardín | planta, arbusto, silla, mesa |
+   | porche | silla, sillón, planta, arbusto, sofá, mesa |
+   | ático | caja, armario, alfombra, silla |
+   | bodega | caja, armario, lavadora, mesa |
+   | terraza | silla, sofá, planta, arbusto, mesa |
+   | invernadero (Mundo 1) | planta, arbusto, silla, mesa |
+   | galería (Mundo 1) | sofá, sillón, alfombra, planta, silla |
+   | sala de música (Mundo 1) | piano, sillón, silla, alfombra, planta |
+
+**Objetos nuevos** (todos bloqueantes, 1 casilla): perchero (un), bañera (una), nevera (una), chimenea (una). Solo admiten pistas "junto a" (y las compuestas "en la Cocina y junto a la nevera"); el artículo sale del género ("junto al perchero", "junto a la bañera", "junto a una nevera" si hay varias).
+
+**Puerta de contenido.** `runContentGate` exige las tres reglas a todo caso del catálogo, con la tabla de habitaciones de SU mundo, y reporta los incumplimientos con el prefijo `mapa:`. Se desactivan solo con `mapRulesExemptMundos` (por defecto, solo el banco de pruebas) y el tutorial (exento salvo `mapRulesOnTutorial: true`). `build-plan` también las comprueba.
 
 ### 1.4 Adyacencia y geografía
 
@@ -251,6 +295,12 @@ El motor aplica siempre la técnica más simple que pode algo; cada aplicación 
 - **Víctima con relleno** ("estaba en la última casilla libre") siempre que sea posible; pista real solo si el caso la necesita.
 - **Pistas compuestas desde principiante** (el cuadernillo las usa en casos fáciles).
 - La rotación anti-trampa quedó SIN pistas que rotar texto direccional (las cardinales ya no existen): solo rota la presentación del mapa.
+
+### [DECISIÓN] cerradas (2026-11-05, prueba de juego n.º 1, decisión de Alejandro)
+
+- **Coherencia visual del mapa**: un solo tipo por familia de objetos parecidos en cada mapa (asientos, superficies, plantas, almacenaje, electrodomésticos), objetos únicos por naturaleza una vez por habitación y cada objeto solo en habitaciones donde tiene sentido. Detalle y tablas en §1.3.1.
+- **Objetos nuevos**: perchero, bañera, nevera y chimenea (bloqueantes, 1 casilla).
+- **Consecuencia**: el generador ya no produce los mismos mapas con las mismas semillas; los casos publicados antes de esta fecha (Mundo 1 y reto) se regeneran con `build-plan`. El banco de pruebas (20 casos) y el tutorial no se regeneran y quedan exentos de la puerta de coherencia de mapa.
 
 ### Preguntas abiertas
 

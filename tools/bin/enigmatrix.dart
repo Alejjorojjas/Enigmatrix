@@ -324,7 +324,8 @@ void _buildPlan(List<String> args) {
           '${b.rejections}');
       continue;
     }
-    final check = checkCaseContent(pc);
+    final check = checkCaseContent(pc,
+        mapRules: MapRules.fromRooms(world.roomFurniture));
     final f = writeCaseFile(pc, outDir);
     final m = pc.metrics!;
     stdout.writeln('${check.passed ? 'OK   ' : 'FALLA'} ${pc.caseId} · '

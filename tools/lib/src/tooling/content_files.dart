@@ -9,8 +9,10 @@ import 'dart:io';
 
 import '../catalog.dart';
 import '../content_gate.dart';
+import '../map_rules.dart';
 import '../puzzle_case.dart';
 import '../uniqueness.dart';
+import 'world_files.dart';
 
 const kIndexFileName = 'index.json';
 
@@ -47,14 +49,36 @@ class ContentGateReport {
       ];
 }
 
+/// Carpeta de mundos: la del directorio de trabajo (tools/ o la raíz del
+/// repo, como en las pruebas) o, si no, la relativa al script de la CLI.
+Directory _findWorldsDir() {
+  for (final p in ['data/mundos', 'tools/data/mundos']) {
+    if (Directory(p).existsSync()) return Directory(p);
+  }
+  return defaultWorldsDir();
+}
+
 /// Recorre [casesDir] (y [tutorialDir] si existe) y comprueba cada caso y la
 /// coherencia entre archivos, catálogo e índice.
+///
+/// Reglas de coherencia del mapa (05-11-2026, map_rules.dart): se exigen a
+/// todos los casos del catálogo, con la tabla de habitaciones de SU mundo
+/// (tools/data/mundos/<mundo>.json en [worldsDir]; sin archivo de mundo, la
+/// tabla canónica). Se desactivan solo para:
+/// - los mundos de [mapRulesExemptMundos] (por defecto, solo el banco de
+///   pruebas, que no se regenera), y
+/// - el tutorial, salvo que [mapRulesOnTutorial] sea true.
 ContentGateReport runContentGate({
   required Directory casesDir,
   Directory? tutorialDir,
   SolverLimits limits = SolverLimits.standard,
+  Set<String> mapRulesExemptMundos = const {kBancoDePruebas},
+  bool mapRulesOnTutorial = false,
+  Directory? worldsDir,
 }) {
   final report = ContentGateReport();
+  final cases = <String, PuzzleCase>{}; // archivo -> caso (solo catálogo)
+  final tutorialCases = <String, PuzzleCase>{};
   final caseIds = <String, String>{}; // archivo -> caseId
   final difficulties = <String, String>{}; // archivo -> dificultad
   final storyWorlds = <String, String?>{}; // archivo -> mundo de su historia
@@ -64,6 +88,7 @@ ContentGateReport runContentGate({
       final name = _name(f);
       try {
         final pc = loadCaseFile(f);
+        (inCatalog ? cases : tutorialCases)[name] = pc;
         if (inCatalog) {
           caseIds[name] = pc.caseId;
           difficulties[name] = pc.difficulty;
@@ -141,6 +166,49 @@ ContentGateReport runContentGate({
     }
   } else {
     report.problems.add('falta $kCatalogFileName en ${casesDir.path}');
+  }
+
+  // Coherencia del mapa (05-11-2026). Mundo de cada archivo según el
+  // catálogo; sin catálogo legible se exige a todos con la tabla canónica.
+  final mundoOfFile = <String, String>{};
+  try {
+    final cf = File('${casesDir.path}/$kCatalogFileName');
+    if (cf.existsSync()) {
+      for (final e
+          in CaseCatalog.parse(cf.readAsStringSync()).catalog.entries) {
+        mundoOfFile[e.archivo] = e.mundo;
+      }
+    }
+  } catch (_) {
+    // El catálogo ilegible ya se reportó arriba.
+  }
+  final worldsFolder = worldsDir ?? _findWorldsDir();
+  final rulesByMundo = <String, MapRules>{};
+  MapRules rulesFor(String? mundo) {
+    if (mundo == null) return MapRules.generic;
+    return rulesByMundo.putIfAbsent(mundo, () {
+      final wf = File('${worldsFolder.path}/$mundo.json');
+      if (!wf.existsSync()) return MapRules.generic;
+      try {
+        return MapRules.fromRooms(loadWorldFile(wf).roomFurniture);
+      } catch (_) {
+        return MapRules.generic;
+      }
+    });
+  }
+
+  for (final e in cases.entries) {
+    final mundo = mundoOfFile[e.key];
+    if (mundo != null && mapRulesExemptMundos.contains(mundo)) continue;
+    final extra = mapCoherenceProblems(e.value, rulesFor(mundo));
+    report.checks[e.key] = report.checks[e.key]!.withProblems(extra);
+  }
+  if (mapRulesOnTutorial) {
+    for (final e in tutorialCases.entries) {
+      final key = 'tutorial/${e.key}';
+      report.checks[key] = report.checks[key]!
+          .withProblems(mapCoherenceProblems(e.value, MapRules.generic));
+    }
   }
 
   // Índice heredado (compatibilidad): si existe, lista exactamente los casos

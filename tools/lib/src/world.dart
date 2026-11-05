@@ -11,6 +11,7 @@ library;
 
 import 'dart:math';
 
+import 'map_rules.dart';
 import 'model.dart';
 
 /// Un personaje posible del elenco.
@@ -120,6 +121,10 @@ class WorldData {
 
   String get nameEs => names['es'] ?? id;
 
+  /// Muebles permitidos por id de habitación (para las reglas de mapa).
+  Map<String, List<ObjectType>> get roomFurniture =>
+      {for (final r in rooms) r.id: r.furniture};
+
   /// Elenco de [count] personajes con iniciales distintas, elegido de forma
   /// determinista por [seed] (con su propio generador: no altera el sorteo
   /// del caso). Se devuelve ordenado alfabéticamente, como el elenco genérico.
@@ -171,6 +176,21 @@ class WorldData {
     for (final r in rooms) {
       if (!roomIds.add(r.id)) p.add('habitación repetida: ${r.id}');
       if (r.furniture.isEmpty) p.add('habitación sin muebles: ${r.id}');
+      if (r.furniture.toSet().length != r.furniture.length) {
+        p.add('habitación con muebles repetidos en su lista: ${r.id}');
+      }
+      // Coherencia (05-11-2026): si la habitación figura en la tabla
+      // canónica, el mundo solo puede usar un subconjunto de ella (jamás una
+      // cama en la cocina). Una habitación nueva se valida solo contra sí
+      // misma.
+      final canon = kRoomFurniture[r.id];
+      if (canon != null) {
+        for (final f in r.furniture) {
+          if (!canon.contains(f)) {
+            p.add('${f.nameEs} no corresponde a la habitación ${r.id}');
+          }
+        }
+      }
     }
     if (weapons.length < 3) {
       p.add('el mundo tiene ${weapons.length} armas; hacen falta al menos 3');
