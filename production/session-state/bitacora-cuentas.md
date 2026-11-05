@@ -1,0 +1,19 @@
+# Bitácora entre cuentas
+
+Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antiguo, con este formato:
+
+```
+## dd-mm-yyyy · cuenta (principal / secundaria)
+- Qué se hizo:
+- Archivos tocados:
+- Commit(s):
+- Pruebas (números):
+- Pendiente o dudas para la otra cuenta:
+```
+
+## 05-11-2026 · cuenta principal (cierre)
+
+- **Qué se hizo:** auditoría, documentación al día, etapas 1, 2, 3.1, 3.2, 4.1, 4.2 y 4.3a. La versión actual es 0.5.0+5. Se prepararon este archivo y `TRASPASO.md`.
+- **Último commit:** el del traspaso, después de `a4dca02`.
+- **Pruebas:** tools 279 y app 540, todas pasan.
+- **Pendiente:** la ronda 4.3b (ver `TRASPASO.md`).

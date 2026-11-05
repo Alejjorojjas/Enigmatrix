@@ -1,5 +1,7 @@
 # Enigmatrix
 
+> **SESIÓN NUEVA U OTRA CUENTA:** antes de hacer nada, lee `production/session-state/TRASPASO.md`. Anota todo lo que hagas en `production/session-state/bitacora-cuentas.md`.
+
 App móvil de puzzles de deducción visual. El jugador resuelve casos de misterio colocando sospechosos sobre un mapa con habitaciones, guiándose por pistas lógicas. Compite por tiempo y puntos en rankings. Android primero, iOS después.
 
 **Referencia jugable**: existe una versión web del juego en https://murdoku.com/play (nombre anterior del producto). El core es el mismo; Enigmatrix es la evolución móvil con campaña, reto diario, vidas, rachas y arma homicida.
