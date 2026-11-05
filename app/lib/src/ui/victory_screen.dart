@@ -21,16 +21,20 @@ String _fmt(int seconds) =>
 
 /// Guarda el resultado y muestra la celebración.
 Future<void> showVictoryScreen(
-    BuildContext context, WidgetRef ref, PuzzleCase pc) async {
+  BuildContext context,
+  WidgetRef ref,
+  PuzzleCase pc,
+) async {
   final state = ref.read(gameControllerProvider(pc));
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString(
-      'done:${pc.caseId}',
-      jsonEncode({
-        'time': state.elapsedSeconds,
-        'errors': state.errorCount,
-        'date': DateTime.now().toIso8601String().substring(0, 16),
-      }));
+    'done:${pc.caseId}',
+    jsonEncode({
+      'time': state.elapsedSeconds,
+      'errors': state.errorCount,
+      'date': DateTime.now().toIso8601String().substring(0, 16),
+    }),
+  );
 
   if (!context.mounted) return;
   await showDialog<void>(
@@ -56,7 +60,8 @@ class _VictoryView extends ConsumerStatefulWidget {
 
 class _VictoryViewState extends ConsumerState<_VictoryView> {
   late final TextEditingController _fb = TextEditingController(
-      text: widget.prefs.getString('fb:${widget.pc.caseId}') ?? '');
+    text: widget.prefs.getString('fb:${widget.pc.caseId}') ?? '',
+  );
 
   @override
   void dispose() {
@@ -74,8 +79,9 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
     final pal = ref.watch(paletteProvider);
     final pc = widget.pc;
     final state = ref.read(gameControllerProvider(pc));
-    final murderer =
-        state.murdererId == null ? null : pc.character(state.murdererId!);
+    final murderer = state.murdererId == null
+        ? null
+        : pc.character(state.murdererId!);
     final weapon = state.lethalWeaponId == null
         ? null
         : pc.map.weapons.firstWhere((w) => w.id == state.lethalWeaponId);
@@ -103,33 +109,42 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                       child: Container(
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Enx.crimson, width: 4),
+                          border: Border.all(color: Enx.crimson, width: 4),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 18, vertical: 6),
+                            horizontal: 18,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Enx.crimson, width: 2),
+                            border: Border.all(color: Enx.crimson, width: 2),
                             borderRadius: BorderRadius.circular(11),
                           ),
-                          child: Text('CASO CERRADO',
-                              style: Enx.display(30,
-                                  color: Enx.crimson, spacing: 3)),
+                          child: Text(
+                            'CASO CERRADO',
+                            style: Enx.display(
+                              30,
+                              color: Enx.crimson,
+                              spacing: 3,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 18),
-                Text('Buen trabajo, detective.',
-                    textAlign: TextAlign.center,
-                    style: Enx.display(19, color: Enx.goldInk)),
-                Text(pc.map.nameEs,
-                    textAlign: TextAlign.center,
-                    style: Enx.font(15, color: pal.muted)),
+                Text(
+                  'Buen trabajo, detective.',
+                  textAlign: TextAlign.center,
+                  style: Enx.display(19, color: Enx.goldInk),
+                ),
+                Text(
+                  pc.map.nameEs,
+                  textAlign: TextAlign.center,
+                  style: Enx.font(15, color: pal.muted),
+                ),
                 const SizedBox(height: 22),
 
                 // Informe del caso en papel.
@@ -140,32 +155,43 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                          color: enxDarken(Enx.paper, .4),
-                          offset: const Offset(0, 6),
-                          blurRadius: 0),
+                        color: enxDarken(Enx.paper, .4),
+                        offset: const Offset(0, 6),
+                        blurRadius: 0,
+                      ),
                     ],
                   ),
                   child: Column(
                     children: [
-                      Text('INFORME DEL CASO',
-                          style: Enx.font(11,
-                              weight: FontWeight.w800,
-                              color: Enx.inkMuted,
-                              spacing: 2.5)),
+                      Text(
+                        'INFORME DEL CASO',
+                        style: Enx.font(
+                          11,
+                          weight: FontWeight.w800,
+                          color: Enx.inkMuted,
+                          spacing: 2.5,
+                        ),
+                      ),
                       const SizedBox(height: 4),
                       Container(height: 2, color: Enx.paperShade),
                       const SizedBox(height: 12),
                       Text.rich(
-                        TextSpan(children: [
-                          const TextSpan(text: 'El asesino era '),
-                          TextSpan(
+                        TextSpan(
+                          children: [
+                            const TextSpan(text: 'El asesino era '),
+                            TextSpan(
                               text: murderer?.nameEs ?? '?',
-                              style: Enx.font(16,
-                                  weight: FontWeight.w800,
-                                  color: Enx.crimson)),
-                          const TextSpan(
-                              text: ', que quedó a solas con la víctima.'),
-                        ]),
+                              style: Enx.font(
+                                16,
+                                weight: FontWeight.w800,
+                                color: Enx.crimson,
+                              ),
+                            ),
+                            const TextSpan(
+                              text: ', que quedó a solas con la víctima.',
+                            ),
+                          ],
+                        ),
                         textAlign: TextAlign.center,
                         style: Enx.font(16, color: Enx.ink),
                       ),
@@ -173,14 +199,19 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                         Padding(
                           padding: const EdgeInsets.only(top: 6),
                           child: Text.rich(
-                            TextSpan(children: [
-                              const TextSpan(text: 'Arma homicida: '),
-                              TextSpan(
+                            TextSpan(
+                              children: [
+                                const TextSpan(text: 'Arma homicida: '),
+                                TextSpan(
                                   text: weapon.nameEs,
-                                  style: Enx.font(15,
-                                      weight: FontWeight.w800,
-                                      color: Enx.goldInk)),
-                            ]),
+                                  style: Enx.font(
+                                    15,
+                                    weight: FontWeight.w800,
+                                    color: Enx.goldInk,
+                                  ),
+                                ),
+                              ],
+                            ),
                             style: Enx.font(15, color: Enx.ink),
                           ),
                         ),
@@ -189,20 +220,22 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           EnxReportStat(
-                              label: 'Tiempo',
-                              value: _fmt(state.elapsedSeconds),
-                              icon: Icons.timer_outlined,
-                              color: Enx.blue),
+                            label: 'Tiempo',
+                            value: _fmt(state.elapsedSeconds),
+                            icon: Icons.timer_outlined,
+                            color: Enx.blue,
+                          ),
                           const SizedBox(width: 12),
                           EnxReportStat(
-                              label: 'Errores',
-                              value: '${state.errorCount}',
-                              icon: state.errorCount == 0
-                                  ? Icons.verified_outlined
-                                  : Icons.close_rounded,
-                              color: state.errorCount == 0
-                                  ? Enx.green
-                                  : Enx.crimson),
+                            label: 'Errores',
+                            value: '${state.errorCount}',
+                            icon: state.errorCount == 0
+                                ? Icons.verified_outlined
+                                : Icons.close_rounded,
+                            color: state.errorCount == 0
+                                ? Enx.green
+                                : Enx.crimson,
+                          ),
                         ],
                       ),
                     ],
@@ -221,11 +254,15 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('FEEDBACK DE PLAYTEST',
-                          style: Enx.font(11,
-                              weight: FontWeight.w800,
-                              color: pal.muted,
-                              spacing: 2)),
+                      Text(
+                        'FEEDBACK DE PLAYTEST',
+                        style: Enx.font(
+                          11,
+                          weight: FontWeight.w800,
+                          color: pal.muted,
+                          spacing: 2,
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _fb,
@@ -235,24 +272,26 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                           isDense: true,
                           filled: true,
                           fillColor: pal.background,
-                          hintText:
-                              '¿Pistas confusas? ¿Dificultad justa?…',
-                          hintStyle: Enx.font(14,
-                              weight: FontWeight.w600, color: pal.muted),
+                          hintText: '¿Pistas confusas? ¿Dificultad justa?…',
+                          hintStyle: Enx.font(
+                            14,
+                            weight: FontWeight.w600,
+                            color: pal.muted,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                BorderSide(color: pal.border, width: 2),
+                            borderSide: BorderSide(color: pal.border, width: 2),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide:
-                                BorderSide(color: pal.border, width: 2),
+                            borderSide: BorderSide(color: pal.border, width: 2),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                                color: Enx.gold, width: 2),
+                              color: Enx.gold,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
@@ -267,15 +306,16 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                   textColor: Enx.goldInk,
                   onPressed: () => _saveAnd(() {
                     Navigator.of(context).pop();
-                    context.go('/');
+                    context.go('/casos');
                   }),
                 ),
                 const SizedBox(height: 10),
                 TextButton(
-                  onPressed: () =>
-                      _saveAnd(() => Navigator.of(context).pop()),
-                  child: Text('Seguir mirando el tablero',
-                      style: Enx.font(14, color: pal.muted)),
+                  onPressed: () => _saveAnd(() => Navigator.of(context).pop()),
+                  child: Text(
+                    'Seguir mirando el tablero',
+                    style: Enx.font(14, color: pal.muted),
+                  ),
                 ),
               ],
             ),

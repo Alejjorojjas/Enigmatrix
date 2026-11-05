@@ -7,9 +7,19 @@ library;
 import 'dart:async';
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
+import 'package:flutter/widgets.dart' show AppLifecycleState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/case_repository.dart' show kTutorialCaseId;
 import 'board_state.dart';
+import 'saved_game.dart';
+
+/// Estado del ciclo de vida de la app (lo publica main.dart). Al pasar a
+/// segundo plano, la partida en pantalla se pausa y se guarda (regla 10).
+final appLifecycleProvider = StateProvider<AppLifecycleState>(
+  (ref) => AppLifecycleState.resumed,
+);
 
 /// Herramienta seleccionada en el panel.
 sealed class Tool {
@@ -51,6 +61,17 @@ class GameState {
   final bool canUndo;
   final bool canRedo;
 
+  /// Casillas que no cuadran tras un Resolver fallido (regla 9). Solo se
+  /// conserva mientras dura el bloqueo; no dice cuáles son.
+  final int wrongCount;
+
+  /// true mientras se lee la partida guardada (el reloj aún no corre).
+  final bool loading;
+
+  /// Partida en pausa (app en segundo plano): el tablero queda tapado y el
+  /// reloj detenido hasta que el jugador toque Continuar.
+  final bool paused;
+
   const GameState({
     required this.pc,
     required this.board,
@@ -67,6 +88,9 @@ class GameState {
     this.autoX = true,
     this.canUndo = false,
     this.canRedo = false,
+    this.wrongCount = 0,
+    this.loading = false,
+    this.paused = false,
   });
 
   GameState copyWith({
@@ -84,24 +108,29 @@ class GameState {
     bool? autoX,
     bool? canUndo,
     bool? canRedo,
-  }) =>
-      GameState(
-        pc: pc,
-        board: board ?? this.board,
-        clueMarks: clueMarks ?? this.clueMarks,
-        tool: tool != null ? tool() : this.tool,
-        elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
-        errorCount: errorCount ?? this.errorCount,
-        locked: locked ?? this.locked,
-        errorCells: errorCells ?? this.errorCells,
-        solved: solved ?? this.solved,
-        murdererId: murdererId ?? this.murdererId,
-        lethalWeaponId: lethalWeaponId ?? this.lethalWeaponId,
-        mapMode: mapMode ?? this.mapMode,
-        autoX: autoX ?? this.autoX,
-        canUndo: canUndo ?? this.canUndo,
-        canRedo: canRedo ?? this.canRedo,
-      );
+    int? wrongCount,
+    bool? loading,
+    bool? paused,
+  }) => GameState(
+    pc: pc,
+    board: board ?? this.board,
+    clueMarks: clueMarks ?? this.clueMarks,
+    tool: tool != null ? tool() : this.tool,
+    elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
+    errorCount: errorCount ?? this.errorCount,
+    locked: locked ?? this.locked,
+    errorCells: errorCells ?? this.errorCells,
+    solved: solved ?? this.solved,
+    murdererId: murdererId ?? this.murdererId,
+    lethalWeaponId: lethalWeaponId ?? this.lethalWeaponId,
+    mapMode: mapMode ?? this.mapMode,
+    autoX: autoX ?? this.autoX,
+    canUndo: canUndo ?? this.canUndo,
+    canRedo: canRedo ?? this.canRedo,
+    wrongCount: wrongCount ?? this.wrongCount,
+    loading: loading ?? this.loading,
+    paused: paused ?? this.paused,
+  );
 }
 
 /// Resultado de una acción para que la UI reaccione (mensajes/diálogos).
@@ -111,34 +140,246 @@ enum ActionFeedback {
   cellHasX, // casilla descartada: no acepta candidatos
   alreadyConfirmedElsewhere, // ese personaje ya está fijado en otra casilla
   askReplaceConfirmed, // diálogo de confirmación
+  noToolSelected, // casilla tocada sin sospechoso ni herramienta (regla 20)
   incompleteBoard, // falta confirmar personajes
   wrongSolution,
   solvedOk,
 }
 
+/// En producción el reloj corre solo (1 tick por segundo). Los tests lo
+/// apagan para llamar a [GameController.tick] a mano y ser deterministas.
+final gameTickerEnabledProvider = Provider<bool>((ref) => true);
+
 class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   static const _undoLimit = 50; // doc 08: historial de 50 acciones
+
+  /// Cada cuántos segundos de juego se guarda el reloj aunque no haya
+  /// cambios en el tablero (por si el sistema cierra la app sin aviso).
+  static const _periodicSaveSeconds = 15;
+
   final List<BoardState> _undo = [];
   final List<BoardState> _redo = [];
   Timer? _ticker;
   Timer? _unlockTimer;
 
+  SharedPreferences? _prefs;
+  bool _alive = true;
+
+  /// true cuando hay algo que vale la pena guardar: el jugador cambió algo
+  /// o se restauró una partida. Abrir un caso y salir sin tocar nada no
+  /// deja partida guardada.
+  bool _touched = false;
+  bool _savePending = false;
+  Future<void> _io = Future<void>.value();
+  Future<void> _ready = Future<void>.value();
+
+  /// Se completa cuando terminó de leerse la partida guardada.
+  Future<void> get ready => _ready;
+
   @override
   GameState build(PuzzleCase arg) {
+    _alive = true;
     ref.onDispose(() {
+      _alive = false;
       _ticker?.cancel();
       _unlockTimer?.cancel();
+      _saveOnDispose();
     });
-    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!state.solved) {
-        state = state.copyWith(elapsedSeconds: state.elapsedSeconds + 1);
+
+    // App a segundo plano: pausa y guarda (regla 10). Al volver NO se
+    // reanuda sola: el jugador toca Continuar.
+    ref.listen<AppLifecycleState>(appLifecycleProvider, (_, next) {
+      if (next == AppLifecycleState.paused ||
+          next == AppLifecycleState.inactive ||
+          next == AppLifecycleState.hidden) {
+        pause();
       }
     });
+
+    // Guardar en cada cambio de lo que se persiste (agrupado por microtarea).
+    listenSelf((prev, next) {
+      if (prev == null || prev.loading || next.loading || next.solved) return;
+      if (!identical(prev.board, next.board) ||
+          !identical(prev.clueMarks, next.clueMarks) ||
+          prev.errorCount != next.errorCount ||
+          prev.autoX != next.autoX ||
+          prev.mapMode != next.mapMode) {
+        _touched = true;
+        _scheduleSave();
+      }
+    });
+
+    _ready = Future<void>.microtask(_load);
     return GameState(
       pc: arg,
       board: BoardState.empty(),
       clueMarks: List.filled(arg.clues.length, ClueMark.normal),
+      loading: true,
     );
+  }
+
+  // ---- partida guardada (H-55) ---------------------------------------------
+
+  Future<void> _load() async {
+    SharedPreferences? prefs;
+    try {
+      // El tutorial no guarda, no restaura ni borra "game:" (prefs nulo
+      // desactiva toda la persistencia).
+      prefs = arg.caseId == kTutorialCaseId
+          ? null
+          : await SharedPreferences.getInstance();
+    } catch (_) {
+      prefs = null; // sin almacenamiento: se juega igual, sin guardar
+    }
+    if (!_alive) return;
+    _prefs = prefs;
+
+    SavedGame? saved;
+    if (prefs != null) {
+      try {
+        saved = SavedGame.read(
+          prefs,
+          arg.caseId,
+          cellCount: arg.map.size * arg.map.size,
+          clueCount: arg.clues.length,
+        );
+      } catch (_) {
+        saved = null; // dato dañado: se empieza de cero
+      }
+    }
+    if (saved != null) {
+      _touched = true;
+      state = state.copyWith(
+        board: saved.board,
+        clueMarks: [for (final i in saved.clueMarks) ClueMark.values[i]],
+        elapsedSeconds: saved.elapsed,
+        errorCount: saved.errors,
+        autoX: saved.autoX,
+        mapMode: saved.mapMode,
+        loading: false,
+      );
+    } else {
+      state = state.copyWith(loading: false);
+    }
+    // Si la app ya está en segundo plano al terminar la carga, queda en
+    // pausa y el reloj no arranca.
+    final life = ref.read(appLifecycleProvider);
+    if (life == AppLifecycleState.paused ||
+        life == AppLifecycleState.inactive ||
+        life == AppLifecycleState.hidden) {
+      state = state.copyWith(paused: true);
+    }
+    _startTicker();
+  }
+
+  SavedGame _snapshot() => SavedGame(
+    elapsed: state.elapsedSeconds,
+    errors: state.errorCount,
+    savedAt: DateTime.now(),
+    board: state.board,
+    clueMarks: [for (final m in state.clueMarks) m.index],
+    autoX: state.autoX,
+    mapMode: state.mapMode,
+  );
+
+  void _enqueue(Future<Object?> Function() op) {
+    _io = _io.then((_) async {
+      try {
+        await op();
+      } catch (_) {
+        // Guardar es un cache local: un fallo no debe tumbar la partida.
+      }
+    });
+  }
+
+  void _scheduleSave() {
+    if (_savePending) return;
+    _savePending = true;
+    scheduleMicrotask(() {
+      _savePending = false;
+      if (_alive) _enqueueSave();
+    });
+  }
+
+  void _enqueueSave() {
+    final prefs = _prefs;
+    if (prefs == null || !_touched || state.loading || state.solved) return;
+    final raw = _snapshot().encode();
+    _enqueue(() => prefs.setString(SavedGame.keyFor(arg.caseId), raw));
+  }
+
+  void _saveOnDispose() {
+    final prefs = _prefs;
+    if (prefs == null || !_touched) return;
+    try {
+      if (state.loading || state.solved) return;
+      final raw = _snapshot().encode();
+      _enqueue(() => prefs.setString(SavedGame.keyFor(arg.caseId), raw));
+    } catch (_) {
+      // Sin estado legible al cerrar: ya se guardó en el último cambio.
+    }
+  }
+
+  /// Guarda ya (al salir del caso o pasar a segundo plano). Devuelve cuando
+  /// la escritura terminó.
+  Future<void> saveNow() {
+    _enqueueSave();
+    return _io;
+  }
+
+  // ---- reloj y pausa (regla 10) ---------------------------------------------
+
+  void _startTicker() {
+    _ticker?.cancel();
+    _ticker = null;
+    if (!ref.read(gameTickerEnabledProvider)) return;
+    if (state.loading || state.paused || state.solved || _held) return;
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) => tick());
+  }
+
+  /// true mientras un diálogo detiene el reloj sin mostrar la pausa.
+  bool _held = false;
+
+  /// Detiene el reloj SIN tapar el tablero (p. ej. diálogo de salida).
+  void holdClock() {
+    _held = true;
+    _stopTicker();
+  }
+
+  /// Reanuda el reloj detenido con [holdClock].
+  void releaseClock() {
+    if (!_held) return;
+    _held = false;
+    _startTicker();
+  }
+
+  void _stopTicker() {
+    _ticker?.cancel();
+    _ticker = null;
+  }
+
+  /// Un segundo de juego. No avanza si la partida está en pausa, cargando
+  /// o resuelta.
+  void tick() {
+    if (state.loading || state.paused || state.solved || _held) return;
+    final elapsed = state.elapsedSeconds + 1;
+    state = state.copyWith(elapsedSeconds: elapsed);
+    if (elapsed % _periodicSaveSeconds == 0) _enqueueSave();
+  }
+
+  /// Detiene el reloj, tapa el tablero y guarda.
+  void pause() {
+    if (state.loading || state.solved || state.paused) return;
+    _stopTicker();
+    state = state.copyWith(paused: true);
+    _enqueueSave();
+  }
+
+  /// Quita la pausa y el reloj sigue (botón Continuar).
+  void resume() {
+    if (!state.paused) return;
+    state = state.copyWith(paused: false);
+    _startTicker();
   }
 
   // ---- selección de herramienta --------------------------------------------
@@ -172,16 +413,23 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
   // ---- colocación ----------------------------------------------------------
 
-  bool get _editable => !state.locked && !state.solved;
+  bool get _editable =>
+      !state.locked && !state.solved && !state.paused && !state.loading;
 
   /// Coloca con la herramienta seleccionada. [confirm] viene del gesto:
   /// tap = candidato, mantener oprimido / arrastrar = confirmado.
+  /// Sin sospechoso ni herramienta elegidos devuelve
+  /// [ActionFeedback.noToolSelected] para que la UI avise (regla 20).
   ActionFeedback placeAt(int cell, {required bool confirm}) {
+    if (!_editable) return ActionFeedback.ok;
     final t = state.tool;
-    if (t == null || !_editable) return ActionFeedback.ok;
+    if (t == null) return ActionFeedback.noToolSelected;
     return switch (t) {
-      SuspectTool(:final charId) =>
-        placeSuspect(cell, charId: charId, confirm: confirm),
+      SuspectTool(:final charId) => placeSuspect(
+        cell,
+        charId: charId,
+        confirm: confirm,
+      ),
       XTool(:final level) => placeXMark(cell, level),
       EraserTool() => eraseCell(cell),
     };
@@ -198,13 +446,20 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     return ActionFeedback.ok;
   }
 
-  ActionFeedback placeSuspect(int cell,
-      {required String charId, required bool confirm, bool replace = false}) {
+  ActionFeedback placeSuspect(
+    int cell, {
+    required String charId,
+    required bool confirm,
+    bool replace = false,
+  }) {
     if (!_editable) return ActionFeedback.ok;
     final result = confirm
-        ? state.board.placeConfirmed(cell, charId,
+        ? state.board.placeConfirmed(
+            cell,
+            charId,
             replace: replace,
-            autoXGridSize: state.autoX ? state.pc.map.size : null)
+            autoXGridSize: state.autoX ? state.pc.map.size : null,
+          )
         : state.board.placeCandidate(cell, charId);
     return _applyPlace(result);
   }
@@ -218,8 +473,11 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     switch (result.outcome) {
       case PlaceOutcome.placed:
         _pushUndo();
-        state =
-            state.copyWith(board: result.board, canUndo: true, canRedo: false);
+        state = state.copyWith(
+          board: result.board,
+          canUndo: true,
+          canRedo: false,
+        );
         return ActionFeedback.ok;
       case PlaceOutcome.noChange:
         return ActionFeedback.ok;
@@ -287,49 +545,77 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   // ---- pistas (doc 03: ciclo normal -> destacada -> tachada) ---------------
 
   void cycleClue(int index) {
+    if (state.paused || state.loading) return;
     final next = [...state.clueMarks];
     next[index] =
         ClueMark.values[(next[index].index + 1) % ClueMark.values.length];
     state = state.copyWith(clueMarks: next);
   }
 
+  /// Fija la marca de una pista (hoja de pista completa: Normal, Destacar,
+  /// Tachar), sin pasar por el ciclo del toque simple.
+  void setClueMark(int index, ClueMark mark) {
+    if (state.paused || state.loading) return;
+    if (index < 0 || index >= state.clueMarks.length) return;
+    if (state.clueMarks[index] == mark) return;
+    final next = [...state.clueMarks];
+    next[index] = mark;
+    state = state.copyWith(clueMarks: next);
+  }
+
   void toggleMapMode() => state = state.copyWith(mapMode: !state.mapMode);
 
-  // ---- resolver (doc 03) ----------------------------------------------------
+  // ---- resolver (doc 03 + regla 9 del ADR-0012) -------------------------------
 
-  ActionFeedback solve() {
+  /// Comprueba el tablero. Si es incorrecto cuenta las casillas que no
+  /// cuadran ([GameState.wrongCount]) y solo señala cuáles
+  /// ([GameState.errorCells]) cuando [revealCells] es true (tutorial).
+  ActionFeedback solve({bool revealCells = false}) {
     if (!_editable) return ActionFeedback.ok;
-    final positions =
-        state.board.confirmedPositions(state.pc.characters.map((c) => c.id));
+    final positions = state.board.confirmedPositions(
+      state.pc.characters.map((c) => c.id),
+    );
     if (positions == null) return ActionFeedback.incompleteBoard;
 
     final v = Validator.validate(state.pc, positions);
     if (v.valid) {
-      _ticker?.cancel();
+      _stopTicker();
       state = state.copyWith(
         solved: true,
         murdererId: v.murdererId,
         lethalWeaponId: v.lethalWeaponId,
         errorCells: const {},
+        wrongCount: 0,
         tool: () => null,
       );
+      // Resuelto: la partida guardada ya no hace falta.
+      _touched = false;
+      final prefs = _prefs;
+      if (prefs != null) {
+        _enqueue(() => SavedGame.clear(prefs, arg.caseId));
+      }
       return ActionFeedback.solvedOk;
     }
 
-    // Resaltado de casillas incorrectas: en Fase 1 se compara contra la
-    // solución local (en Fase 2 esto lo responde el servidor).
+    // Casillas incorrectas: en Fase 1 se compara contra la solución local
+    // (en Fase 2 esto lo responde el servidor).
     final wrong = <int>{
       for (final e in positions.entries)
-        if (state.pc.solution.positions[e.key] != e.value) e.value
+        if (state.pc.solution.positions[e.key] != e.value) e.value,
     };
     state = state.copyWith(
       errorCount: state.errorCount + 1,
-      errorCells: wrong,
+      errorCells: revealCells ? wrong : const {},
+      wrongCount: wrong.length,
       locked: true,
     );
     _unlockTimer?.cancel();
     _unlockTimer = Timer(const Duration(seconds: 3), () {
-      state = state.copyWith(locked: false, errorCells: const {});
+      state = state.copyWith(
+        locked: false,
+        errorCells: const {},
+        wrongCount: 0,
+      );
     });
     return ActionFeedback.wrongSolution;
   }

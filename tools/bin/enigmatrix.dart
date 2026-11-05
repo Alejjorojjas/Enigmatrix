@@ -1,7 +1,7 @@
 /// CLI del motor de puzzles (Fase 0).
 ///
 /// Uso:
-///   dart run bin/enigmatrix.dart generate --difficulty principiante|casual|intermedio
+///   dart run bin/enigmatrix.dart generate --difficulty tutorial|principiante|casual|intermedio
 ///       [--count N] [--seed S] [--weapons] [--out DIR] [--solution]
 ///   dart run bin/enigmatrix.dart show ARCHIVO.json [--solution]
 ///   dart run bin/enigmatrix.dart validate ARCHIVO.json

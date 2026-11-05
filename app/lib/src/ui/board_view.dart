@@ -68,43 +68,52 @@ Color charColor(PuzzleCase pc, String charId) =>
 
 /// Icono por tipo de mueble.
 IconData objectIcon(ObjectType type) => switch (type) {
-      ObjectType.silla => Icons.chair_alt,
-      ObjectType.sillon => Icons.chair,
-      ObjectType.sofa => Icons.weekend,
-      ObjectType.cama => Icons.bed,
-      ObjectType.alfombra => Icons.texture,
-      ObjectType.mesa => Icons.table_restaurant,
-      ObjectType.tv => Icons.tv,
-      ObjectType.planta => Icons.local_florist,
-      ObjectType.arbusto => Icons.grass,
-      ObjectType.armario => Icons.door_sliding,
-      ObjectType.caja => Icons.inventory_2,
-      ObjectType.lavadora => Icons.local_laundry_service,
-      ObjectType.piano => Icons.piano,
-      ObjectType.barra => Icons.countertops,
-    };
+  ObjectType.silla => Icons.chair_alt,
+  ObjectType.sillon => Icons.chair,
+  ObjectType.sofa => Icons.weekend,
+  ObjectType.cama => Icons.bed,
+  ObjectType.alfombra => Icons.texture,
+  ObjectType.mesa => Icons.table_restaurant,
+  ObjectType.tv => Icons.tv,
+  ObjectType.planta => Icons.local_florist,
+  ObjectType.arbusto => Icons.grass,
+  ObjectType.armario => Icons.door_sliding,
+  ObjectType.caja => Icons.inventory_2,
+  ObjectType.lavadora => Icons.local_laundry_service,
+  ObjectType.piano => Icons.piano,
+  ObjectType.barra => Icons.countertops,
+};
 
 /// Color propio de cada mueble (madera, tela, vegetación...).
 Color objectColor(ObjectType type) => switch (type) {
-      ObjectType.silla || ObjectType.sillon => const Color(0xFFD7B98E),
-      ObjectType.sofa => const Color(0xFFCF8B6E),
-      ObjectType.cama => const Color(0xFFA8CBEA),
-      ObjectType.alfombra => const Color(0xFFC59BD6),
-      ObjectType.mesa || ObjectType.barra => const Color(0xFFC49A6C),
-      ObjectType.tv => const Color(0xFF86B9D6),
-      ObjectType.planta || ObjectType.arbusto => const Color(0xFF8BC97B),
-      ObjectType.armario => const Color(0xFFB08A5E),
-      ObjectType.caja => const Color(0xFFD0A95E),
-      ObjectType.lavadora => const Color(0xFFA9BCCD),
-      ObjectType.piano => const Color(0xFF9C9CA8),
-    };
+  ObjectType.silla || ObjectType.sillon => const Color(0xFFD7B98E),
+  ObjectType.sofa => const Color(0xFFCF8B6E),
+  ObjectType.cama => const Color(0xFFA8CBEA),
+  ObjectType.alfombra => const Color(0xFFC59BD6),
+  ObjectType.mesa || ObjectType.barra => const Color(0xFFC49A6C),
+  ObjectType.tv => const Color(0xFF86B9D6),
+  ObjectType.planta || ObjectType.arbusto => const Color(0xFF8BC97B),
+  ObjectType.armario => const Color(0xFFB08A5E),
+  ObjectType.caja => const Color(0xFFD0A95E),
+  ObjectType.lavadora => const Color(0xFFA9BCCD),
+  ObjectType.piano => const Color(0xFF9C9CA8),
+};
 
 class BoardView extends ConsumerWidget {
   final PuzzleCase pc;
 
   /// La pantalla decide cómo reaccionar (mensajes, diálogo de reemplazo).
   final void Function(int cell, Tool tool, {required bool confirm}) onPlace;
-  const BoardView({super.key, required this.pc, required this.onPlace});
+
+  /// Se llama al tocar (o mantener oprimida) una casilla vacía sin
+  /// sospechoso ni herramienta elegidos, para avisar (regla 20).
+  final void Function(int cell)? onNoTool;
+  const BoardView({
+    super.key,
+    required this.pc,
+    required this.onPlace,
+    this.onNoTool,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -122,9 +131,10 @@ class BoardView extends ConsumerWidget {
           border: Border.all(color: const Color(0xFF6E5432), width: 3),
           boxShadow: const [
             BoxShadow(
-                color: Color(0x664A3A26),
-                blurRadius: 18,
-                offset: Offset(0, 10)),
+              color: Color(0x664A3A26),
+              blurRadius: 18,
+              offset: Offset(0, 10),
+            ),
             BoxShadow(color: Color(0x338A6C46), blurRadius: 0, spreadRadius: 0),
           ],
         ),
@@ -132,7 +142,7 @@ class BoardView extends ConsumerWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(11),
           child: IgnorePointer(
-            ignoring: state.locked || state.solved,
+            ignoring: state.locked || state.solved || state.paused,
             child: LayoutBuilder(
               builder: (context, box) {
                 final cs = box.maxWidth / n;
@@ -140,7 +150,8 @@ class BoardView extends ConsumerWidget {
                   children: [
                     // Capa 0 — hoja de papel base del plano.
                     Positioned.fill(
-                        child: Container(color: const Color(0xFFF2E7CD))),
+                      child: Container(color: const Color(0xFFF2E7CD)),
+                    ),
                     // Capa 1 — muebles, dibujados como una pieza continua
                     // sobre sus celdas (van DEBAJO de las marcas).
                     if (state.mapMode)
@@ -155,10 +166,13 @@ class BoardView extends ConsumerWidget {
                               children: [
                                 for (var c = 0; c < n; c++)
                                   Expanded(
-                                      child: _Cell(
-                                          pc: pc,
-                                          cell: map.cellAt(r, c),
-                                          onPlace: onPlace)),
+                                    child: _Cell(
+                                      pc: pc,
+                                      cell: map.cellAt(r, c),
+                                      onPlace: onPlace,
+                                      onNoTool: onNoTool,
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
@@ -192,22 +206,24 @@ class BoardView extends ConsumerWidget {
       final w = (maxC - minC + 1) * cs;
       final h = (maxR - minR + 1) * cs;
 
-      widgets.add(Positioned(
-        left: minC * cs,
-        top: minR * cs,
-        width: w,
-        height: h,
-        child: Padding(
-          padding: EdgeInsets.all(cs * .09),
-          child: Opacity(
-            opacity: obj.blocks ? 1 : .88,
-            child: CustomPaint(
-              painter: FurniturePainter(obj.type),
-              size: Size(w - cs * .18, h - cs * .18),
+      widgets.add(
+        Positioned(
+          left: minC * cs,
+          top: minR * cs,
+          width: w,
+          height: h,
+          child: Padding(
+            padding: EdgeInsets.all(cs * .09),
+            child: Opacity(
+              opacity: obj.blocks ? 1 : .88,
+              child: CustomPaint(
+                painter: FurniturePainter(obj.type),
+                size: Size(w - cs * .18, h - cs * .18),
+              ),
             ),
           ),
         ),
-      ));
+      );
     }
     return widgets;
   }
@@ -229,30 +245,34 @@ class BoardView extends ConsumerWidget {
           .toUpperCase();
       final estWidth = name.length * fontSize * .68 + 6;
       final left = math.min(
-          map.col(best) * cs + 3, math.max(0.0, boardW - estWidth));
+        map.col(best) * cs + 3,
+        math.max(0.0, boardW - estWidth),
+      );
       final top = map.row(best) * cs + cs - fontSize - 7;
-      labels.add(Positioned(
-        left: left,
-        top: top,
-        child: IgnorePointer(
-          child: Text(
-            name,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w900,
-              letterSpacing: .5,
-              color: Colors.white,
-              shadows: const [
-                Shadow(color: Colors.black, blurRadius: 3),
-                Shadow(color: Colors.black, offset: Offset(1.2, 1.2)),
-                Shadow(color: Colors.black, offset: Offset(-1.2, 1.2)),
-                Shadow(color: Colors.black, offset: Offset(1.2, -1.2)),
-                Shadow(color: Colors.black, offset: Offset(-1.2, -1.2)),
-              ],
+      labels.add(
+        Positioned(
+          left: left,
+          top: top,
+          child: IgnorePointer(
+            child: Text(
+              name,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w900,
+                letterSpacing: .5,
+                color: Colors.white,
+                shadows: const [
+                  Shadow(color: Colors.black, blurRadius: 3),
+                  Shadow(color: Colors.black, offset: Offset(1.2, 1.2)),
+                  Shadow(color: Colors.black, offset: Offset(-1.2, 1.2)),
+                  Shadow(color: Colors.black, offset: Offset(1.2, -1.2)),
+                  Shadow(color: Colors.black, offset: Offset(-1.2, -1.2)),
+                ],
+              ),
             ),
           ),
         ),
-      ));
+      );
     }
     return labels;
   }
@@ -262,7 +282,13 @@ class _Cell extends ConsumerWidget {
   final PuzzleCase pc;
   final int cell;
   final void Function(int cell, Tool tool, {required bool confirm}) onPlace;
-  const _Cell({required this.pc, required this.cell, required this.onPlace});
+  final void Function(int cell)? onNoTool;
+  const _Cell({
+    required this.pc,
+    required this.cell,
+    required this.onPlace,
+    this.onNoTool,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -295,13 +321,18 @@ class _Cell extends ConsumerWidget {
       if (sameObject(rr, cc)) return BorderSide.none;
       final isWall = wall(rr, cc);
       return BorderSide(
-          color: isWall ? wallColor : gridColor, width: isWall ? 3.5 : 0.6);
+        color: isWall ? wallColor : gridColor,
+        width: isWall ? 3.5 : 0.6,
+      );
     }
 
     // Colores de habitación más vivos: se mezclan hacia el blanco y con
     // más opacidad para que se distingan bien (feedback 2026-06-12).
-    final basePalette =
-        Color.lerp(areaPalette[areaIdx % areaPalette.length], Colors.white, .12)!;
+    final basePalette = Color.lerp(
+      areaPalette[areaIdx % areaPalette.length],
+      Colors.white,
+      .12,
+    )!;
     // Si hay mueble (dibujado debajo), el fondo de la celda es más tenue
     // para dejarlo ver.
     final hasObj = obj != null;
@@ -318,70 +349,81 @@ class _Cell extends ConsumerWidget {
       onAcceptWithDetails: (d) => onPlace(cell, d.data.tool, confirm: true),
       builder: (context, hovering, _) {
         final body = GestureDetector(
-        onTap: () {
-          if (blocked) return;
-          if (state.tool != null) {
-            onPlace(cell, state.tool!, confirm: false);
-          } else if (content.elementCount > 0) {
-            _showMiniPanel(context, controller, state.board.elementsOf(cell));
-          }
-        },
-        onLongPress: () {
-          if (blocked || state.tool == null) return;
-          onPlace(cell, state.tool!, confirm: true);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isError
-                  ? [
-                      Brand.error.withValues(alpha: .55),
-                      Brand.error.withValues(alpha: .35)
-                    ]
-                  : hovering.isNotEmpty
-                      ? [
-                          Brand.goldBright.withValues(alpha: .45),
-                          Brand.gold.withValues(alpha: .30)
-                        ]
-                      : [
-                          basePalette.withValues(alpha: hi),
-                          basePalette.withValues(alpha: lo)
-                        ],
+          onTap: () {
+            if (blocked) return;
+            if (state.tool != null) {
+              onPlace(cell, state.tool!, confirm: false);
+            } else if (content.elementCount > 0) {
+              _showMiniPanel(context, controller, state.board.elementsOf(cell));
+            } else {
+              onNoTool?.call(cell);
+            }
+          },
+          onLongPress: () {
+            if (blocked) return;
+            if (state.tool == null) {
+              if (content.elementCount == 0) onNoTool?.call(cell);
+              return;
+            }
+            onPlace(cell, state.tool!, confirm: true);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: isError
+                    ? [
+                        Brand.error.withValues(alpha: .55),
+                        Brand.error.withValues(alpha: .35),
+                      ]
+                    : hovering.isNotEmpty
+                    ? [
+                        Brand.goldBright.withValues(alpha: .45),
+                        Brand.gold.withValues(alpha: .30),
+                      ]
+                    : [
+                        basePalette.withValues(alpha: hi),
+                        basePalette.withValues(alpha: lo),
+                      ],
+              ),
+              border: Border(
+                top: side(r - 1, c),
+                bottom: side(r + 1, c),
+                left: side(r, c - 1),
+                right: side(r, c + 1),
+              ),
             ),
-            border: Border(
-              top: side(r - 1, c),
-              bottom: side(r + 1, c),
-              left: side(r, c - 1),
-              right: side(r, c + 1),
-            ),
-          ),
-          child: Stack(
-            children: [
-              if (isAreaAnchor)
-                Positioned(
-                  right: 2,
-                  top: 2,
-                  child: Tooltip(
-                    message:
-                        'Armas: ${weapons.map((w) => w.nameEs).join(', ')}',
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: .45),
-                        shape: BoxShape.circle,
+            child: Stack(
+              children: [
+                if (isAreaAnchor)
+                  Positioned(
+                    right: 2,
+                    top: 2,
+                    child: Tooltip(
+                      message:
+                          'Armas: ${weapons.map((w) => w.nameEs).join(', ')}',
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: .45),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.colorize,
+                          size: 11,
+                          color: Brand.goldBright,
+                        ),
                       ),
-                      child: const Icon(Icons.colorize,
-                          size: 11, color: Brand.goldBright),
                     ),
                   ),
-                ),
-              if (!blocked)
-                Positioned.fill(child: _CellMarks(pc: pc, cell: cell)),
-            ],
+                if (!blocked)
+                  Positioned.fill(
+                    child: _CellMarks(pc: pc, cell: cell),
+                  ),
+              ],
+            ),
           ),
-        ),
         );
         if (obj == null) return body;
         // Tooltip con el nombre del mueble al pasar el mouse (el tooltip de
@@ -390,7 +432,7 @@ class _Cell extends ConsumerWidget {
           message: obj.blocks
               ? obj.type.nameEs[0].toUpperCase() + obj.type.nameEs.substring(1)
               : '${obj.type.nameEs[0].toUpperCase()}${obj.type.nameEs.substring(1)} · '
-                  'puedes colocar a alguien encima',
+                    'puedes colocar a alguien encima',
           waitDuration: const Duration(milliseconds: 250),
           child: body,
         );
@@ -400,13 +442,18 @@ class _Cell extends ConsumerWidget {
 
   /// Mini panel de borrado (doc 06, pantalla 22): solo sirve para borrar;
   /// se cierra al borrar un elemento.
-  void _showMiniPanel(BuildContext context, GameController controller,
-      List<CellElement> elements) {
+  void _showMiniPanel(
+    BuildContext context,
+    GameController controller,
+    List<CellElement> elements,
+  ) {
     showDialog<void>(
       context: context,
       builder: (ctx) => SimpleDialog(
-        title: const Text('Borrar de esta casilla',
-            style: TextStyle(fontSize: 16)),
+        title: const Text(
+          'Borrar de esta casilla',
+          style: TextStyle(fontSize: 16),
+        ),
         children: [
           for (final el in elements)
             SimpleDialogOption(
@@ -416,8 +463,11 @@ class _Cell extends ConsumerWidget {
               },
               child: Row(
                 children: [
-                  const Icon(Icons.delete_outline,
-                      color: Brand.error, size: 18),
+                  const Icon(
+                    Icons.delete_outline,
+                    color: Brand.error,
+                    size: 18,
+                  ),
                   const SizedBox(width: 8),
                   Text(_elementLabel(el)),
                 ],
@@ -429,12 +479,12 @@ class _Cell extends ConsumerWidget {
   }
 
   String _elementLabel(CellElement el) => switch (el) {
-        ConfirmedElement(:final charId) =>
-          '${pc.character(charId).nameEs} (confirmado — quita sus X automáticas)',
-        CandidateElement(:final charId) =>
-          '${pc.character(charId).nameEs} (candidato)',
-        XElement() => 'X',
-      };
+    ConfirmedElement(:final charId) =>
+      '${pc.character(charId).nameEs} (confirmado — quita sus X automáticas)',
+    CandidateElement(:final charId) =>
+      '${pc.character(charId).nameEs} (candidato)',
+    XElement() => 'X',
+  };
 }
 
 class _CellMarks extends ConsumerWidget {
@@ -444,8 +494,9 @@ class _CellMarks extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final content =
-        ref.watch(gameControllerProvider(pc).select((s) => s.board.cell(cell)));
+    final content = ref.watch(
+      gameControllerProvider(pc).select((s) => s.board.cell(cell)),
+    );
 
     // Confirmado: círculo con avatar que llena la celda.
     if (content.confirmed != null) {
@@ -464,10 +515,7 @@ class _CellMarks extends ConsumerWidget {
     final xWidget = content.hasX
         ? _draggableMark(
             XElement(content.x ?? XLevel.large),
-            _XMark(
-              level: content.x ?? XLevel.large,
-              isAuto: content.x == null,
-            ),
+            _XMark(level: content.x ?? XLevel.large, isAuto: content.x == null),
           )
         : null;
 
@@ -475,7 +523,9 @@ class _CellMarks extends ConsumerWidget {
     final letters = [
       for (final id in content.candidates)
         _draggableMark(
-            CandidateElement(id), _CandidateLetter(pc: pc, charId: id)),
+          CandidateElement(id),
+          _CandidateLetter(pc: pc, charId: id),
+        ),
     ];
 
     return Stack(
@@ -532,11 +582,15 @@ class _ConfirmedAvatar extends StatelessWidget {
             border: Border.all(color: Colors.white, width: 2.2),
             boxShadow: [
               const BoxShadow(
-                  color: Colors.black54, blurRadius: 6, offset: Offset(0, 3)),
+                color: Colors.black54,
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
               BoxShadow(
-                  color: color.withValues(alpha: .55),
-                  blurRadius: 14,
-                  spreadRadius: 1),
+                color: color.withValues(alpha: .55),
+                blurRadius: 14,
+                spreadRadius: 1,
+              ),
             ],
           ),
           child: Center(
@@ -546,9 +600,10 @@ class _ConfirmedAvatar extends StatelessWidget {
                 child: Text(
                   isVictim ? '†' : pc.character(charId).nameEs[0],
                   style: const TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 22),
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 22,
+                  ),
                 ),
               ),
             ),
@@ -574,9 +629,7 @@ class _CandidateLetter extends StatelessWidget {
         fontSize: 17,
         fontWeight: FontWeight.w900,
         color: Color.lerp(charColor(pc, charId), const Color(0xFF3D2C14), .45),
-        shadows: const [
-          Shadow(color: Color(0x66FFFBEA), offset: Offset(1, 1)),
-        ],
+        shadows: const [Shadow(color: Color(0x66FFFBEA), offset: Offset(1, 1))],
       ),
     );
   }
@@ -589,20 +642,19 @@ class _XMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-        builder: (context, box) {
-          final base = box.maxWidth.isFinite ? box.maxWidth : 48;
-          final size = base * (level == XLevel.small ? .5 : .82);
-          // Trazo de marcador rojo sobre el papel (auto-X más tenue).
-          return Text(
-            '✕',
-            style: TextStyle(
-              fontSize: size.clamp(14, 54),
-              height: 1,
-              fontWeight: FontWeight.w900,
-              color: const Color(0xFF8A2F1B)
-                  .withValues(alpha: isAuto ? .45 : .88),
-            ),
-          );
-        },
+    builder: (context, box) {
+      final base = box.maxWidth.isFinite ? box.maxWidth : 48;
+      final size = base * (level == XLevel.small ? .5 : .82);
+      // Trazo de marcador rojo sobre el papel (auto-X más tenue).
+      return Text(
+        '✕',
+        style: TextStyle(
+          fontSize: size.clamp(14, 54),
+          height: 1,
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFF8A2F1B).withValues(alpha: isAuto ? .45 : .88),
+        ),
       );
+    },
+  );
 }

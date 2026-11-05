@@ -2,10 +2,24 @@
 
 > Archivo de checkpoint. Toda sesión de trabajo lo lee al empezar y lo actualiza al cerrar un hito. Se mantiene corto a propósito: el historial completo está en [historial.md](historial.md).
 
-## Estado hoy (04-11-2026)
+## Estado hoy (05-11-2026)
 
-- **Etapa actual:** etapa 0, "Orden y protección", del plan por etapas 0 a 6 (aprobado; detalle en [docs/17-roadmap.md](../../docs/17-roadmap.md)). Sin tocar código.
-- **Dónde está el proyecto:** Fase 0 cerrada; Fase 1 hecha en gran parte (app Flutter con 20 casos, tutorial, shell con pantallas simuladas DEMO, Paper Craft). Último commit: `84835be` (12-07-2026). Hay cambios sin commit del 01-11-2026.
+- **Etapa actual:** etapa 0 cerrada. Las etapas 1 y 2 están en curso, con el plan por etapas 0 a 6 aprobado (detalle en [docs/17-roadmap.md](../../docs/17-roadmap.md)).
+- **Etapa 1, versión de prueba `0.2.0+2`:** implementada y aprobada por QA independiente el 05-11-2026. Incluye:
+  - partida guardada en `game:<caseId>`;
+  - pausa con el tablero tapado y reloj detenido en el diálogo de salida;
+  - salida con confirmación hacia `/casos`;
+  - errores mostrados solo como cantidad (regla 9);
+  - aviso "Elige primero a un sospechoso" (regla 20);
+  - pista completa al mantenerla oprimida;
+  - etiquetas DEMO y "Próximamente";
+  - casos ordenados por número y carga tolerante a archivos dañados;
+  - versión y casos sin terminar en el reporte de feedback;
+  - tutorial nuevo de 5×5 (`assets/tutorial/caso-tutorial.json`, semilla 192), obligatorio una vez (`tutorial:v2:done`) con Saltar visible, que ya no consume el Caso 1.
+
+  Pruebas: tools 65 y app 98, todas pasan; analyze sin errores. Falta la guía de la prueba de juego.
+- **Etapa 2, prototipo gráfico (`prototipos/tablero-flame/`):** la parte técnica está hecha (Flame, director de feedback, sonidos propios generados por código, medidor de FPS, 85 tests). Se están construyendo dos pieles, "Ilustrada" (cualidades de la referencia de Alejandro del 05-11-2026, ver [docs/referencias-visuales/](../../docs/referencias-visuales/README.md)) y "Papel", con modo claro y oscuro que sigue al teléfono. Falta medir en el Android de gama media de Alejandro.
+- **Compilación:** el JAVA_HOME por defecto del PC es Java 11, y para compilar Android hay que usar `JAVA_HOME=C:/Program Files/Java/jdk-17`.
 - **Protección:** Alejandro creó el repositorio privado `https://github.com/Alejjorojjas/Enigmatrix` y autorizó los commits el 04-11-2026. Los commits llevan solo su autoría, sin coautoría de Claude. Siguen sin autorizar: sacar el proyecto de OneDrive, versionar `app/pubspec.lock` y cambiar la firma.
 - **Documentos:** puestos al día el 04-11-2026 y revisados por el arquitecto y por dos verificadores independientes. El índice con el estado de cada documento está en [docs/README.md](../../docs/README.md) y hay registros de decisión nuevos (ADR 0003 a 0012).
 - **Decididas el 04-11-2026:** reglas 5, 9, 10, 11 y 20; pregunta 21 (3 a 5 personas); prueba de concepto gráfica autorizada con ambos estilos y arte gratuito; Mac confirmado desde el 12-07-2026 (ver "Decisiones vigentes").
@@ -14,9 +28,9 @@
 - **Estado verificado en el código:** 54 tests en `tools/test` y 26 en `app/test`; tableros 6×6, 8×8, 9×9, 12×12 y 16×16 (solo los tres primeros tienen casos); `shared_preferences`; sin audio, vibración, traducciones ni lectores de pantalla.
 - **Próximos pasos:**
   1. ~~Alejandro crea el repositorio privado en GitHub y Claude sube el historial.~~ Hecho el 04-11-2026.
-  2. Alejandro consigue sus propias referencias visuales: las 5 sugeridas no le gustaron.
-  3. Preparar la versión de prueba de la etapa 1 (cambios pequeños de código que hay que autorizar, con las reglas decididas) y la guía de la prueba de juego.
-  4. Arrancar la prueba de concepto gráfica (etapa 2), escalonada unos días después de la prueba de juego.
+  2. ~~Alejandro consigue sus propias referencias visuales.~~ Las envió el 05-11-2026.
+  3. ~~Preparar la versión de prueba de la etapa 1.~~ Hecho el 05-11-2026. Falta la guía de la prueba de juego, con hoja de registro y umbrales a acordar con Alejandro.
+  4. Alejandro instala la versión de prueba y el prototipo en su Android de gama media. Mide la fluidez del prototipo y compara las pieles; arranca la prueba de juego con 3 a 5 personas.
 
 ### Preguntas abiertas (sin decidir; ninguna se resuelve en los documentos)
 

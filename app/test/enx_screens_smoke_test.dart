@@ -17,12 +17,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<List<PuzzleCase>> _loadRealCases() async {
   final raw = await rootBundle.loadString('assets/cases/index.json');
-  final names = (jsonDecode(raw) as List).cast<String>()
-    ..remove('index.json');
+  final names = (jsonDecode(raw) as List).cast<String>()..remove('index.json');
   final cases = <PuzzleCase>[];
   for (final name in names.take(4)) {
-    final j = jsonDecode(await rootBundle.loadString('assets/cases/$name'))
-        as Map<String, dynamic>;
+    final j =
+        jsonDecode(await rootBundle.loadString('assets/cases/$name'))
+            as Map<String, dynamic>;
     cases.add(PuzzleCase.fromJson(j));
   }
   return cases;
@@ -34,14 +34,12 @@ void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
 
   testWidgets('el camino de casos construye y pinta', (tester) async {
-    SharedPreferences.setMockInitialValues({'tutorial:seen': true});
+    SharedPreferences.setMockInitialValues({'tutorial:v2:done': true});
     final cases = await tester.runAsync(_loadRealCases);
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          casesProvider.overrideWith((_) async => cases!),
-        ],
+        overrides: [casesProvider.overrideWith((_) async => cases!)],
         child: const MaterialApp(home: CaseListScreen()),
       ),
     );
@@ -55,16 +53,15 @@ void main() {
     expect(find.textContaining('EXPEDIENTE'), findsWidgets);
   });
 
-  testWidgets('tocar un nodo abre la ficha del caso con botón Jugar',
-      (tester) async {
-    SharedPreferences.setMockInitialValues({'tutorial:seen': true});
+  testWidgets('tocar un nodo abre la ficha del caso con botón Jugar', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({'tutorial:v2:done': true});
     final cases = await tester.runAsync(_loadRealCases);
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          casesProvider.overrideWith((_) async => cases!),
-        ],
+        overrides: [casesProvider.overrideWith((_) async => cases!)],
         child: const MaterialApp(home: CaseListScreen()),
       ),
     );
@@ -73,8 +70,10 @@ void main() {
 
     // La primera ficha es la actual (icono lupa; la barra superior usa
     // otro tamaño del mismo icono, por eso .last = la ficha).
-    await tester.tap(find.byIcon(Icons.search_rounded).last,
-        warnIfMissed: false);
+    await tester.tap(
+      find.byIcon(Icons.search_rounded).last,
+      warnIfMissed: false,
+    );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
@@ -82,20 +81,22 @@ void main() {
     expect(find.textContaining('sospechosos'), findsOneWidget);
   });
 
-  testWidgets('nodo resuelto muestra check y datos de la partida',
-      (tester) async {
+  testWidgets('nodo resuelto muestra check y datos de la partida', (
+    tester,
+  ) async {
     final cases = await tester.runAsync(_loadRealCases);
     SharedPreferences.setMockInitialValues({
-      'tutorial:seen': true,
-      'done:${cases!.first.caseId}':
-          jsonEncode({'time': 95, 'errors': 1, 'date': '2026-07-11T10:00'}),
+      'tutorial:v2:done': true,
+      'done:${cases!.first.caseId}': jsonEncode({
+        'time': 95,
+        'errors': 1,
+        'date': '2026-07-11T10:00',
+      }),
     });
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          casesProvider.overrideWith((_) async => cases),
-        ],
+        overrides: [casesProvider.overrideWith((_) async => cases)],
         child: const MaterialApp(home: CaseListScreen()),
       ),
     );
@@ -107,17 +108,16 @@ void main() {
     expect(find.text('1 / 4'), findsWidgets);
   });
 
-  testWidgets('primer arranque: el tutorial aparece automáticamente',
-      (tester) async {
+  testWidgets('primer arranque: el tutorial aparece automáticamente', (
+    tester,
+  ) async {
     // Sin 'tutorial:seen' (instalación nueva o reinstalación).
     SharedPreferences.setMockInitialValues({});
     final cases = await tester.runAsync(_loadRealCases);
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          casesProvider.overrideWith((_) async => cases!),
-        ],
+        overrides: [casesProvider.overrideWith((_) async => cases!)],
         child: const EnigmatrixApp(),
       ),
     );
@@ -132,16 +132,13 @@ void main() {
     expect(find.text('Omitir'), findsOneWidget);
   });
 
-  testWidgets('la app completa arranca en el Inicio del shell',
-      (tester) async {
-    SharedPreferences.setMockInitialValues({'tutorial:seen': true});
+  testWidgets('la app completa arranca en el Inicio del shell', (tester) async {
+    SharedPreferences.setMockInitialValues({'tutorial:v2:done': true});
     final cases = await tester.runAsync(_loadRealCases);
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          casesProvider.overrideWith((_) async => cases!),
-        ],
+        overrides: [casesProvider.overrideWith((_) async => cases!)],
         child: const EnigmatrixApp(),
       ),
     );

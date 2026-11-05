@@ -16,13 +16,15 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
+import '../app_version.dart';
 import '../data/case_repository.dart';
 import 'enx_style.dart';
 import 'tutorial_coach.dart';
 import 'tutorial_dialog.dart';
 
-final prefsProvider =
-    FutureProvider<SharedPreferences>((_) => SharedPreferences.getInstance());
+final prefsProvider = FutureProvider<SharedPreferences>(
+  (_) => SharedPreferences.getInstance(),
+);
 
 /// Altura fija de cada fila del camino (permite que el hilo conozca la
 /// posición exacta de cada ficha).
@@ -65,6 +67,13 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
             final raw = prefs?.getString('done:${pc.caseId}');
             if (raw != null) done[pc.caseId] = jsonDecode(raw);
           }
+          // Partidas abiertas y sin terminar (clave game:<id>, solo lectura).
+          final inProgress = <String, SavedGameInfo>{};
+          for (final pc in list) {
+            if (done.containsKey(pc.caseId)) continue;
+            final g = prefs?.getString('game:${pc.caseId}');
+            if (g != null) inProgress[pc.caseId] = SavedGameInfo.fromRaw(g);
+          }
           // Ficha actual = primer caso sin resolver en el orden del tablero.
           final currentId = list
               .where((pc) => !done.containsKey(pc.caseId))
@@ -88,9 +97,7 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
                   padding: const EdgeInsets.only(bottom: 60),
                   children: [
                     _TutorialNode(
-                      firstCaseId: list.first.caseId,
-                      played:
-                          prefs?.getBool(tutorialPlayedKey) ?? false,
+                      played: prefs?.getBool(tutorialPlayedKey) ?? false,
                     ),
                     for (final (i, e) in sections.entries.indexed) ...[
                       _CaseFolderHeader(
@@ -105,6 +112,7 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
                       _EvidenceBoard(
                         cases: e.value,
                         done: done,
+                        inProgress: inProgress,
                         currentId: currentId,
                       ),
                     ],
@@ -121,25 +129,30 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
   Future<void> _copyFeedback(BuildContext context, WidgetRef ref) async {
     final prefs = await SharedPreferences.getInstance();
     final cases = ref.read(casesProvider).valueOrNull ?? [];
-    final report = StringBuffer('FEEDBACK PLAYTEST ENIGMATRIX\n\n');
-    for (final pc in cases) {
-      final done = prefs.getString('done:${pc.caseId}');
-      final fb = prefs.getString('fb:${pc.caseId}');
-      if (done == null && (fb == null || fb.isEmpty)) continue;
-      report.writeln('## ${pc.caseId} (${pc.difficulty})');
-      if (done != null) {
-        final d = jsonDecode(done);
-        report.writeln(
-            '   tiempo: ${d['time']}s · errores: ${d['errors']} · ${d['date']}');
-      }
-      if (fb != null && fb.isNotEmpty) report.writeln('   notas: $fb');
-      report.writeln();
-    }
-    await Clipboard.setData(ClipboardData(text: report.toString()));
+    final report = buildFeedbackReport(
+      version: kAppVersion,
+      now: DateTime.now(),
+      cases: [
+        for (final pc in cases)
+          FeedbackCaseData(
+            caseId: pc.caseId,
+            difficulty: pc.difficulty,
+            doneRaw: prefs.getString('done:${pc.caseId}'),
+            gameRaw: prefs.getString('game:${pc.caseId}'),
+            notes: prefs.getString('fb:${pc.caseId}'),
+          ),
+      ],
+    );
+    await Clipboard.setData(ClipboardData(text: report));
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Feedback copiado al portapapeles — pégalo en el chat '
-              'de Claude para calibrar el generador')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Feedback copiado al portapapeles — pégalo en el chat '
+            'de Claude para calibrar el generador',
+          ),
+        ),
+      );
     }
   }
 }
@@ -150,36 +163,37 @@ class _TopBar extends ConsumerWidget {
   final int total;
   final VoidCallback onCopyFeedback;
 
-  const _TopBar(
-      {required this.solved,
-      required this.total,
-      required this.onCopyFeedback});
+  const _TopBar({
+    required this.solved,
+    required this.total,
+    required this.onCopyFeedback,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pal = ref.watch(paletteProvider);
 
-    Widget squareAction(
-            {required IconData icon,
-            required Color color,
-            required String tooltip,
-            required VoidCallback onTap}) =>
-        Tooltip(
-          message: tooltip,
-          child: InkWell(
-            onTap: onTap,
+    Widget squareAction({
+      required IconData icon,
+      required Color color,
+      required String tooltip,
+      required VoidCallback onTap,
+    }) => Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(7),
+          decoration: BoxDecoration(
+            color: pal.surface,
             borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                color: pal.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: pal.border, width: 2),
-              ),
-              child: Icon(icon, size: 18, color: color),
-            ),
+            border: Border.all(color: pal.border, width: 2),
           ),
-        );
+          child: Icon(icon, size: 18, color: color),
+        ),
+      ),
+    );
 
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 14, 12, 12),
@@ -196,8 +210,11 @@ class _TopBar extends ConsumerWidget {
               borderRadius: BorderRadius.circular(10),
               child: const Padding(
                 padding: EdgeInsets.all(4),
-                child: Icon(Icons.arrow_back_rounded,
-                    size: 24, color: Enx.goldInk),
+                child: Icon(
+                  Icons.arrow_back_rounded,
+                  size: 24,
+                  color: Enx.goldInk,
+                ),
               ),
             ),
             const SizedBox(width: 6),
@@ -208,22 +225,29 @@ class _TopBar extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                      color: enxDarken(Enx.gold),
-                      offset: const Offset(0, 3),
-                      blurRadius: 0),
+                    color: enxDarken(Enx.gold),
+                    offset: const Offset(0, 3),
+                    blurRadius: 0,
+                  ),
                 ],
               ),
-              child: const Icon(Icons.search_rounded,
-                  size: 18, color: Enx.goldInk),
+              child: const Icon(
+                Icons.search_rounded,
+                size: 18,
+                color: Enx.goldInk,
+              ),
             ),
             const SizedBox(width: 10),
-            Text('Enigmatrix',
-                style: Enx.display(22, color: Enx.goldInk, spacing: .5)),
+            Text(
+              'Enigmatrix',
+              style: Enx.display(22, color: Enx.goldInk, spacing: .5),
+            ),
             const Spacer(),
             EnxChip(
-                icon: Icons.folder_special_rounded,
-                text: '$solved / $total',
-                color: solved == total ? Enx.green : Enx.text),
+              icon: Icons.folder_special_rounded,
+              text: '$solved / $total',
+              color: solved == total ? Enx.green : Enx.text,
+            ),
             const SizedBox(width: 8),
             squareAction(
               icon: Icons.help_outline_rounded,
@@ -243,7 +267,6 @@ class _TopBar extends ConsumerWidget {
       ),
     );
   }
-
 }
 
 /// Cabecera de sección con forma de carpeta de expediente: pestaña de color
@@ -255,12 +278,13 @@ class _CaseFolderHeader extends ConsumerWidget {
   final int count;
   final int solved;
 
-  const _CaseFolderHeader(
-      {required this.index,
-      required this.difficulty,
-      required this.size,
-      required this.count,
-      required this.solved});
+  const _CaseFolderHeader({
+    required this.index,
+    required this.difficulty,
+    required this.size,
+    required this.count,
+    required this.solved,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -277,54 +301,71 @@ class _CaseFolderHeader extends ConsumerWidget {
               // Pestaña de la carpeta.
               Container(
                 margin: const EdgeInsets.only(left: 14),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(10)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(10),
+                  ),
                 ),
-                child: Text('EXPEDIENTE Nº$index',
-                    style: Enx.font(11,
-                        weight: FontWeight.w800,
-                        color: Colors.white,
-                        spacing: 2)),
+                child: Text(
+                  'EXPEDIENTE Nº$index',
+                  style: Enx.font(
+                    11,
+                    weight: FontWeight.w800,
+                    color: Colors.white,
+                    spacing: 2,
+                  ),
+                ),
               ),
               // Cuerpo de la carpeta.
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 18, vertical: 14),
+                  horizontal: 18,
+                  vertical: 14,
+                ),
                 decoration: BoxDecoration(
                   color: pal.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: color, width: 2.5),
                   boxShadow: [
                     BoxShadow(
-                        color: enxDarken(color, .35),
-                        offset: const Offset(0, 5),
-                        blurRadius: 0),
+                      color: enxDarken(color, .35),
+                      offset: const Offset(0, 5),
+                      blurRadius: 0,
+                    ),
                   ],
                 ),
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
-                          '${difficulty[0].toUpperCase()}${difficulty.substring(1)}'
-                          ' · tablero $size×$size',
-                          style: Enx.display(18)),
+                        '${difficulty[0].toUpperCase()}${difficulty.substring(1)}'
+                        ' · tablero $size×$size',
+                        style: Enx.display(18),
+                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
                       decoration: BoxDecoration(
                         color: color.withValues(alpha: .18),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                            color: color.withValues(alpha: .6), width: 1.5),
+                          color: color.withValues(alpha: .6),
+                          width: 1.5,
+                        ),
                       ),
-                      child: Text('$solved / $count',
-                          style: Enx.font(13, color: color)),
+                      child: Text(
+                        '$solved / $count',
+                        style: Enx.font(13, color: color),
+                      ),
                     ),
                   ],
                 ),
@@ -342,18 +383,22 @@ class _CaseFolderHeader extends ConsumerWidget {
 class _EvidenceBoard extends StatelessWidget {
   final List<PuzzleCase> cases;
   final Map<String, Map<String, dynamic>> done;
+  final Map<String, SavedGameInfo> inProgress;
   final String? currentId;
 
-  const _EvidenceBoard(
-      {required this.cases, required this.done, required this.currentId});
+  const _EvidenceBoard({
+    required this.cases,
+    required this.done,
+    required this.inProgress,
+    required this.currentId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, box) {
         // Amplitud de la culebrita limitada por el ancho disponible.
-        final amplitude =
-            math.min(120.0, math.max(0.0, box.maxWidth / 2 - 70));
+        final amplitude = math.min(120.0, math.max(0.0, box.maxWidth / 2 - 70));
         final height = _boardTopPad + cases.length * _rowHeight + 10;
 
         return SizedBox(
@@ -364,7 +409,9 @@ class _EvidenceBoard extends StatelessWidget {
               Positioned.fill(
                 child: CustomPaint(
                   painter: _ThreadPainter(
-                      count: cases.length, amplitude: amplitude),
+                    count: cases.length,
+                    amplitude: amplitude,
+                  ),
                 ),
               ),
               for (final (i, pc) in cases.indexed)
@@ -377,6 +424,7 @@ class _EvidenceBoard extends StatelessWidget {
                       number: i + 1,
                       tilt: (i.isEven ? -1 : 1) * 0.045,
                       doneInfo: done[pc.caseId],
+                      savedGame: inProgress[pc.caseId],
                       isCurrent: pc.caseId == currentId,
                     ),
                   ),
@@ -402,8 +450,10 @@ class _ThreadPainter extends CustomPainter {
     if (count < 2) return;
     final cx = size.width / 2;
 
-    Offset center(int i) => Offset(cx + _snake(i) * amplitude,
-        _boardTopPad + i * _rowHeight + _tileCenterY);
+    Offset center(int i) => Offset(
+      cx + _snake(i) * amplitude,
+      _boardTopPad + i * _rowHeight + _tileCenterY,
+    );
 
     // Curva suave: cúbicas con controles verticales a mitad de camino.
     final path = Path()..moveTo(center(0).dx, center(0).dy);
@@ -426,7 +476,9 @@ class _ThreadPainter extends CustomPainter {
       double d = 0;
       while (d < metric.length) {
         canvas.drawPath(
-            metric.extractPath(d, math.min(d + dash, metric.length)), paint);
+          metric.extractPath(d, math.min(d + dash, metric.length)),
+          paint,
+        );
         d += dash + gap;
       }
     }
@@ -446,14 +498,17 @@ class _CaseFile extends ConsumerStatefulWidget {
   final int number;
   final double tilt;
   final Map<String, dynamic>? doneInfo;
+  final SavedGameInfo? savedGame;
   final bool isCurrent;
 
-  const _CaseFile(
-      {required this.pc,
-      required this.number,
-      required this.tilt,
-      required this.doneInfo,
-      required this.isCurrent});
+  const _CaseFile({
+    required this.pc,
+    required this.number,
+    required this.tilt,
+    required this.doneInfo,
+    this.savedGame,
+    required this.isCurrent,
+  });
 
   @override
   ConsumerState<_CaseFile> createState() => _CaseFileState();
@@ -481,8 +536,9 @@ class _CaseFileState extends ConsumerState<_CaseFile>
   void _syncBounce() {
     if (widget.isCurrent && _bounce == null) {
       _bounce = AnimationController(
-          vsync: this, duration: const Duration(milliseconds: 900))
-        ..repeat(reverse: true);
+        vsync: this,
+        duration: const Duration(milliseconds: 900),
+      )..repeat(reverse: true);
     } else if (!widget.isCurrent && _bounce != null) {
       _bounce!.dispose();
       _bounce = null;
@@ -503,8 +559,8 @@ class _CaseFileState extends ConsumerState<_CaseFile>
     final fileColor = isDone
         ? diffColor
         : widget.isCurrent
-            ? pal.surfaceHigh
-            : pal.lockedNode;
+        ? pal.surfaceHigh
+        : pal.lockedNode;
     const fileSize = 78.0;
     const edge = 6.0;
 
@@ -530,9 +586,10 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               ? const []
               : [
                   BoxShadow(
-                      color: enxDarken(fileColor),
-                      offset: const Offset(0, edge),
-                      blurRadius: 0),
+                    color: enxDarken(fileColor),
+                    offset: const Offset(0, edge),
+                    blurRadius: 0,
+                  ),
                 ],
         ),
         child: Stack(
@@ -542,31 +599,38 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               isDone
                   ? Icons.check_rounded
                   : widget.isCurrent
-                      ? Icons.search_rounded
-                      : Icons.folder_rounded,
+                  ? Icons.search_rounded
+                  : Icons.folder_rounded,
               color: isDone
                   ? Colors.white
                   : widget.isCurrent
-                      ? Enx.goldInk
-                      : pal.muted,
+                  ? Enx.goldInk
+                  : pal.muted,
               size: 32,
             ),
             if (widget.pc.hasWeapon)
               Positioned(
                 right: 9,
                 top: 9,
-                child: Icon(Icons.colorize,
-                    size: 13, color: Colors.white.withValues(alpha: .8)),
+                child: Icon(
+                  Icons.colorize,
+                  size: 13,
+                  color: Colors.white.withValues(alpha: .8),
+                ),
               ),
             Positioned(
               bottom: 7,
-              child: Text('Nº ${widget.number}',
-                  style: Enx.font(10,
-                      weight: FontWeight.w800,
-                      color: isDone
-                          ? Colors.white.withValues(alpha: .85)
-                          : pal.muted,
-                      spacing: .5)),
+              child: Text(
+                'Nº ${widget.number}',
+                style: Enx.font(
+                  10,
+                  weight: FontWeight.w800,
+                  color: isDone
+                      ? Colors.white.withValues(alpha: .85)
+                      : pal.muted,
+                  spacing: .5,
+                ),
+              ),
             ),
           ],
         ),
@@ -578,8 +642,21 @@ class _CaseFileState extends ConsumerState<_CaseFile>
     if (!widget.isCurrent) {
       // Reserva el mismo alto que la ficha actual para que la fila sea fija.
       return SizedBox(
-          height: _rowContent,
-          child: Align(alignment: Alignment.bottomCenter, child: tilted));
+        height: _rowContent,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (widget.savedGame != null) ...[
+                _inProgressTag(widget.savedGame!),
+                const SizedBox(height: 6),
+              ],
+              tilted,
+            ],
+          ),
+        ),
+      );
     }
 
     // La ficha actual lleva una etiqueta de papel que rebota.
@@ -595,23 +672,29 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               child: child,
             ),
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: Enx.paper,
                 borderRadius: BorderRadius.circular(9),
                 boxShadow: [
                   BoxShadow(
-                      color: enxDarken(Enx.paper, .35),
-                      offset: const Offset(0, 3),
-                      blurRadius: 0),
+                    color: enxDarken(Enx.paper, .35),
+                    offset: const Offset(0, 3),
+                    blurRadius: 0,
+                  ),
                 ],
               ),
-              child: Text('SIGUIENTE CASO',
-                  style: Enx.font(12,
-                      weight: FontWeight.w800,
-                      color: Enx.ink,
-                      spacing: 1.2)),
+              child: Text(
+                widget.savedGame != null
+                    ? 'EN CURSO · ${formatElapsed(widget.savedGame!.elapsed)}'
+                    : 'SIGUIENTE CASO',
+                style: Enx.font(
+                  12,
+                  weight: FontWeight.w800,
+                  color: Enx.ink,
+                  spacing: 1.2,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 7),
@@ -620,6 +703,19 @@ class _CaseFileState extends ConsumerState<_CaseFile>
       ),
     );
   }
+
+  Widget _inProgressTag(SavedGameInfo g) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    decoration: BoxDecoration(
+      color: Enx.paper,
+      borderRadius: BorderRadius.circular(7),
+      border: Border.all(color: Enx.gold, width: 1.5),
+    ),
+    child: Text(
+      'En curso · ${formatElapsed(g.elapsed)}',
+      style: Enx.font(11, weight: FontWeight.w800, color: Enx.ink),
+    ),
+  );
 
   void _showCaseSheet(BuildContext context) {
     final pc = widget.pc;
@@ -631,7 +727,8 @@ class _CaseFileState extends ConsumerState<_CaseFile>
       context: context,
       backgroundColor: pal.surface,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       constraints: const BoxConstraints(maxWidth: 520),
       builder: (ctx) => Padding(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
@@ -644,47 +741,68 @@ class _CaseFileState extends ConsumerState<_CaseFile>
                 width: 44,
                 height: 5,
                 decoration: BoxDecoration(
-                    color: pal.border,
-                    borderRadius: BorderRadius.circular(3)),
+                  color: pal.border,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
             ),
             const SizedBox(height: 16),
-            Text('Caso Nº${widget.number} — ${pc.map.nameEs}',
-                style: Enx.display(20)),
+            Text(
+              'Caso Nº${widget.number} — ${pc.map.nameEs}',
+              style: Enx.display(20),
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
                 EnxChip(
-                    icon: Icons.speed,
-                    text: pc.difficulty,
-                    color: diffColor),
+                  icon: Icons.speed,
+                  text: pc.difficulty,
+                  color: diffColor,
+                ),
                 EnxChip(
-                    icon: Icons.grid_on,
-                    text: '${pc.map.size}×${pc.map.size}'),
+                  icon: Icons.grid_on,
+                  text: '${pc.map.size}×${pc.map.size}',
+                ),
                 EnxChip(
-                    icon: Icons.group_outlined,
-                    text: '${pc.characters.length} sospechosos'),
+                  icon: Icons.group_outlined,
+                  text: '${pc.characters.length} sospechosos',
+                ),
                 EnxChip(icon: Icons.search, text: '${pc.clues.length} pistas'),
                 if (pc.hasWeapon)
                   const EnxChip(
-                      icon: Icons.colorize,
-                      text: 'arma homicida',
-                      color: Enx.gold),
+                    icon: Icons.colorize,
+                    text: 'arma homicida',
+                    color: Enx.gold,
+                  ),
               ],
             ),
             if (done != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
-                    '✓ Caso cerrado en ${done['time']}s · ${done['errors']} '
-                    'errores',
-                    style: Enx.font(14, color: Enx.green)),
+                  '✓ Caso cerrado en ${done['time']}s · ${done['errors']} '
+                  'errores',
+                  style: Enx.font(14, color: Enx.green),
+                ),
+              ),
+            if (done == null && widget.savedGame != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  'En curso: ${formatElapsed(widget.savedGame!.elapsed)} '
+                  'jugados · ${widget.savedGame!.errors ?? 0} errores',
+                  style: Enx.font(14, color: Enx.goldInk),
+                ),
               ),
             const SizedBox(height: 20),
             EnxButton(
-              label: done != null ? 'Reabrir caso' : 'Investigar',
+              label: done != null
+                  ? 'Reabrir caso'
+                  : widget.savedGame != null
+                  ? 'Continuar'
+                  : 'Investigar',
               color: done != null ? diffColor : Enx.gold,
               textColor: done != null ? Colors.white : Enx.goldInk,
               onPressed: () {
@@ -699,14 +817,12 @@ class _CaseFileState extends ConsumerState<_CaseFile>
   }
 }
 
-
-/// Nodo TUTORIAL: aparece ANTES del Caso Nº1. Abre el primer caso en modo
-/// guiado paso a paso (TutorialCoach).
+/// Nodo TUTORIAL: aparece ANTES del Caso Nº1. Abre el caso de práctica
+/// propio (assets/tutorial) en modo guiado paso a paso (TutorialCoach): no
+/// consume ni cuenta como el Caso 1. Se puede repetir las veces que se quiera.
 class _TutorialNode extends ConsumerWidget {
-  final String firstCaseId;
   final bool played;
-  const _TutorialNode(
-      {required this.firstCaseId, required this.played});
+  const _TutorialNode({required this.played});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -722,41 +838,50 @@ class _TutorialNode extends ConsumerWidget {
             border: Border.all(color: Enx.gold, width: 2.5),
             boxShadow: const [
               BoxShadow(
-                  color: Color(0x59473418),
-                  offset: Offset(0, 5),
-                  blurRadius: 2),
+                color: Color(0x59473418),
+                offset: Offset(0, 5),
+                blurRadius: 2,
+              ),
             ],
           ),
-          child: Row(children: [
-            Text(played ? '🎓' : '🎓',
-                style: const TextStyle(fontSize: 32)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
+          child: Row(
+            children: [
+              Text(played ? '🎓' : '🎓', style: const TextStyle(fontSize: 32)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('TUTORIAL',
-                        style: Enx.font(11,
-                            weight: FontWeight.w800,
-                            color: Enx.goldInk,
-                            spacing: 2)),
-                    Text('Aprende paso a paso con tu primer caso',
-                        style: Enx.hand(16, color: Enx.ink)),
+                    Text(
+                      'TUTORIAL',
+                      style: Enx.font(
+                        11,
+                        weight: FontWeight.w800,
+                        color: Enx.goldInk,
+                        spacing: 2,
+                      ),
+                    ),
+                    Text(
+                      'Caso de práctica paso a paso (no cuenta como Caso 1)',
+                      style: Enx.hand(16, color: Enx.ink),
+                    ),
                     if (played)
-                      Text('✓ completado — puedes repetirlo',
-                          style: Enx.font(12, color: Enx.green)),
-                  ]),
-            ),
-            EnxButton(
-              label: played ? 'Repetir' : 'Empezar',
-              color: played ? Enx.paperShade : Enx.gold,
-              textColor:
-                  played ? Enx.ink : const Color(0xFF4A3200),
-              expand: false,
-              onPressed: () =>
-                  context.go('/play/$firstCaseId?tutorial=1'),
-            ),
-          ]),
+                      Text(
+                        '✓ completado — puedes repetirlo',
+                        style: Enx.font(12, color: Enx.green),
+                      ),
+                  ],
+                ),
+              ),
+              EnxButton(
+                label: played ? 'Repetir' : 'Empezar',
+                color: played ? Enx.paperShade : Enx.gold,
+                textColor: played ? Enx.ink : const Color(0xFF4A3200),
+                expand: false,
+                onPressed: () => context.go('/tutorial'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -41,6 +41,10 @@ class DifficultyProfile {
     required this.maxExtras,
   });
 
+  /// Tutorial (etapa 1, ADR-0012 regla 11): 5×5, mismas reglas de pistas
+  /// que Principiante (sin extras ni arma, mínimo 2 casillas por pista).
+  static const tutorial = DifficultyProfile(
+      label: 'tutorial', size: 5, allowVague: false, maxExtras: 0);
   static const principiante = DifficultyProfile(
       label: 'principiante', size: 6, allowVague: false, maxExtras: 0);
   static const casual = DifficultyProfile(
@@ -53,6 +57,7 @@ class DifficultyProfile {
       label: 'elite', size: 16, allowVague: true, maxExtras: 3);
 
   static DifficultyProfile byLabel(String label) => switch (label) {
+        'tutorial' => tutorial,
         'principiante' => principiante,
         'casual' => casual,
         'intermedio' => intermedio,

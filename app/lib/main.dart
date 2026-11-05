@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'src/data/case_repository.dart';
+import 'src/game/game_controller.dart';
 import 'src/ui/case_list_screen.dart';
 import 'src/ui/game_screen.dart';
 import 'src/ui/home_shell.dart';
@@ -54,19 +55,25 @@ abstract final class Brand {
 /// Color identificador por dificultad (paleta vintage detective,
 /// pase Enx 2026-07-11).
 Color difficultyColor(String label) => switch (label) {
-      'principiante' => const Color(0xFF7BC950), // verde salvia
-      'casual' => const Color(0xFF4FA3D1), // azul empolvado
-      'intermedio' => const Color(0xFFE8871E), // calabaza
-      'experto' => const Color(0xFFD64550), // ladrillo
-      'elite' => const Color(0xFF9B5DE5), // violeta
-      _ => Brand.muted,
-    };
+  'principiante' => const Color(0xFF7BC950), // verde salvia
+  'casual' => const Color(0xFF4FA3D1), // azul empolvado
+  'intermedio' => const Color(0xFFE8871E), // calabaza
+  'experto' => const Color(0xFFD64550), // ladrillo
+  'elite' => const Color(0xFF9B5DE5), // violeta
+  _ => Brand.muted,
+};
 
 final _router = GoRouter(
   routes: [
     GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
     GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
     GoRoute(path: '/casos', builder: (_, __) => const CaseListScreen()),
+    // Tutorial (regla 11): caso propio, aparte del banco de casos.
+    GoRoute(
+      path: '/tutorial',
+      builder: (_, __) =>
+          const GameScreen(caseId: kTutorialCaseId, tutorial: true),
+    ),
     GoRoute(
       path: '/play/:id',
       builder: (_, state) => GameScreen(
@@ -77,11 +84,36 @@ final _router = GoRouter(
   ],
 );
 
-class EnigmatrixApp extends ConsumerWidget {
+class EnigmatrixApp extends ConsumerStatefulWidget {
   const EnigmatrixApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<EnigmatrixApp> createState() => _EnigmatrixAppState();
+}
+
+/// Publica el ciclo de vida de la app: la partida en pantalla se pausa y se
+/// guarda al pasar a segundo plano (regla 10 del ADR-0012).
+class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    ref.read(appLifecycleProvider.notifier).state = state;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Precarga de casos al arrancar.
     ref.watch(casesProvider);
     return MaterialApp.router(

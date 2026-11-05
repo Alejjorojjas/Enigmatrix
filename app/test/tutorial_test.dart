@@ -1,0 +1,720 @@
+/// Tutorial jugable (regla 11, ADR-0012): caso propio que no consume el
+/// Caso 1, guía paso a paso que avanza con las acciones del jugador (X,
+/// Notas, papelera, borrador y un Resolver fallido controlado), Saltar
+/// siempre visible y cero huellas en el progreso del banco ("done:" / "game:").
+/// Todo determinista: el reloj real está apagado y el caso es fijo.
+library;
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:enigmatrix/src/data/case_repository.dart';
+import 'package:enigmatrix/src/game/board_state.dart';
+import 'package:enigmatrix/src/game/game_controller.dart';
+import 'package:enigmatrix/src/ui/board_view.dart';
+import 'package:enigmatrix/src/ui/case_list_screen.dart';
+import 'package:enigmatrix/src/ui/game_screen.dart';
+import 'package:enigmatrix/src/ui/home_shell.dart';
+import 'package:enigmatrix/src/ui/tutorial_coach.dart';
+import 'package:enigmatrix_engine/enigmatrix_engine.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+PuzzleCase _loadTutorial() => PuzzleCase.fromJson(
+  jsonDecode(
+        File(
+          'assets/tutorial/caso-tutorial.json',
+        ).readAsStringSync().replaceFirst('﻿', ''),
+      )
+      as Map<String, dynamic>,
+);
+
+/// Primeros casos reales del banco (como en los smoke tests).
+Future<List<PuzzleCase>> _loadBank() async {
+  final raw = await rootBundle.loadString('assets/cases/index.json');
+  final names = (jsonDecode(raw) as List).cast<String>()..remove('index.json');
+  final cases = <PuzzleCase>[];
+  for (final name in names.take(4)) {
+    final j =
+        jsonDecode(await rootBundle.loadString('assets/cases/$name'))
+            as Map<String, dynamic>;
+    cases.add(PuzzleCase.fromJson(j));
+  }
+  return cases;
+}
+
+// Personajes del tutorial (guion fijo): Adela (víctima), Bruno, Clara, Dario
+// y Elena. Casillas de la solución en el tablero de 5x5.
+const _adela = 'c1', _bruno = 'c2', _clara = 'c3', _dario = 'c4', _elena = 'c5';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  GoogleFonts.config.allowRuntimeFetching = false;
+  final pc = _loadTutorial();
+  final pos = pc.solution.positions;
+  final steps = buildTutorialSteps(pc);
+
+  // ------------------------------------------------------------------------
+  group('el caso del tutorial', () {
+    test('es un caso propio y el guion encaja con él', () {
+      expect(pc.caseId, kTutorialCaseId);
+      expect(pc.caseId, 'tutorial');
+      expect(pc.map.size, 5);
+      expect(pc.victimId, _adela);
+      expect(
+        [for (final c in pc.characters) c.nameEs],
+        ['Adela', 'Bruno', 'Clara', 'Dario', 'Elena'],
+      );
+      // Las casillas que nombra la guía.
+      expect(pos, {_adela: 3, _bruno: 7, _clara: 14, _dario: 15, _elena: 21});
+      expect(
+        pc.clueFor(_elena)!.cardTextEs(pc.map, pc.names),
+        contains('sofá'),
+      );
+      expect(steps.length, 18);
+      expect(steps.last.isFinal, isTrue);
+      expect(steps.where((s) => s.manual).length, 4);
+    });
+
+    test('no figura en index.json: no cuenta como Caso 1', () {
+      final names =
+          (jsonDecode(
+                    File(
+                      'assets/cases/index.json',
+                    ).readAsStringSync().replaceFirst('﻿', ''),
+                  )
+                  as List)
+              .cast<String>();
+      expect(names.any((n) => n.contains('tutorial')), isFalse);
+      expect(names.where((n) => n != 'index.json'), isNotEmpty);
+    });
+
+    testWidgets('se empaqueta como asset y no entra al banco', (tester) async {
+      final tutorial = await tester.runAsync(CaseRepository.loadTutorial);
+      expect(tutorial!.caseId, kTutorialCaseId);
+      expect(tutorial.characters.length, 5);
+      final bank = await tester.runAsync(CaseRepository.loadAll);
+      expect(bank!.any((c) => c.caseId == kTutorialCaseId), isFalse);
+    });
+
+    test('los textos de todos los pasos se arman con el caso', () {
+      final s = GameState(
+        pc: pc,
+        board: BoardState.empty(),
+        clueMarks: const [],
+      );
+      for (final (i, step) in steps.indexed) {
+        final text = step.text(s);
+        expect(text, isNotEmpty, reason: 'paso $i');
+        expect(text.contains(r'$'), isFalse, reason: 'paso $i');
+        expect(text.contains('null'), isFalse, reason: 'paso $i');
+      }
+      // Enseña la X, las notas, la papelera, el borrador y el Resolver.
+      final all = [for (final st in steps) st.text(s)].join(' ');
+      for (final word in ['X', 'NOTAS', 'PAPELERA', 'BORRADOR', 'RESOLVER']) {
+        expect(all, contains(word));
+      }
+    });
+  });
+
+  // ------------------------------------------------------------------------
+  group('la guía avanza con las acciones del jugador', () {
+    late ProviderContainer container;
+    late GameController c;
+
+    GameState st() => container.read(gameControllerProvider(pc));
+    bool done(int step) => steps[step].advanceWhen!(st());
+
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      container = ProviderContainer(
+        overrides: [gameTickerEnabledProvider.overrideWithValue(false)],
+      );
+      addTearDown(container.dispose);
+      container.listen(gameControllerProvider(pc), (_, __) {});
+      c = container.read(gameControllerProvider(pc).notifier);
+      await c.ready;
+    });
+
+    void confirm(String id, [int? cell]) => expect(
+      c.placeSuspect(cell ?? pos[id]!, charId: id, confirm: true),
+      ActionFeedback.ok,
+    );
+
+    test('recorre los 18 pasos con las acciones del guion', () async {
+      // 0 y 1 son manuales: el botón Entendido los pasa.
+      expect(steps[0].manual && steps[1].manual, isTrue);
+
+      // 2: anotar un candidato.
+      expect(done(2), isFalse);
+      c.placeSuspect(pos[_adela]!, charId: _adela, confirm: false);
+      expect(done(2), isTrue);
+
+      // 3: confirmar a Adela en su casilla. Antes, una casilla equivocada
+      // avisa; la correcta avanza.
+      expect(done(3), isFalse);
+      c.placeSuspect(0, charId: _adela, confirm: true);
+      expect(done(3), isFalse);
+      expect(steps[3].warning!(st()), contains('Adela no va ahí'));
+      c.eraseCell(0);
+      confirm(_adela);
+      expect(done(3), isTrue);
+      expect(steps[3].warning!(st()), isNull);
+
+      // 5: Bruno en la única cama libre (4 es manual: Auto-X).
+      expect(steps[4].manual, isTrue);
+      expect(done(5), isFalse);
+      confirm(_bruno);
+      expect(done(5), isTrue);
+
+      // 6: una X a mano en el Porche; una X sobre una casilla solución avisa.
+      expect(done(6), isFalse);
+      c.placeXMark(20, XLevel.small);
+      expect(done(6), isTrue);
+      expect(steps[6].warning!(st()), isNull);
+      c.placeXMark(pos[_elena]!, XLevel.small);
+      expect(steps[6].warning!(st()), contains('Esa X tapa'));
+      c.eraseCell(pos[_elena]!);
+
+      // 7 y 8: Notas y de vuelta a Mapa.
+      expect(done(7), isFalse);
+      c.toggleMapMode();
+      expect(done(7), isTrue);
+      expect(done(8), isFalse);
+      c.toggleMapMode();
+      expect(done(8), isTrue);
+
+      // 9: Clara en la única casilla libre del Baño.
+      expect(done(9), isFalse);
+      confirm(_clara);
+      expect(done(9), isTrue);
+
+      // 10: Elena y Dario terminan el tablero.
+      expect(done(10), isFalse);
+      confirm(_elena);
+      confirm(_dario);
+      expect(done(10), isTrue);
+      expect(tutorialBoardIsCorrect(st()), isTrue);
+
+      // Con el tablero correcto, el Resolver que acierta espera al final.
+      expect(tutorialResolveBlock(pc, st(), 11), isNotNull);
+      expect(tutorialResolveBlock(pc, st(), 16), isNotNull);
+      expect(tutorialResolveBlock(pc, st(), 17), isNull);
+
+      // 11: quitar a Elena y a Dario (papelera o lo que sea).
+      expect(done(11), isFalse);
+      c.removeElement(pos[_elena]!, ConfirmedElement(_elena));
+      expect(done(11), isFalse);
+      c.removeElement(pos[_dario]!, ConfirmedElement(_dario));
+      expect(done(11), isTrue);
+
+      // 12: intercambiarlos. Ponerlos bien avisa que no es el experimento.
+      expect(done(12), isFalse);
+      confirm(_elena);
+      confirm(_dario);
+      expect(steps[12].warning!(st()), contains('correcto'));
+      c.eraseCell(pos[_elena]!);
+      c.eraseCell(pos[_dario]!);
+      confirm(_elena, pos[_dario]);
+      confirm(_dario, pos[_elena]);
+      expect(done(12), isTrue);
+      expect(steps[12].warning!(st()), isNull);
+
+      // Con el tablero mal, Resolver siempre falla (no se bloquea).
+      expect(tutorialResolveBlock(pc, st(), 13), isNull);
+
+      // 13: Resolver fallido: SOLO el tutorial señala las casillas exactas.
+      expect(done(13), isFalse);
+      expect(c.solve(revealCells: true), ActionFeedback.wrongSolution);
+      expect(done(13), isTrue);
+      expect(st().errorCells, {pos[_dario], pos[_elena]});
+      expect(st().wrongCount, 2);
+      expect(steps[14].manual, isTrue);
+
+      // 15: borrar a los dos con el borrador; 16: ponerlos bien.
+      // (el bloqueo de 3 s tras el error debe haber pasado)
+      await Future<void>.delayed(const Duration(milliseconds: 3100));
+      expect(done(15), isFalse);
+      c.eraseCell(pos[_dario]!);
+      c.eraseCell(pos[_elena]!);
+      expect(done(15), isTrue);
+      expect(done(16), isFalse);
+      confirm(_elena);
+      confirm(_dario);
+      expect(done(16), isTrue);
+
+      // 17: el Resolver final acierta.
+      expect(steps[17].advanceWhen, isNull);
+      expect(c.solve(revealCells: true), ActionFeedback.solvedOk);
+      expect(st().murdererId, _bruno);
+    });
+
+    test('un Resolver normal NO señala casillas (regla 9)', () {
+      confirm(_adela, pos[_bruno]);
+      confirm(_bruno, pos[_adela]);
+      confirm(_clara);
+      confirm(_dario);
+      confirm(_elena);
+      expect(c.solve(), ActionFeedback.wrongSolution);
+      expect(st().errorCells, isEmpty);
+      expect(st().wrongCount, 2);
+    });
+  });
+
+  // ------------------------------------------------------------------------
+  group('pantalla del tutorial', () {
+    Future<(ProviderContainer, GoRouter)> pumpApp(
+      WidgetTester tester, {
+      Map<String, Object> prefs = const {},
+      String initial = '/tutorial',
+      List<PuzzleCase>? bank,
+    }) async {
+      SharedPreferences.setMockInitialValues(prefs);
+      tester.view.physicalSize = const Size(1100, 1700);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final container = ProviderContainer(
+        overrides: [
+          gameTickerEnabledProvider.overrideWithValue(false),
+          casesProvider.overrideWith((_) async => bank ?? const []),
+          tutorialCaseProvider.overrideWith((_) async => pc),
+        ],
+      );
+      addTearDown(container.dispose);
+      final router = GoRouter(
+        initialLocation: initial,
+        routes: [
+          GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
+          GoRoute(path: '/casos', builder: (_, __) => const CaseListScreen()),
+          GoRoute(
+            path: '/tutorial',
+            builder: (_, __) =>
+                const GameScreen(caseId: kTutorialCaseId, tutorial: true),
+          ),
+        ],
+      );
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+      await _settle(tester);
+      return (container, router);
+    }
+
+    Offset cellCenter(WidgetTester tester, int cell) {
+      final box = tester.getRect(find.byType(BoardView));
+      final n = pc.map.size;
+      final cs = (box.width - 16) / n;
+      return Offset(
+        box.left + 8 + cs * (cell % n + .5),
+        box.top + 8 + cs * (cell ~/ n + .5),
+      );
+    }
+
+    // Las tarjetas de sospechosos van en una tira que se desliza a los lados.
+    Future<void> tapCard(WidgetTester tester, String name) async {
+      final strip = find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axis == Axis.horizontal,
+      );
+      final stripRect = tester.getRect(strip);
+      for (var i = 0; i < 8; i++) {
+        final f = find.text(name);
+        if (f.evaluate().isNotEmpty) {
+          final x = tester.getCenter(f.first).dx;
+          if (x > stripRect.left + 40 && x < stripRect.right - 40) break;
+        }
+        // Se prueba hacia el lado donde esté la tarjeta.
+        final shown = find.text(name).evaluate().isNotEmpty;
+        final dx =
+            shown &&
+                tester.getCenter(find.text(name).first).dx < stripRect.left + 40
+            ? 150.0
+            : -150.0;
+        await tester.drag(strip, Offset(dx, 0));
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      await tester.tap(find.text(name).first);
+      await _settle(tester);
+    }
+
+    Future<void> confirmAt(WidgetTester tester, String name, int cell) async {
+      await tapCard(tester, name);
+      await tester.longPressAt(cellCenter(tester, cell));
+      await _settle(tester);
+    }
+
+    void expectStep(int index) {
+      expect(
+        find.text('TUTORIAL · ${index + 1}/${steps.length}'),
+        findsOneWidget,
+      );
+    }
+
+    Future<Set<String>> prefKeys() async =>
+        (await SharedPreferences.getInstance()).getKeys();
+
+    testWidgets('recorre los pasos principales con el caso del tutorial', (
+      tester,
+    ) async {
+      final (container, _) = await pumpApp(tester);
+      GameState state() => container.read(gameControllerProvider(pc));
+
+      // Arranca en el paso 1, con el caso del tutorial y Saltar a la vista.
+      expectStep(0);
+      expect(find.text('Saltar'), findsOneWidget);
+      expect(find.text('Tutorial · El Club'), findsOneWidget);
+      expect(find.textContaining('caso de práctica'), findsOneWidget);
+
+      // 0 y 1: pasos manuales.
+      await tester.tap(find.text('ENTENDIDO'));
+      await _settle(tester);
+      expectStep(1);
+      await tester.tap(find.text('ENTENDIDO'));
+      await _settle(tester);
+
+      // 2: tocar la tarjeta de Adela y una casilla = candidato.
+      expectStep(2);
+      await tapCard(tester, 'Adela');
+      await tester.tapAt(cellCenter(tester, pos[_adela]!));
+      await _settle(tester);
+      expect(state().board.cell(pos[_adela]!).candidates, {_adela});
+
+      // 3: mantener presionada = confirmar.
+      expectStep(3);
+      await tester.longPressAt(cellCenter(tester, pos[_adela]!));
+      await _settle(tester);
+      expect(state().board.confirmedCellOf(_adela), pos[_adela]);
+
+      // 4: manual (Auto-X).
+      expectStep(4);
+      await tester.tap(find.text('ENTENDIDO'));
+      await _settle(tester);
+
+      // 5: Bruno en la única cama libre.
+      expectStep(5);
+      await confirmAt(tester, 'Bruno', pos[_bruno]!);
+
+      // 6: la X a mano, con la herramienta y una casilla del Porche.
+      expectStep(6);
+      await tester.tap(find.text('Descarte (X)'));
+      await _settle(tester);
+      await tester.tapAt(cellCenter(tester, 20));
+      await _settle(tester);
+      expect(state().board.cell(20).x, XLevel.small);
+
+      // 7 y 8: Notas y vuelta a Mapa.
+      expectStep(7);
+      await tester.tap(find.text('Notas'));
+      await _settle(tester);
+      expect(state().mapMode, isFalse);
+      expectStep(8);
+      await tester.tap(find.text('Mapa'));
+      await _settle(tester);
+      expect(state().mapMode, isTrue);
+
+      // 9 y 10: Clara, luego Elena y Dario.
+      expectStep(9);
+      await confirmAt(tester, 'Clara', pos[_clara]!);
+      expectStep(10);
+      await confirmAt(tester, 'Elena', pos[_elena]!);
+      await confirmAt(tester, 'Dario', pos[_dario]!);
+      expect(tutorialBoardIsCorrect(state()), isTrue);
+
+      // 11: con el tablero correcto el Resolver espera (hay experimento).
+      expectStep(11);
+      await tester.tap(find.text('RESOLVER'));
+      await _settle(tester);
+      expect(find.textContaining('Aún no'), findsOneWidget);
+      expect(state().solved, isFalse);
+      expect(state().errorCount, 0);
+
+      // 11: arrastrar a Elena y a Dario a la papelera.
+      final trash = tester.getCenter(find.byIcon(Icons.delete_outline));
+      for (final cell in [pos[_elena]!, pos[_dario]!]) {
+        final from = cellCenter(tester, cell);
+        await tester.dragFrom(from, trash - from);
+        await _settle(tester);
+      }
+      expect(state().board.confirmedCellOf(_elena), isNull);
+      expect(state().board.confirmedCellOf(_dario), isNull);
+
+      // 12: intercambiarlos.
+      expectStep(12);
+      await confirmAt(tester, 'Elena', pos[_dario]!);
+      await confirmAt(tester, 'Dario', pos[_elena]!);
+
+      // 13: Resolver fallido: se marcan las casillas exactas y se explica.
+      expectStep(13);
+      await tester.tap(find.text('RESOLVER'));
+      await _settle(tester);
+      expect(state().errorCells, {pos[_dario], pos[_elena]});
+      // El aviso anterior sale y el nuevo entra (animaciones del SnackBar).
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(
+        find.text('2 casillas no cuadran: revisa las marcadas'),
+        findsOneWidget,
+      );
+      expect(state().errorCount, 1);
+
+      // 14: explicación (manual). El bloqueo de 3 s se acaba solo.
+      expectStep(14);
+      expect(find.textContaining('Las casillas rojas'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 4));
+      await tester.tap(find.text('ENTENDIDO'));
+      await _settle(tester);
+
+      // 15: borrador.
+      expectStep(15);
+      await tester.tap(find.text('Borrador (toca y limpia casillas)'));
+      await _settle(tester);
+      for (final cell in [pos[_dario]!, pos[_elena]!]) {
+        await tester.tapAt(cellCenter(tester, cell));
+        await _settle(tester);
+      }
+      expect(state().board.confirmedCellOf(_elena), isNull);
+
+      // 16: ponerlos bien.
+      expectStep(16);
+      await confirmAt(tester, 'Elena', pos[_elena]!);
+      await confirmAt(tester, 'Dario', pos[_dario]!);
+
+      // 17: Resolver final.
+      expectStep(17);
+      expect(find.text('ENTENDIDO'), findsNothing);
+      await tester.tap(find.text('RESOLVER'));
+      await _settle(tester);
+      expect(state().solved, isTrue);
+      expect(find.text('¡Práctica superada!'), findsOneWidget);
+      expect(find.textContaining('El asesino era Bruno'), findsOneWidget);
+
+      // Sin huellas: ni "done:" ni "game:" de ningún caso.
+      final keys = await prefKeys();
+      expect(keys.where((k) => k.startsWith('done:')), isEmpty);
+      expect(keys.where((k) => k.startsWith('game:')), isEmpty);
+      expect(keys.where((k) => k.startsWith('fb:')), isEmpty);
+      expect(keys, contains(tutorialPlayedKey));
+    });
+
+    testWidgets('terminar el tutorial deja el Caso 1 sin jugar', (
+      tester,
+    ) async {
+      final bank = (await tester.runAsync(_loadBank))!;
+      final (container, router) = await pumpApp(tester, bank: bank);
+      final c = container.read(gameControllerProvider(pc).notifier);
+
+      // Se resuelve el caso (con el controlador, ya probado paso a paso).
+      for (final e in pos.entries) {
+        c.placeSuspect(e.value, charId: e.key, confirm: true);
+      }
+      await tester.tap(find.text('RESOLVER'));
+      await _settle(tester);
+      // Con el tablero ya correcto pero la guía en el paso 1, Resolver espera
+      // (falta el experimento del Resolver fallido). Se fuerza el último
+      // paso de la guía para cerrar el caso.
+      expect(container.read(gameControllerProvider(pc)).solved, isFalse);
+      container.read(tutorialStepProvider.notifier).state = steps.length - 1;
+      await _settle(tester);
+      await tester.tap(find.text('RESOLVER'));
+      await _settle(tester);
+      expect(find.text('¡Práctica superada!'), findsOneWidget);
+
+      await tester.tap(find.text('IR A LOS CASOS'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(router.state.uri.path, '/casos');
+
+      // La lista no incluye el tutorial y el Caso 1 sigue siendo el actual.
+      expect(bank.any((b) => b.caseId == kTutorialCaseId), isFalse);
+      expect(find.text('SIGUIENTE CASO'), findsOneWidget);
+      expect(find.text('✓ completado — puedes repetirlo'), findsOneWidget);
+      expect(find.text('REPETIR'), findsOneWidget);
+
+      final keys = await prefKeys();
+      expect(keys.where((k) => k.startsWith('done:')), isEmpty);
+      for (final b in bank) {
+        expect(keys, isNot(contains('game:${b.caseId}')));
+        expect(keys, isNot(contains('done:${b.caseId}')));
+      }
+      expect(keys, isNot(contains('game:$kTutorialCaseId')));
+    });
+
+    testWidgets('Saltar está siempre a la vista y no vuelve solo', (
+      tester,
+    ) async {
+      final bank = (await tester.runAsync(_loadBank))!;
+      final (container, router) = await pumpApp(tester, bank: bank);
+
+      expect(find.text('Saltar'), findsOneWidget);
+      // También con la partida en pausa.
+      container.read(appLifecycleProvider.notifier).state =
+          AppLifecycleState.paused;
+      await _settle(tester);
+      expect(find.text('Partida en pausa'), findsOneWidget);
+      expect(find.text('Saltar'), findsOneWidget);
+      await tester.tap(find.text('Continuar'));
+      await _settle(tester);
+
+      await tester.tap(find.text('Saltar'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(router.state.uri.path, '/casos');
+      expect(find.text('SIGUIENTE CASO'), findsOneWidget);
+
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getBool(tutorialPlayedKey), isTrue);
+      expect(prefs.getBool('tutorial:v2:done'), isTrue);
+      expect([
+        for (final k in prefs.getKeys())
+          if (k.startsWith('done:')) k,
+      ], isEmpty);
+    });
+
+    testWidgets('la flecha pide confirmar y salir equivale a saltar', (
+      tester,
+    ) async {
+      final bank = (await tester.runAsync(_loadBank))!;
+      final (_, router) = await pumpApp(tester, bank: bank);
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await _settle(tester);
+      expect(find.text('Salir del tutorial'), findsOneWidget);
+      await tester.tap(find.text('Seguir practicando'));
+      await _settle(tester);
+      expect(router.state.uri.path, '/tutorial');
+
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await _settle(tester);
+      await tester.tap(find.text('Salir'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(router.state.uri.path, '/casos');
+      expect(
+        (await SharedPreferences.getInstance()).getBool(tutorialPlayedKey),
+        isTrue,
+      );
+    });
+
+    testWidgets('siempre empieza de cero y no deja partida guardada', (
+      tester,
+    ) async {
+      final (container, _) = await pumpApp(
+        tester,
+        prefs: {'game:$kTutorialCaseId': 'basura de una partida anterior'},
+      );
+      // El tutorial ni restaura ni toca "game:tutorial": empieza de cero.
+      final s = container.read(gameControllerProvider(pc));
+      expect(s.board.isEmpty, isTrue);
+      expect(s.elapsedSeconds, 0);
+      expectStep(0);
+    });
+
+    testWidgets('la tarjeta de la guía va fuera del tablero y no lo tapa', (
+      tester,
+    ) async {
+      await pumpApp(tester);
+      final card = tester.getRect(find.text('TUTORIAL · 1/18'));
+      final board = tester.getRect(find.byType(BoardView));
+      final strip = tester.getRect(find.text('PISTAS'));
+      expect(card.bottom, lessThan(board.top));
+      expect(card.bottom, lessThan(strip.top));
+    });
+
+    testWidgets('primer arranque: bienvenida y directo al caso de práctica', (
+      tester,
+    ) async {
+      final bank = (await tester.runAsync(_loadBank))!;
+      final (_, router) = await pumpApp(tester, initial: '/home', bank: bank);
+      for (var i = 0; i < 5; i++) {
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+      expect(find.text('CÓMO JUGAR'), findsOneWidget);
+
+      for (var i = 0; i < 4; i++) {
+        await tester.tap(find.text('SIGUIENTE'));
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump(const Duration(milliseconds: 400));
+      }
+      expect(find.text('EMPEZAR LA PRÁCTICA'), findsOneWidget);
+      expect(router.state.uri.path, '/home');
+
+      await tester.tap(find.text('EMPEZAR LA PRÁCTICA'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(router.state.uri.path, '/tutorial');
+      expectStep(0);
+      expect(find.text('Saltar'), findsOneWidget);
+    });
+
+    testWidgets('si ya se hizo o se saltó, no aparece solo', (tester) async {
+      final bank = (await tester.runAsync(_loadBank))!;
+      final (_, router) = await pumpApp(
+        tester,
+        initial: '/home',
+        bank: bank,
+        prefs: {tutorialPlayedKey: true},
+      );
+      for (var i = 0; i < 5; i++) {
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+      expect(find.text('CÓMO JUGAR'), findsNothing);
+      expect(router.state.uri.path, '/home');
+    });
+
+    testWidgets('las claves viejas no eximen del tutorial nuevo (v2)', (
+      tester,
+    ) async {
+      final bank = (await tester.runAsync(_loadBank))!;
+      final (_, router) = await pumpApp(
+        tester,
+        initial: '/home',
+        bank: bank,
+        prefs: {'tutorial:seen': true, 'tutorial:played': true},
+      );
+      for (var i = 0; i < 5; i++) {
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+      expect(find.text('CÓMO JUGAR'), findsOneWidget);
+      expect(router.state.uri.path, '/home');
+      final prefs = await SharedPreferences.getInstance();
+      // Las claves viejas se conservan.
+      expect(prefs.getBool('tutorial:played'), isTrue);
+      expect(prefs.getBool('tutorial:v2:done'), isNull);
+    });
+
+    testWidgets('desde la lista de casos se puede repetir', (tester) async {
+      final bank = (await tester.runAsync(_loadBank))!;
+      final (_, router) = await pumpApp(
+        tester,
+        initial: '/casos',
+        bank: bank,
+        prefs: {tutorialPlayedKey: true},
+      );
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.text('REPETIR'), findsOneWidget);
+
+      await tester.tap(find.text('REPETIR'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(router.state.uri.path, '/tutorial');
+      await tester.pump(const Duration(milliseconds: 300));
+      expectStep(0);
+    });
+  });
+}
+
+/// Deja pasar lo que el tutorial hace tras cada acción: guardado, avance
+/// automático (tras el frame) y animaciones cortas.
+Future<void> _settle(WidgetTester tester) async {
+  for (var i = 0; i < 4; i++) {
+    await tester.pump(const Duration(milliseconds: 80));
+  }
+}

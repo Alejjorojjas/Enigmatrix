@@ -44,13 +44,12 @@ class CellContent {
     Set<String>? candidates,
     XLevel? Function()? x,
     Set<String>? autoXFrom,
-  }) =>
-      CellContent(
-        confirmed: confirmed != null ? confirmed() : this.confirmed,
-        candidates: candidates ?? this.candidates,
-        x: x != null ? x() : this.x,
-        autoXFrom: autoXFrom ?? this.autoXFrom,
-      );
+  }) => CellContent(
+    confirmed: confirmed != null ? confirmed() : this.confirmed,
+    candidates: candidates ?? this.candidates,
+    x: x != null ? x() : this.x,
+    autoXFrom: autoXFrom ?? this.autoXFrom,
+  );
 }
 
 /// Resultado de un intento de colocación (doc 03 + reglas 2026-06-12).
@@ -110,6 +109,72 @@ class BoardState {
 
   factory BoardState.empty() => const BoardState._({});
 
+  /// Serializa el tablero para la partida guardada (contrato `game:<caseId>`).
+  /// Formato: {"cells": {"<índice>": {"c": confirmado, "k": [candidatos],
+  /// "x": "small"|"large", "a": [personajes que tachan por auto-X]}}}.
+  /// Solo se escriben las celdas con contenido y las listas van ordenadas,
+  /// así el resultado es determinista.
+  Map<String, dynamic> toJson() {
+    final indexes = _cells.keys.toList()..sort();
+    return {
+      'cells': {
+        for (final i in indexes)
+          '$i': {
+            if (_cells[i]!.confirmed != null) 'c': _cells[i]!.confirmed,
+            if (_cells[i]!.candidates.isNotEmpty)
+              'k': (_cells[i]!.candidates.toList()..sort()),
+            if (_cells[i]!.x != null) 'x': _cells[i]!.x!.name,
+            if (_cells[i]!.autoXFrom.isNotEmpty)
+              'a': (_cells[i]!.autoXFrom.toList()..sort()),
+          },
+      },
+    };
+  }
+
+  /// Reconstruye un tablero guardado. Lanza [FormatException] si el JSON
+  /// está dañado. Si se pasa [cellCount], rechaza índices fuera del mapa.
+  factory BoardState.fromJson(Map<String, dynamic> json, {int? cellCount}) {
+    final raw = json['cells'];
+    if (raw is! Map) throw const FormatException('board.cells ausente');
+    final cells = <int, CellContent>{};
+    for (final e in raw.entries) {
+      final index = int.tryParse('${e.key}');
+      if (index == null ||
+          index < 0 ||
+          (cellCount != null && index >= cellCount)) {
+        throw FormatException('índice de casilla inválido: ${e.key}');
+      }
+      final v = e.value;
+      if (v is! Map) throw FormatException('casilla ${e.key} inválida');
+      final c = v['c'];
+      final k = v['k'];
+      final x = v['x'];
+      final a = v['a'];
+      if (c != null && c is! String) {
+        throw FormatException('confirmado inválido en ${e.key}');
+      }
+      if (k != null && (k is! List || k.any((i) => i is! String))) {
+        throw FormatException('candidatos inválidos en ${e.key}');
+      }
+      if (a != null && (a is! List || a.any((i) => i is! String))) {
+        throw FormatException('auto-X inválido en ${e.key}');
+      }
+      XLevel? level;
+      if (x != null) {
+        level = XLevel.values.where((l) => l.name == x).firstOrNull;
+        if (level == null) throw FormatException('X inválida en ${e.key}');
+      }
+      final content = CellContent(
+        confirmed: c as String?,
+        candidates: k == null ? const {} : {...(k as List).cast<String>()},
+        x: level,
+        autoXFrom: a == null ? const {} : {...(a as List).cast<String>()},
+      );
+      if (!content.isEmpty) cells[index] = content;
+    }
+    return BoardState._(cells);
+  }
+
   CellContent cell(int index) => _cells[index] ?? const CellContent();
 
   bool get isEmpty => _cells.values.every((c) => c.isEmpty);
@@ -163,8 +228,12 @@ class BoardState {
   /// Si [autoXGridSize] no es null, tacha automáticamente la fila y la
   /// columna del confirmado — solo en casillas VACÍAS (no pisa candidatos),
   /// atribuyéndole las X para poder retirarlas si se borra.
-  PlaceResult placeConfirmed(int index, String charId,
-      {bool replace = false, int? autoXGridSize}) {
+  PlaceResult placeConfirmed(
+    int index,
+    String charId, {
+    bool replace = false,
+    int? autoXGridSize,
+  }) {
     final c = cell(index);
     if (c.confirmed == charId) {
       return PlaceResult(PlaceOutcome.noChange, this);
@@ -193,8 +262,10 @@ class BoardState {
     var board = this;
     for (final e in [..._cells.entries]) {
       if (e.value.candidates.contains(charId)) {
-        board = board._with(e.key,
-            e.value.copyWith(candidates: {...e.value.candidates}..remove(charId)));
+        board = board._with(
+          e.key,
+          e.value.copyWith(candidates: {...e.value.candidates}..remove(charId)),
+        );
       }
     }
     return board;
@@ -212,10 +283,12 @@ class BoardState {
         // La X descarta la celda: borra los candidatos que hubiera
         // (regla 2026-06-12: nadie de esa fila/columna puede estar ahí).
         board = board._with(
-            target,
-            tc.copyWith(
-                autoXFrom: {...tc.autoXFrom, charId},
-                candidates: const {}));
+          target,
+          tc.copyWith(
+            autoXFrom: {...tc.autoXFrom, charId},
+            candidates: const {},
+          ),
+        );
       }
     }
     return board;
@@ -226,9 +299,9 @@ class BoardState {
     for (final e in [..._cells.entries]) {
       if (e.value.autoXFrom.contains(charId)) {
         board = board._with(
-            e.key,
-            e.value
-                .copyWith(autoXFrom: {...e.value.autoXFrom}..remove(charId)));
+          e.key,
+          e.value.copyWith(autoXFrom: {...e.value.autoXFrom}..remove(charId)),
+        );
       }
     }
     return board;
@@ -281,16 +354,21 @@ class BoardState {
   BoardState removeElement(int index, CellElement element) {
     final c = cell(index);
     return switch (element) {
-      ConfirmedElement(:final charId) => c.confirmed == charId
-          ? _with(index, c.copyWith(confirmed: () => null))
-              ._clearAutoX(charId)
-          : this,
+      ConfirmedElement(:final charId) =>
+        c.confirmed == charId
+            ? _with(
+                index,
+                c.copyWith(confirmed: () => null),
+              )._clearAutoX(charId)
+            : this,
       CandidateElement(:final charId) => _with(
-          index,
-          c.copyWith(candidates: {...c.candidates}..remove(charId)),
-        ),
-      XElement() =>
-        _with(index, c.copyWith(x: () => null, autoXFrom: const {})),
+        index,
+        c.copyWith(candidates: {...c.candidates}..remove(charId)),
+      ),
+      XElement() => _with(
+        index,
+        c.copyWith(x: () => null, autoXFrom: const {}),
+      ),
     };
   }
 
@@ -312,6 +390,8 @@ class BoardState {
   }
 
   /// Celdas donde hay algún personaje confirmado.
-  Iterable<int> get confirmedCells =>
-      [for (final e in _cells.entries) if (e.value.confirmed != null) e.key];
+  Iterable<int> get confirmedCells => [
+    for (final e in _cells.entries)
+      if (e.value.confirmed != null) e.key,
+  ];
 }

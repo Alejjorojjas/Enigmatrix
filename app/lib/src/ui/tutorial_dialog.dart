@@ -1,7 +1,8 @@
-/// Tutorial de primera vez (2026-07-12): ventana paginada estilo cuaderno de
-/// detective que explica cómo jugar. Aparece automáticamente en el primer
+/// Bienvenida de primera vez (2026-07-12): ventana paginada estilo cuaderno
+/// de detective que explica cómo jugar. Aparece automáticamente en el primer
 /// arranque, se puede OMITIR, y se reabre desde el botón ? de la pantalla
-/// de casos.
+/// de casos. Desde el 04-11-2026 (regla 11, ADR-0012) el primer arranque
+/// sigue con el caso de práctica; ver tutorial_coach.dart.
 library;
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,12 @@ import 'enx_style.dart';
 
 const tutorialSeenKey = 'tutorial:seen';
 
-Future<void> showTutorialDialog(BuildContext context) async {
+/// Con [thenPractice] (primer arranque) el último botón anuncia el caso de
+/// práctica que viene a continuación; quien llama navega al terminar.
+Future<void> showTutorialDialog(
+  BuildContext context, {
+  bool thenPractice = false,
+}) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool(tutorialSeenKey, true);
   if (!context.mounted) return;
@@ -19,7 +25,7 @@ Future<void> showTutorialDialog(BuildContext context) async {
     context: context,
     barrierDismissible: false,
     barrierColor: const Color(0xCC3D2F1C),
-    builder: (_) => const _TutorialDialog(),
+    builder: (_) => _TutorialDialog(thenPractice: thenPractice),
   );
 }
 
@@ -54,12 +60,13 @@ const _pages = [
   _Page('⚖️', 'Resolver el caso', [
     'Cuando todos estén confirmados, pulsa RESOLVER.',
     'Si todo está correcto: el asesino es quien quedó A SOLAS con la víctima en la misma habitación. El sistema lo revela.',
-    'Si hay errores, se marcan en rojo y puedes seguir intentando. ¡Suerte, detective!',
+    'Si algo no cuadra, el juego te dice cuántas casillas fallan, pero no cuáles: hay que volver a deducir. ¡Suerte, detective!',
   ]),
 ];
 
 class _TutorialDialog extends StatefulWidget {
-  const _TutorialDialog();
+  final bool thenPractice;
+  const _TutorialDialog({this.thenPractice = false});
 
   @override
   State<_TutorialDialog> createState() => _TutorialDialogState();
@@ -89,9 +96,10 @@ class _TutorialDialogState extends State<_TutorialDialog> {
             borderRadius: BorderRadius.circular(6),
             boxShadow: const [
               BoxShadow(
-                  color: Color(0x99271D0E),
-                  offset: Offset(0, 10),
-                  blurRadius: 24),
+                color: Color(0x99271D0E),
+                offset: Offset(0, 10),
+                blurRadius: 24,
+              ),
             ],
           ),
           child: Column(
@@ -103,19 +111,27 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 3),
+                        horizontal: 10,
+                        vertical: 3,
+                      ),
                       color: const Color(0xFFE8D48E),
-                      child: Text('CÓMO JUGAR',
-                          style: Enx.font(11,
-                              weight: FontWeight.w800,
-                              color: Enx.ink,
-                              spacing: 2)),
+                      child: Text(
+                        'CÓMO JUGAR',
+                        style: Enx.font(
+                          11,
+                          weight: FontWeight.w800,
+                          color: Enx.ink,
+                          spacing: 2,
+                        ),
+                      ),
                     ),
                     const Spacer(),
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text('Omitir',
-                          style: Enx.font(14, color: Enx.inkMuted)),
+                      child: Text(
+                        'Omitir',
+                        style: Enx.font(14, color: Enx.inkMuted),
+                      ),
                     ),
                   ],
                 ),
@@ -132,29 +148,33 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                       padding: const EdgeInsets.fromLTRB(26, 10, 26, 8),
                       child: Column(
                         children: [
-                          Text(p.emoji,
-                              style: const TextStyle(fontSize: 52)),
+                          Text(p.emoji, style: const TextStyle(fontSize: 52)),
                           const SizedBox(height: 8),
-                          Text(p.title,
-                              textAlign: TextAlign.center,
-                              style:
-                                  Enx.display(23, color: Enx.goldInk)),
+                          Text(
+                            p.title,
+                            textAlign: TextAlign.center,
+                            style: Enx.display(23, color: Enx.goldInk),
+                          ),
                           const SizedBox(height: 14),
                           for (final line in p.lines)
                             Padding(
                               padding: const EdgeInsets.only(bottom: 10),
                               child: Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('• ',
-                                      style: Enx.font(15,
-                                          color: Enx.crimson,
-                                          weight: FontWeight.w800)),
+                                  Text(
+                                    '• ',
+                                    style: Enx.font(
+                                      15,
+                                      color: Enx.crimson,
+                                      weight: FontWeight.w800,
+                                    ),
+                                  ),
                                   Expanded(
-                                    child: Text(line,
-                                        style: Enx.hand(18,
-                                            color: Enx.ink)),
+                                    child: Text(
+                                      line,
+                                      style: Enx.hand(18, color: Enx.ink),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -178,12 +198,9 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                             duration: const Duration(milliseconds: 200),
                             width: i == _page ? 22 : 8,
                             height: 8,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 3),
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
                             decoration: BoxDecoration(
-                              color: i == _page
-                                  ? Enx.crimson
-                                  : Enx.paperShade,
+                              color: i == _page ? Enx.crimson : Enx.paperShade,
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -191,18 +208,23 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                     ),
                     const SizedBox(height: 14),
                     EnxButton(
-                      label: isLast ? '¡A investigar!' : 'Siguiente',
+                      label: isLast
+                          ? (widget.thenPractice
+                                ? 'Empezar la práctica'
+                                : '¡A investigar!')
+                          : 'Siguiente',
                       color: isLast ? Enx.crimson : Enx.gold,
-                      textColor:
-                          isLast ? Colors.white : const Color(0xFF4A3200),
+                      textColor: isLast
+                          ? Colors.white
+                          : const Color(0xFF4A3200),
                       onPressed: () {
                         if (isLast) {
                           Navigator.of(context).pop();
                         } else {
                           _controller.nextPage(
-                              duration:
-                                  const Duration(milliseconds: 280),
-                              curve: Curves.easeOut);
+                            duration: const Duration(milliseconds: 280),
+                            curve: Curves.easeOut,
+                          );
                         }
                       },
                     ),
