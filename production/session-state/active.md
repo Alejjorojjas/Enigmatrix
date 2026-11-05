@@ -2,42 +2,33 @@
 
 > Archivo de checkpoint. Toda sesión de trabajo lo lee al empezar y lo actualiza al cerrar un hito. Se mantiene corto a propósito: el historial completo está en [historial.md](historial.md).
 
-## Estado hoy (05-11-2026)
+## Estado hoy (05-11-2026, tarde)
 
-- **Etapa actual:** etapa 0 cerrada. Las etapas 1 y 2 están en curso, con el plan por etapas 0 a 6 aprobado (detalle en [docs/17-roadmap.md](../../docs/17-roadmap.md)).
-- **Etapa 1, versión de prueba `0.2.0+2`:** implementada y aprobada por QA independiente el 05-11-2026. Incluye:
-  - partida guardada en `game:<caseId>`;
-  - pausa con el tablero tapado y reloj detenido en el diálogo de salida;
-  - salida con confirmación hacia `/casos`;
-  - errores mostrados solo como cantidad (regla 9);
-  - aviso "Elige primero a un sospechoso" (regla 20);
-  - pista completa al mantenerla oprimida;
-  - etiquetas DEMO y "Próximamente";
-  - casos ordenados por número y carga tolerante a archivos dañados;
-  - versión y casos sin terminar en el reporte de feedback;
-  - tutorial nuevo de 5×5 (`assets/tutorial/caso-tutorial.json`, semilla 192), obligatorio una vez (`tutorial:v2:done`) con Saltar visible, que ya no consume el Caso 1.
+- **Versión actual: `0.5.0+5`** (commit `6e18cb8`), con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.5.0+5-arm64.apk`. Incluye:
+  - el tablero de Flame con dos pieles (Ilustrada y Papel) en modo claro y oscuro, en todas las pantallas;
+  - el Mundo 1 "La Mansión" (10 casos con título y premisa) y el reto diario (30 días, DEMO);
+  - tipografías dentro de la app, sin permiso INTERNET;
+  - accesibilidad básica: semántica del tablero, texto hasta 1,3, Reducir movimiento y contraste AA.
 
-  Pruebas: tools 65 y app 98, todas pasan; analyze sin errores. Falta la guía de la prueba de juego.
-- **Etapa 2, prototipo gráfico (`prototipos/tablero-flame/`):** la parte técnica está hecha (Flame, director de feedback, sonidos propios generados por código, medidor de FPS, 85 tests). Se están construyendo dos pieles, "Ilustrada" (cualidades de la referencia de Alejandro del 05-11-2026, ver [docs/referencias-visuales/](../../docs/referencias-visuales/README.md)) y "Papel", con modo claro y oscuro que sigue al teléfono. Falta medir en el Android de gama media de Alejandro.
-- **05-11-2026, prototipo corregido y aprobado en dirección.** Alejandro dijo "sí me gustó" y confirmó las herramientas:
-  - Anotar = candidato.
-  - Tachar = X a mano.
-  - Confirmar = un toque fija al sospechoso, además de mantener oprimido o arrastrar. Así se cumple el gesto alternativo de la regla 20 del ADR-0012.
-  - Borrar = borrador.
-
-  Tablero a todo el ancho (336 px a 360 de ancho). Commit `3ee6487`. Siguen pendientes: qué piel prefiere, la medición de FPS en su teléfono y cómo se hace el arte final.
-- **Compilación:** el JAVA_HOME por defecto del PC es Java 11, y para compilar Android hay que usar `JAVA_HOME=C:/Program Files/Java/jdk-17`.
-- **Protección:** Alejandro creó el repositorio privado `https://github.com/Alejjorojjas/Enigmatrix` y autorizó los commits el 04-11-2026. Los commits llevan solo su autoría, sin coautoría de Claude. Siguen sin autorizar: sacar el proyecto de OneDrive, versionar `app/pubspec.lock` y cambiar la firma.
-- **Documentos:** puestos al día el 04-11-2026 y revisados por el arquitecto y por dos verificadores independientes. El índice con el estado de cada documento está en [docs/README.md](../../docs/README.md) y hay registros de decisión nuevos (ADR 0003 a 0012).
-- **Decididas el 04-11-2026:** reglas 5, 9, 10, 11 y 20; pregunta 21 (3 a 5 personas); prueba de concepto gráfica autorizada con ambos estilos y arte gratuito; Mac confirmado desde el 12-07-2026 (ver "Decisiones vigentes").
-- **Preguntas abiertas:** 6, 7, 8, 12, 13, 14, 15, 16, 17, 18, 19, 22 (solo el iPhone) y 23 (nueva). Detalle en la [sección 5 de la auditoría](../revisiones/2026-11-04-auditoria-proyecto.md#5-decisiones-que-necesito-de-ti) y abajo.
-- **Cómo se juega hoy:** `JUGAR.bat` abre http://localhost:8123 (web local). `COMPILAR-ANDROID.bat` genera el APK.
-- **Estado verificado en el código:** 54 tests en `tools/test` y 26 en `app/test`; tableros 6×6, 8×8, 9×9, 12×12 y 16×16 (solo los tres primeros tienen casos); `shared_preferences`; sin audio, vibración, traducciones ni lectores de pantalla.
+  Pruebas: tools 279 y app 540, todas pasan; analyze limpio.
+- **Prueba de juego n.º 1:** con la versión **0.3.0+3 congelada** (ADR-0014), con 3 a 5 personas y la guía en [guia-prueba-1.md](../prueba-de-juego/guia-prueba-1.md). La hace Alejandro; todavía no hay resultados.
+- **Hecho del plan** ([production/planes/2026-11-05-etapas-3-y-4.md](../planes/2026-11-05-etapas-3-y-4.md)): rondas 3.1, 3.2, 4.1, 4.2 y 4.3a.
+- **Pendiente técnico:**
+  - Ronda 4.3b: textos centralizados para traducir, valores de juego a configuración y limpieza de restos.
+  - Medir FPS en el teléfono de Alejandro y probar TalkBack real.
+  - El texto de la partida tiene un tope de 1,3.
+  - Experto y Élite necesitan trabajo de motor para la V2 (ver `production/revisiones/2026-11-05-medicion-12x12-16x16.md`).
+- **Compilación:** hay que usar `JAVA_HOME=C:/Program Files/Java/jdk-17`. Los APK entregables se copian con nombre y versión a `Proyecto Enigmatrix/APKs/`.
+- **Protección:** repositorio privado `https://github.com/Alejjorojjas/Enigmatrix`. Los commits van solo con la autoría de Alejandro. Siguen sin autorizar: sacar el proyecto de OneDrive, versionar `app/pubspec.lock` y cambiar la firma.
+- **Decisiones del 05-11-2026:**
+  - ADR-0013: dos pieles por código en la V1.
+  - ADR-0014: V1 hasta Intermedio, Mundo 1 con 10 casos y 30 días de reto, solo Android, sin arrastrar retratos, el arma como quedó (pregunta 19) y tipografías incluidas.
+- **Preguntas abiertas:** 6 (premium), 7 (hora del reto), 8 (víctima), 12 (ayudas y puntos), 16 (edad), 17 (identidad legal), 18 (qué ve la tienda) y 23 (mundos bloqueados; hoy se muestran como "Próximamente"). Antes de publicar también falta decidir el servidor (etapa 5) y los trámites de tienda (etapa 6).
 - **Próximos pasos:**
-  1. ~~Alejandro crea el repositorio privado en GitHub y Claude sube el historial.~~ Hecho el 04-11-2026.
-  2. ~~Alejandro consigue sus propias referencias visuales.~~ Las envió el 05-11-2026.
-  3. ~~Preparar la versión de prueba de la etapa 1.~~ Hecho el 05-11-2026. Falta la guía de la prueba de juego, con hoja de registro y umbrales a acordar con Alejandro.
-  4. Alejandro instala la versión de prueba y el prototipo en su Android de gama media. Mide la fluidez del prototipo y compara las pieles; arranca la prueba de juego con 3 a 5 personas.
+  1. Alejandro hace la prueba de juego con la 0.3.0+3 y trae los resultados.
+  2. Ronda 4.3b.
+  3. Con los resultados de la prueba: recalibrar los rangos de dificultad y, si hace falta, regenerar casos.
+  4. Planear las etapas 5 (Firebase) y 6 (tiendas) y responder las preguntas abiertas de publicación.
 
 ### Preguntas abiertas (sin decidir; ninguna se resuelve en los documentos)
 
