@@ -1,13 +1,13 @@
 # Guía de la prueba de juego n.º 1 (etapa 1)
 
-Fecha de preparación: 05-11-2026. Versión de la app: **0.2.0+2**.
+Fecha de preparación: 05-11-2026. Versión de la app: **0.3.0+3** (congelada para esta prueba; ver ADR-0014).
 
-**Qué queremos saber:** si Enigmatrix se entiende sin ayuda, si engancha y si la dificultad es justa. Aquí no se evalúa el aspecto visual: eso lo mide el prototipo gráfico por separado.
+**Qué queremos saber:** si Enigmatrix se entiende sin ayuda, si engancha y si la dificultad es justa. Esta versión ya trae el tablero nuevo, así que también se observa si se siente como un juego.
 
 ## 1. Antes de empezar (Alejandro)
 
 1. **Acordar los umbrales.** Los de abajo son una propuesta del arquitecto. Confírmalos o cámbialos antes de la primera persona, para no ajustarlos a los resultados después.
-2. **Instalar la app** en el Android de cada persona. Usa `app-arm64-v8a-release.apk`, que sirve para casi todos los teléfonos actuales. Si no instala, usa `app-armeabi-v7a-release.apk`.
+2. **Instalar la app** en el Android de cada persona. Usa `enigmatrix-0.3.0+3-arm64.apk`, de la carpeta `Proyecto Enigmatrix/APKs`, que sirve para casi todos los teléfonos actuales. Si no instala, usa `enigmatrix-0.3.0+3-armeabi-v7a.apk`.
 3. **Usar una instalación nueva.** Si la persona ya tenía una versión anterior, desinstálala primero para que vea la bienvenida y el tutorial desde cero.
 
 ## 2. Durante la prueba (por persona, 20 a 30 minutos)

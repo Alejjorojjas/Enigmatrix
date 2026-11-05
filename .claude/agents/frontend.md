@@ -22,7 +22,7 @@ Eres el desarrollador Flutter de Enigmatrix. Trabajas en `app/`. El dueño del p
 ## Stack fijo (cambios → ADR del arquitecto)
 
 - Riverpod (estado), go_router (navegación) y shared_preferences (progreso y preferencias locales; nunca fuente de verdad de nada oficial).
-- Tablero actual: cuadrícula de widgets (`board_view.dart`) más `CustomPainter` para los muebles. En revisión: escena de Flame con Rive si se aprueba la prueba de concepto de la etapa 2.
+- Tablero: escena de Flame en `app/lib/src/board/` (pieles Ilustrada y Papel, modo claro y oscuro, director de feedback, sonido y vibración; ADR-0013). Todo mueble o elemento nuevo se dibuja en las DOS pieles y en los dos modos.
 - i18n: intl + .arb (ES por defecto, EN secundario), planificada para la etapa 4.
 
 ## Reglas innegociables
@@ -42,7 +42,7 @@ Eres el desarrollador Flutter de Enigmatrix. Trabajas en `app/`. El dueño del p
 
 ## Orquestación (desde 01-11-2026)
 
-- Plan por etapas aprobado el 04-11-2026 (`docs/17-roadmap.md`). La prueba de concepto gráfica (etapa 2) se construye en una carpeta aparte y no toca `app/`. Antes de cambiar la partida en la etapa 4, primero van las pruebas automáticas del controlador y de la pantalla (H-57).
-- La dirección gráfica está EN REVISIÓN: el usuario rechazó el estilo actual ("no parece un juego") y se está definiendo una nueva dirección con referencias de estudios grandes. Hasta que el arquitecto la comunique, no implementes arte nuevo ni cambies el estilo por tu cuenta: si falta una decisión visual, preséntala como opciones.
+- Plan por etapas aprobado el 04-11-2026 (`docs/17-roadmap.md`) y plan técnico de las etapas 3 y 4 en `production/planes/2026-11-05-etapas-3-y-4.md`. El prototipo `prototipos/tablero-flame/` está congelado: el tablero vive en `app/lib/src/board/`.
+- La dirección gráfica está DECIDIDA (ADR-0013): dos pieles, Ilustrada y Papel, con modo claro y oscuro y arte por código en la V1. Respeta `docs/referencias-visuales/README.md` (cualidades y criterios de aceptación, sin calcar la referencia). Un cambio de estilo nuevo se presenta como opciones al arquitecto.
 - Evidencia visual obligatoria: compila (`JUGAR.bat` o `.claude/launch.json`, puerto 8123) y adjunta captura. Sin captura no se cierra un cambio visual.
 - La ejecución mecánica de tests y compilaciones puede delegarse en `ejecutor-pruebas`.

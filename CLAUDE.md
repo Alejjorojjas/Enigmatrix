@@ -19,7 +19,8 @@ App móvil de puzzles de deducción visual. El jugador resuelve casos de misteri
 - Idioma de trabajo: **español**. Código y nombres técnicos en inglés.
 - Explica las decisiones técnicas en lenguaje claro antes de implementarlas.
 - Las decisiones de producto/diseño las toma el usuario: presenta opciones con recomendación, no decidas por él en silencio.
-- **Dirección visual.** El usuario eligió el estilo Paper Craft el 12-07-2026, entre los mockups de `docs/mockups/estilos/` (el 05). Claude Design se abandonó y la UI se hace directo en Flutter. Desde el 01-11-2026 la dirección gráfica está **en revisión**: ver `production/revisiones/2026-11-04-investigacion-grafica.md` y la etapa 2 del plan.
+- **Dirección visual (ADR-0013, 05-11-2026).** Hay dos pieles que el jugador elige en Configuración: "Ilustrada" (cualidades de `docs/referencias-visuales/`, con diseño propio) y "Papel". Las dos tienen modo claro y oscuro, que sigue al teléfono. La V1 lleva arte hecho por código y el arte de ilustrador o IA se revisa en la V2. Nunca se calcan dibujos, nombres ni pantallas de las referencias de terceros.
+- **Alcance de la V1 (ADR-0014).** Solo Android; dificultades Principiante, Casual e Intermedio; Mundo 1 "La Mansión" con 10 casos y 30 días de reto diario.
 
 ## Stack (ver ADRs en docs/adr/; estado real al 04-11-2026)
 
@@ -28,7 +29,7 @@ App móvil de puzzles de deducción visual. El jugador resuelve casos de misteri
 | App móvil | Flutter (Dart) |
 | Estado | Riverpod (ADR-0002) |
 | Navegación | go_router |
-| Tablero | Hoy: cuadrícula de widgets (un contenedor por casilla, `board_view.dart`) más `CustomPainter` para los muebles. En revisión: escena de Flame con Rive, si la prueba de concepto de la etapa 2 lo aprueba |
+| Tablero | Escena de Flame en `app/lib/src/board/`, con dos pieles (Ilustrada y Papel) en modo claro y oscuro, director de feedback, sonido y vibración (ADR-0013, desde la 0.3.0+3). El arte de la V1 está hecho por código |
 | Cache local | shared_preferences (progreso y preferencias; solo cache, nunca fuente de verdad) |
 | Backend | Firebase: Auth, Firestore, Cloud Functions, FCM, Remote Config. **Planificado para la etapa 5; hoy no existe backend** |
 | i18n | intl + archivos .arb (ES por defecto, EN secundario). **Planificado para la etapa 4; hoy los textos están fijos en español** |
@@ -118,5 +119,6 @@ Pendientes de crear cuando se decida la nueva dirección gráfica: un agente de 
 - Al iniciar una sesión de trabajo: leer `production/session-state/active.md` para recuperar contexto.
 - Al cerrar un hito: actualizar ese archivo (tarea actual, decisiones, archivos tocados, pendientes).
 - Etapa actual del proyecto: ver `docs/17-roadmap.md`, que tiene el plan por etapas 0 a 6 aprobado el 04-11-2026. **No implementar features de etapas futuras** sin acuerdo explícito, salvo las excepciones vigentes de la Fase 1 descritas arriba.
-- La prueba de concepto gráfica (etapa 2) va en una carpeta aparte y no toca `app/` hasta la etapa 4.
+- El prototipo `prototipos/tablero-flame/` quedó congelado como referencia; el código del tablero vive en `app/lib/src/board/`. El plan técnico de las etapas 3 y 4 está en `production/planes/2026-11-05-etapas-3-y-4.md`.
+- Los APK que se entregan a Alejandro se copian con nombre y versión a `Proyecto Enigmatrix/APKs/`, para que una compilación nueva no los pise. Para compilar Android se usa `JAVA_HOME=C:/Program Files/Java/jdk-17`.
 - Tests: el solver y toda lógica de juego llevan tests unitarios deterministas. Sin tests no se cierra una tarea del core.
