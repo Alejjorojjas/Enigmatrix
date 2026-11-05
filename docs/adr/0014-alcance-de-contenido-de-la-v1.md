@@ -29,3 +29,8 @@
 - **Interfaz:** la app no debe mostrar Experto ni Élite como disponibles en la V1, o debe marcarlos "Próximamente".
 - **Documentos:** el roadmap y los docs 05 y 08 deben reflejar estas dificultades de lanzamiento.
 - **Guía de la prueba:** `production/prueba-de-juego/guia-prueba-1.md` pasa a la versión 0.3.0+3.
+
+## Actualización 05-11-2026
+
+- **Pregunta 19 (arma homicida), decidida por Alejandro:** se mantiene como quedó en la ronda 3.2. El arma aparece en 3 de los 4 casos Intermedio del Mundo 1 (mansion-08 a mansion-10) y en 9 de los 30 retos, los últimos de cada semana.
+- **Tipografías:** Alejandro autorizó descargar Baloo 2, Quicksand y Patrick Hand (licencia OFL) desde el repositorio oficial de Google Fonts para incluirlas dentro de la app (H-07).
