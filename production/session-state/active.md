@@ -13,7 +13,7 @@
 - **Prueba de juego n.º 1:** con la versión **0.3.0+3 congelada** (ADR-0014), con 3 a 5 personas y la guía en [guia-prueba-1.md](../prueba-de-juego/guia-prueba-1.md). La hace Alejandro; todavía no hay resultados.
 - **Hecho del plan** ([production/planes/2026-11-05-etapas-3-y-4.md](../planes/2026-11-05-etapas-3-y-4.md)): rondas 3.1, 3.2, 4.1, 4.2, 4.3a y 4.3b.
 - **Pendiente técnico:**
-  - Medir FPS en el teléfono de Alejandro y probar TalkBack real.
+  - Probar TalkBack real. (FPS medidos el 05-11-2026: 60 fps estables en el Galaxy A52 de Alejandro.)
   - El texto de la partida tiene un tope de 1,3.
   - Experto y Élite necesitan trabajo de motor para la V2 (ver `production/revisiones/2026-11-05-medicion-12x12-16x16.md`).
 - **Compilación:** hay que usar `JAVA_HOME=C:/Program Files/Java/jdk-17`. Los APK entregables se copian con nombre y versión a `Proyecto Enigmatrix/APKs/`.
@@ -24,9 +24,8 @@
 - **Preguntas abiertas:** 6 (premium), 7 (hora del reto), 8 (víctima), 12 (ayudas y puntos), 16 (edad), 17 (identidad legal), 18 (qué ve la tienda) y 23 (mundos bloqueados; hoy se muestran como "Próximamente"). Antes de publicar también falta decidir el servidor (etapa 5) y los trámites de tienda (etapa 6).
 - **Próximos pasos:**
   1. Alejandro hace la prueba de juego con la 0.3.0+3 y trae los resultados.
-  2. Medir FPS con la 0.6.0+6 en su teléfono.
-  3. Con los resultados de la prueba: recalibrar los rangos de dificultad y, si hace falta, regenerar casos.
-  4. Planear las etapas 5 (Firebase) y 6 (tiendas) y responder las preguntas abiertas de publicación.
+  2. Con los resultados de la prueba: recalibrar los rangos de dificultad y, si hace falta, regenerar casos.
+  3. Planear las etapas 5 (Firebase) y 6 (tiendas) y responder las preguntas abiertas de publicación.
 
 ### Preguntas abiertas (sin decidir; ninguna se resuelve en los documentos)
 

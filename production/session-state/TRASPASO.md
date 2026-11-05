@@ -45,7 +45,7 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 
 ## Qué sigue, en orden
 
-1. **Medir FPS** en el teléfono de Alejandro con la 0.6.0+6 (medidor en el menú de la partida) y probar TalkBack.
+1. **FPS medidos (05-11-2026):** 60 fps estables en el Galaxy A52 de Alejandro con la 0.6.0+6. Falta probar TalkBack en el teléfono.
 2. **Cuando Alejandro traiga los resultados de la prueba de juego**: recalibrar los rangos de dificultad en `tools/lib/src/difficulty_ranges.dart` (son provisionales) y, si hace falta, regenerar casos con `build-plan` y los planes de `tools/data/mundos/`.
 3. **Planear las etapas 5 (Firebase) y 6 (Google Play)** con Alejandro. Preguntas abiertas: 6, 7, 8, 12, 16, 17, 18 y 23 (ver la sección 5 de la auditoría en `production/revisiones/2026-11-04-auditoria-proyecto.md`).
 4. Restos menores de H-66 sin hacer: versión con `package_info_plus`, vocabulario "Caso Nº"/"Expediente", pantalla de error con Reintentar y lints más estrictos.

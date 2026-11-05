@@ -11,6 +11,12 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 05-11-2026 · cuenta secundaria · medición de FPS
+
+- **Qué se hizo:** Alejandro midió los FPS con la 0.6.0+6 en su teléfono, un Samsung Galaxy A52: **siempre anduvo a 60 fps**. Queda cerrada la medición de FPS de la ronda 4.3. Falta probar TalkBack en el teléfono.
+- **Archivos tocados:** esta bitácora, `active.md` y `TRASPASO.md`.
+- **Pruebas:** sin cambios de código.
+
 ## 05-11-2026 · cuenta secundaria · ronda 4.3b (0.6.0+6)
 
 - **Qué se hizo:**
@@ -27,7 +33,7 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
   - El APK de un worktree sale firmado con la llave de depuración, porque `key.properties` solo está en la carpeta principal. Los APK para Alejandro se compilan siempre en la carpeta principal.
   - `app/lib/src/board/audio/audio_service.dart:27` tiene un mensaje técnico en español sin pasar al `.arb`. El jugador no lo ve.
   - No se hicieron (H-66, fuera de alcance): leer la versión con `package_info_plus`, unificar "Caso Nº"/"Expediente", la pantalla de error con Reintentar y subir el nivel de lints.
-  - Siguen pendientes: medir FPS en el teléfono de Alejandro y los resultados de la prueba de juego.
+  - Siguen pendientes los resultados de la prueba de juego. (La medición de FPS se hizo después; ver la entrada de arriba.)
 
 ## 05-11-2026 · cuenta principal (cierre)
 
