@@ -125,7 +125,7 @@
     {
       "id": "reto-011",
       "dificultad": "intermedio",
-      "semilla": 123,
+      "semilla": 166,
       "arma": false,
       "titulo": {
         "es": "Junto al fuego"
@@ -161,7 +161,7 @@
     {
       "id": "reto-014",
       "dificultad": "intermedio",
-      "semilla": 117,
+      "semilla": 161,
       "arma": true,
       "titulo": {
         "es": "El sombrero olvidado"
@@ -233,7 +233,7 @@
     {
       "id": "reto-020",
       "dificultad": "intermedio",
-      "semilla": 130,
+      "semilla": 155,
       "arma": true,
       "titulo": {
         "es": "El paraguas negro"

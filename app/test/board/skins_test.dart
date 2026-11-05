@@ -141,8 +141,8 @@ void main() {
   });
 
   group('muebles', () {
-    test('los 14 tipos tienen dibujo (1 casilla y 2 casillas)', () {
-      expect(ObjectType.values, hasLength(14));
+    test('los 18 tipos tienen dibujo (1 casilla y 2 casillas)', () {
+      expect(ObjectType.values, hasLength(18));
       for (final t in ObjectType.values) {
         for (final mode in Brightness.values) {
           for (final (w, h) in const [(0.78, 0.78), (1.78, 0.78)]) {

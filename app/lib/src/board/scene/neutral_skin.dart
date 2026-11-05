@@ -537,6 +537,35 @@ class NeutralSkin extends BoardSkin {
           RRect.fromRectAndRadius(r.deflate(cell * 0.05), Radius.circular(rad.x * 0.6)),
           Paint()..style = PaintingStyle.stroke..strokeWidth = cell * 0.03..color = const Color(0x55E8C99A),
         );
+      case ObjectType.perchero:
+        final c = r.center;
+        final rr = math.min(r.width, r.height) / 2;
+        canvas.drawCircle(c + Offset(rr * 0.1, rr * 0.2), rr * 0.7,
+            Paint()..color = const Color(0x59000000)..maskFilter = MaskFilter.blur(BlurStyle.normal, cell * 0.06));
+        canvas.drawCircle(c, rr * 0.7, fill(const Color(0xFF7D6249)));
+        canvas.drawCircle(c, rr * 0.28, fill(const Color(0xFFD9C79A)));
+      case ObjectType.banera:
+        shadow(r);
+        box(r, const Color(0xFFF1F3F5), const Color(0xFFCDD3D8), radiusK: 1.6);
+        canvas.drawOval(r.deflate(cell * 0.1), fill(const Color(0xFF86B8CC)));
+      case ObjectType.nevera:
+        shadow(r);
+        box(r, const Color(0xFFB5D8CF), const Color(0xFF8DBBB0), radiusK: 0.8);
+        canvas.drawLine(Offset(r.left, r.top + r.height * 0.4),
+            Offset(r.right, r.top + r.height * 0.4), edge);
+        canvas.drawLine(Offset(r.right - cell * 0.12, r.top + r.height * 0.5),
+            Offset(r.right - cell * 0.12, r.top + r.height * 0.75),
+            Paint()..strokeWidth = cell * 0.04..color = const Color(0xFF4A5A63));
+      case ObjectType.chimenea:
+        shadow(r);
+        box(r, const Color(0xFF9A9088), const Color(0xFF6E655E), radiusK: 0.6);
+        final hearth = Rect.fromLTWH(
+            r.left + r.width * 0.2, r.top + r.height * 0.28, r.width * 0.6, r.height * 0.62);
+        canvas.drawRRect(
+            RRect.fromRectAndRadius(hearth, Radius.circular(cell * 0.1)),
+            fill(const Color(0xFF2A1D19)));
+        canvas.drawCircle(hearth.center + Offset(0, hearth.height * 0.15), cell * 0.1,
+            fill(const Color(0xFFF39A2B)));
     }
   }
 
