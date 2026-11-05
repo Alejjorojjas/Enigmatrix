@@ -1,7 +1,7 @@
 /// Controlador de partida: tablero + cronómetro + errores + resolver.
 /// Flujos: docs/02-flujo.md ("Flujo dentro de partida") y docs/03.
-/// Interacción 2026-06-11: tap = candidato (letra), mantener oprimido o
-/// arrastrar = confirmado (círculo con avatar) + auto-X opcional.
+/// Herramientas del ADR-0013: Anotar (toque = candidato, mantener oprimido =
+/// confirmar), Tachar (X a mano), Confirmar (un toque) y Borrar.
 library;
 
 import 'dart:async';
@@ -21,25 +21,12 @@ final appLifecycleProvider = StateProvider<AppLifecycleState>(
   (ref) => AppLifecycleState.resumed,
 );
 
-/// Herramienta seleccionada en el panel.
-sealed class Tool {
-  const Tool();
-}
-
-class SuspectTool extends Tool {
-  final String charId;
-  const SuspectTool(this.charId);
-}
-
-class XTool extends Tool {
-  final XLevel level;
-  const XTool(this.level);
-}
-
-/// Borrador: tocar una casilla la limpia por completo.
-class EraserTool extends Tool {
-  const EraserTool();
-}
+/// Herramienta activa de la barra (ADR-0013):
+///  - notes (Anotar): toque = candidato; mantener oprimido = confirmar.
+///  - cross (Tachar): toque = X a mano; otro toque la quita.
+///  - place (Confirmar): un toque confirma al sospechoso elegido.
+///  - erase (Borrar): toque = limpiar la casilla.
+enum ToolMode { notes, cross, place, erase }
 
 /// Estado de una pista: ciclo normal -> destacada -> tachada -> normal.
 enum ClueMark { normal, highlighted, struck }
@@ -48,7 +35,10 @@ class GameState {
   final PuzzleCase pc;
   final BoardState board;
   final List<ClueMark> clueMarks;
-  final Tool? tool;
+
+  /// Herramienta activa de la barra y sospechoso elegido en los retratos.
+  final ToolMode toolMode;
+  final String? selectedChar;
   final int elapsedSeconds;
   final int errorCount;
   final bool locked; // bloqueo temporal tras error (doc 03)
@@ -76,7 +66,8 @@ class GameState {
     required this.pc,
     required this.board,
     required this.clueMarks,
-    this.tool,
+    this.toolMode = ToolMode.notes,
+    this.selectedChar,
     this.elapsedSeconds = 0,
     this.errorCount = 0,
     this.locked = false,
@@ -96,7 +87,8 @@ class GameState {
   GameState copyWith({
     BoardState? board,
     List<ClueMark>? clueMarks,
-    Tool? Function()? tool,
+    ToolMode? toolMode,
+    String? Function()? selectedChar,
     int? elapsedSeconds,
     int? errorCount,
     bool? locked,
@@ -115,7 +107,8 @@ class GameState {
     pc: pc,
     board: board ?? this.board,
     clueMarks: clueMarks ?? this.clueMarks,
-    tool: tool != null ? tool() : this.tool,
+    toolMode: toolMode ?? this.toolMode,
+    selectedChar: selectedChar != null ? selectedChar() : this.selectedChar,
     elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
     errorCount: errorCount ?? this.errorCount,
     locked: locked ?? this.locked,
@@ -140,7 +133,8 @@ enum ActionFeedback {
   cellHasX, // casilla descartada: no acepta candidatos
   alreadyConfirmedElsewhere, // ese personaje ya está fijado en otra casilla
   askReplaceConfirmed, // diálogo de confirmación
-  noToolSelected, // casilla tocada sin sospechoso ni herramienta (regla 20)
+  noToolSelected, // casilla tocada sin sospechoso elegido (regla 20)
+  blockedCell, // hay un mueble que bloquea la casilla
   incompleteBoard, // falta confirmar personajes
   wrongSolution,
   solvedOk,
@@ -384,28 +378,26 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
   // ---- selección de herramienta --------------------------------------------
 
+  /// Elige (o suelta, si ya estaba elegido) a un sospechoso. Desde Tachar o
+  /// Borrar, elegir un retrato vuelve a Anotar.
   void tapSuspect(String charId) {
-    final t = state.tool;
+    if (state.solved) return;
+    final selecting = state.selectedChar != charId;
+    final backToNotes =
+        state.toolMode == ToolMode.erase || state.toolMode == ToolMode.cross;
     state = state.copyWith(
-      tool: () =>
-          (t is SuspectTool && t.charId == charId) ? null : SuspectTool(charId),
+      selectedChar: () => selecting ? charId : null,
+      toolMode: backToNotes ? ToolMode.notes : null,
     );
   }
 
-  void tapX() {
-    final t = state.tool;
-    if (t is XTool) {
-      state = state.copyWith(
-        tool: () => t.level == XLevel.small ? const XTool(XLevel.large) : null,
-      );
-    } else {
-      state = state.copyWith(tool: () => const XTool(XLevel.small));
-    }
-  }
-
-  void tapEraser() {
+  /// Cambia de herramienta. Tachar y Borrar sueltan al sospechoso elegido.
+  void setToolMode(ToolMode mode) {
+    if (state.solved || state.toolMode == mode) return;
+    final releases = mode == ToolMode.erase || mode == ToolMode.cross;
     state = state.copyWith(
-      tool: () => state.tool is EraserTool ? null : const EraserTool(),
+      toolMode: mode,
+      selectedChar: releases ? () => null : null,
     );
   }
 
@@ -416,23 +408,42 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   bool get _editable =>
       !state.locked && !state.solved && !state.paused && !state.loading;
 
-  /// Coloca con la herramienta seleccionada. [confirm] viene del gesto:
-  /// tap = candidato, mantener oprimido / arrastrar = confirmado.
-  /// Sin sospechoso ni herramienta elegidos devuelve
-  /// [ActionFeedback.noToolSelected] para que la UI avise (regla 20).
+  /// Actúa sobre una casilla con la herramienta activa (ADR-0013).
+  /// [confirm] viene del gesto: toque corto = candidato, mantener oprimido =
+  /// confirmado. Con Confirmar, cualquier toque confirma. Con Tachar pone o
+  /// quita la X a mano y con Borrar limpia la casilla.
+  ///
+  /// Sin sospechoso elegido (Anotar o Confirmar) devuelve
+  /// [ActionFeedback.noToolSelected] para que la UI avise (regla 20). Sobre
+  /// un mueble que bloquea devuelve [ActionFeedback.blockedCell].
   ActionFeedback placeAt(int cell, {required bool confirm}) {
     if (!_editable) return ActionFeedback.ok;
-    final t = state.tool;
-    if (t == null) return ActionFeedback.noToolSelected;
-    return switch (t) {
-      SuspectTool(:final charId) => placeSuspect(
-        cell,
-        charId: charId,
-        confirm: confirm,
-      ),
-      XTool(:final level) => placeXMark(cell, level),
-      EraserTool() => eraseCell(cell),
-    };
+    if (!state.pc.map.isOccupiable(cell)) return ActionFeedback.blockedCell;
+    switch (state.toolMode) {
+      case ToolMode.erase:
+        return eraseCell(cell);
+      case ToolMode.cross:
+        return crossAt(cell);
+      case ToolMode.notes:
+      case ToolMode.place:
+        final id = state.selectedChar;
+        if (id == null) return ActionFeedback.noToolSelected;
+        return placeSuspect(
+          cell,
+          charId: id,
+          confirm: confirm || state.toolMode == ToolMode.place,
+        );
+    }
+  }
+
+  /// Tachar a mano: pone una X; si ya había una X a mano, la quita. Una
+  /// casilla con ficha no se tacha.
+  ActionFeedback crossAt(int cell) {
+    if (!_editable) return ActionFeedback.ok;
+    final c = state.board.cell(cell);
+    if (c.confirmed != null) return ActionFeedback.cellHasConfirmed;
+    if (c.x != null) return eraseCell(cell);
+    return placeXMark(cell, XLevel.small);
   }
 
   /// Borrador: limpia la casilla completa (incluye X automáticas del
@@ -586,7 +597,8 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         lethalWeaponId: v.lethalWeaponId,
         errorCells: const {},
         wrongCount: 0,
-        tool: () => null,
+        selectedChar: () => null,
+        toolMode: ToolMode.notes,
       );
       // Resuelto: la partida guardada ya no hace falta.
       _touched = false;

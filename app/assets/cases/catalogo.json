@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "casos": [
+    {
+      "id": "caso-principiante-s1",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 1,
+      "archivo": "caso-principiante-s1.json"
+    },
+    {
+      "id": "caso-principiante-s2",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 2,
+      "archivo": "caso-principiante-s2.json"
+    },
+    {
+      "id": "caso-principiante-s3",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 3,
+      "archivo": "caso-principiante-s3.json"
+    },
+    {
+      "id": "caso-principiante-s4",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 4,
+      "archivo": "caso-principiante-s4.json"
+    },
+    {
+      "id": "caso-principiante-s5",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 5,
+      "archivo": "caso-principiante-s5.json"
+    },
+    {
+      "id": "caso-principiante-s6",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 6,
+      "archivo": "caso-principiante-s6.json"
+    },
+    {
+      "id": "caso-principiante-s7",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 7,
+      "archivo": "caso-principiante-s7.json"
+    },
+    {
+      "id": "caso-principiante-s8",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 8,
+      "archivo": "caso-principiante-s8.json"
+    },
+    {
+      "id": "caso-casual-s1",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 9,
+      "archivo": "caso-casual-s1.json"
+    },
+    {
+      "id": "caso-casual-s2",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 10,
+      "archivo": "caso-casual-s2.json"
+    },
+    {
+      "id": "caso-casual-s3",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 11,
+      "archivo": "caso-casual-s3.json"
+    },
+    {
+      "id": "caso-casual-s4",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 12,
+      "archivo": "caso-casual-s4.json"
+    },
+    {
+      "id": "caso-casual-s5",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 13,
+      "archivo": "caso-casual-s5.json"
+    },
+    {
+      "id": "caso-casual-s20",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 14,
+      "archivo": "caso-casual-s20.json"
+    },
+    {
+      "id": "caso-casual-s21",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 15,
+      "archivo": "caso-casual-s21.json"
+    },
+    {
+      "id": "caso-intermedio-s1",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 16,
+      "archivo": "caso-intermedio-s1.json"
+    },
+    {
+      "id": "caso-intermedio-s2",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 17,
+      "archivo": "caso-intermedio-s2.json"
+    },
+    {
+      "id": "caso-intermedio-s3",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 18,
+      "archivo": "caso-intermedio-s3.json"
+    },
+    {
+      "id": "caso-intermedio-s4",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 19,
+      "archivo": "caso-intermedio-s4.json"
+    },
+    {
+      "id": "caso-intermedio-s5",
+      "mundo": "banco-de-pruebas",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 20,
+      "archivo": "caso-intermedio-s5.json"
+    }
+  ]
+}

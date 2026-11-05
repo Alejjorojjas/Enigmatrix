@@ -1,9 +1,9 @@
 /// Tutorial jugable (regla 11 del ADR-0012): un caso propio y pequeño
 /// (assets/tutorial/caso-tutorial.json, 5x5) con una guía paso a paso que
 /// avanza sola al detectar la acción del jugador. Enseña candidatos,
-/// confirmar, la X (automática y a mano), el modo Mapa/Notas, la papelera,
-/// el borrador y un Resolver fallido controlado en el que SOLO el tutorial
-/// marca las casillas exactas.
+/// confirmar, la X (automática y a mano), la vista Mapa/Notas, Borrar y un
+/// Resolver fallido controlado en el que SOLO el tutorial marca las casillas
+/// exactas.
 ///
 /// Es obligatorio la primera vez (lo dispara home_shell tras el diálogo de
 /// bienvenida), se puede saltar en cualquier momento y se repite desde la
@@ -20,6 +20,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/case_repository.dart';
 import '../game/game_controller.dart';
 import 'enx_style.dart';
+import 'game_chrome.dart';
+import 'skin_theme.dart';
 
 /// Clave de "el tutorial ya se terminó o se saltó".
 /// Clave vigente (v2): el tutorial nuevo es obligatorio una vez para todos,
@@ -47,16 +49,21 @@ Future<void> leaveTutorial(BuildContext context) async {
 /// empieza en el paso 0.
 final tutorialStepProvider = StateProvider.autoDispose<int>((ref) => 0);
 
-/// Claves de los elementos de la pantalla de partida que la guía señala
-/// (solo se asignan en modo tutorial). Sirven para llevar el scroll hasta
-/// lo que se está explicando.
-abstract final class TutorialTargets {
-  static final board = GlobalKey(debugLabel: 'tutorial-board');
-  static final header = GlobalKey(debugLabel: 'tutorial-header');
-  static final xTool = GlobalKey(debugLabel: 'tutorial-x');
-  static final eraser = GlobalKey(debugLabel: 'tutorial-eraser');
-  static final trash = GlobalKey(debugLabel: 'tutorial-trash');
-  static final controls = GlobalKey(debugLabel: 'tutorial-controls');
+/// Alto fijo de la tarjeta de la guía. La partida no se desplaza, así que la
+/// tarjeta reserva su sitio y el tablero se acomoda al resto.
+const double kTutorialCoachHeight = 132;
+
+/// Elementos de la pantalla de partida que la guía puede señalar con un
+/// marco (solo en modo tutorial).
+enum TutorialTarget {
+  portraits,
+  board,
+  toolNotes,
+  toolCross,
+  toolPlace,
+  toolErase,
+  menu,
+  resolve,
 }
 
 /// Un paso de la guía. [advanceWhen] null = paso manual (botón Entendido),
@@ -66,11 +73,8 @@ class TutorialStep {
   final String Function(GameState s) text;
   final bool Function(GameState s)? advanceWhen;
 
-  /// Elemento hacia el que se desplaza la pantalla al entrar al paso.
-  final GlobalKey? Function(GameState s)? target;
-
-  /// Dónde queda el elemento señalado en la pantalla: 0 = arriba, 1 = abajo.
-  final double Function(GameState s)? alignment;
+  /// Elemento que se señala con un marco mientras dura el paso.
+  final TutorialTarget? Function(GameState s)? target;
 
   /// Aviso (en rojo) cuando el jugador va por mal camino.
   final String? Function(GameState s)? warning;
@@ -81,7 +85,6 @@ class TutorialStep {
     required this.text,
     this.advanceWhen,
     this.target,
-    this.alignment,
     this.warning,
     this.isFinal = false,
   });
@@ -101,6 +104,55 @@ String? tutorialResolveBlock(PuzzleCase pc, GameState s, int step) {
   if (step >= buildTutorialSteps(pc).length - 1) return null;
   return 'Aún no: antes del Resolver final hay un experimento. '
       'Sigue la tarjeta de arriba (o pulsa Saltar).';
+}
+
+/// Los pasos de un caso (se arman una sola vez por caso).
+final tutorialStepsProvider = Provider.family<List<TutorialStep>, PuzzleCase>(
+  (ref, pc) => buildTutorialSteps(pc),
+);
+
+/// A qué elemento señala la guía en este momento (null = a ninguno).
+final tutorialTargetProvider = Provider.autoDispose
+    .family<TutorialTarget?, PuzzleCase>((ref, pc) {
+      final steps = ref.watch(tutorialStepsProvider(pc));
+      final i = ref.watch(tutorialStepProvider).clamp(0, steps.length - 1);
+      final s = ref.watch(gameControllerProvider(pc));
+      if (s.solved) return null;
+      return steps[i].target?.call(s);
+    });
+
+/// Marco que resalta el elemento señalado por la guía. El árbol de widgets
+/// NO cambia al encender o apagar el marco (el tablero de Flame no se
+/// reconstruye): solo cambia la decoración.
+class TutorialSpot extends ConsumerWidget {
+  const TutorialSpot({
+    super.key,
+    required this.pc,
+    required this.target,
+    required this.child,
+    this.radius = 18,
+  });
+
+  final PuzzleCase pc;
+  final TutorialTarget target;
+  final Widget child;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final active = ref.watch(
+      tutorialTargetProvider(pc).select((t) => t == target),
+    );
+    return DecoratedBox(
+      key: ValueKey('guia-${target.name}${active ? '-activo' : ''}'),
+      position: DecorationPosition.foreground,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(radius),
+        border: active ? Border.all(color: context.pal.accent, width: 3) : null,
+      ),
+      child: child,
+    );
+  }
 }
 
 /// Los pasos, escritos para el caso del tutorial (c1 Adela la víctima,
@@ -141,8 +193,7 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
   String? misplaced(GameState s, String id, String why) {
     final cell = s.board.confirmedCellOf(id);
     if (cell == null || cell == pos[id]) return null;
-    return '${n(id)} no va ahí: $why Bórrala con el borrador o la '
-        'papelera y prueba otra.';
+    return '${n(id)} no va ahí: $why Bórrala con BORRAR y prueba otra.';
   }
 
   // Una casilla del Porche (la habitación del sofá) para ensayar la X: nadie
@@ -161,15 +212,22 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
     return null;
   }
 
+  // Señala el tablero si ya está elegida la herramienta; si no, la herramienta.
+  TutorialTarget? Function(GameState) boardOr(
+    TutorialTarget tool,
+    ToolMode mode,
+  ) =>
+      (s) => s.toolMode == mode ? TutorialTarget.board : tool;
+
   return [
     // 0
     TutorialStep(
       emoji: '🕵️',
       text: (_) =>
-          'Este es un caso de práctica: solo 5 personajes, y no '
-          'cuenta como ningún caso de la lista. Debajo del mapa están los '
-          'sospechosos, cada uno con su pista (deslízalos para verlos a '
-          'todos).',
+          'Este es un caso de práctica con solo 5 personajes. No cuenta '
+          'como ningún caso de la lista. Abajo del mapa están los '
+          'sospechosos: toca uno y verás su pista.',
+      target: (_) => TutorialTarget.portraits,
     ),
     // 1
     TutorialStep(
@@ -177,28 +235,28 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
       text: (_) =>
           'Regla de oro: UNA persona por fila y UNA por columna, '
           'como en un sudoku. Hay que ubicar a todos, incluida la víctima: '
-          '${n(victim)} (su tarjeta lleva †).',
+          '${n(victim)} (su retrato dice «Víctima»).',
+      target: (_) => TutorialTarget.board,
     ),
     // 2
     TutorialStep(
       emoji: '✏️',
       text: (_) =>
-          'Pista de ${n(victim)}: ${clue(victim)}. Toca su tarjeta '
+          'Pista de ${n(victim)}: ${clue(victim)}. Toca su retrato '
           'y luego TOCA una casilla donde pueda estar: queda anotada como '
           'candidato (su letra).',
       advanceWhen: anyMark,
-      target: (_) => TutorialTargets.board,
+      target: (_) => TutorialTarget.board,
     ),
     // 3
     TutorialStep(
       emoji: '📌',
-      text: (_) =>
-          'En ${area(pos[victim]!)} solo hay una casilla junto a '
-          'una cama sin ser cama: ${rc(pos[victim]!)}. Con ${n(victim)} '
-          'elegida, MANTÉN PRESIONADA esa casilla (o arrastra su tarjeta '
-          'hasta ella) para CONFIRMARLA.',
+      text: (s) =>
+          '${area(pos[victim]!)}: la única casilla junto a una cama sin ser '
+          'cama es ${rc(pos[victim]!)}. Con ${n(victim)} elegida, '
+          '${s.toolMode == ToolMode.place ? 'toca esa casilla.' : 'pulsa CONFIRMAR y toca esa casilla.'}',
       advanceWhen: (s) => at(s, victim),
-      target: (_) => TutorialTargets.board,
+      target: boardOr(TutorialTarget.toolPlace, ToolMode.place),
       warning: (s) => misplaced(
         s,
         victim,
@@ -210,9 +268,9 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
       emoji: '❌',
       text: (_) =>
           '¿Viste? Al confirmar a ${n(victim)}, el juego tachó con '
-          'X claras su fila y su columna (interruptor Auto-X): ahí ya no '
-          'puede haber nadie más. Las X te ahorran trabajo.',
-      target: (_) => TutorialTargets.board,
+          'X claras su fila y su columna (es el interruptor Auto-X del '
+          'menú ⋮): ahí ya no puede haber nadie más.',
+      target: (_) => TutorialTarget.board,
     ),
     // 5
     TutorialStep(
@@ -222,7 +280,7 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
           'casillas de cama quedaron tachadas: solo una sigue libre, '
           '${rc(pos[bruno]!)}. Confirma a ${n(bruno)} ahí.',
       advanceWhen: (s) => at(s, bruno),
-      target: (_) => TutorialTargets.board,
+      target: (_) => TutorialTarget.board,
       warning: (s) => misplaced(
         s,
         bruno,
@@ -237,42 +295,37 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
         final where = cell == null
             ? 'una casilla en ${area(pos[elena]!)} que no sea el sofá'
             : rc(cell);
-        return s.tool is XTool
-            ? 'Con la X elegida, toca $where. Esa X la pones tú: sirve para '
+        return s.toolMode == ToolMode.cross
+            ? 'Con TACHAR activo, toca $where. Esa X la pones tú: sirve para '
                   'descartar lo que sabes que no puede ser.'
             : '${n(elena)} está sobre un sofá, en ${area(pos[elena]!)}: ahí '
-                  'nadie más puede estar. Descártalo con la herramienta X '
-                  '(baja hasta HERRAMIENTAS y tócala).';
+                  'nadie más puede estar. Descártalo: pulsa TACHAR en la '
+                  'barra y toca una casilla de esa habitación.';
       },
       advanceWhen: anyManualX,
-      target: (s) =>
-          s.tool is XTool ? TutorialTargets.board : TutorialTargets.xTool,
-      alignment: (s) => s.tool is XTool ? 0 : .5,
+      target: boardOr(TutorialTarget.toolCross, ToolMode.cross),
       warning: (s) => manualXOnSolution(s)
-          ? 'Esa X tapa la casilla de alguien. Bórrala con el borrador '
-                'o con la papelera.'
+          ? 'Esa X tapa la casilla de alguien. Bórrala con BORRAR.'
           : null,
     ),
     // 7
     TutorialStep(
       emoji: '🗒️',
       text: (_) =>
-          'Para pensar sin el dibujo, cambia a NOTAS con el '
-          'interruptor Mapa/Notas (debajo de los sospechosos).',
+          'Para pensar sin el dibujo, abre el menú ⋮ (arriba a la derecha) '
+          'y cambia a la vista NOTAS.',
       advanceWhen: (s) => !s.mapMode,
-      target: (_) => TutorialTargets.controls,
-      alignment: (_) => .5,
+      target: (_) => TutorialTarget.menu,
     ),
     // 8
     TutorialStep(
       emoji: '🧮',
       text: (_) =>
-          'En NOTAS se esconden los muebles y los nombres de las '
-          'habitaciones: queda la cuadrícula con tus marcas, ideal para '
-          'repasar filas y columnas. Vuelve a MAPA.',
+          'NOTAS esconde los muebles y los nombres: queda la cuadrícula con '
+          'tus marcas, ideal para repasar filas y columnas. Vuelve a MAPA '
+          'desde el menú ⋮.',
       advanceWhen: (s) => s.mapMode,
-      target: (_) => TutorialTargets.controls,
-      alignment: (_) => .5,
+      target: (_) => TutorialTarget.menu,
     ),
     // 9
     TutorialStep(
@@ -282,7 +335,7 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
           'en ${area(pos[clara]!)} solo queda una casilla libre: '
           '${rc(pos[clara]!)}. Confirma a ${n(clara)} ahí.',
       advanceWhen: (s) => at(s, clara),
-      target: (_) => TutorialTargets.board,
+      target: (_) => TutorialTarget.board,
       warning: (s) => misplaced(
         s,
         clara,
@@ -297,7 +350,7 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
           '(${clue(dario)}). Termina tú con las X y la regla de fila y '
           'columna.',
       advanceWhen: tutorialBoardIsCorrect,
-      target: (_) => TutorialTargets.board,
+      target: (_) => TutorialTarget.board,
       warning: (s) => fiveWrong(s)
           ? 'Los cinco están puestos, pero alguno no cuadra. Relee las '
                 'pistas de los que dudes.'
@@ -305,27 +358,25 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
     ),
     // 11
     TutorialStep(
-      emoji: '🗑️',
+      emoji: '🧽',
       text: (_) =>
           '¡Todos bien ubicados! Antes de resolver, un experimento: '
           'equivoquémonos a propósito. Primero quita a ${n(elena)} y a '
-          '${n(dario)}: arrastra cada ficha del mapa hasta la PAPELERA '
-          '(la barra bajo las pistas).',
+          '${n(dario)}: pulsa BORRAR y toca cada ficha en el mapa.',
       advanceWhen: (s) => gone(s, elena) && gone(s, dario),
-      target: (_) => TutorialTargets.trash,
-      alignment: (_) => 1,
+      target: boardOr(TutorialTarget.toolErase, ToolMode.erase),
     ),
     // 12
     TutorialStep(
       emoji: '🔀',
       text: (_) =>
           'Ahora cámbialos de sitio: ${n(elena)} en ${rc(pos[dario]!)} '
-          'y ${n(dario)} en ${rc(pos[elena]!)}. Elige su tarjeta y mantén '
-          'presionada la casilla.',
+          'y ${n(dario)} en ${rc(pos[elena]!)}. Elige su retrato, pulsa '
+          'CONFIRMAR y toca la casilla.',
       advanceWhen: (s) =>
           s.board.confirmedCellOf(elena) == pos[dario] &&
           s.board.confirmedCellOf(dario) == pos[elena],
-      target: (_) => TutorialTargets.board,
+      target: (_) => TutorialTarget.board,
       warning: (s) => tutorialBoardIsCorrect(s)
           ? 'Ese tablero es el correcto; para el experimento hay que '
                 'intercambiarlos.'
@@ -335,35 +386,29 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
     TutorialStep(
       emoji: '⚖️',
       text: (_) =>
-          'Con el tablero lleno pero mal, pulsa RESOLVER (arriba). '
+          'Con el tablero lleno pero mal, pulsa RESOLVER (abajo). '
           'En el tutorial el juego marca en rojo las casillas que no '
           'cuadran.',
       advanceWhen: (s) => s.errorCells.isNotEmpty,
-      target: (_) => TutorialTargets.header,
+      target: (_) => TutorialTarget.resolve,
     ),
     // 14
     TutorialStep(
       emoji: '🔴',
       text: (_) =>
-          'Las casillas rojas (se apagan a los 3 segundos) no '
-          'cuadran: ${n(elena)} no está sobre un sofá, y su pista lo '
-          'exige; y al estar ella mal, falla también ${n(dario)}. Para '
-          'hallar un error, mira la casilla roja y relee la pista de quien '
-          'está ahí. Ojo: en una partida real solo te diremos CUÁNTAS no '
-          'cuadran, no cuáles.',
-      target: (_) => TutorialTargets.board,
+          'Las casillas rojas no cuadran: ${n(elena)} no está sobre un sofá, '
+          'como exige su pista, y por eso falla también ${n(dario)}. En una '
+          'partida real solo verás CUÁNTAS no cuadran.',
+      target: (_) => TutorialTarget.board,
     ),
     // 15
     TutorialStep(
-      emoji: '🧽',
+      emoji: '🧹',
       text: (_) =>
-          'Para corregir, usa el BORRADOR (en HERRAMIENTAS): '
-          'elígelo y toca a ${n(elena)} y a ${n(dario)} en el mapa para '
-          'limpiarlos.',
+          'Para corregir, pulsa BORRAR otra vez y toca a ${n(elena)} y a '
+          '${n(dario)} en el mapa para limpiarlos.',
       advanceWhen: (s) => gone(s, elena) && gone(s, dario),
-      target: (s) =>
-          s.tool is EraserTool ? TutorialTargets.board : TutorialTargets.eraser,
-      alignment: (s) => s.tool is EraserTool ? 0 : .5,
+      target: boardOr(TutorialTarget.toolErase, ToolMode.erase),
     ),
     // 16
     TutorialStep(
@@ -372,7 +417,7 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
           'Ahora ponlos bien: ${n(elena)} en ${rc(pos[elena]!)} '
           '(sobre el sofá) y ${n(dario)} en ${rc(pos[dario]!)} (a solas).',
       advanceWhen: tutorialBoardIsCorrect,
-      target: (_) => TutorialTargets.board,
+      target: (_) => TutorialTarget.board,
     ),
     // 17
     TutorialStep(
@@ -381,7 +426,7 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
           '¡Tablero completo y correcto! Pulsa RESOLVER: si todo '
           'cuadra, sabrás quién quedó a solas con la víctima. Ese es el '
           'asesino.',
-      target: (_) => TutorialTargets.header,
+      target: (_) => TutorialTarget.resolve,
       isFinal: true,
     ),
   ];
@@ -440,7 +485,7 @@ class _TutorialLoaderState extends ConsumerState<TutorialLoader> {
 
 /// Tarjeta de la guía. Va FUERA del área de juego (arriba, en el flujo de
 /// la pantalla), así nunca tapa lo que explica; el botón Saltar vive en la
-/// barra superior de la partida y siempre está a la vista.
+/// fila del título de la partida y siempre está a la vista.
 class TutorialCoach extends ConsumerStatefulWidget {
   final PuzzleCase pc;
   const TutorialCoach({super.key, required this.pc});
@@ -451,30 +496,18 @@ class TutorialCoach extends ConsumerStatefulWidget {
 
 class _TutorialCoachState extends ConsumerState<TutorialCoach> {
   late final List<TutorialStep> _steps = buildTutorialSteps(widget.pc);
-  int _lastStep = -1;
-  GlobalKey? _lastTarget;
 
   void _goTo(int index) {
     if (index < 0 || index >= _steps.length) return;
     ref.read(tutorialStepProvider.notifier).state = index;
   }
 
-  void _scrollTo(GlobalKey? key, double alignment) {
-    final ctx = key?.currentContext;
-    if (ctx == null || !ctx.mounted) return;
-    Scrollable.ensureVisible(
-      ctx,
-      alignment: alignment,
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.easeOut,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(gameControllerProvider(widget.pc));
     final index = ref.watch(tutorialStepProvider).clamp(0, _steps.length - 1);
-    if (state.solved) return const SizedBox.shrink();
+    if (state.solved) return const SizedBox(height: kTutorialCoachHeight);
+    final p = context.pal;
 
     final step = _steps[index];
 
@@ -488,110 +521,98 @@ class _TutorialCoachState extends ConsumerState<TutorialCoach> {
       });
     }
 
-    // Lleva el scroll a lo que se explica (al entrar al paso o al cambiar
-    // el elemento señalado).
-    final target = step.target?.call(state);
-    final alignment = step.alignment?.call(state) ?? 0.0;
-    if (index != _lastStep || target != _lastTarget) {
-      _lastStep = index;
-      _lastTarget = target;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _scrollTo(target, alignment);
-      });
-    }
-
     final warning = step.warning?.call(state);
-    final maxHeight = MediaQuery.sizeOf(context).height * .34;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 620, maxHeight: maxHeight),
-          child: Semantics(
-            container: true,
-            liveRegion: true,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(14, 10, 14, 8),
-              decoration: BoxDecoration(
-                color: Enx.paper,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Enx.gold, width: 2.5),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x73473418),
-                    offset: Offset(0, 4),
-                    blurRadius: 3,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: SingleChildScrollView(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            step.emoji,
-                            style: const TextStyle(fontSize: 24),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  step.text(state),
-                                  style: Enx.hand(16.5, color: Enx.ink),
-                                ),
-                                if (warning != null)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 6),
-                                    child: Text(
-                                      '⚠ $warning',
-                                      style: Enx.font(
-                                        13,
-                                        weight: FontWeight.w700,
-                                        color: Enx.crimson,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
+    return SizedBox(
+      height: kTutorialCoachHeight,
+      child: Semantics(
+        container: true,
+        liveRegion: true,
+        child: ChromeBox(
+          color: p.surface,
+          radius: 16,
+          depth: 3,
+          padding: const EdgeInsets.fromLTRB(12, 6, 12, 4),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'TUTORIAL · ${index + 1}/${_steps.length}',
-                        style: Enx.font(
-                          10.5,
-                          weight: FontWeight.w800,
-                          color: Enx.inkMuted,
-                          spacing: 1.5,
+                      Text(step.emoji, style: const TextStyle(fontSize: 22)),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              step.text(state),
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 1.25,
+                                color: p.text,
+                              ),
+                            ),
+                            if (warning != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(
+                                  '⚠ $warning',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    height: 1.2,
+                                    fontWeight: FontWeight.w700,
+                                    color: p.danger,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                      const Spacer(),
-                      if (step.manual)
-                        EnxButton(
-                          label: 'Entendido',
-                          color: Enx.gold,
-                          textColor: const Color(0xFF4A3200),
-                          expand: false,
-                          onPressed: () => _goTo(index + 1),
-                        ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(
+                height: 38,
+                child: Row(
+                  children: [
+                    Text(
+                      'TUTORIAL · ${index + 1}/${_steps.length}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: p.textDim,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (step.manual)
+                      ChromeButton(
+                        key: const ValueKey('guia-entendido'),
+                        onTap: () => _goTo(index + 1),
+                        color: p.accent,
+                        radius: 14,
+                        minSize: const Size(SkinUi.minTouch, 34),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 2,
+                        ),
+                        semanticsLabel: 'Entendido',
+                        child: Text(
+                          'Entendido',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: p.onAccent,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -615,74 +636,84 @@ Future<void> showTutorialEnd(
   await showDialog<void>(
     context: context,
     barrierDismissible: false,
-    barrierColor: const Color(0xCC3D2F1C),
-    builder: (ctx) => Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.all(20),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 440),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(24, 22, 24, 20),
-          decoration: BoxDecoration(
-            color: Enx.paper,
-            borderRadius: BorderRadius.circular(6),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x99271D0E),
-                offset: Offset(0, 10),
-                blurRadius: 24,
-              ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('🎓', style: TextStyle(fontSize: 48)),
-                const SizedBox(height: 6),
-                Text(
-                  '¡Práctica superada!',
-                  textAlign: TextAlign.center,
-                  style: Enx.display(23, color: Enx.goldInk),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'El asesino era ${murderer?.nameEs ?? '?'}: fue la única '
-                  'persona que quedó a solas con la víctima.',
-                  textAlign: TextAlign.center,
-                  style: Enx.hand(18, color: Enx.ink),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Ya sabes ubicar, descartar con X, usar Notas, borrar y '
-                  'resolver. Esto era solo práctica: tu Caso 1 te espera '
-                  'sin empezar.',
-                  textAlign: TextAlign.center,
-                  style: Enx.hand(17, color: Enx.ink),
-                ),
-                const SizedBox(height: 18),
-                EnxButton(
-                  label: 'Ir a los casos',
-                  color: Enx.crimson,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    context.go('/casos');
-                  },
-                ),
-                const SizedBox(height: 6),
-                TextButton(
-                  onPressed: () => Navigator.of(ctx).pop(),
-                  child: Text(
-                    'Seguir mirando el tablero',
-                    style: Enx.font(14, color: Enx.inkMuted),
+    builder: (ctx) {
+      final p = ctx.pal;
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(20),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 440),
+          child: ChromeBox(
+            color: p.surface,
+            radius: 20,
+            padding: const EdgeInsets.fromLTRB(24, 22, 24, 18),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('🎓', style: TextStyle(fontSize: 48)),
+                  const SizedBox(height: 6),
+                  Text(
+                    '¡Práctica superada!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.w800,
+                      color: p.text,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 12),
+                  Text(
+                    'El asesino era ${murderer?.nameEs ?? '?'}: fue la única '
+                    'persona que quedó a solas con la víctima.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 17, height: 1.35, color: p.text),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Ya sabes ubicar, descartar con X, usar Notas, borrar y '
+                    'resolver. Esto era solo práctica: tu Caso 1 te espera '
+                    'sin empezar.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, height: 1.35, color: p.text),
+                  ),
+                  const SizedBox(height: 18),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ChromeButton(
+                      key: const ValueKey('tutorial-ir-casos'),
+                      onTap: () {
+                        Navigator.of(ctx).pop();
+                        context.go('/casos');
+                      },
+                      color: p.accent,
+                      radius: 18,
+                      minSize: const Size(0, 50),
+                      semanticsLabel: 'Ir a los casos',
+                      child: Text(
+                        'Ir a los casos',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800,
+                          color: p.onAccent,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    child: Text(
+                      'Seguir mirando el tablero',
+                      style: TextStyle(fontSize: 15, color: p.textDim),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    ),
+      );
+    },
   );
 }

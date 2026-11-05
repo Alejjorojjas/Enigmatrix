@@ -12,6 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_version.dart';
 import '../data/case_repository.dart';
+import '../game/app_settings.dart';
+import 'appearance_picker.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'enx_style.dart';
 import 'logo.dart';
@@ -932,59 +934,75 @@ void _openConfig(BuildContext context) => showModalBottomSheet<void>(
   builder: (ctx) => const _ConfigSheet(),
 );
 
-class _ConfigSheet extends StatelessWidget {
+class _ConfigSheet extends ConsumerWidget {
   const _ConfigSheet();
 
   @override
-  Widget build(BuildContext context) {
-    // Estos interruptores aún no hacen nada: se muestran desactivados.
-    Widget toggle(String label) => SwitchListTile(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
+    final notifier = ref.read(settingsProvider.notifier);
+    // Sonido y Vibración ya funcionan; Música y Notificaciones siguen
+    // desactivadas hasta sus etapas.
+    Widget soon(String label) => SwitchListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(label, style: Enx.font(15.5, color: Enx.inkMuted)),
       subtitle: Text('Próximamente', style: Enx.font(12, color: Enx.inkMuted)),
       value: false,
       onChanged: null,
     );
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(22, 22, 22, 30),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Configuración', style: Enx.display(22)),
-          const SizedBox(height: 6),
-          toggle('Sonido'),
-          toggle('Música'),
-          toggle('Vibración'),
-          toggle('Notificaciones'),
-          const Divider(),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text('Idioma', style: Enx.font(15.5)),
-            trailing: Text('Español', style: Enx.font(14, color: Enx.inkMuted)),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Cuenta y compras',
-                  style: Enx.font(15.5, color: Enx.inkMuted),
+    Widget live(String label, bool value, ValueChanged<bool> onChanged) =>
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(label, style: Enx.font(15.5)),
+          value: value,
+          onChanged: onChanged,
+        );
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(22, 22, 22, 30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Configuración', style: Enx.display(22)),
+            const SizedBox(height: 6),
+            live('Sonido', settings.soundOn, notifier.setSound),
+            soon('Música'),
+            live('Vibración', settings.hapticsOn, notifier.setHaptics),
+            soon('Notificaciones'),
+            const Divider(),
+            Text(AppearanceTexts.title, style: Enx.font(15.5)),
+            const SizedBox(height: 8),
+            AppearancePicker(labelStyle: Enx.font(14, color: Enx.inkMuted)),
+            const Divider(),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text('Idioma', style: Enx.font(15.5)),
+              trailing: Text('Español', style: Enx.font(14, color: Enx.inkMuted)),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Cuenta y compras',
+                    style: Enx.font(15.5, color: Enx.inkMuted),
+                  ),
                 ),
-              ),
-              _demoBadge(),
-            ],
-          ),
-          Text(
-            'Restaurar compras, cerrar sesión y eliminar cuenta se '
-            'activan con el modo online.',
-            style: Enx.hand(15, color: Enx.inkMuted),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Enigmatrix v$kAppVersion · hecho en papel 📜',
-            style: Enx.font(12, color: Enx.inkMuted),
-          ),
-        ],
+                _demoBadge(),
+              ],
+            ),
+            Text(
+              'Restaurar compras, cerrar sesión y eliminar cuenta se '
+              'activan con el modo online.',
+              style: Enx.hand(15, color: Enx.inkMuted),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Enigmatrix v$kAppVersion · hecho en papel 📜',
+              style: Enx.font(12, color: Enx.inkMuted),
+            ),
+          ],
+        ),
       ),
     );
   }

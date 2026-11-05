@@ -7,18 +7,19 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:enigmatrix/src/board/board_strings.dart';
 import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/game_controller.dart';
 import 'package:enigmatrix/src/game/saved_game.dart';
-import 'package:enigmatrix/src/ui/board_view.dart';
-import 'package:enigmatrix/src/ui/game_screen.dart';
+import 'package:enigmatrix/src/ui/game_tray.dart' show HintBox;
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/game_ui.dart';
 
 PuzzleCase _loadCase() {
   final j =
@@ -94,6 +95,8 @@ Map<String, Object> _savedPrefs(PuzzleCase pc, {List<int>? marks}) => {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  // Letra real (Roboto) para medir bien la interfaz.
+  setUpAll(loadRoboto);
   final pc = _loadCase();
   final firstChar = pc.characters.first.id;
 
@@ -313,12 +316,21 @@ void main() {
       );
     });
 
-    test('con una herramienta elegida tampoco avisa', () async {
-      final (_, c) = await _open(pc);
-      c.tapX();
+    test('con Tachar o Borrar tampoco hace falta un sospechoso', () async {
+      final (container, c) = await _open(pc);
+      GameState read() => container.read(gameControllerProvider(pc));
+      c.setToolMode(ToolMode.cross);
       expect(c.placeAt(0, confirm: false), ActionFeedback.ok);
-      c.tapEraser(); // pasa de la X al borrador
-      c.tapEraser(); // y lo suelta: vuelve a no haber herramienta
+      expect(read().board.cell(0).x, XLevel.small);
+      c.setToolMode(ToolMode.erase);
+      expect(c.placeAt(0, confirm: false), ActionFeedback.ok);
+      expect(read().board.cell(0).isEmpty, isTrue);
+    });
+
+    test('Anotar y Confirmar sin sospechoso avisan (regla 20)', () async {
+      final (_, c) = await _open(pc);
+      expect(c.placeAt(0, confirm: false), ActionFeedback.noToolSelected);
+      c.setToolMode(ToolMode.place);
       expect(c.placeAt(0, confirm: false), ActionFeedback.noToolSelected);
     });
 
@@ -326,6 +338,102 @@ void main() {
       final (_, c) = await _open(pc);
       c.pause();
       expect(c.placeAt(0, confirm: false), ActionFeedback.ok);
+    });
+  });
+
+  group('herramientas del ADR-0013', () {
+    test('Anotar: toque corto anota y mantener oprimido confirma', () async {
+      final (container, c) = await _open(pc);
+      GameState read() => container.read(gameControllerProvider(pc));
+      expect(read().toolMode, ToolMode.notes);
+      c.tapSuspect(firstChar);
+      expect(c.placeAt(0, confirm: false), ActionFeedback.ok);
+      expect(read().board.cell(0).candidates, {firstChar});
+      expect(c.placeAt(0, confirm: true), ActionFeedback.ok);
+      expect(read().board.confirmedCellOf(firstChar), 0);
+    });
+
+    test('Confirmar: un toque basta para fijar al sospechoso', () async {
+      final (container, c) = await _open(pc);
+      c.tapSuspect(firstChar);
+      c.setToolMode(ToolMode.place);
+      expect(c.placeAt(0, confirm: false), ActionFeedback.ok);
+      final s = container.read(gameControllerProvider(pc));
+      expect(s.board.confirmedCellOf(firstChar), 0);
+    });
+
+    test('Tachar pone la X a mano y otro toque la quita', () async {
+      final (container, c) = await _open(pc);
+      GameState read() => container.read(gameControllerProvider(pc));
+      c.setToolMode(ToolMode.cross);
+      c.placeAt(0, confirm: false);
+      expect(read().board.cell(0).x, XLevel.small);
+      c.placeAt(0, confirm: false);
+      expect(read().board.cell(0).x, isNull);
+    });
+
+    test('Tachar no pisa una ficha confirmada', () async {
+      final (container, c) = await _open(pc);
+      c.placeSuspect(0, charId: firstChar, confirm: true);
+      c.setToolMode(ToolMode.cross);
+      expect(c.placeAt(0, confirm: false), ActionFeedback.cellHasConfirmed);
+      final s = container.read(gameControllerProvider(pc));
+      expect(s.board.confirmedCellOf(firstChar), 0);
+    });
+
+    test('Borrar limpia la casilla completa', () async {
+      final (container, c) = await _open(pc);
+      c.placeSuspect(0, charId: firstChar, confirm: true);
+      c.setToolMode(ToolMode.erase);
+      expect(c.placeAt(0, confirm: false), ActionFeedback.ok);
+      final s = container.read(gameControllerProvider(pc));
+      expect(s.board.cell(0).isEmpty, isTrue);
+    });
+
+    test('Tachar y Borrar sueltan al sospechoso y elegir un retrato vuelve a '
+        'Anotar', () async {
+      final (container, c) = await _open(pc);
+      GameState read() => container.read(gameControllerProvider(pc));
+      c.tapSuspect(firstChar);
+      c.setToolMode(ToolMode.cross);
+      expect(read().selectedChar, isNull);
+      c.tapSuspect(firstChar);
+      expect(read().toolMode, ToolMode.notes);
+      expect(read().selectedChar, firstChar);
+      c.setToolMode(ToolMode.erase);
+      expect(read().selectedChar, isNull);
+      c.tapSuspect(firstChar);
+      expect(read().toolMode, ToolMode.notes);
+      // Tocar de nuevo al mismo sospechoso lo suelta.
+      c.tapSuspect(firstChar);
+      expect(read().selectedChar, isNull);
+    });
+
+    test('una casilla con mueble que bloquea avisa y no cambia nada', () async {
+      final (container, c) = await _open(pc);
+      final blocked = [
+        for (var i = 0; i < pc.map.size * pc.map.size; i++)
+          if (!pc.map.isOccupiable(i)) i,
+      ];
+      expect(blocked, isNotEmpty);
+      c.tapSuspect(firstChar);
+      expect(
+        c.placeAt(blocked.first, confirm: true),
+        ActionFeedback.blockedCell,
+      );
+      expect(container.read(gameControllerProvider(pc)).board.isEmpty, isTrue);
+    });
+
+    test('al resolver bien la herramienta vuelve a Anotar y no queda nadie '
+        'elegido', () async {
+      final (container, c) = await _open(pc);
+      c.tapSuspect(firstChar);
+      c.setToolMode(ToolMode.place);
+      _placeSolution(c, pc);
+      expect(c.solve(), ActionFeedback.solvedOk);
+      final s = container.read(gameControllerProvider(pc));
+      expect(s.toolMode, ToolMode.notes);
+      expect(s.selectedChar, isNull);
     });
   });
 
@@ -423,42 +531,8 @@ void main() {
   });
 
   group('pantalla de partida', () {
-    Future<ProviderContainer> pumpGame(WidgetTester tester) async {
-      SharedPreferences.setMockInitialValues({});
-      tester.view.physicalSize = const Size(420, 1000);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final container = ProviderContainer(
-        overrides: [
-          gameTickerEnabledProvider.overrideWithValue(false),
-          casesProvider.overrideWith((_) async => [pc]),
-        ],
-      );
-      addTearDown(container.dispose);
-      final router = GoRouter(
-        initialLocation: '/play/${pc.caseId}',
-        routes: [
-          GoRoute(
-            path: '/casos',
-            builder: (_, __) => const Scaffold(body: Text('LISTA DE CASOS')),
-          ),
-          GoRoute(
-            path: '/play/:id',
-            builder: (_, s) => GameScreen(caseId: s.pathParameters['id']!),
-          ),
-        ],
-      );
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: MaterialApp.router(routerConfig: router),
-        ),
-      );
-      for (var i = 0; i < 4; i++) {
-        await tester.pump(const Duration(milliseconds: 50));
-      }
-      return container;
-    }
+    Future<ProviderContainer> pumpGame(WidgetTester tester) async =>
+        (await pumpGameScreen(tester, pc)).container;
 
     const exitText = 'Tu avance queda guardado. ¿Salir del caso?';
 
@@ -483,6 +557,17 @@ void main() {
       await tester.pump();
       expect(find.text('Partida en pausa'), findsNothing);
       expect(container.read(gameControllerProvider(pc)).paused, isFalse);
+    });
+
+    testWidgets('en pausa el tablero no recibe toques', (tester) async {
+      final container = await pumpGame(tester);
+      final c = container.read(gameControllerProvider(pc).notifier);
+      c.tapSuspect(firstChar);
+      c.pause();
+      await settle(tester, 2);
+      c.placeAt(0, confirm: true);
+      expect(container.read(gameControllerProvider(pc)).board.isEmpty, isTrue);
+      expect(gameOf(tester).session.interactive, isFalse);
     });
 
     testWidgets('la flecha pide confirmación y Salir va a /casos', (
@@ -548,28 +633,14 @@ void main() {
       expect(find.text('LISTA DE CASOS'), findsNothing);
     });
 
-    testWidgets('tocar una casilla sin herramienta muestra el aviso', (
+    testWidgets('tocar una casilla sin sospechoso elegido muestra el aviso', (
       tester,
     ) async {
       await pumpGame(tester);
-      // Se busca una casilla libre (sin mueble que la bloquee).
-      final free = [
-        for (var i = 0; i < pc.map.size * pc.map.size; i++)
-          if (!(pc.map.objectAt(i)?.blocks ?? false)) i,
-      ].first;
-      final box = tester.getRect(find.byType(BoardView));
-      final n = pc.map.size;
-      final cs = (box.width - 16) / n;
-      final r = free ~/ n, c = free % n;
-      await tester.tapAt(
-        Offset(box.left + 8 + cs * (c + .5), box.top + 8 + cs * (r + .5)),
-      );
-      await tester.pump();
-      expect(find.text(noToolSelectedMessage), findsOneWidget);
-      expect(
-        noToolSelectedMessage,
-        'Elige primero a un sospechoso (toca su tarjeta) o una herramienta',
-      );
+      await tapCell(tester, firstFreeCell(pc));
+      expect(find.text(BoardStrings.pickSuspectFirst), findsOneWidget);
+      expect(BoardStrings.pickSuspectFirst, 'Elige primero a un sospechoso');
+      await tester.pump(const Duration(seconds: 3));
     });
 
     testWidgets('mantener oprimida la pista abre la pista completa', (
@@ -582,7 +653,8 @@ void main() {
       final clue = pc.clueFor(withClue.id)!;
       final text = clue.cardTextEs(pc.map, pc.names);
 
-      await tester.longPress(find.text(text).first);
+      await pickSuspect(tester, withClue.id);
+      await tester.longPress(find.byType(HintBox));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
 
@@ -592,42 +664,79 @@ void main() {
         (w) => w is Text && w.data == text && (w.style?.fontSize ?? 0) >= 16,
       );
       expect(big, findsOneWidget);
-      expect(find.text('Normal'), findsOneWidget);
-      expect(find.text('Destacar'), findsOneWidget);
-      expect(find.text('Tachar'), findsOneWidget);
+      // "Tachar" también es una herramienta de la barra: se busca en la hoja.
+      final inSheet = find.byType(BottomSheet);
+      Finder mark(String t) =>
+          find.descendant(of: inSheet, matching: find.text(t));
+      expect(mark('Normal'), findsOneWidget);
+      expect(mark('Destacar'), findsOneWidget);
+      expect(mark('Tachar'), findsOneWidget);
 
       final i = pc.clues.indexOf(clue);
+      ClueMark current() =>
+          container.read(gameControllerProvider(pc)).clueMarks[i];
+      await tester.tap(mark('Tachar'));
+      await tester.pump();
+      expect(current(), ClueMark.struck);
+      await tester.tap(mark('Destacar'));
+      await tester.pump();
+      expect(current(), ClueMark.highlighted);
+      await tester.tap(mark('Normal'));
+      await tester.pump();
+      expect(current(), ClueMark.normal);
+    });
+
+    testWidgets('tocar la pista la destaca y luego la tacha', (tester) async {
+      final container = await pumpGame(tester);
+      final withClue = pc.characters.firstWhere(
+        (c) => pc.clueFor(c.id) != null,
+      );
+      final i = pc.clues.indexOf(pc.clueFor(withClue.id)!);
       ClueMark mark() =>
           container.read(gameControllerProvider(pc)).clueMarks[i];
-      await tester.tap(find.text('Tachar'));
-      await tester.pump();
-      expect(mark(), ClueMark.struck);
-      await tester.tap(find.text('Destacar'));
+      await pickSuspect(tester, withClue.id);
+      await tester.tap(find.byType(HintBox));
       await tester.pump();
       expect(mark(), ClueMark.highlighted);
-      await tester.tap(find.text('Normal'));
+      await tester.tap(find.byType(HintBox));
       await tester.pump();
-      expect(mark(), ClueMark.normal);
+      expect(mark(), ClueMark.struck);
     });
 
     testWidgets('si la pista queda cortada con "…" aparece "ver más"', (
       tester,
     ) async {
-      await pumpGame(tester);
+      // En pantallas bajas la pista ocupa una sola línea.
+      await pumpGameScreen(tester, pc, size: const Size(360, 640));
       // Con la tipografía de prueba (cada letra ocupa un cuadrado) las
-      // pistas largas se cortan: la señal debe verse en esas tarjetas.
-      final longClues = pc.characters.where((c) {
-        final clue = pc.clueFor(c.id);
-        return clue != null && clue.cardTextEs(pc.map, pc.names).length > 38;
-      });
-      expect(longClues, isNotEmpty);
-      expect(find.text('ver más'), findsWidgets);
+      // pistas largas se cortan: la señal debe verse en esa pista.
+      int len(Character c) =>
+          pc.clueFor(c.id)?.cardTextEs(pc.map, pc.names).length ?? 0;
+      final longest = pc.characters.reduce((a, b) => len(a) >= len(b) ? a : b);
+      await pickSuspect(tester, longest.id);
+      expect(find.text('ver más'), findsOneWidget);
     });
 
     test('mensaje de casillas que no cuadran, con plural correcto', () {
-      expect(wrongCellsMessage(1), '1 casilla no cuadra');
-      expect(wrongCellsMessage(2), '2 casillas no cuadran');
-      expect(wrongCellsMessage(5), '5 casillas no cuadran');
+      expect(BoardStrings.wrongCells(1), '1 casilla no cuadra');
+      expect(BoardStrings.wrongCells(2), '2 casillas no cuadran');
+      expect(BoardStrings.wrongCells(5), '5 casillas no cuadran');
+    });
+
+    testWidgets('Resolver con casillas mal cuenta cuántas, no cuáles', (
+      tester,
+    ) async {
+      final container = await pumpGame(tester);
+      final c = container.read(gameControllerProvider(pc).notifier);
+      _placeSwapped(c, pc);
+      await settle(tester, 2);
+      await tester.tap(find.byKey(const ValueKey('boton-resolver')));
+      await settle(tester, 3);
+      final s = container.read(gameControllerProvider(pc));
+      expect(s.wrongCount, 2);
+      expect(s.errorCells, isEmpty); // regla 9: solo el tutorial señala
+      expect(s.errorCount, 1);
+      await tester.pump(const Duration(seconds: 4));
     });
   });
   group('holdClock y releaseClock', () {

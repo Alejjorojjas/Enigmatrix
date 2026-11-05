@@ -216,8 +216,12 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                           ),
                         ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      // Wrap y no Row: en teléfonos angostos (360 px) las dos
+                      // fichas pasan a dos líneas en vez de desbordar.
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 12,
+                        runSpacing: 8,
                         children: [
                           EnxReportStat(
                             label: 'Tiempo',
@@ -225,7 +229,6 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                             icon: Icons.timer_outlined,
                             color: Enx.blue,
                           ),
-                          const SizedBox(width: 12),
                           EnxReportStat(
                             label: 'Errores',
                             value: '${state.errorCount}',

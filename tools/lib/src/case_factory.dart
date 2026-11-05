@@ -5,6 +5,7 @@ library;
 
 import 'dart:math';
 
+import 'difficulty_ranges.dart';
 import 'generator.dart';
 import 'map_generator.dart';
 
@@ -13,13 +14,35 @@ class CaseFactory {
   final bool withWeapon;
   final int maxMapAttempts;
 
-  CaseFactory(this.profile, {this.withWeapon = false, this.maxMapAttempts = 40});
+  /// Rango de dificultad (PROVISIONAL). Por defecto el del perfil.
+  final DifficultyRange? range;
+
+  /// Topes del solver y de tiempo por caso (H-42).
+  final GenerationLimits limits;
+
+  CaseFactory(
+    this.profile, {
+    this.withWeapon = false,
+    this.maxMapAttempts = 40,
+    this.range,
+    this.limits = GenerationLimits.standard,
+  });
 
   GenerationResult generate(int seed) {
     final rng = Random(seed);
     final rejections = <String, int>{};
+    // Un solo reloj para todos los mapas de esta semilla.
+    final clock = Stopwatch()..start();
 
     for (var m = 1; m <= maxMapAttempts; m++) {
+      if (limits.maxCaseTime != null && clock.elapsed > limits.maxCaseTime!) {
+        rejections.update(rejectCaseTimeCap, (v) => v + 1, ifAbsent: () => 1);
+        return GenerationResult(
+            puzzle: null,
+            attempts: m - 1,
+            rejections: rejections,
+            extrasUsed: 0);
+      }
       final map = MapGenerator(
         size: profile.size,
         rng: rng,
@@ -39,7 +62,9 @@ class CaseFactory {
         withWeapon: withWeapon,
         maxAttempts: 8,
         caseIdOverride: 'caso-${profile.label}-s$seed',
-      ).generateWith(rng, seed);
+        range: range,
+        limits: limits,
+      ).generateWith(rng, seed, clock: clock);
 
       result.rejections.forEach(
           (r, n) => rejections.update(r, (v) => v + n, ifAbsent: () => n));

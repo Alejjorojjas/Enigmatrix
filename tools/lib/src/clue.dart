@@ -2,9 +2,11 @@
 /// (decisiones 2026-06-11: pistas de áreas, muebles y personas;
 /// sin pistas mecánicas de fila/columna/esquina/cardinales en V1).
 /// Tabla de referencia: docs/16-spec-puzzle.md sección 3.1.
-/// La semántica de cada tipo vive AQUÍ y solo aquí.
+/// La semántica de cada tipo vive AQUÍ y solo aquí. La REDACCIÓN por idioma
+/// vive en clue_formatter.dart (H-63).
 library;
 
+import 'clue_formatter.dart';
 import 'model.dart';
 
 /// Contexto de evaluación: asignación completa de posiciones.
@@ -42,23 +44,6 @@ class ClueNames {
   const ClueNames({required this.nameOf, required this.isFemale});
 }
 
-/// Texto del grupo de mueble: "una silla" / "la silla" (definido si solo
-/// hay un mueble de ese grupo en el mapa).
-String _groupText(GameMap map, String group) {
-  final type = ObjectType.values.byName(group);
-  return map.countOfGroup(group) == 1 ? type.defEs : type.indefEs;
-}
-
-/// "junto a" + objeto, con la contracción del español "a el" → "al".
-String _besideText(GameMap map, String group) {
-  final obj = _groupText(map, group);
-  return obj.startsWith('el ')
-      ? 'junto al ${obj.substring(3)}'
-      : 'junto a $obj';
-}
-
-ObjectType _groupType(String group) => ObjectType.values.byName(group);
-
 sealed class Clue {
   const Clue();
 
@@ -71,20 +56,18 @@ sealed class Clue {
 
   /// Predicado en español sin el sujeto: "estaba en el Salón".
   /// Para pistas sin sujeto devuelve la frase completa.
-  String predicateEs(GameMap map, ClueNames names);
+  /// La redacción vive en [ClueFormatterEs] (clue_formatter.dart); estos
+  /// métodos delegan para que la app y las herramientas sigan igual.
+  String predicateEs(GameMap map, ClueNames names) =>
+      ClueFormatterEs.instance.predicate(this, map, names);
 
   /// Frase completa: "Adela estaba en el Salón."
-  String textEs(GameMap map, ClueNames names) {
-    final p = predicateEs(map, names);
-    if (subjectId == null) return p;
-    return '${names.nameOf(subjectId!)} $p.';
-  }
+  String textEs(GameMap map, ClueNames names) =>
+      ClueFormatterEs.instance.text(this, map, names);
 
   /// Texto para la tarjeta del personaje (sin nombre): "Estaba en el Salón."
-  String cardTextEs(GameMap map, ClueNames names) {
-    final p = predicateEs(map, names);
-    return '${p[0].toUpperCase()}${p.substring(1)}${subjectId == null ? '' : '.'}';
-  }
+  String cardTextEs(GameMap map, ClueNames names) =>
+      ClueFormatterEs.instance.cardText(this, map, names);
 
   Map<String, dynamic> toJson();
 
@@ -134,10 +117,6 @@ class InArea extends Clue {
   bool holds(ClueContext ctx) => ctx.map.areaIdOf(ctx.pos(subject)) == areaId;
 
   @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'estaba en ${map.area(areaId).nameEs}';
-
-  @override
   Map<String, dynamic> toJson() =>
       {'type': 'in_area', 'subject': subject, 'area': areaId};
 }
@@ -153,10 +132,6 @@ class NotInArea extends Clue {
 
   @override
   bool holds(ClueContext ctx) => ctx.map.areaIdOf(ctx.pos(subject)) != areaId;
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'no estaba en ${map.area(areaId).nameEs}';
 
   @override
   Map<String, dynamic> toJson() =>
@@ -177,17 +152,6 @@ class OnObjectGroup extends Clue {
   bool holds(ClueContext ctx) => ctx.map.isOnGroup(ctx.pos(subject), group);
 
   @override
-  String predicateEs(GameMap map, ClueNames names) {
-    final type = _groupType(group);
-    final obj = _groupText(map, group);
-    if (type.seated) {
-      final seated = names.isFemale(subject) ? 'sentada' : 'sentado';
-      return 'estaba $seated en $obj';
-    }
-    return 'estaba sobre $obj';
-  }
-
-  @override
   Map<String, dynamic> toJson() =>
       {'type': 'on_object', 'subject': subject, 'group': group};
 }
@@ -205,10 +169,6 @@ class BesideObjectGroup extends Clue {
   @override
   bool holds(ClueContext ctx) =>
       ctx.map.isBesideGroup(ctx.pos(subject), group);
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'estaba ${_besideText(map, group)}';
 
   @override
   Map<String, dynamic> toJson() =>
@@ -235,15 +195,6 @@ class OnlyOneOnGroup extends Clue {
   }
 
   @override
-  String predicateEs(GameMap map, ClueNames names) {
-    final type = _groupType(group);
-    final obj = _groupText(map, group);
-    return type.seated
-        ? 'era la única persona sentada en $obj'
-        : 'era la única persona sobre $obj';
-  }
-
-  @override
   Map<String, dynamic> toJson() =>
       {'type': 'only_one_on', 'subject': subject, 'group': group};
 }
@@ -260,19 +211,6 @@ class CompoundClue extends Clue {
 
   @override
   bool holds(ClueContext ctx) => parts.every((p) => p.holds(ctx));
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) {
-    final preds = [for (final p in parts) p.predicateEs(map, names)];
-    // "estaba en la Cocina y estaba junto a una mesa" ->
-    // "estaba en la Cocina y junto a una mesa"
-    for (var i = 1; i < preds.length; i++) {
-      if (preds[i].startsWith('estaba ')) {
-        preds[i] = preds[i].substring('estaba '.length);
-      }
-    }
-    return preds.join(' y ');
-  }
 
   @override
   Map<String, dynamic> toJson() => {
@@ -295,10 +233,6 @@ class LastFreeCell extends Clue {
   bool holds(ClueContext ctx) => true;
 
   @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'estaba en la última casilla libre';
-
-  @override
   Map<String, dynamic> toJson() =>
       {'type': 'victim_filler', 'subject': subject};
 }
@@ -314,10 +248,6 @@ class SameArea extends Clue {
 
   @override
   bool holds(ClueContext ctx) => ctx.map.sameArea(ctx.pos(a), ctx.pos(b));
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'estaba con ${names.nameOf(b)}';
 
   @override
   Map<String, dynamic> toJson() => {'type': 'same_area', 'a': a, 'b': b};
@@ -336,10 +266,6 @@ class NotSameArea extends Clue {
   bool holds(ClueContext ctx) => !ctx.map.sameArea(ctx.pos(a), ctx.pos(b));
 
   @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'no estaba con ${names.nameOf(b)}';
-
-  @override
   Map<String, dynamic> toJson() => {'type': 'not_same_area', 'a': a, 'b': b};
 }
 
@@ -356,10 +282,6 @@ class BesideChar extends Clue {
   bool holds(ClueContext ctx) => ctx.map.besideInArea(ctx.pos(a), ctx.pos(b));
 
   @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'estaba junto a ${names.nameOf(b)}';
-
-  @override
   Map<String, dynamic> toJson() => {'type': 'beside', 'a': a, 'b': b};
 }
 
@@ -374,10 +296,6 @@ class Alone extends Clue {
   @override
   bool holds(ClueContext ctx) =>
       ctx.occupantsOf(ctx.map.areaIdOf(ctx.pos(subject))).length == 1;
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      names.isFemale(subject) ? 'estaba sola' : 'estaba solo';
 
   @override
   Map<String, dynamic> toJson() => {'type': 'alone', 'subject': subject};
@@ -400,10 +318,6 @@ class AloneWith extends Clue {
   }
 
   @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'estaba a solas con ${names.nameOf(b)}';
-
-  @override
   Map<String, dynamic> toJson() => {'type': 'alone_with', 'a': a, 'b': b};
 }
 
@@ -414,10 +328,6 @@ class AreaEmpty extends Clue {
 
   @override
   bool holds(ClueContext ctx) => ctx.occupantsOf(areaId).isEmpty;
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'Nadie estaba en ${map.area(areaId).nameEs}.';
 
   @override
   Map<String, dynamic> toJson() => {'type': 'area_empty', 'area': areaId};
@@ -436,10 +346,6 @@ class WeaponInArea extends Clue {
   }
 
   @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'El arma homicida está en ${map.area(areaId).nameEs}.';
-
-  @override
   Map<String, dynamic> toJson() => {'type': 'weapon_area', 'area': areaId};
 }
 
@@ -456,17 +362,6 @@ class WeaponCat extends Clue {
         category;
   }
 
-  static const _catEs = {
-    WeaponCategory.cortante: 'un arma cortante',
-    WeaponCategory.contundente: 'un arma contundente',
-    WeaponCategory.veneno: 'un veneno',
-    WeaponCategory.asfixia: 'un arma de asfixia o atadura',
-  };
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'El arma homicida es ${_catEs[category]}.';
-
   @override
   Map<String, dynamic> toJson() =>
       {'type': 'weapon_category', 'category': category.name};
@@ -479,10 +374,6 @@ class WeaponExact extends Clue {
 
   @override
   bool holds(ClueContext ctx) => ctx.lethalWeaponId == weaponId;
-
-  @override
-  String predicateEs(GameMap map, ClueNames names) =>
-      'El arma homicida es ${map.weapons.firstWhere((w) => w.id == weaponId).nameEs}.';
 
   @override
   Map<String, dynamic> toJson() => {'type': 'weapon_exact', 'weapon': weaponId};

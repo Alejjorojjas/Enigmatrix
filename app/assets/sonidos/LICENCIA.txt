@@ -1,0 +1,18 @@
+Sonidos del prototipo del tablero de Enigmatrix
+================================================
+
+Todos los archivos .wav de esta carpeta son sonidos ORIGINALES, generados por
+script (tool/generar_sonidos.py) mediante sintesis matematica: senoides, ruido
+filtrado y envolventes. No contienen muestras, grabaciones ni fragmentos de
+ningun otro audio, y no se descargaron de internet.
+
+Autoria: proyecto Enigmatrix (script de sintesis propio).
+
+Uso: libre dentro del proyecto Enigmatrix, sin atribucion externa.
+
+Para regenerarlos (da exactamente los mismos archivos, la semilla es fija):
+
+    python tool/generar_sonidos.py
+
+Lista: tick, lapiz1, lapiz2, lapiz3, borrar, sello, arpegio, zumbido, redoble,
+golpe, estrella, fanfarria.

@@ -1,6 +1,6 @@
 /// Tutorial jugable (regla 11, ADR-0012): caso propio que no consume el
 /// Caso 1, guía paso a paso que avanza con las acciones del jugador (X,
-/// Notas, papelera, borrador y un Resolver fallido controlado), Saltar
+/// Notas, Borrar y un Resolver fallido controlado), Saltar
 /// siempre visible y cero huellas en el progreso del banco ("done:" / "game:").
 /// Todo determinista: el reloj real está apagado y el caso es fijo.
 library;
@@ -11,7 +11,6 @@ import 'dart:io';
 import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/game_controller.dart';
-import 'package:enigmatrix/src/ui/board_view.dart';
 import 'package:enigmatrix/src/ui/case_list_screen.dart';
 import 'package:enigmatrix/src/ui/game_screen.dart';
 import 'package:enigmatrix/src/ui/home_shell.dart';
@@ -24,6 +23,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'support/game_ui.dart';
 
 PuzzleCase _loadTutorial() => PuzzleCase.fromJson(
   jsonDecode(
@@ -55,6 +56,8 @@ const _adela = 'c1', _bruno = 'c2', _clara = 'c3', _dario = 'c4', _elena = 'c5';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   GoogleFonts.config.allowRuntimeFetching = false;
+  // Letra real (Roboto) para medir bien la interfaz.
+  setUpAll(loadRoboto);
   final pc = _loadTutorial();
   final pos = pc.solution.positions;
   final steps = buildTutorialSteps(pc);
@@ -114,9 +117,15 @@ void main() {
         expect(text.contains(r'$'), isFalse, reason: 'paso $i');
         expect(text.contains('null'), isFalse, reason: 'paso $i');
       }
-      // Enseña la X, las notas, la papelera, el borrador y el Resolver.
+      // Enseña Confirmar, la X (Tachar), las notas, Borrar y el Resolver.
       final all = [for (final st in steps) st.text(s)].join(' ');
-      for (final word in ['X', 'NOTAS', 'PAPELERA', 'BORRADOR', 'RESOLVER']) {
+      for (final word in [
+        'CONFIRMAR',
+        'TACHAR',
+        'NOTAS',
+        'BORRAR',
+        'RESOLVER',
+      ]) {
         expect(all, contains(word));
       }
     });
@@ -206,7 +215,7 @@ void main() {
       expect(tutorialResolveBlock(pc, st(), 16), isNotNull);
       expect(tutorialResolveBlock(pc, st(), 17), isNull);
 
-      // 11: quitar a Elena y a Dario (papelera o lo que sea).
+      // 11: quitar a Elena y a Dario (Borrar o lo que sea).
       expect(done(11), isFalse);
       c.removeElement(pos[_elena]!, ConfirmedElement(_elena));
       expect(done(11), isFalse);
@@ -268,14 +277,17 @@ void main() {
 
   // ------------------------------------------------------------------------
   group('pantalla del tutorial', () {
+    const phone = Size(360, 740);
+
     Future<(ProviderContainer, GoRouter)> pumpApp(
       WidgetTester tester, {
       Map<String, Object> prefs = const {},
       String initial = '/tutorial',
       List<PuzzleCase>? bank,
+      Size size = phone,
     }) async {
       SharedPreferences.setMockInitialValues(prefs);
-      tester.view.physicalSize = const Size(1100, 1700);
+      tester.view.physicalSize = size;
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final container = ProviderContainer(
@@ -308,46 +320,36 @@ void main() {
       return (container, router);
     }
 
-    Offset cellCenter(WidgetTester tester, int cell) {
-      final box = tester.getRect(find.byType(BoardView));
-      final n = pc.map.size;
-      final cs = (box.width - 16) / n;
-      return Offset(
-        box.left + 8 + cs * (cell % n + .5),
-        box.top + 8 + cs * (cell ~/ n + .5),
-      );
+    // Poner a alguien con la herramienta Confirmar (un solo toque).
+    Future<void> confirmAt(WidgetTester tester, String id, int cell) async {
+      await pickSuspect(tester, id);
+      await pickTool(tester, ToolMode.place);
+      await tapCell(tester, cell);
+      await _settle(tester);
     }
 
-    // Las tarjetas de sospechosos van en una tira que se desliza a los lados.
-    Future<void> tapCard(WidgetTester tester, String name) async {
-      final strip = find.byWidgetPredicate(
-        (w) => w is Scrollable && w.axis == Axis.horizontal,
-      );
-      final stripRect = tester.getRect(strip);
-      for (var i = 0; i < 8; i++) {
-        final f = find.text(name);
-        if (f.evaluate().isNotEmpty) {
-          final x = tester.getCenter(f.first).dx;
-          if (x > stripRect.left + 40 && x < stripRect.right - 40) break;
-        }
-        // Se prueba hacia el lado donde esté la tarjeta.
-        final shown = find.text(name).evaluate().isNotEmpty;
-        final dx =
-            shown &&
-                tester.getCenter(find.text(name).first).dx < stripRect.left + 40
-            ? 150.0
-            : -150.0;
-        await tester.drag(strip, Offset(dx, 0));
-        await tester.pump(const Duration(milliseconds: 100));
+    Future<void> tapResolve(WidgetTester tester) async {
+      await tester.tap(find.byKey(const ValueKey('boton-resolver')));
+      await _settle(tester);
+    }
+
+    Future<void> entendido(WidgetTester tester) async {
+      await tester.tap(find.byKey(const ValueKey('guia-entendido')));
+      await _settle(tester);
+    }
+
+    Future<void> openMenu(WidgetTester tester) async {
+      await tester.tap(find.byIcon(Icons.more_vert));
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+
+    // La secuencia de resolver corre en la escena (cuadros de 50 ms como
+    // máximo) y el resumen sale 0,9 s después de terminar.
+    Future<void> watchReveal(WidgetTester tester) async {
+      for (var i = 0; i < 140; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
       }
-      await tester.tap(find.text(name).first);
-      await _settle(tester);
-    }
-
-    Future<void> confirmAt(WidgetTester tester, String name, int cell) async {
-      await tapCard(tester, name);
-      await tester.longPressAt(cellCenter(tester, cell));
-      await _settle(tester);
     }
 
     void expectStep(int index) {
@@ -373,73 +375,72 @@ void main() {
       expect(find.textContaining('caso de práctica'), findsOneWidget);
 
       // 0 y 1: pasos manuales.
-      await tester.tap(find.text('ENTENDIDO'));
-      await _settle(tester);
+      await entendido(tester);
       expectStep(1);
-      await tester.tap(find.text('ENTENDIDO'));
-      await _settle(tester);
+      await entendido(tester);
 
-      // 2: tocar la tarjeta de Adela y una casilla = candidato.
+      // 2: tocar el retrato de Adela y una casilla = candidato.
       expectStep(2);
-      await tapCard(tester, 'Adela');
-      await tester.tapAt(cellCenter(tester, pos[_adela]!));
+      await pickSuspect(tester, _adela);
+      await tapCell(tester, pos[_adela]!);
       await _settle(tester);
       expect(state().board.cell(pos[_adela]!).candidates, {_adela});
 
-      // 3: mantener presionada = confirmar.
+      // 3: mantener oprimida la casilla = confirmar.
       expectStep(3);
-      await tester.longPressAt(cellCenter(tester, pos[_adela]!));
+      await holdCell(tester, pos[_adela]!);
       await _settle(tester);
       expect(state().board.confirmedCellOf(_adela), pos[_adela]);
 
       // 4: manual (Auto-X).
       expectStep(4);
-      await tester.tap(find.text('ENTENDIDO'));
-      await _settle(tester);
+      await entendido(tester);
 
       // 5: Bruno en la única cama libre.
       expectStep(5);
-      await confirmAt(tester, 'Bruno', pos[_bruno]!);
+      await confirmAt(tester, _bruno, pos[_bruno]!);
 
-      // 6: la X a mano, con la herramienta y una casilla del Porche.
+      // 6: la X a mano, con la herramienta Tachar y una casilla del Porche.
       expectStep(6);
-      await tester.tap(find.text('Descarte (X)'));
-      await _settle(tester);
-      await tester.tapAt(cellCenter(tester, 20));
+      await pickTool(tester, ToolMode.cross);
+      await tapCell(tester, 20);
       await _settle(tester);
       expect(state().board.cell(20).x, XLevel.small);
 
-      // 7 y 8: Notas y vuelta a Mapa.
+      // 7 y 8: vista Notas desde el menú, y de vuelta a Mapa.
       expectStep(7);
+      await openMenu(tester);
       await tester.tap(find.text('Notas'));
+      await tester.pump(const Duration(milliseconds: 400));
       await _settle(tester);
       expect(state().mapMode, isFalse);
       expectStep(8);
+      await openMenu(tester);
       await tester.tap(find.text('Mapa'));
+      await tester.pump(const Duration(milliseconds: 400));
       await _settle(tester);
       expect(state().mapMode, isTrue);
 
       // 9 y 10: Clara, luego Elena y Dario.
       expectStep(9);
-      await confirmAt(tester, 'Clara', pos[_clara]!);
+      await confirmAt(tester, _clara, pos[_clara]!);
       expectStep(10);
-      await confirmAt(tester, 'Elena', pos[_elena]!);
-      await confirmAt(tester, 'Dario', pos[_dario]!);
+      await confirmAt(tester, _elena, pos[_elena]!);
+      await confirmAt(tester, _dario, pos[_dario]!);
       expect(tutorialBoardIsCorrect(state()), isTrue);
 
       // 11: con el tablero correcto el Resolver espera (hay experimento).
       expectStep(11);
-      await tester.tap(find.text('RESOLVER'));
-      await _settle(tester);
+      await tapResolve(tester);
       expect(find.textContaining('Aún no'), findsOneWidget);
       expect(state().solved, isFalse);
       expect(state().errorCount, 0);
+      await tester.pump(const Duration(seconds: 4));
 
-      // 11: arrastrar a Elena y a Dario a la papelera.
-      final trash = tester.getCenter(find.byIcon(Icons.delete_outline));
+      // 11: quitar a Elena y a Dario con Borrar.
+      await pickTool(tester, ToolMode.erase);
       for (final cell in [pos[_elena]!, pos[_dario]!]) {
-        final from = cellCenter(tester, cell);
-        await tester.dragFrom(from, trash - from);
+        await tapCell(tester, cell);
         await _settle(tester);
       }
       expect(state().board.confirmedCellOf(_elena), isNull);
@@ -447,17 +448,13 @@ void main() {
 
       // 12: intercambiarlos.
       expectStep(12);
-      await confirmAt(tester, 'Elena', pos[_dario]!);
-      await confirmAt(tester, 'Dario', pos[_elena]!);
+      await confirmAt(tester, _elena, pos[_dario]!);
+      await confirmAt(tester, _dario, pos[_elena]!);
 
       // 13: Resolver fallido: se marcan las casillas exactas y se explica.
       expectStep(13);
-      await tester.tap(find.text('RESOLVER'));
-      await _settle(tester);
+      await tapResolve(tester);
       expect(state().errorCells, {pos[_dario], pos[_elena]});
-      // El aviso anterior sale y el nuevo entra (animaciones del SnackBar).
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pump(const Duration(milliseconds: 500));
       expect(
         find.text('2 casillas no cuadran: revisa las marcadas'),
         findsOneWidget,
@@ -468,30 +465,28 @@ void main() {
       expectStep(14);
       expect(find.textContaining('Las casillas rojas'), findsOneWidget);
       await tester.pump(const Duration(seconds: 4));
-      await tester.tap(find.text('ENTENDIDO'));
-      await _settle(tester);
+      await entendido(tester);
 
-      // 15: borrador.
+      // 15: Borrar otra vez.
       expectStep(15);
-      await tester.tap(find.text('Borrador (toca y limpia casillas)'));
-      await _settle(tester);
+      await pickTool(tester, ToolMode.erase);
       for (final cell in [pos[_dario]!, pos[_elena]!]) {
-        await tester.tapAt(cellCenter(tester, cell));
+        await tapCell(tester, cell);
         await _settle(tester);
       }
       expect(state().board.confirmedCellOf(_elena), isNull);
 
       // 16: ponerlos bien.
       expectStep(16);
-      await confirmAt(tester, 'Elena', pos[_elena]!);
-      await confirmAt(tester, 'Dario', pos[_dario]!);
+      await confirmAt(tester, _elena, pos[_elena]!);
+      await confirmAt(tester, _dario, pos[_dario]!);
 
       // 17: Resolver final.
       expectStep(17);
-      expect(find.text('ENTENDIDO'), findsNothing);
-      await tester.tap(find.text('RESOLVER'));
-      await _settle(tester);
+      expect(find.byKey(const ValueKey('guia-entendido')), findsNothing);
+      await tapResolve(tester);
       expect(state().solved, isTrue);
+      await watchReveal(tester);
       expect(find.text('¡Práctica superada!'), findsOneWidget);
       expect(find.textContaining('El asesino era Bruno'), findsOneWidget);
 
@@ -503,30 +498,58 @@ void main() {
       expect(keys, contains(tutorialPlayedKey));
     });
 
+    testWidgets('la guía señala con un marco lo que explica', (tester) async {
+      final (container, _) = await pumpApp(tester);
+      Finder spot(String target) => find.byKey(ValueKey('guia-$target-activo'));
+      // Paso 0: los retratos. Paso 1: el tablero.
+      expect(spot('portraits'), findsOneWidget);
+      await entendido(tester);
+      expect(spot('board'), findsOneWidget);
+      expect(spot('portraits'), findsNothing);
+      // Paso 3: primero la herramienta Confirmar, luego el tablero.
+      container.read(tutorialStepProvider.notifier).state = 3;
+      await _settle(tester);
+      expect(spot('toolPlace'), findsOneWidget);
+      await pickTool(tester, ToolMode.place);
+      expect(spot('board'), findsOneWidget);
+      // Paso 7: el menú.
+      container.read(tutorialStepProvider.notifier).state = 7;
+      await _settle(tester);
+      expect(spot('menu'), findsOneWidget);
+      // Paso 13: Resolver.
+      container.read(tutorialStepProvider.notifier).state = 13;
+      await _settle(tester);
+      expect(spot('resolve'), findsOneWidget);
+    });
+
     testWidgets('terminar el tutorial deja el Caso 1 sin jugar', (
       tester,
     ) async {
       final bank = (await tester.runAsync(_loadBank))!;
-      final (container, router) = await pumpApp(tester, bank: bank);
+      final (container, router) = await pumpApp(
+        tester,
+        bank: bank,
+        size: const Size(1100, 1700),
+      );
       final c = container.read(gameControllerProvider(pc).notifier);
 
       // Se resuelve el caso (con el controlador, ya probado paso a paso).
       for (final e in pos.entries) {
         c.placeSuspect(e.value, charId: e.key, confirm: true);
       }
-      await tester.tap(find.text('RESOLVER'));
-      await _settle(tester);
+      await tapResolve(tester);
       // Con el tablero ya correcto pero la guía en el paso 1, Resolver espera
       // (falta el experimento del Resolver fallido). Se fuerza el último
       // paso de la guía para cerrar el caso.
       expect(container.read(gameControllerProvider(pc)).solved, isFalse);
       container.read(tutorialStepProvider.notifier).state = steps.length - 1;
+      await tester.pump(const Duration(seconds: 4));
       await _settle(tester);
-      await tester.tap(find.text('RESOLVER'));
-      await _settle(tester);
+      await tapResolve(tester);
+      await watchReveal(tester);
       expect(find.text('¡Práctica superada!'), findsOneWidget);
 
-      await tester.tap(find.text('IR A LOS CASOS'));
+      await tester.tap(find.byKey(const ValueKey('tutorial-ir-casos')));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       expect(router.state.uri.path, '/casos');
@@ -550,7 +573,11 @@ void main() {
       tester,
     ) async {
       final bank = (await tester.runAsync(_loadBank))!;
-      final (container, router) = await pumpApp(tester, bank: bank);
+      final (container, router) = await pumpApp(
+        tester,
+        bank: bank,
+        size: const Size(1100, 1700),
+      );
 
       expect(find.text('Saltar'), findsOneWidget);
       // También con la partida en pausa.
@@ -581,7 +608,11 @@ void main() {
       tester,
     ) async {
       final bank = (await tester.runAsync(_loadBank))!;
-      final (_, router) = await pumpApp(tester, bank: bank);
+      final (_, router) = await pumpApp(
+        tester,
+        bank: bank,
+        size: const Size(1100, 1700),
+      );
 
       await tester.tap(find.byIcon(Icons.arrow_back));
       await _settle(tester);
@@ -616,22 +647,70 @@ void main() {
       expectStep(0);
     });
 
-    testWidgets('la tarjeta de la guía va fuera del tablero y no lo tapa', (
+    for (final size in const [Size(360, 740), Size(360, 640)]) {
+      testWidgets(
+        'a ${size.width.toInt()}x${size.height.toInt()} la tarjeta de la guía '
+        'va arriba y no tapa el tablero ni los retratos',
+        (tester) async {
+          await pumpApp(tester, size: size);
+          final card = tester.getRect(find.text('TUTORIAL · 1/18'));
+          final board = tester.getRect(gameFinder);
+          final portraits = tester.getRect(
+            find.byKey(const ValueKey('retrato-c1')),
+          );
+          expect(card.bottom, lessThan(board.top));
+          expect(board.bottom, lessThanOrEqualTo(portraits.top + 60));
+          // Nada se sale de la pantalla ni se desborda.
+          expect(
+            tester.getRect(find.byKey(const ValueKey('boton-resolver'))).bottom,
+            lessThanOrEqualTo(size.height),
+          );
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+
+    testWidgets('el texto de cada paso cabe en la tarjeta sin desplazarse', (
       tester,
     ) async {
       await pumpApp(tester);
-      final card = tester.getRect(find.text('TUTORIAL · 1/18'));
-      final board = tester.getRect(find.byType(BoardView));
-      final strip = tester.getRect(find.text('PISTAS'));
-      expect(card.bottom, lessThan(board.top));
-      expect(card.bottom, lessThan(strip.top));
+      final style = const TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 14,
+        height: 1.25,
+      );
+      final s = GameState(
+        pc: pc,
+        board: BoardState.empty(),
+        clueMarks: const [],
+      );
+      // Ancho útil del texto: pantalla 360 - 2*12 de margen - 24 de relleno
+      // - 8 + 22 (emoji).
+      const width = 360 - 24 - 24 - 30.0;
+      final offenders = <String>[];
+      for (final (i, step) in steps.indexed) {
+        final painter = TextPainter(
+          text: TextSpan(text: step.text(s), style: style),
+          textDirection: TextDirection.ltr,
+        )..layout(maxWidth: width);
+        // Alto disponible para el texto: 132 - 6 - 4 - 38 de pie - 6.
+        if (painter.height > kTutorialCoachHeight - 54) {
+          offenders.add('paso $i (${painter.height} px)');
+        }
+      }
+      expect(offenders, isEmpty, reason: 'no caben: acórtalos');
     });
 
     testWidgets('primer arranque: bienvenida y directo al caso de práctica', (
       tester,
     ) async {
       final bank = (await tester.runAsync(_loadBank))!;
-      final (_, router) = await pumpApp(tester, initial: '/home', bank: bank);
+      final (_, router) = await pumpApp(
+        tester,
+        initial: '/home',
+        bank: bank,
+        size: const Size(1100, 1700),
+      );
       for (var i = 0; i < 5; i++) {
         await tester.pump(const Duration(milliseconds: 300));
       }
@@ -661,6 +740,7 @@ void main() {
         initial: '/home',
         bank: bank,
         prefs: {tutorialPlayedKey: true},
+        size: const Size(1100, 1700),
       );
       for (var i = 0; i < 5; i++) {
         await tester.pump(const Duration(milliseconds: 300));
@@ -678,6 +758,7 @@ void main() {
         initial: '/home',
         bank: bank,
         prefs: {'tutorial:seen': true, 'tutorial:played': true},
+        size: const Size(1100, 1700),
       );
       for (var i = 0; i < 5; i++) {
         await tester.pump(const Duration(milliseconds: 300));
@@ -697,6 +778,7 @@ void main() {
         initial: '/casos',
         bank: bank,
         prefs: {tutorialPlayedKey: true},
+        size: const Size(1100, 1700),
       );
       await tester.pump(const Duration(milliseconds: 400));
       expect(find.text('REPETIR'), findsOneWidget);

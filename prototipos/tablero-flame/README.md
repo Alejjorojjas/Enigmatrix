@@ -1,5 +1,13 @@
 # Tablero Flame: prueba técnica de la etapa 2
 
+> **CONGELADO (05-11-2026).** Este prototipo ya cumplió su trabajo (etapa 2,
+> ADR-0013) y **no se modifica más**: queda como referencia de lo que Alejandro
+> aprobó. El código del tablero (escena de Flame, pieles Ilustrada, Papel y
+> Neutra, director de feedback, audio y vibración, medidor de FPS) vive ahora en
+> **`app/lib/src/board/`** y los sonidos en `app/assets/sonidos/`, conectados al
+> `GameController` y al `BoardState` de la app (ronda 4.1). Los cambios nuevos
+> se hacen allá, no aquí.
+
 Prototipo aislado. **No es la app** y no toca `app/` ni `tools/`. Sirve para
 medir, en un Android de gama media, si un tablero con "game feel" de juego
 profesional corre fluido, y para **comparar en el teléfono dos direcciones

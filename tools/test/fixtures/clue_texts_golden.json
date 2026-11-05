@@ -1,0 +1,2398 @@
+{
+ "cases": {
+  "app/assets/cases/caso-casual-s1.json": [
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a una planta",
+    "Adela estaba en la Biblioteca y junto a una planta.",
+    "Estaba en la Biblioteca y junto a una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Bruno era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una silla",
+    "Clara estaba junto a una silla.",
+    "Estaba junto a una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la TV",
+    "Dario estaba junto a la TV.",
+    "Estaba junto a la TV."
+   ],
+   [
+    "compound",
+    "estaba en el Estudio y junto a una alfombra",
+    "La víctima estaba en el Estudio y junto a una alfombra.",
+    "Estaba en el Estudio y junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y junto a una planta",
+    "Franco estaba en la Terraza y junto a una planta.",
+    "Estaba en la Terraza y junto a una planta."
+   ],
+   [
+    "on_object",
+    "estaba sentada en el sofá",
+    "Greta estaba sentada en el sofá.",
+    "Estaba sentada en el sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Estudio y junto a una planta",
+    "Hugo estaba en el Estudio y junto a una planta.",
+    "Estaba en el Estudio y junto a una planta."
+   ]
+  ],
+  "app/assets/cases/caso-casual-s2.json": [
+   [
+    "compound",
+    "estaba en el Estudio y junto a una silla",
+    "Adela estaba en el Estudio y junto a una silla.",
+    "Estaba en el Estudio y junto a una silla."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Bruno estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "in_area",
+    "estaba en el Jardín",
+    "Clara estaba en el Jardín.",
+    "Estaba en el Jardín."
+   ],
+   [
+    "compound",
+    "estaba en la Cocina y junto a una mesa",
+    "Dario estaba en la Cocina y junto a una mesa.",
+    "Estaba en la Cocina y junto a una mesa."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un sofá",
+    "La víctima estaba junto a un sofá.",
+    "Estaba junto a un sofá."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una alfombra",
+    "Franco estaba junto a una alfombra.",
+    "Estaba junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba sentada en un sofá y junto a una planta",
+    "Greta estaba sentada en un sofá y junto a una planta.",
+    "Estaba sentada en un sofá y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba sobre una alfombra y junto a una alfombra",
+    "Hugo estaba sobre una alfombra y junto a una alfombra.",
+    "Estaba sobre una alfombra y junto a una alfombra."
+   ]
+  ],
+  "app/assets/cases/caso-casual-s20.json": [
+   [
+    "compound",
+    "estaba en el Salón y junto a una mesa",
+    "La víctima estaba en el Salón y junto a una mesa.",
+    "Estaba en el Salón y junto a una mesa."
+   ],
+   [
+    "compound",
+    "estaba en el Porche y junto a una planta",
+    "Bruno estaba en el Porche y junto a una planta.",
+    "Estaba en el Porche y junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto al sillón",
+    "Clara estaba junto al sillón.",
+    "Estaba junto al sillón."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y sobre una alfombra",
+    "Dario estaba en la Biblioteca y sobre una alfombra.",
+    "Estaba en la Biblioteca y sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Elena estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a una planta",
+    "Franco estaba en la Biblioteca y junto a una planta.",
+    "Estaba en la Biblioteca y junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una lavadora",
+    "Greta estaba junto a una lavadora.",
+    "Estaba junto a una lavadora."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a una silla",
+    "Hugo estaba en la Biblioteca y junto a una silla.",
+    "Estaba en la Biblioteca y junto a una silla."
+   ]
+  ],
+  "app/assets/cases/caso-casual-s21.json": [
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Adela era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sofá",
+    "Bruno era la única persona sentada en un sofá.",
+    "Era la única persona sentada en un sofá."
+   ],
+   [
+    "compound",
+    "estaba en la Bodega y junto a una caja",
+    "Clara estaba en la Bodega y junto a una caja.",
+    "Estaba en la Bodega y junto a una caja."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un armario",
+    "Dario estaba junto a un armario.",
+    "Estaba junto a un armario."
+   ],
+   [
+    "compound",
+    "estaba en el Salón y junto a un sofá",
+    "Elena estaba en el Salón y junto a un sofá.",
+    "Estaba en el Salón y junto a un sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Jardín y junto a un sofá",
+    "Franco estaba en el Jardín y junto a un sofá.",
+    "Estaba en el Jardín y junto a un sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Pasillo y sobre una alfombra",
+    "La víctima estaba en el Pasillo y sobre una alfombra.",
+    "Estaba en el Pasillo y sobre una alfombra."
+   ],
+   [
+    "in_area",
+    "estaba en el Pasillo",
+    "Hugo estaba en el Pasillo.",
+    "Estaba en el Pasillo."
+   ]
+  ],
+  "app/assets/cases/caso-casual-s3.json": [
+   [
+    "compound",
+    "estaba en el Ático y junto a una silla",
+    "Adela estaba en el Ático y junto a una silla.",
+    "Estaba en el Ático y junto a una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la alfombra",
+    "La víctima estaba junto a la alfombra.",
+    "Estaba junto a la alfombra."
+   ],
+   [
+    "in_area",
+    "estaba en el Estudio",
+    "Clara estaba en el Estudio.",
+    "Estaba en el Estudio."
+   ],
+   [
+    "compound",
+    "estaba en el Baño y junto a una planta",
+    "Dario estaba en el Baño y junto a una planta.",
+    "Estaba en el Baño y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba en el Estudio y junto a un armario",
+    "Elena estaba en el Estudio y junto a un armario.",
+    "Estaba en el Estudio y junto a un armario."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Franco era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Comedor y junto a una mesa",
+    "Greta estaba en el Comedor y junto a una mesa.",
+    "Estaba en el Comedor y junto a una mesa."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Franco",
+    "Hugo estaba a solas con Franco.",
+    "Estaba a solas con Franco."
+   ]
+  ],
+  "app/assets/cases/caso-casual-s4.json": [
+   [
+    "alone_with",
+    "estaba a solas con Bruno",
+    "Adela estaba a solas con Bruno.",
+    "Estaba a solas con Bruno."
+   ],
+   [
+    "compound",
+    "estaba en el Jardín y junto a una planta",
+    "Bruno estaba en el Jardín y junto a una planta.",
+    "Estaba en el Jardín y junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una mesa",
+    "La víctima estaba junto a una mesa.",
+    "Estaba junto a una mesa."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y junto a una planta",
+    "Dario estaba en la Terraza y junto a una planta.",
+    "Estaba en la Terraza y junto a una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Elena era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Hugo",
+    "Franco estaba a solas con Hugo.",
+    "Estaba a solas con Hugo."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Greta estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Salón y sobre una alfombra",
+    "Hugo estaba en el Salón y sobre una alfombra.",
+    "Estaba en el Salón y sobre una alfombra."
+   ]
+  ],
+  "app/assets/cases/caso-casual-s5.json": [
+   [
+    "compound",
+    "estaba en el Estudio y junto a un sillón",
+    "Adela estaba en el Estudio y junto a un sillón.",
+    "Estaba en el Estudio y junto a un sillón."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y junto a una planta",
+    "Bruno estaba en la Terraza y junto a una planta.",
+    "Estaba en la Terraza y junto a una planta."
+   ],
+   [
+    "same_area",
+    "estaba con Dario",
+    "Clara estaba con Dario.",
+    "Estaba con Dario."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sillón",
+    "Dario era la única persona sentada en un sillón.",
+    "Era la única persona sentada en un sillón."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la silla",
+    "Elena estaba junto a la silla.",
+    "Estaba junto a la silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Franco era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Pasillo y junto a una alfombra",
+    "Greta estaba en el Pasillo y junto a una alfombra.",
+    "Estaba en el Pasillo y junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Baño y junto a una alfombra",
+    "La víctima estaba en el Baño y junto a una alfombra.",
+    "Estaba en el Baño y junto a una alfombra."
+   ]
+  ],
+  "app/assets/cases/caso-intermedio-s1.json": [
+   [
+    "compound",
+    "estaba en el Salón y sobre una alfombra",
+    "La víctima estaba en el Salón y sobre una alfombra.",
+    "Estaba en el Salón y sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la TV",
+    "Bruno estaba junto a la TV.",
+    "Estaba junto a la TV."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Dario",
+    "Clara estaba a solas con Dario.",
+    "Estaba a solas con Dario."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Dario estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto al sofá",
+    "Elena estaba junto al sofá.",
+    "Estaba junto al sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Dormitorio y sobre una alfombra",
+    "Franco estaba en el Dormitorio y sobre una alfombra.",
+    "Estaba en el Dormitorio y sobre una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Dormitorio y junto a una alfombra",
+    "Greta estaba en el Dormitorio y junto a una alfombra.",
+    "Estaba en el Dormitorio y junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Jardín y junto a una planta",
+    "Hugo estaba en el Jardín y junto a una planta.",
+    "Estaba en el Jardín y junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un armario",
+    "Irene estaba junto a un armario.",
+    "Estaba junto a un armario."
+   ]
+  ],
+  "app/assets/cases/caso-intermedio-s2.json": [
+   [
+    "alone_with",
+    "estaba a solas con Bruno",
+    "Adela estaba a solas con Bruno.",
+    "Estaba a solas con Bruno."
+   ],
+   [
+    "compound",
+    "estaba en la Bodega y junto a un armario",
+    "Bruno estaba en la Bodega y junto a un armario.",
+    "Estaba en la Bodega y junto a un armario."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una alfombra",
+    "Clara estaba junto a una alfombra.",
+    "Estaba junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Vestíbulo y junto a un armario",
+    "Dario estaba en el Vestíbulo y junto a un armario.",
+    "Estaba en el Vestíbulo y junto a un armario."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Elena era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la barra",
+    "La víctima estaba junto a la barra.",
+    "Estaba junto a la barra."
+   ],
+   [
+    "compound",
+    "estaba en el Porche y junto a una planta",
+    "Greta estaba en el Porche y junto a una planta.",
+    "Estaba en el Porche y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba junto a una mesa y junto a una planta",
+    "Hugo estaba junto a una mesa y junto a una planta.",
+    "Estaba junto a una mesa y junto a una planta."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Hugo",
+    "Irene estaba a solas con Hugo.",
+    "Estaba a solas con Hugo."
+   ]
+  ],
+  "app/assets/cases/caso-intermedio-s3.json": [
+   [
+    "beside_object",
+    "estaba junto a la caja",
+    "Adela estaba junto a la caja.",
+    "Estaba junto a la caja."
+   ],
+   [
+    "compound",
+    "estaba en el Estudio y junto a una silla",
+    "Bruno estaba en el Estudio y junto a una silla.",
+    "Estaba en el Estudio y junto a una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Dormitorio y junto a una silla",
+    "La víctima estaba en el Dormitorio y junto a una silla.",
+    "Estaba en el Dormitorio y junto a una silla."
+   ],
+   [
+    "compound",
+    "estaba en la Bodega y junto a un armario",
+    "Dario estaba en la Bodega y junto a un armario.",
+    "Estaba en la Bodega y junto a un armario."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una planta",
+    "Elena estaba junto a una planta.",
+    "Estaba junto a una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Franco era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Comedor y junto a una planta",
+    "Greta estaba en el Comedor y junto a una planta.",
+    "Estaba en el Comedor y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a un armario",
+    "Hugo estaba en la Biblioteca y junto a un armario.",
+    "Estaba en la Biblioteca y junto a un armario."
+   ],
+   [
+    "compound",
+    "estaba en la Cocina y junto a una planta",
+    "Irene estaba en la Cocina y junto a una planta.",
+    "Estaba en la Cocina y junto a una planta."
+   ]
+  ],
+  "app/assets/cases/caso-intermedio-s4.json": [
+   [
+    "compound",
+    "estaba en el Salón y junto a una mesa",
+    "Adela estaba en el Salón y junto a una mesa.",
+    "Estaba en el Salón y junto a una mesa."
+   ],
+   [
+    "compound",
+    "estaba en el Vestíbulo y sobre una alfombra",
+    "Bruno estaba en el Vestíbulo y sobre una alfombra.",
+    "Estaba en el Vestíbulo y sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sentada en un sillón",
+    "Clara estaba sentada en un sillón.",
+    "Estaba sentada en un sillón."
+   ],
+   [
+    "compound",
+    "estaba en el Estudio y junto a una silla",
+    "Dario estaba en el Estudio y junto a una silla.",
+    "Estaba en el Estudio y junto a una silla."
+   ],
+   [
+    "on_object",
+    "estaba sentada en una silla",
+    "La víctima estaba sentada en una silla.",
+    "Estaba sentada en una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Porche y junto a una silla",
+    "Franco estaba en el Porche y junto a una silla.",
+    "Estaba en el Porche y junto a una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Ático y sobre una alfombra",
+    "Greta estaba en el Ático y sobre una alfombra.",
+    "Estaba en el Ático y sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una alfombra",
+    "Hugo estaba junto a una alfombra.",
+    "Estaba junto a una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Irene estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ]
+  ],
+  "app/assets/cases/caso-intermedio-s5.json": [
+   [
+    "beside_object",
+    "estaba junto a la cama",
+    "Adela estaba junto a la cama.",
+    "Estaba junto a la cama."
+   ],
+   [
+    "compound",
+    "estaba en el Dormitorio y junto a una silla",
+    "La víctima estaba en el Dormitorio y junto a una silla.",
+    "Estaba en el Dormitorio y junto a una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Ático y junto a una caja",
+    "Clara estaba en el Ático y junto a una caja.",
+    "Estaba en el Ático y junto a una caja."
+   ],
+   [
+    "compound",
+    "estaba junto a una alfombra y junto a una silla",
+    "Dario estaba junto a una alfombra y junto a una silla.",
+    "Estaba junto a una alfombra y junto a una silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Elena era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto al sillón",
+    "Franco estaba junto al sillón.",
+    "Estaba junto al sillón."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Franco",
+    "Greta estaba a solas con Franco.",
+    "Estaba a solas con Franco."
+   ],
+   [
+    "compound",
+    "estaba en la Bodega y junto a un armario",
+    "Hugo estaba en la Bodega y junto a un armario.",
+    "Estaba en la Bodega y junto a un armario."
+   ],
+   [
+    "in_area",
+    "estaba en el Pasillo",
+    "Irene estaba en el Pasillo.",
+    "Estaba en el Pasillo."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s1.json": [
+   [
+    "compound",
+    "estaba en el Comedor y junto a una silla",
+    "Adela estaba en el Comedor y junto a una silla.",
+    "Estaba en el Comedor y junto a una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Comedor y junto a una alfombra",
+    "Bruno estaba en el Comedor y junto a una alfombra.",
+    "Estaba en el Comedor y junto a una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Clara era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Baño y junto a una alfombra",
+    "Dario estaba en el Baño y junto a una alfombra.",
+    "Estaba en el Baño y junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y junto a una planta",
+    "La víctima estaba en la Terraza y junto a una planta.",
+    "Estaba en la Terraza y junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto al sofá",
+    "Franco estaba junto al sofá.",
+    "Estaba junto al sofá."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s2.json": [
+   [
+    "beside_object",
+    "estaba junto a la silla",
+    "Adela estaba junto a la silla.",
+    "Estaba junto a la silla."
+   ],
+   [
+    "compound",
+    "estaba en el Salón y junto a una planta",
+    "Bruno estaba en el Salón y junto a una planta.",
+    "Estaba en el Salón y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba en el Jardín y junto a una planta",
+    "Clara estaba en el Jardín y junto a una planta.",
+    "Estaba en el Jardín y junto a una planta."
+   ],
+   [
+    "in_area",
+    "estaba en el Salón",
+    "La víctima estaba en el Salón.",
+    "Estaba en el Salón."
+   ],
+   [
+    "beside_object",
+    "estaba junto al sillón",
+    "Elena estaba junto al sillón.",
+    "Estaba junto al sillón."
+   ],
+   [
+    "compound",
+    "estaba en el Pasillo y junto a una alfombra",
+    "Franco estaba en el Pasillo y junto a una alfombra.",
+    "Estaba en el Pasillo y junto a una alfombra."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s3.json": [
+   [
+    "compound",
+    "estaba en el Estudio y sobre una alfombra",
+    "Adela estaba en el Estudio y sobre una alfombra.",
+    "Estaba en el Estudio y sobre una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Pasillo y sobre una alfombra",
+    "Bruno estaba en el Pasillo y sobre una alfombra.",
+    "Estaba en el Pasillo y sobre una alfombra."
+   ],
+   [
+    "in_area",
+    "estaba en la Bodega",
+    "Clara estaba en la Bodega.",
+    "Estaba en la Bodega."
+   ],
+   [
+    "beside_object",
+    "estaba junto al sillón",
+    "Dario estaba junto al sillón.",
+    "Estaba junto al sillón."
+   ],
+   [
+    "compound",
+    "estaba en el Comedor y junto a una planta",
+    "La víctima estaba en el Comedor y junto a una planta.",
+    "Estaba en el Comedor y junto a una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Franco era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s4.json": [
+   [
+    "alone_with",
+    "estaba a solas con Bruno",
+    "Adela estaba a solas con Bruno.",
+    "Estaba a solas con Bruno."
+   ],
+   [
+    "compound",
+    "estaba en el Jardín y junto a un sofá",
+    "Bruno estaba en el Jardín y junto a un sofá.",
+    "Estaba en el Jardín y junto a un sofá."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a una alfombra",
+    "Clara estaba en la Biblioteca y junto a una alfombra.",
+    "Estaba en la Biblioteca y junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en el Salón y junto a un sofá",
+    "Dario estaba en el Salón y junto a un sofá.",
+    "Estaba en el Salón y junto a un sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Salón y sobre una alfombra",
+    "La víctima estaba en el Salón y sobre una alfombra.",
+    "Estaba en el Salón y sobre una alfombra."
+   ],
+   [
+    "alone",
+    "estaba solo",
+    "Franco estaba solo.",
+    "Estaba solo."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s5.json": [
+   [
+    "only_one_on",
+    "era la única persona sentada en un sillón",
+    "Adela era la única persona sentada en un sillón.",
+    "Era la única persona sentada en un sillón."
+   ],
+   [
+    "victim_filler",
+    "estaba en la última casilla libre",
+    "La víctima estaba en la última casilla libre.",
+    "Estaba en la última casilla libre."
+   ],
+   [
+    "same_area",
+    "estaba con Franco",
+    "Clara estaba con Franco.",
+    "Estaba con Franco."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un sillón",
+    "Dario estaba junto a un sillón.",
+    "Estaba junto a un sillón."
+   ],
+   [
+    "in_area",
+    "estaba en el Jardín",
+    "Elena estaba en el Jardín.",
+    "Estaba en el Jardín."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una silla",
+    "Franco estaba junto a una silla.",
+    "Estaba junto a una silla."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s6.json": [
+   [
+    "compound",
+    "estaba en el Pasillo y junto a una alfombra",
+    "Adela estaba en el Pasillo y junto a una alfombra.",
+    "Estaba en el Pasillo y junto a una alfombra."
+   ],
+   [
+    "in_area",
+    "estaba en el Porche",
+    "Bruno estaba en el Porche.",
+    "Estaba en el Porche."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y junto a una planta",
+    "Clara estaba en la Terraza y junto a una planta.",
+    "Estaba en la Terraza y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a una planta",
+    "Dario estaba en la Biblioteca y junto a una planta.",
+    "Estaba en la Biblioteca y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba en el Baño y junto a una planta",
+    "La víctima estaba en el Baño y junto a una planta.",
+    "Estaba en el Baño y junto a una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Franco era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s7.json": [
+   [
+    "compound",
+    "estaba en el Ático y junto a una silla",
+    "Adela estaba en el Ático y junto a una silla.",
+    "Estaba en el Ático y junto a una silla."
+   ],
+   [
+    "compound",
+    "estaba en la Cocina y junto a una silla",
+    "Bruno estaba en la Cocina y junto a una silla.",
+    "Estaba en la Cocina y junto a una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una mesa",
+    "Clara estaba junto a una mesa.",
+    "Estaba junto a una mesa."
+   ],
+   [
+    "compound",
+    "estaba en la Cocina y sentado en una silla",
+    "La víctima estaba en la Cocina y sentado en una silla.",
+    "Estaba en la Cocina y sentado en una silla."
+   ],
+   [
+    "compound",
+    "estaba en la Bodega y junto a una caja",
+    "Elena estaba en la Bodega y junto a una caja.",
+    "Estaba en la Bodega y junto a una caja."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Clara",
+    "Franco estaba a solas con Clara.",
+    "Estaba a solas con Clara."
+   ]
+  ],
+  "app/assets/cases/caso-principiante-s8.json": [
+   [
+    "beside_object",
+    "estaba junto al sofá",
+    "Adela estaba junto al sofá.",
+    "Estaba junto al sofá."
+   ],
+   [
+    "compound",
+    "estaba sobre una alfombra y junto a la mesa",
+    "Bruno estaba sobre una alfombra y junto a la mesa.",
+    "Estaba sobre una alfombra y junto a la mesa."
+   ],
+   [
+    "in_area",
+    "estaba en el Baño",
+    "Clara estaba en el Baño.",
+    "Estaba en el Baño."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y junto a una planta",
+    "Dario estaba en la Terraza y junto a una planta.",
+    "Estaba en la Terraza y junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una planta",
+    "Elena estaba junto a una planta.",
+    "Estaba junto a una planta."
+   ],
+   [
+    "victim_filler",
+    "estaba en la última casilla libre",
+    "La víctima estaba en la última casilla libre.",
+    "Estaba en la última casilla libre."
+   ]
+  ],
+  "app/assets/tutorial/caso-tutorial.json": [
+   [
+    "beside_object",
+    "estaba junto a una cama",
+    "La víctima estaba junto a una cama.",
+    "Estaba junto a una cama."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una cama",
+    "Bruno era la única persona sobre una cama.",
+    "Era la única persona sobre una cama."
+   ],
+   [
+    "in_area",
+    "estaba en el Baño",
+    "Clara estaba en el Baño.",
+    "Estaba en el Baño."
+   ],
+   [
+    "alone",
+    "estaba solo",
+    "Dario estaba solo.",
+    "Estaba solo."
+   ],
+   [
+    "on_object",
+    "estaba sentada en el sofá",
+    "Elena estaba sentada en el sofá.",
+    "Estaba sentada en el sofá."
+   ]
+  ],
+  "tools/test/fixtures/cases_armas/caso-casual-s11-arma.json": [
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Adela era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Ático y junto a un armario",
+    "Bruno estaba en el Ático y junto a un armario.",
+    "Estaba en el Ático y junto a un armario."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una mesa",
+    "Clara estaba junto a una mesa.",
+    "Estaba junto a una mesa."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la barra",
+    "Dario estaba junto a la barra.",
+    "Estaba junto a la barra."
+   ],
+   [
+    "victim_filler",
+    "estaba en la última casilla libre",
+    "La víctima estaba en la última casilla libre.",
+    "Estaba en la última casilla libre."
+   ],
+   [
+    "on_object",
+    "estaba sentado en el sofá",
+    "Franco estaba sentado en el sofá.",
+    "Estaba sentado en el sofá."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y junto a una planta",
+    "Greta estaba en la Terraza y junto a una planta.",
+    "Estaba en la Terraza y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba en el Pasillo y junto a una alfombra",
+    "Hugo estaba en el Pasillo y junto a una alfombra.",
+    "Estaba en el Pasillo y junto a una alfombra."
+   ]
+  ],
+  "tools/test/fixtures/cases_armas/caso-casual-s12-arma.json": [
+   [
+    "in_area",
+    "estaba en el Porche",
+    "Adela estaba en el Porche.",
+    "Estaba en el Porche."
+   ],
+   [
+    "compound",
+    "estaba en el Porche y junto a un sofá",
+    "Bruno estaba en el Porche y junto a un sofá.",
+    "Estaba en el Porche y junto a un sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Porche y sentada en un sofá",
+    "Clara estaba en el Porche y sentada en un sofá.",
+    "Estaba en el Porche y sentada en un sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Baño y junto a una planta",
+    "Dario estaba en el Baño y junto a una planta.",
+    "Estaba en el Baño y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba junto a una planta y junto a la mesa",
+    "Elena estaba junto a una planta y junto a la mesa.",
+    "Estaba junto a una planta y junto a la mesa."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la mesa",
+    "Franco estaba junto a la mesa.",
+    "Estaba junto a la mesa."
+   ],
+   [
+    "compound",
+    "estaba en la Terraza y sentada en un sofá",
+    "Greta estaba en la Terraza y sentada en un sofá.",
+    "Estaba en la Terraza y sentada en un sofá."
+   ],
+   [
+    "victim_filler",
+    "estaba en la última casilla libre",
+    "La víctima estaba en la última casilla libre.",
+    "Estaba en la última casilla libre."
+   ]
+  ],
+  "tools/test/fixtures/cases_armas/caso-casual-s13-arma.json": [
+   [
+    "compound",
+    "estaba en el Dormitorio y junto a una alfombra",
+    "Adela estaba en el Dormitorio y junto a una alfombra.",
+    "Estaba en el Dormitorio y junto a una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sofá",
+    "Bruno era la única persona sentada en un sofá.",
+    "Era la única persona sentada en un sofá."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un sofá",
+    "Clara estaba junto a un sofá.",
+    "Estaba junto a un sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Dormitorio y junto a una silla",
+    "La víctima estaba en el Dormitorio y junto a una silla.",
+    "Estaba en el Dormitorio y junto a una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una planta",
+    "Elena estaba junto a una planta.",
+    "Estaba junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una mesa",
+    "Franco estaba junto a una mesa.",
+    "Estaba junto a una mesa."
+   ],
+   [
+    "compound",
+    "estaba en el Estudio y junto a una planta",
+    "Greta estaba en el Estudio y junto a una planta.",
+    "Estaba en el Estudio y junto a una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una caja",
+    "Hugo estaba junto a una caja.",
+    "Estaba junto a una caja."
+   ]
+  ],
+  "tools/test/fixtures/cases_armas/caso-intermedio-s21-arma.json": [
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a un armario",
+    "La víctima estaba en la Biblioteca y junto a un armario.",
+    "Estaba en la Biblioteca y junto a un armario."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a un sillón",
+    "Bruno estaba en la Biblioteca y junto a un sillón.",
+    "Estaba en la Biblioteca y junto a un sillón."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una cama",
+    "Clara era la única persona sobre una cama.",
+    "Era la única persona sobre una cama."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una silla",
+    "Dario estaba junto a una silla.",
+    "Estaba junto a una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Estudio y junto a un armario",
+    "Elena estaba en el Estudio y junto a un armario.",
+    "Estaba en el Estudio y junto a un armario."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una caja",
+    "Franco estaba junto a una caja.",
+    "Estaba junto a una caja."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Greta era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "same_area",
+    "estaba con Irene",
+    "Hugo estaba con Irene.",
+    "Estaba con Irene."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sillón",
+    "Irene era la única persona sentada en un sillón.",
+    "Era la única persona sentada en un sillón."
+   ]
+  ],
+  "tools/test/fixtures/cases_armas/caso-intermedio-s22-arma.json": [
+   [
+    "compound",
+    "estaba en el Salón y junto a una mesa",
+    "Adela estaba en el Salón y junto a una mesa.",
+    "Estaba en el Salón y junto a una mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sillón",
+    "Bruno era la única persona sentada en un sillón.",
+    "Era la única persona sentada en un sillón."
+   ],
+   [
+    "in_area",
+    "estaba en el Baño",
+    "Clara estaba en el Baño.",
+    "Estaba en el Baño."
+   ],
+   [
+    "in_area",
+    "estaba en el Porche",
+    "Dario estaba en el Porche.",
+    "Estaba en el Porche."
+   ],
+   [
+    "compound",
+    "estaba en el Porche y junto a un sillón",
+    "La víctima estaba en el Porche y junto a un sillón.",
+    "Estaba en el Porche y junto a un sillón."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sofá",
+    "Franco era la única persona sentada en un sofá.",
+    "Era la única persona sentada en un sofá."
+   ],
+   [
+    "alone",
+    "estaba sola",
+    "Greta estaba sola.",
+    "Estaba sola."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un armario",
+    "Hugo estaba junto a un armario.",
+    "Estaba junto a un armario."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una lavadora",
+    "Irene estaba junto a una lavadora.",
+    "Estaba junto a una lavadora."
+   ]
+  ],
+  "tools/test/fixtures/cases_armas/caso-intermedio-s23-arma.json": [
+   [
+    "compound",
+    "estaba en el Jardín y junto a una planta",
+    "Adela estaba en el Jardín y junto a una planta.",
+    "Estaba en el Jardín y junto a una planta."
+   ],
+   [
+    "on_object",
+    "estaba sentado en el sofá",
+    "La víctima estaba sentado en el sofá.",
+    "Estaba sentado en el sofá."
+   ],
+   [
+    "compound",
+    "estaba en el Ático y junto a una alfombra",
+    "Clara estaba en el Ático y junto a una alfombra.",
+    "Estaba en el Ático y junto a una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la caja",
+    "Dario estaba junto a la caja.",
+    "Estaba junto a la caja."
+   ],
+   [
+    "compound",
+    "estaba en el Dormitorio y junto a un armario",
+    "Elena estaba en el Dormitorio y junto a un armario.",
+    "Estaba en el Dormitorio y junto a un armario."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un sillón",
+    "Franco estaba junto a un sillón.",
+    "Estaba junto a un sillón."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Greta era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "compound",
+    "estaba en el Vestíbulo y junto a una alfombra",
+    "Hugo estaba en el Vestíbulo y junto a una alfombra.",
+    "Estaba en el Vestíbulo y junto a una alfombra."
+   ],
+   [
+    "compound",
+    "estaba en la Biblioteca y junto a una alfombra",
+    "Irene estaba en la Biblioteca y junto a una alfombra.",
+    "Estaba en la Biblioteca y junto a una alfombra."
+   ]
+  ]
+ },
+ "synthetic": {
+  "cabana-test": [
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Adela estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Bruno estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una alfombra",
+    "Adela estaba junto a una alfombra.",
+    "Estaba junto a una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Adela era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Bruno era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sentada en la silla",
+    "Adela estaba sentada en la silla.",
+    "Estaba sentada en la silla."
+   ],
+   [
+    "on_object",
+    "estaba sentado en la silla",
+    "Bruno estaba sentado en la silla.",
+    "Estaba sentado en la silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la silla",
+    "Adela estaba junto a la silla.",
+    "Estaba junto a la silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en la silla",
+    "Adela era la única persona sentada en la silla.",
+    "Era la única persona sentada en la silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en la silla",
+    "Bruno era la única persona sentada en la silla.",
+    "Era la única persona sentada en la silla."
+   ],
+   [
+    "on_object",
+    "estaba sobre la mesa",
+    "Adela estaba sobre la mesa.",
+    "Estaba sobre la mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre la mesa",
+    "Bruno estaba sobre la mesa.",
+    "Estaba sobre la mesa."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la mesa",
+    "Adela estaba junto a la mesa.",
+    "Estaba junto a la mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la mesa",
+    "Adela era la única persona sobre la mesa.",
+    "Era la única persona sobre la mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la mesa",
+    "Bruno era la única persona sobre la mesa.",
+    "Era la única persona sobre la mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre la planta",
+    "Adela estaba sobre la planta.",
+    "Estaba sobre la planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre la planta",
+    "Bruno estaba sobre la planta.",
+    "Estaba sobre la planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la planta",
+    "Adela estaba junto a la planta.",
+    "Estaba junto a la planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la planta",
+    "Adela era la única persona sobre la planta.",
+    "Era la única persona sobre la planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la planta",
+    "Bruno era la única persona sobre la planta.",
+    "Era la única persona sobre la planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre la cama",
+    "Adela estaba sobre la cama.",
+    "Estaba sobre la cama."
+   ],
+   [
+    "on_object",
+    "estaba sobre la cama",
+    "Bruno estaba sobre la cama.",
+    "Estaba sobre la cama."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la cama",
+    "Adela estaba junto a la cama.",
+    "Estaba junto a la cama."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la cama",
+    "Adela era la única persona sobre la cama.",
+    "Era la única persona sobre la cama."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la cama",
+    "Bruno era la única persona sobre la cama.",
+    "Era la única persona sobre la cama."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Adela estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Bruno estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la TV",
+    "Adela estaba junto a la TV.",
+    "Estaba junto a la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Adela era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Bruno era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Adela estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Bruno estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una alfombra",
+    "Adela estaba junto a una alfombra.",
+    "Estaba junto a una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Adela era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Bruno era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre un piano",
+    "Adela estaba sobre un piano.",
+    "Estaba sobre un piano."
+   ],
+   [
+    "on_object",
+    "estaba sobre un piano",
+    "Bruno estaba sobre un piano.",
+    "Estaba sobre un piano."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un piano",
+    "Adela estaba junto a un piano.",
+    "Estaba junto a un piano."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre un piano",
+    "Adela era la única persona sobre un piano.",
+    "Era la única persona sobre un piano."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre un piano",
+    "Bruno era la única persona sobre un piano.",
+    "Era la única persona sobre un piano."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Adela estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Bruno estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la TV",
+    "Adela estaba junto a la TV.",
+    "Estaba junto a la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Adela era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Bruno era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sentada en un sillón",
+    "Adela estaba sentada en un sillón.",
+    "Estaba sentada en un sillón."
+   ],
+   [
+    "on_object",
+    "estaba sentado en un sillón",
+    "Bruno estaba sentado en un sillón.",
+    "Estaba sentado en un sillón."
+   ],
+   [
+    "beside_object",
+    "estaba junto a un sillón",
+    "Adela estaba junto a un sillón.",
+    "Estaba junto a un sillón."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sillón",
+    "Adela era la única persona sentada en un sillón.",
+    "Era la única persona sentada en un sillón."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en un sillón",
+    "Bruno era la única persona sentada en un sillón.",
+    "Era la única persona sentada en un sillón."
+   ],
+   [
+    "on_object",
+    "estaba sobre la planta",
+    "Adela estaba sobre la planta.",
+    "Estaba sobre la planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre la planta",
+    "Bruno estaba sobre la planta.",
+    "Estaba sobre la planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la planta",
+    "Adela estaba junto a la planta.",
+    "Estaba junto a la planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la planta",
+    "Adela era la única persona sobre la planta.",
+    "Era la única persona sobre la planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la planta",
+    "Bruno era la única persona sobre la planta.",
+    "Era la única persona sobre la planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre la mesa",
+    "Adela estaba sobre la mesa.",
+    "Estaba sobre la mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre la mesa",
+    "Bruno estaba sobre la mesa.",
+    "Estaba sobre la mesa."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la mesa",
+    "Adela estaba junto a la mesa.",
+    "Estaba junto a la mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la mesa",
+    "Adela era la única persona sobre la mesa.",
+    "Era la única persona sobre la mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la mesa",
+    "Bruno era la única persona sobre la mesa.",
+    "Era la única persona sobre la mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre una lavadora",
+    "Adela estaba sobre una lavadora.",
+    "Estaba sobre una lavadora."
+   ],
+   [
+    "on_object",
+    "estaba sobre una lavadora",
+    "Bruno estaba sobre una lavadora.",
+    "Estaba sobre una lavadora."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una lavadora",
+    "Adela estaba junto a una lavadora.",
+    "Estaba junto a una lavadora."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una lavadora",
+    "Adela era la única persona sobre una lavadora.",
+    "Era la única persona sobre una lavadora."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una lavadora",
+    "Bruno era la única persona sobre una lavadora.",
+    "Era la única persona sobre una lavadora."
+   ],
+   [
+    "on_object",
+    "estaba sentada en la silla",
+    "Adela estaba sentada en la silla.",
+    "Estaba sentada en la silla."
+   ],
+   [
+    "on_object",
+    "estaba sentado en la silla",
+    "Bruno estaba sentado en la silla.",
+    "Estaba sentado en la silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la silla",
+    "Adela estaba junto a la silla.",
+    "Estaba junto a la silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en la silla",
+    "Adela era la única persona sentada en la silla.",
+    "Era la única persona sentada en la silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en la silla",
+    "Bruno era la única persona sentada en la silla.",
+    "Era la única persona sentada en la silla."
+   ],
+   [
+    "in_area",
+    "estaba en el Salón",
+    "Adela estaba en el Salón.",
+    "Estaba en el Salón."
+   ],
+   [
+    "not_in_area",
+    "no estaba en el Salón",
+    "Bruno no estaba en el Salón.",
+    "No estaba en el Salón."
+   ],
+   [
+    "area_empty",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón."
+   ],
+   [
+    "weapon_area",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón."
+   ],
+   [
+    "in_area",
+    "estaba en el Salón",
+    "Adela estaba en el Salón.",
+    "Estaba en el Salón."
+   ],
+   [
+    "not_in_area",
+    "no estaba en el Salón",
+    "Bruno no estaba en el Salón.",
+    "No estaba en el Salón."
+   ],
+   [
+    "area_empty",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón."
+   ],
+   [
+    "weapon_area",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón."
+   ],
+   [
+    "same_area",
+    "estaba con Bruno",
+    "Adela estaba con Bruno.",
+    "Estaba con Bruno."
+   ],
+   [
+    "not_same_area",
+    "no estaba con Adela",
+    "Bruno no estaba con Adela.",
+    "No estaba con Adela."
+   ],
+   [
+    "beside",
+    "estaba junto a La víctima",
+    "Adela estaba junto a La víctima.",
+    "Estaba junto a La víctima."
+   ],
+   [
+    "alone",
+    "estaba sola",
+    "Adela estaba sola.",
+    "Estaba sola."
+   ],
+   [
+    "alone",
+    "estaba solo",
+    "Bruno estaba solo.",
+    "Estaba solo."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Bruno",
+    "Adela estaba a solas con Bruno.",
+    "Estaba a solas con Bruno."
+   ],
+   [
+    "victim_filler",
+    "estaba en la última casilla libre",
+    "La víctima estaba en la última casilla libre.",
+    "Estaba en la última casilla libre."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un arma cortante.",
+    "El arma homicida es un arma cortante.",
+    "El arma homicida es un arma cortante."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un arma contundente.",
+    "El arma homicida es un arma contundente.",
+    "El arma homicida es un arma contundente."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un veneno.",
+    "El arma homicida es un veneno.",
+    "El arma homicida es un veneno."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un arma de asfixia o atadura.",
+    "El arma homicida es un arma de asfixia o atadura.",
+    "El arma homicida es un arma de asfixia o atadura."
+   ],
+   [
+    "weapon_exact",
+    "El arma homicida es el cuchillo de cocina.",
+    "El arma homicida es el cuchillo de cocina.",
+    "El arma homicida es el cuchillo de cocina."
+   ],
+   [
+    "compound",
+    "estaba en el Salón y junto a la planta",
+    "Adela estaba en el Salón y junto a la planta.",
+    "Estaba en el Salón y junto a la planta."
+   ],
+   [
+    "compound",
+    "estaba sentado en la silla y junto a la mesa y en el Salón",
+    "Bruno estaba sentado en la silla y junto a la mesa y en el Salón.",
+    "Estaba sentado en la silla y junto a la mesa y en el Salón."
+   ]
+  ],
+  "mansion-test": [
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Adela estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Bruno estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una alfombra",
+    "Adela estaba junto a una alfombra.",
+    "Estaba junto a una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Adela era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Bruno era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sentada en una silla",
+    "Adela estaba sentada en una silla.",
+    "Estaba sentada en una silla."
+   ],
+   [
+    "on_object",
+    "estaba sentado en una silla",
+    "Bruno estaba sentado en una silla.",
+    "Estaba sentado en una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una silla",
+    "Adela estaba junto a una silla.",
+    "Estaba junto a una silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Adela era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Bruno era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "on_object",
+    "estaba sobre una mesa",
+    "Adela estaba sobre una mesa.",
+    "Estaba sobre una mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre una mesa",
+    "Bruno estaba sobre una mesa.",
+    "Estaba sobre una mesa."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una mesa",
+    "Adela estaba junto a una mesa.",
+    "Estaba junto a una mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una mesa",
+    "Adela era la única persona sobre una mesa.",
+    "Era la única persona sobre una mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una mesa",
+    "Bruno era la única persona sobre una mesa.",
+    "Era la única persona sobre una mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre una planta",
+    "Adela estaba sobre una planta.",
+    "Estaba sobre una planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre una planta",
+    "Bruno estaba sobre una planta.",
+    "Estaba sobre una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una planta",
+    "Adela estaba junto a una planta.",
+    "Estaba junto a una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una planta",
+    "Adela era la única persona sobre una planta.",
+    "Era la única persona sobre una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una planta",
+    "Bruno era la única persona sobre una planta.",
+    "Era la única persona sobre una planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre una cama",
+    "Adela estaba sobre una cama.",
+    "Estaba sobre una cama."
+   ],
+   [
+    "on_object",
+    "estaba sobre una cama",
+    "Bruno estaba sobre una cama.",
+    "Estaba sobre una cama."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una cama",
+    "Adela estaba junto a una cama.",
+    "Estaba junto a una cama."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una cama",
+    "Adela era la única persona sobre una cama.",
+    "Era la única persona sobre una cama."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una cama",
+    "Bruno era la única persona sobre una cama.",
+    "Era la única persona sobre una cama."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Adela estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Bruno estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la TV",
+    "Adela estaba junto a la TV.",
+    "Estaba junto a la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Adela era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Bruno era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Adela estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre una alfombra",
+    "Bruno estaba sobre una alfombra.",
+    "Estaba sobre una alfombra."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una alfombra",
+    "Adela estaba junto a una alfombra.",
+    "Estaba junto a una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Adela era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una alfombra",
+    "Bruno era la única persona sobre una alfombra.",
+    "Era la única persona sobre una alfombra."
+   ],
+   [
+    "on_object",
+    "estaba sobre el piano",
+    "Adela estaba sobre el piano.",
+    "Estaba sobre el piano."
+   ],
+   [
+    "on_object",
+    "estaba sobre el piano",
+    "Bruno estaba sobre el piano.",
+    "Estaba sobre el piano."
+   ],
+   [
+    "beside_object",
+    "estaba junto al piano",
+    "Adela estaba junto al piano.",
+    "Estaba junto al piano."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre el piano",
+    "Adela era la única persona sobre el piano.",
+    "Era la única persona sobre el piano."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre el piano",
+    "Bruno era la única persona sobre el piano.",
+    "Era la única persona sobre el piano."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Adela estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sobre la TV",
+    "Bruno estaba sobre la TV.",
+    "Estaba sobre la TV."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la TV",
+    "Adela estaba junto a la TV.",
+    "Estaba junto a la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Adela era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la TV",
+    "Bruno era la única persona sobre la TV.",
+    "Era la única persona sobre la TV."
+   ],
+   [
+    "on_object",
+    "estaba sentada en el sillón",
+    "Adela estaba sentada en el sillón.",
+    "Estaba sentada en el sillón."
+   ],
+   [
+    "on_object",
+    "estaba sentado en el sillón",
+    "Bruno estaba sentado en el sillón.",
+    "Estaba sentado en el sillón."
+   ],
+   [
+    "beside_object",
+    "estaba junto al sillón",
+    "Adela estaba junto al sillón.",
+    "Estaba junto al sillón."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en el sillón",
+    "Adela era la única persona sentada en el sillón.",
+    "Era la única persona sentada en el sillón."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en el sillón",
+    "Bruno era la única persona sentada en el sillón.",
+    "Era la única persona sentada en el sillón."
+   ],
+   [
+    "on_object",
+    "estaba sobre una planta",
+    "Adela estaba sobre una planta.",
+    "Estaba sobre una planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre una planta",
+    "Bruno estaba sobre una planta.",
+    "Estaba sobre una planta."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una planta",
+    "Adela estaba junto a una planta.",
+    "Estaba junto a una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una planta",
+    "Adela era la única persona sobre una planta.",
+    "Era la única persona sobre una planta."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una planta",
+    "Bruno era la única persona sobre una planta.",
+    "Era la única persona sobre una planta."
+   ],
+   [
+    "on_object",
+    "estaba sobre una mesa",
+    "Adela estaba sobre una mesa.",
+    "Estaba sobre una mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre una mesa",
+    "Bruno estaba sobre una mesa.",
+    "Estaba sobre una mesa."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una mesa",
+    "Adela estaba junto a una mesa.",
+    "Estaba junto a una mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una mesa",
+    "Adela era la única persona sobre una mesa.",
+    "Era la única persona sobre una mesa."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre una mesa",
+    "Bruno era la única persona sobre una mesa.",
+    "Era la única persona sobre una mesa."
+   ],
+   [
+    "on_object",
+    "estaba sobre la lavadora",
+    "Adela estaba sobre la lavadora.",
+    "Estaba sobre la lavadora."
+   ],
+   [
+    "on_object",
+    "estaba sobre la lavadora",
+    "Bruno estaba sobre la lavadora.",
+    "Estaba sobre la lavadora."
+   ],
+   [
+    "beside_object",
+    "estaba junto a la lavadora",
+    "Adela estaba junto a la lavadora.",
+    "Estaba junto a la lavadora."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la lavadora",
+    "Adela era la única persona sobre la lavadora.",
+    "Era la única persona sobre la lavadora."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sobre la lavadora",
+    "Bruno era la única persona sobre la lavadora.",
+    "Era la única persona sobre la lavadora."
+   ],
+   [
+    "on_object",
+    "estaba sentada en una silla",
+    "Adela estaba sentada en una silla.",
+    "Estaba sentada en una silla."
+   ],
+   [
+    "on_object",
+    "estaba sentado en una silla",
+    "Bruno estaba sentado en una silla.",
+    "Estaba sentado en una silla."
+   ],
+   [
+    "beside_object",
+    "estaba junto a una silla",
+    "Adela estaba junto a una silla.",
+    "Estaba junto a una silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Adela era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "only_one_on",
+    "era la única persona sentada en una silla",
+    "Bruno era la única persona sentada en una silla.",
+    "Era la única persona sentada en una silla."
+   ],
+   [
+    "in_area",
+    "estaba en el Salón",
+    "Adela estaba en el Salón.",
+    "Estaba en el Salón."
+   ],
+   [
+    "not_in_area",
+    "no estaba en el Salón",
+    "Bruno no estaba en el Salón.",
+    "No estaba en el Salón."
+   ],
+   [
+    "area_empty",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón."
+   ],
+   [
+    "weapon_area",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón."
+   ],
+   [
+    "in_area",
+    "estaba en el Salón",
+    "Adela estaba en el Salón.",
+    "Estaba en el Salón."
+   ],
+   [
+    "not_in_area",
+    "no estaba en el Salón",
+    "Bruno no estaba en el Salón.",
+    "No estaba en el Salón."
+   ],
+   [
+    "area_empty",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón.",
+    "Nadie estaba en el Salón."
+   ],
+   [
+    "weapon_area",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón.",
+    "El arma homicida está en el Salón."
+   ],
+   [
+    "same_area",
+    "estaba con Bruno",
+    "Adela estaba con Bruno.",
+    "Estaba con Bruno."
+   ],
+   [
+    "not_same_area",
+    "no estaba con Adela",
+    "Bruno no estaba con Adela.",
+    "No estaba con Adela."
+   ],
+   [
+    "beside",
+    "estaba junto a La víctima",
+    "Adela estaba junto a La víctima.",
+    "Estaba junto a La víctima."
+   ],
+   [
+    "alone",
+    "estaba sola",
+    "Adela estaba sola.",
+    "Estaba sola."
+   ],
+   [
+    "alone",
+    "estaba solo",
+    "Bruno estaba solo.",
+    "Estaba solo."
+   ],
+   [
+    "alone_with",
+    "estaba a solas con Bruno",
+    "Adela estaba a solas con Bruno.",
+    "Estaba a solas con Bruno."
+   ],
+   [
+    "victim_filler",
+    "estaba en la última casilla libre",
+    "La víctima estaba en la última casilla libre.",
+    "Estaba en la última casilla libre."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un arma cortante.",
+    "El arma homicida es un arma cortante.",
+    "El arma homicida es un arma cortante."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un arma contundente.",
+    "El arma homicida es un arma contundente.",
+    "El arma homicida es un arma contundente."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un veneno.",
+    "El arma homicida es un veneno.",
+    "El arma homicida es un veneno."
+   ],
+   [
+    "weapon_category",
+    "El arma homicida es un arma de asfixia o atadura.",
+    "El arma homicida es un arma de asfixia o atadura.",
+    "El arma homicida es un arma de asfixia o atadura."
+   ],
+   [
+    "weapon_exact",
+    "El arma homicida es el cuchillo de cocina.",
+    "El arma homicida es el cuchillo de cocina.",
+    "El arma homicida es el cuchillo de cocina."
+   ],
+   [
+    "compound",
+    "estaba en el Salón y junto a una planta",
+    "Adela estaba en el Salón y junto a una planta.",
+    "Estaba en el Salón y junto a una planta."
+   ],
+   [
+    "compound",
+    "estaba sentado en una silla y junto a una mesa y en el Salón",
+    "Bruno estaba sentado en una silla y junto a una mesa y en el Salón.",
+    "Estaba sentado en una silla y junto a una mesa y en el Salón."
+   ]
+  ]
+ }
+}

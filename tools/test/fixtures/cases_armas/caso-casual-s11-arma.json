@@ -1,0 +1,414 @@
+{
+  "caseId": "caso-casual-s11",
+  "mapId": "mapa-casual-s11-v4",
+  "map": {
+    "id": "mapa-casual-s11-v4",
+    "name_es": "La Villa",
+    "size": 8,
+    "areas": [
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          2,
+          3,
+          4,
+          5,
+          10,
+          11,
+          12,
+          18,
+          19,
+          20,
+          27,
+          28
+        ]
+      },
+      {
+        "id": "atico",
+        "name_es": "el Ático",
+        "cells": [
+          0,
+          1,
+          8,
+          9,
+          16,
+          17
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          26,
+          33,
+          34,
+          35,
+          36,
+          41,
+          42,
+          43
+        ]
+      },
+      {
+        "id": "pasillo",
+        "name_es": "el Pasillo",
+        "cells": [
+          29,
+          37,
+          38,
+          44,
+          45,
+          51,
+          52,
+          53,
+          54,
+          59,
+          60,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          24,
+          25,
+          32,
+          40,
+          48,
+          49,
+          50,
+          56,
+          57,
+          58
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          6,
+          7,
+          13,
+          14,
+          15,
+          21,
+          22,
+          23,
+          30,
+          31,
+          39,
+          46,
+          47,
+          55
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "armario-1",
+        "type": "armario",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          19
+        ]
+      },
+      {
+        "id": "silla-3",
+        "type": "silla",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "alfombra-4",
+        "type": "alfombra",
+        "cells": [
+          11,
+          3
+        ]
+      },
+      {
+        "id": "armario-5",
+        "type": "armario",
+        "cells": [
+          17
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "tv-7",
+        "type": "tv",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "sofa-8",
+        "type": "sofa",
+        "cells": [
+          42,
+          34
+        ]
+      },
+      {
+        "id": "piano-9",
+        "type": "piano",
+        "cells": [
+          43
+        ]
+      },
+      {
+        "id": "silla-10",
+        "type": "silla",
+        "cells": [
+          37
+        ]
+      },
+      {
+        "id": "alfombra-11",
+        "type": "alfombra",
+        "cells": [
+          61,
+          62
+        ]
+      },
+      {
+        "id": "alfombra-12",
+        "type": "alfombra",
+        "cells": [
+          51,
+          59
+        ]
+      },
+      {
+        "id": "alfombra-13",
+        "type": "alfombra",
+        "cells": [
+          54,
+          53
+        ]
+      },
+      {
+        "id": "planta-14",
+        "type": "planta",
+        "cells": [
+          57
+        ]
+      },
+      {
+        "id": "silla-15",
+        "type": "silla",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "arbusto-16",
+        "type": "arbusto",
+        "cells": [
+          40
+        ]
+      },
+      {
+        "id": "mesa-17",
+        "type": "mesa",
+        "cells": [
+          13,
+          14
+        ]
+      },
+      {
+        "id": "barra-18",
+        "type": "barra",
+        "cells": [
+          31,
+          23
+        ]
+      },
+      {
+        "id": "silla-19",
+        "type": "silla",
+        "cells": [
+          15
+        ]
+      },
+      {
+        "id": "mesa-20",
+        "type": "mesa",
+        "cells": [
+          7,
+          6
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "cuerda",
+        "name_es": "la cuerda",
+        "category": "asfixia",
+        "area": "salon"
+      },
+      {
+        "id": "cable",
+        "name_es": "el cable",
+        "category": "asfixia",
+        "area": "atico"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": true,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "only_one_on",
+      "subject": "c1",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "atico"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "mesa"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "barra"
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c5"
+    },
+    {
+      "type": "on_object",
+      "subject": "c6",
+      "group": "sofa"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "terraza"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "pasillo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "alfombra"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 9,
+      "c3": 21,
+      "c4": 30,
+      "c5": 35,
+      "c6": 42,
+      "c7": 48,
+      "c8": 63
+    },
+    "murderer": "c6",
+    "lethalWeapon": "cuerda"
+  },
+  "metrics": {
+    "deductionSteps": 8,
+    "maxTier": 4,
+    "clueCount": 8
+  }
+}

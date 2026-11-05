@@ -1,0 +1,399 @@
+{
+  "caseId": "caso-casual-s13",
+  "mapId": "mapa-casual-s13-v2",
+  "map": {
+    "id": "mapa-casual-s13-v2",
+    "name_es": "El Casino",
+    "size": 8,
+    "areas": [
+      {
+        "id": "terraza",
+        "name_es": "la Terraza",
+        "cells": [
+          5,
+          6,
+          7,
+          13,
+          14,
+          15,
+          20,
+          21,
+          22,
+          23,
+          30,
+          31,
+          38,
+          39,
+          47
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          2,
+          3,
+          4,
+          10,
+          11,
+          12,
+          18,
+          19,
+          27
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          24,
+          28,
+          29,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          41,
+          42,
+          45,
+          46,
+          54,
+          55,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          40,
+          43,
+          44,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          0,
+          1,
+          8,
+          9,
+          16,
+          17,
+          25,
+          26
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sofa-1",
+        "type": "sofa",
+        "cells": [
+          14,
+          15
+        ]
+      },
+      {
+        "id": "sofa-2",
+        "type": "sofa",
+        "cells": [
+          13,
+          21
+        ]
+      },
+      {
+        "id": "arbusto-3",
+        "type": "arbusto",
+        "cells": [
+          47
+        ]
+      },
+      {
+        "id": "silla-4",
+        "type": "silla",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          19
+        ]
+      },
+      {
+        "id": "alfombra-7",
+        "type": "alfombra",
+        "cells": [
+          18,
+          10
+        ]
+      },
+      {
+        "id": "mesa-8",
+        "type": "mesa",
+        "cells": [
+          45,
+          46
+        ]
+      },
+      {
+        "id": "silla-9",
+        "type": "silla",
+        "cells": [
+          63
+        ]
+      },
+      {
+        "id": "mesa-10",
+        "type": "mesa",
+        "cells": [
+          33,
+          32
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          55
+        ]
+      },
+      {
+        "id": "caja-12",
+        "type": "caja",
+        "cells": [
+          48
+        ]
+      },
+      {
+        "id": "caja-13",
+        "type": "caja",
+        "cells": [
+          49
+        ]
+      },
+      {
+        "id": "armario-14",
+        "type": "armario",
+        "cells": [
+          51
+        ]
+      },
+      {
+        "id": "caja-15",
+        "type": "caja",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "alfombra-16",
+        "type": "alfombra",
+        "cells": [
+          8,
+          0
+        ]
+      },
+      {
+        "id": "armario-17",
+        "type": "armario",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "alfombra-18",
+        "type": "alfombra",
+        "cells": [
+          9,
+          1
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "estudio"
+      },
+      {
+        "id": "cuerda",
+        "name_es": "la cuerda",
+        "category": "asfixia",
+        "area": "terraza"
+      },
+      {
+        "id": "jeringa",
+        "name_es": "la jeringa",
+        "category": "veneno",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": true,
+  "victim": "c4",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c2",
+      "group": "sofa"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "sofa"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "planta"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "mesa"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c8",
+      "group": "caja"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 2,
+      "c2": 13,
+      "c3": 20,
+      "c4": 27,
+      "c5": 39,
+      "c6": 41,
+      "c7": 54,
+      "c8": 56
+    },
+    "murderer": "c1",
+    "lethalWeapon": "jeringa"
+  },
+  "metrics": {
+    "deductionSteps": 9,
+    "maxTier": 4,
+    "clueCount": 8
+  }
+}

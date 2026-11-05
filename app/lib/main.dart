@@ -1,16 +1,37 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'src/board/audio/audio_service.dart';
 import 'src/data/case_repository.dart';
+import 'src/game/app_settings.dart';
+import 'src/game/feedback_providers.dart';
 import 'src/game/game_controller.dart';
 import 'src/ui/case_list_screen.dart';
 import 'src/ui/game_screen.dart';
 import 'src/ui/home_shell.dart';
 import 'src/ui/splash_screen.dart';
 
-void main() {
-  runApp(const ProviderScope(child: EnigmatrixApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Las opciones se leen antes del primer cuadro para que la piel y el modo
+  // no parpadeen al arrancar.
+  final settings = await AppSettings.load();
+  // El audio carga los sonidos en segundo plano: hasta que termina, la
+  // partida simplemente no suena.
+  final audio = SoloudSoundService();
+  unawaited(audio.init());
+  runApp(
+    ProviderScope(
+      overrides: [
+        initialSettingsProvider.overrideWithValue(settings),
+        soundSinkProvider.overrideWithValue(audio),
+      ],
+      child: const EnigmatrixApp(),
+    ),
+  );
 }
 
 /// Identidad visual PAPER CRAFT (elegida por el usuario 2026-07-12 entre 6
@@ -120,6 +141,10 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
       title: 'Enigmatrix — banco de pruebas',
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
+      // Inicio, lista y perfil siguen con su estilo de papel (claro) hasta la
+      // ronda 4.2. La partida arma su propio tema con la piel y el modo que
+      // el jugador elige en Configuración (ver game_screen.dart).
+      themeMode: ThemeMode.light,
       builder: (context, child) => DecoratedBox(
         decoration: const BoxDecoration(
           gradient: RadialGradient(

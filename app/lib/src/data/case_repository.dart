@@ -9,12 +9,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Id del caso del tutorial (regla 11 del ADR-0012). No está en
-/// assets/cases/index.json: no cuenta como Caso 1 ni aparece en la lista.
+/// Id del caso del tutorial (regla 11 del ADR-0012). No está en el catálogo
+/// ni en assets/cases/index.json: no cuenta como Caso 1 ni aparece en la
+/// lista.
 const kTutorialCaseId = 'tutorial';
 
 /// Archivo del caso del tutorial.
 const kTutorialAsset = 'assets/tutorial/caso-tutorial.json';
+
+/// Catálogo de casos (manifiesto): id estable, mundo, tipo, dificultad, orden
+/// y archivo. Manda el orden de la lista (H-43, H-50).
+const kCatalogAsset = 'assets/cases/$kCatalogFileName';
+
+/// Índice heredado: solo nombres de archivo. Se usa si el catálogo falta o
+/// está dañado.
+const kIndexAsset = 'assets/cases/index.json';
 
 /// Orden de las carpetas de dificultad.
 const kDifficultyOrder = [
@@ -60,15 +69,101 @@ int compareCaseKeys(
 }
 
 /// Ordena una lista (en una copia) por dificultad y número final del id.
+///
+/// Si se da [orderOf] (id -> posición en el catálogo), los casos que tienen
+/// posición van primero, por ella; los que no la tienen van después con el
+/// orden de siempre (dificultad y número final).
 List<T> sortCases<T>(
   Iterable<T> items, {
   required String Function(T) idOf,
   required String Function(T) difficultyOf,
+  Map<String, int>? orderOf,
 }) => items.toList()
-  ..sort(
-    (a, b) =>
-        compareCaseKeys(idOf(a), difficultyOf(a), idOf(b), difficultyOf(b)),
+  ..sort((a, b) {
+    if (orderOf != null) {
+      final oa = orderOf[idOf(a)];
+      final ob = orderOf[idOf(b)];
+      if (oa != null && ob != null) {
+        final c = oa.compareTo(ob);
+        return c != 0 ? c : idOf(a).compareTo(idOf(b));
+      }
+      if (oa != null) return -1;
+      if (ob != null) return 1;
+    }
+    return compareCaseKeys(idOf(a), difficultyOf(a), idOf(b), difficultyOf(b));
+  });
+
+/// Qué archivos cargar y en qué orden: el resultado de leer el catálogo (o
+/// el índice heredado si el catálogo no sirve).
+class CaseSource {
+  /// Nombres de archivo a cargar.
+  final List<String> files;
+
+  /// id del caso -> posición en el catálogo. Vacío si se usó el índice
+  /// heredado (entonces se ordena por dificultad y número final).
+  final Map<String, int> orderById;
+
+  /// true si los nombres salieron del catálogo.
+  final bool fromCatalog;
+
+  /// Entradas del catálogo omitidas o avisos de lectura.
+  final List<String> warnings;
+
+  const CaseSource({
+    required this.files,
+    required this.orderById,
+    required this.fromCatalog,
+    this.warnings = const [],
+  });
+}
+
+/// Decide la fuente de casos a partir de los textos crudos del catálogo y
+/// del índice heredado (cualquiera puede faltar o venir roto). Función pura:
+/// se prueba sin rootBundle.
+///
+/// Prioridad: el catálogo si trae al menos una entrada válida; si no, el
+/// índice heredado. Si no sirve ninguno lanza [StateError].
+CaseSource resolveCaseSource({String? catalogRaw, String? indexRaw}) {
+  final warnings = <String>[];
+  if (catalogRaw != null) {
+    try {
+      final parsed = CaseCatalog.parse(catalogRaw);
+      warnings.addAll([for (final e in parsed.errors) 'Catálogo: $e']);
+      if (parsed.catalog.entries.isNotEmpty) {
+        return CaseSource(
+          files: parsed.catalog.files,
+          orderById: {for (final e in parsed.catalog.entries) e.id: e.orden},
+          fromCatalog: true,
+          warnings: warnings,
+        );
+      }
+      warnings.add('Catálogo sin casos válidos: se usa index.json.');
+    } catch (e) {
+      warnings.add('Catálogo ilegible, se usa index.json: $e');
+    }
+  }
+  if (indexRaw != null) {
+    try {
+      final names = (jsonDecode(stripBom(indexRaw)) as List).cast<String>()
+        ..remove('index.json')
+        ..remove(kCatalogFileName);
+      if (names.isNotEmpty) {
+        return CaseSource(
+          files: names,
+          orderById: const {},
+          fromCatalog: false,
+          warnings: warnings,
+        );
+      }
+    } catch (e) {
+      warnings.add('index.json ilegible: $e');
+    }
+  }
+  throw StateError(
+    'No se pudo leer la lista de casos (catálogo ni índice). '
+    'Reinstala la app o avisa al equipo. ${warnings.join(' ')}',
   );
+}
 
 /// Parsea cada JSON crudo (nombre de archivo -> texto) saltando los que
 /// fallan (se registran con [onError]). Lanza [StateError] si no queda
@@ -78,6 +173,7 @@ List<T> parseCasesTolerant<T>(
   required T Function(Map<String, dynamic> json) parse,
   required String Function(T) idOf,
   required String Function(T) difficultyOf,
+  Map<String, int>? orderOf,
   void Function(String message)? onError,
 }) {
   final ok = <T>[];
@@ -95,19 +191,39 @@ List<T> parseCasesTolerant<T>(
       'revisados). Reinstala la app o avisa al equipo.',
     );
   }
-  return sortCases(ok, idOf: idOf, difficultyOf: difficultyOf);
+  return sortCases(
+    ok,
+    idOf: idOf,
+    difficultyOf: difficultyOf,
+    orderOf: orderOf,
+  );
 }
 
 String stripBom(String s) =>
     s.isNotEmpty && s.codeUnitAt(0) == 0xFEFF ? s.substring(1) : s;
 
 class CaseRepository {
+  /// Lee el texto de un asset; null si no existe o falla.
+  static Future<String?> _tryLoad(String path) async {
+    try {
+      return await rootBundle.loadString(path);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Carga los casos en el orden del catálogo (assets/cases/catalogo.json).
+  /// Si el catálogo falta o está dañado, usa index.json (orden por
+  /// dificultad y número final, como antes). Un caso que no se lee o no se
+  /// entiende se omite y se registra; el resto carga.
   static Future<List<PuzzleCase>> loadAll() async {
-    final raw = await rootBundle.loadString('assets/cases/index.json');
-    final names = (jsonDecode(stripBom(raw)) as List).cast<String>()
-      ..remove('index.json');
+    final source = resolveCaseSource(
+      catalogRaw: await _tryLoad(kCatalogAsset),
+      indexRaw: await _tryLoad(kIndexAsset),
+    );
+    source.warnings.forEach(debugPrint);
     final raws = <String, String>{};
-    for (final name in names) {
+    for (final name in source.files) {
       try {
         raws[name] = await rootBundle.loadString('assets/cases/$name');
       } catch (e) {
@@ -120,12 +236,13 @@ class CaseRepository {
       parse: PuzzleCase.fromJson,
       idOf: (c) => c.caseId,
       difficultyOf: (c) => c.difficulty,
+      orderOf: source.orderById,
       onError: debugPrint,
     );
   }
 
   /// Caso del tutorial (assets/tutorial/caso-tutorial.json), separado del
-  /// banco: no pasa por index.json, no se ordena ni cuenta como Caso 1.
+  /// banco: no pasa por el catálogo, no se ordena ni cuenta como Caso 1.
   static Future<PuzzleCase> loadTutorial() async {
     final raw = await rootBundle.loadString(kTutorialAsset);
     return PuzzleCase.fromJson(

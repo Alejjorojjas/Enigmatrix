@@ -1,0 +1,488 @@
+{
+  "caseId": "caso-intermedio-s22",
+  "mapId": "mapa-intermedio-s22",
+  "map": {
+    "id": "mapa-intermedio-s22",
+    "name_es": "La Posada",
+    "size": 9,
+    "areas": [
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          62,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          76,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          45,
+          46,
+          54,
+          55,
+          56,
+          63,
+          64,
+          65,
+          72,
+          73,
+          74,
+          75
+        ]
+      },
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          57,
+          58,
+          59,
+          60,
+          61
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          5,
+          6,
+          7,
+          8,
+          13,
+          14,
+          15,
+          16,
+          17,
+          25,
+          26,
+          34
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          10,
+          11,
+          12,
+          20,
+          21,
+          22,
+          30
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
+          9,
+          18,
+          19,
+          27,
+          28,
+          29,
+          36,
+          37,
+          38,
+          47
+        ]
+      },
+      {
+        "id": "porche",
+        "name_es": "el Porche",
+        "cells": [
+          23,
+          24,
+          31,
+          32,
+          33,
+          35,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "caja-1",
+        "type": "caja",
+        "cells": [
+          80
+        ]
+      },
+      {
+        "id": "lavadora-2",
+        "type": "lavadora",
+        "cells": [
+          69
+        ]
+      },
+      {
+        "id": "lavadora-3",
+        "type": "lavadora",
+        "cells": [
+          78
+        ]
+      },
+      {
+        "id": "armario-4",
+        "type": "armario",
+        "cells": [
+          66
+        ]
+      },
+      {
+        "id": "alfombra-5",
+        "type": "alfombra",
+        "cells": [
+          54,
+          55
+        ]
+      },
+      {
+        "id": "mesa-6",
+        "type": "mesa",
+        "cells": [
+          46,
+          45
+        ]
+      },
+      {
+        "id": "armario-7",
+        "type": "armario",
+        "cells": [
+          64
+        ]
+      },
+      {
+        "id": "planta-8",
+        "type": "planta",
+        "cells": [
+          63
+        ]
+      },
+      {
+        "id": "sofa-9",
+        "type": "sofa",
+        "cells": [
+          53,
+          52
+        ]
+      },
+      {
+        "id": "planta-10",
+        "type": "planta",
+        "cells": [
+          59
+        ]
+      },
+      {
+        "id": "silla-11",
+        "type": "silla",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "sofa-12",
+        "type": "sofa",
+        "cells": [
+          60,
+          51
+        ]
+      },
+      {
+        "id": "mesa-13",
+        "type": "mesa",
+        "cells": [
+          8,
+          7
+        ]
+      },
+      {
+        "id": "planta-14",
+        "type": "planta",
+        "cells": [
+          15
+        ]
+      },
+      {
+        "id": "planta-15",
+        "type": "planta",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "tv-16",
+        "type": "tv",
+        "cells": [
+          14
+        ]
+      },
+      {
+        "id": "planta-17",
+        "type": "planta",
+        "cells": [
+          22
+        ]
+      },
+      {
+        "id": "sillon-18",
+        "type": "sillon",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "sillon-19",
+        "type": "sillon",
+        "cells": [
+          12
+        ]
+      },
+      {
+        "id": "armario-20",
+        "type": "armario",
+        "cells": [
+          11
+        ]
+      },
+      {
+        "id": "planta-21",
+        "type": "planta",
+        "cells": [
+          36
+        ]
+      },
+      {
+        "id": "planta-22",
+        "type": "planta",
+        "cells": [
+          47
+        ]
+      },
+      {
+        "id": "planta-23",
+        "type": "planta",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "planta-24",
+        "type": "planta",
+        "cells": [
+          24
+        ]
+      },
+      {
+        "id": "arbusto-25",
+        "type": "arbusto",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "sillon-26",
+        "type": "sillon",
+        "cells": [
+          23
+        ]
+      },
+      {
+        "id": "sillon-27",
+        "type": "sillon",
+        "cells": [
+          40
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "jeringa",
+        "name_es": "la jeringa",
+        "category": "veneno",
+        "area": "porche"
+      },
+      {
+        "id": "cuerda",
+        "name_es": "la cuerda",
+        "category": "asfixia",
+        "area": "bodega"
+      },
+      {
+        "id": "botella",
+        "name_es": "la botella rota",
+        "category": "cortante",
+        "area": "jardin"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Irene",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c2",
+      "group": "sillon"
+    },
+    {
+      "type": "in_area",
+      "subject": "c3",
+      "area": "bano"
+    },
+    {
+      "type": "in_area",
+      "subject": "c4",
+      "area": "porche"
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "porche"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "sillon"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c6",
+      "group": "sofa"
+    },
+    {
+      "type": "alone",
+      "subject": "c7"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c8",
+      "group": "armario"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c9",
+      "group": "lavadora"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 6,
+      "c2": 10,
+      "c3": 18,
+      "c4": 35,
+      "c5": 39,
+      "c6": 52,
+      "c7": 56,
+      "c8": 67,
+      "c9": 77
+    },
+    "murderer": "c4",
+    "lethalWeapon": "jeringa"
+  },
+  "metrics": {
+    "deductionSteps": 15,
+    "maxTier": 4,
+    "clueCount": 9
+  }
+}

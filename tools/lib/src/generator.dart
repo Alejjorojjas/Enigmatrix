@@ -16,6 +16,7 @@ import 'dart:math';
 
 import 'clue.dart';
 import 'deduction.dart';
+import 'difficulty_ranges.dart';
 import 'model.dart';
 import 'puzzle_case.dart';
 import 'uniqueness.dart';
@@ -102,7 +103,9 @@ const _namePool = [
 ];
 
 /// Pista candidata para una tarjeta, con su poder de poda estimado.
-class _Cand {
+/// Interna del generador; es pública solo para poder probar
+/// [Generator.nextStronger].
+class ClueCandidate {
   final Clue clue;
 
   /// Celdas permitidas para el sujeto (null si es relacional).
@@ -114,14 +117,44 @@ class _Cand {
   /// Preferencia narrativa (mayor = más sabrosa).
   final double flavor;
 
-  const _Cand(this.clue, this.allowed, this.strength, this.flavor);
+  const ClueCandidate(this.clue, this.allowed, this.strength, this.flavor);
 }
+
+/// Topes de la generación (H-42): del solver de unicidad y de tiempo por
+/// caso. Si se superan, el caso se descarta con motivo [rejectSolverCap]
+/// ('tope') o [rejectCaseTimeCap] en vez de colgarse.
+class GenerationLimits {
+  final SolverLimits solver;
+
+  /// Tiempo máximo por caso (todos los intentos y mapas). Null = sin tope.
+  /// Es no determinista: en pruebas usa solo el tope de nodos.
+  final Duration? maxCaseTime;
+
+  const GenerationLimits({
+    this.solver = SolverLimits.standard,
+    this.maxCaseTime,
+  });
+
+  static const standard = GenerationLimits();
+}
+
+/// Motivo de descarte cuando se agota el tiempo por caso.
+const rejectCaseTimeCap = 'tope de tiempo por caso';
 
 class Generator {
   final GameMap map;
   final DifficultyProfile profile;
   final bool withWeapon;
   final int maxAttempts;
+
+  /// Rango aceptable de pasos y técnica (PROVISIONAL, ver
+  /// difficulty_ranges.dart). Por defecto el del perfil.
+  final DifficultyRange range;
+
+  /// Topes del solver y del tiempo por caso.
+  final GenerationLimits limits;
+
+  Stopwatch _clock = Stopwatch();
 
   /// Identificador del caso (por defecto derivado del mapa y la semilla).
   final String? caseIdOverride;
@@ -132,7 +165,9 @@ class Generator {
     this.withWeapon = false,
     this.maxAttempts = 300,
     this.caseIdOverride,
-  }) {
+    DifficultyRange? range,
+    this.limits = GenerationLimits.standard,
+  }) : range = range ?? rangeForProfile(profile.label) {
     if (map.size > _namePool.length) {
       throw ArgumentError('Mapa demasiado grande para el pool de nombres');
     }
@@ -143,12 +178,23 @@ class Generator {
 
   GenerationResult generate(int seed) => generateWith(Random(seed), seed);
 
-  GenerationResult generateWith(Random rng, int seed) {
+  /// [clock]: reloj compartido para que el tope de tiempo por caso cuente
+  /// todos los mapas de una misma semilla (lo pasa CaseFactory).
+  GenerationResult generateWith(Random rng, int seed, {Stopwatch? clock}) {
     final rejections = <String, int>{};
     void reject(String reason) =>
         rejections.update(reason, (v) => v + 1, ifAbsent: () => 1);
+    _clock = clock ?? (Stopwatch()..start());
 
     for (var attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (_timeUp) {
+        reject(rejectCaseTimeCap);
+        return GenerationResult(
+            puzzle: null,
+            attempts: attempt - 1,
+            rejections: rejections,
+            extrasUsed: 0);
+      }
       final pc = _attempt(rng, seed, reject);
       if (pc != null) {
         return GenerationResult(
@@ -165,6 +211,9 @@ class Generator {
         rejections: rejections,
         extrasUsed: 0);
   }
+
+  bool get _timeUp =>
+      limits.maxCaseTime != null && _clock.elapsed > limits.maxCaseTime!;
 
   PuzzleCase? _attempt(Random rng, int seed, void Function(String) reject) {
     final n = map.size;
@@ -226,7 +275,7 @@ class Generator {
 
     // 3. Candidatas por personaje, ordenadas por fuerza (menor dominio
     //    permitido = más fuerte). La selección inicial prefiere sabor.
-    final candsByChar = <String, List<_Cand>>{
+    final candsByChar = <String, List<ClueCandidate>>{
       for (final ch in characters)
         ch.id: _candidatesFor(ch.id, characters, positions, victimId,
             murdererId, occupants, rng)
@@ -241,10 +290,10 @@ class Generator {
 
     // Selección inicial: con sabor, no con fuerza. La víctima arranca con
     // el relleno (decisión 2026-06-11: relleno si se puede).
-    final selection = <String, _Cand>{};
+    final selection = <String, ClueCandidate>{};
     for (final ch in characters) {
       if (ch.id == victimId) {
-        selection[ch.id] = _Cand(
+        selection[ch.id] = ClueCandidate(
             LastFreeCell(victimId), null, 1 << 20, 0); // sin información
         continue;
       }
@@ -276,6 +325,10 @@ class Generator {
     var repairs = 0;
     while (result.status != DeductionStatus.solved && repairs < 4 * n + 8) {
       repairs++;
+      if (_timeUp) {
+        reject(rejectCaseTimeCap);
+        return null;
+      }
       if (result.status == DeductionStatus.contradiction) {
         reject('contradicción inesperada (revisar motor)');
         return null;
@@ -311,7 +364,7 @@ class Generator {
     //    relleno? (momento "última casilla libre")
     if (selection[victimId]!.clue is! LastFreeCell) {
       final backup = selection[victimId]!;
-      selection[victimId] = _Cand(LastFreeCell(victimId), null, 1 << 20, 0);
+      selection[victimId] = ClueCandidate(LastFreeCell(victimId), null, 1 << 20, 0);
       if (DeductionEngine(build()).run().status != DeductionStatus.solved) {
         selection[victimId] = backup;
       }
@@ -344,8 +397,23 @@ class Generator {
       reject('caso final no deducible');
       return null;
     }
-    if (UniquenessChecker.countSolutions(candidate) != 1) {
+    final uniq =
+        UniquenessChecker.analyze(candidate, limits: limits.solver);
+    if (uniq.capped) {
+      reject(rejectSolverCap);
+      return null;
+    }
+    if (uniq.solutions != 1) {
       reject('solución no única (revisar motor)');
+      return null;
+    }
+
+    // 8. Rango de dificultad del perfil (PROVISIONAL, ver
+    //    difficulty_ranges.dart): descarta los extremos y registra el motivo.
+    final outOfRange =
+        range.violation(deduction.deductionSteps, deduction.maxTier);
+    if (outOfRange != null) {
+      reject(outOfRange);
       return null;
     }
 
@@ -392,13 +460,29 @@ class Generator {
     return place(0) ? colsByRow : null;
   }
 
-  /// Siguiente candidata estrictamente más fuerte que la actual.
-  _Cand? _stronger(List<_Cand> sorted, _Cand current) {
-    for (final c in sorted) {
-      if (c.strength < current.strength) return c;
+  /// Candidata INMEDIATAMENTE más fuerte que la actual (H-40): de las
+  /// estrictamente más fuertes (menor `strength`), la menos fuerte de ellas,
+  /// para endurecer de a poco y no saltar a la más fuerte de todas (eso
+  /// regala la posición y baja los pasos de deducción). Entre empates de
+  /// fuerza prefiere la de más sabor; a igual sabor, la primera de la lista.
+  /// Null si no hay ninguna más fuerte.
+  static ClueCandidate? nextStronger(
+      List<ClueCandidate> candidates, ClueCandidate current) {
+    ClueCandidate? best;
+    for (final c in candidates) {
+      if (c.strength >= current.strength) continue;
+      if (best == null ||
+          c.strength > best.strength ||
+          (c.strength == best.strength && c.flavor > best.flavor)) {
+        best = c;
+      }
     }
-    return null;
+    return best;
   }
+
+  ClueCandidate? _stronger(
+          List<ClueCandidate> candidates, ClueCandidate current) =>
+      nextStronger(candidates, current);
 
   List<Clue> _extrasPool(
       Map<String, List<String>> occupants, WeaponDef? lethal) {
@@ -414,7 +498,7 @@ class Generator {
   }
 
   /// Pistas candidatas VERDADERAS para la tarjeta de un personaje.
-  List<_Cand> _candidatesFor(
+  List<ClueCandidate> _candidatesFor(
     String chId,
     List<Character> characters,
     Map<String, int> positions,
@@ -426,7 +510,7 @@ class Generator {
     final pos = positions[chId]!;
     final areaId = map.areaIdOf(pos);
     final occupiableCount = map.occupiableCells.length;
-    final cands = <_Cand>[];
+    final cands = <ClueCandidate>[];
 
     void addUnary(Clue clue, Set<int> allowed, double flavor) {
       final filtered = allowed.where(map.isOccupiable).toSet();
@@ -435,7 +519,7 @@ class Generator {
       // nacer de CRUZAR pistas con filas/columnas, no de pistas que
       // regalan la posición ("la única silla del mapa").
       if (filtered.length < 2) return;
-      cands.add(_Cand(clue, filtered, filtered.length, flavor));
+      cands.add(ClueCandidate(clue, filtered, filtered.length, flavor));
     }
 
     // Área.
@@ -479,7 +563,7 @@ class Generator {
         if (inter.length >= 2 &&
             inter.length < a.allowed!.length &&
             inter.length < b.allowed!.length) {
-          cands.add(_Cand(
+          cands.add(ClueCandidate(
             CompoundClue(chId, [a.clue, b.clue]),
             inter,
             inter.length,
@@ -499,25 +583,25 @@ class Generator {
       final otherPos = positions[other.id]!;
       final sameArea = map.sameArea(pos, otherPos);
       if (sameArea && !revealsPair(other.id)) {
-        cands.add(_Cand(SameArea(chId, other.id), null,
+        cands.add(ClueCandidate(SameArea(chId, other.id), null,
             map.area(areaId).cells.length, 3));
         if (map.besideInArea(pos, otherPos)) {
-          cands.add(_Cand(BesideChar(chId, other.id), null, 5, 4));
+          cands.add(ClueCandidate(BesideChar(chId, other.id), null, 5, 4));
         }
         if (occupants[areaId]!.length == 2) {
-          cands.add(_Cand(AloneWith(chId, other.id), null,
+          cands.add(ClueCandidate(AloneWith(chId, other.id), null,
               map.area(areaId).cells.length, 3.5));
         }
       }
       if (!sameArea && profile.allowVague) {
-        cands.add(_Cand(NotSameArea(chId, other.id), null,
+        cands.add(ClueCandidate(NotSameArea(chId, other.id), null,
             occupiableCount - 2, 1));
       }
     }
 
     // Solo en su área.
     if (occupants[areaId]!.length == 1) {
-      cands.add(_Cand(Alone(chId), null, occupiableCount - 2, 2));
+      cands.add(ClueCandidate(Alone(chId), null, occupiableCount - 2, 2));
     }
 
     // Negativas de área (vagas).

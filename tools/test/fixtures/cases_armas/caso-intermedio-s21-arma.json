@@ -1,0 +1,490 @@
+{
+  "caseId": "caso-intermedio-s21",
+  "mapId": "mapa-intermedio-s21",
+  "map": {
+    "id": "mapa-intermedio-s21",
+    "name_es": "El Teatro",
+    "size": 9,
+    "areas": [
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          54,
+          55,
+          56,
+          63,
+          64,
+          65,
+          67,
+          68,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          10,
+          11,
+          12,
+          13,
+          18,
+          19,
+          20
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          21,
+          29,
+          30,
+          38,
+          39,
+          40,
+          47,
+          48,
+          57,
+          58,
+          66
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          8,
+          17,
+          24,
+          25,
+          26,
+          33,
+          34,
+          35,
+          43,
+          44
+        ]
+      },
+      {
+        "id": "jardin",
+        "name_es": "el Jardín",
+        "cells": [
+          27,
+          28,
+          36,
+          37,
+          45,
+          46
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          14,
+          15,
+          16,
+          22,
+          23,
+          31,
+          32
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          41,
+          42,
+          49,
+          50,
+          51,
+          52,
+          53,
+          59,
+          60,
+          61,
+          62,
+          69,
+          70,
+          71,
+          79,
+          80
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sillon-1",
+        "type": "sillon",
+        "cells": [
+          75
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          77
+        ]
+      },
+      {
+        "id": "alfombra-3",
+        "type": "alfombra",
+        "cells": [
+          54,
+          55
+        ]
+      },
+      {
+        "id": "alfombra-4",
+        "type": "alfombra",
+        "cells": [
+          56,
+          65
+        ]
+      },
+      {
+        "id": "cama-5",
+        "type": "cama",
+        "cells": [
+          20,
+          11
+        ]
+      },
+      {
+        "id": "cama-6",
+        "type": "cama",
+        "cells": [
+          13,
+          12
+        ]
+      },
+      {
+        "id": "planta-7",
+        "type": "planta",
+        "cells": [
+          2
+        ]
+      },
+      {
+        "id": "armario-8",
+        "type": "armario",
+        "cells": [
+          19
+        ]
+      },
+      {
+        "id": "mesa-9",
+        "type": "mesa",
+        "cells": [
+          58,
+          57
+        ]
+      },
+      {
+        "id": "mesa-10",
+        "type": "mesa",
+        "cells": [
+          21,
+          30
+        ]
+      },
+      {
+        "id": "mesa-11",
+        "type": "mesa",
+        "cells": [
+          38,
+          39
+        ]
+      },
+      {
+        "id": "silla-12",
+        "type": "silla",
+        "cells": [
+          40
+        ]
+      },
+      {
+        "id": "planta-13",
+        "type": "planta",
+        "cells": [
+          8
+        ]
+      },
+      {
+        "id": "armario-14",
+        "type": "armario",
+        "cells": [
+          43
+        ]
+      },
+      {
+        "id": "sillon-15",
+        "type": "sillon",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "silla-16",
+        "type": "silla",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "silla-17",
+        "type": "silla",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "alfombra-18",
+        "type": "alfombra",
+        "cells": [
+          31,
+          22
+        ]
+      },
+      {
+        "id": "mesa-19",
+        "type": "mesa",
+        "cells": [
+          32,
+          23
+        ]
+      },
+      {
+        "id": "sillon-20",
+        "type": "sillon",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "armario-21",
+        "type": "armario",
+        "cells": [
+          14
+        ]
+      },
+      {
+        "id": "caja-22",
+        "type": "caja",
+        "cells": [
+          41
+        ]
+      },
+      {
+        "id": "armario-23",
+        "type": "armario",
+        "cells": [
+          42
+        ]
+      },
+      {
+        "id": "lavadora-24",
+        "type": "lavadora",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "caja-25",
+        "type": "caja",
+        "cells": [
+          51
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "biblioteca"
+      },
+      {
+        "id": "jeringa",
+        "name_es": "la jeringa",
+        "category": "veneno",
+        "area": "comedor"
+      },
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "vestibulo"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c1",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Adela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Bruno",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Clara",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Dario",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Elena",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Franco",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Greta",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Hugo",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Irene",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "sillon"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c3",
+      "group": "cama"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "caja"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c7",
+      "group": "alfombra"
+    },
+    {
+      "type": "same_area",
+      "a": "c8",
+      "b": "c9"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c9",
+      "group": "sillon"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 5,
+      "c2": 15,
+      "c3": 20,
+      "c4": 27,
+      "c5": 44,
+      "c6": 52,
+      "c7": 55,
+      "c8": 67,
+      "c9": 75
+    },
+    "murderer": "c2",
+    "lethalWeapon": "candelabro"
+  },
+  "metrics": {
+    "deductionSteps": 11,
+    "maxTier": 4,
+    "clueCount": 9
+  }
+}

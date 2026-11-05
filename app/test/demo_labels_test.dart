@@ -82,13 +82,17 @@ void main() {
       expect(find.text('DEMO'), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('Configuración muestra "Próximamente" 4 veces', (tester) async {
+    testWidgets('Configuración: Sonido y Vibración funcionan; Música y '
+        'Notificaciones siguen "Próximamente"', (tester) async {
       await _pumpShell(tester);
       await _openTab(tester, Icons.person_rounded);
       await tester.tap(find.text('Configuración'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
-      expect(find.text('Próximamente'), findsNWidgets(4));
+      // Solo quedan dos: Música y Notificaciones.
+      expect(find.text('Próximamente'), findsNWidgets(2));
+      expect(find.text('Sonido'), findsOneWidget);
+      expect(find.text('Vibración'), findsOneWidget);
     });
   });
 
