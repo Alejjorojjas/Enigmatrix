@@ -3,6 +3,7 @@
 /// aspecto de la piel y el modo activos.
 library;
 
+import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,10 +28,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _go() async {
-    // Precarga de casos + tiempo mínimo para que el logo respire.
-    final load = ref.read(casesProvider.future);
+    // Precarga del Mundo 1 y del reto diario + tiempo mínimo para que el logo
+    // respire. Si algo falla al leer, la pantalla de destino lo muestra.
     await Future.wait([
-      load,
+      ref
+          .read(campaignProvider(kMundoMansion).future)
+          .catchError((_) => <PuzzleCase>[]),
+      ref
+          .read(dailyChallengesProvider.future)
+          .catchError((_) => <DailyChallenge>[]),
       Future<void>.delayed(const Duration(milliseconds: 1700)),
     ]);
     if (mounted) context.go('/home');

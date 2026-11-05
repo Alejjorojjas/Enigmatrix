@@ -48,10 +48,11 @@ class IllustratedSkin extends ArtSkin {
         line: const Color(0xFF3A2D26),
         text: const Color(0xFF2A201B),
         textDim: const Color(0xFF75665A),
-        accent: const Color(0xFFD2602B),
+        // Naranja quemado: con texto claro da 4,6:1 o más (AA).
+        accent: const Color(0xFFB45224),
         onAccent: const Color(0xFFFFF4E6),
         danger: const Color(0xFFB5402E),
-        good: const Color(0xFF3D8558),
+        good: const Color(0xFF35754D),
         toolActive: const Color(0xFF2A201B),
         onToolActive: const Color(0xFFF5ECDC),
         pill: const Color(0xFF2A201B),

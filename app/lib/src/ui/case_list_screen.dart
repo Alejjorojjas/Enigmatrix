@@ -2,8 +2,9 @@
 /// camino en culebrita, unidas por un hilo punteado que sigue la curva,
 /// agrupadas por carpeta de dificultad. Todo el color sale de la piel y el
 /// modo activos. Experto y Élite se muestran "Próximamente" y no se abren
-/// (ADR-0014). Conserva "En curso" para las partidas guardadas y el reporte
-/// de feedback de la prueba de juego.
+/// (ADR-0014). Muestra los 10 casos de la campaña "mansion" en su orden, con
+/// título y premisa, y conserva "En curso" para las partidas guardadas. Los 20
+/// casos del banco de pruebas y el reporte de feedback viven en Configuración.
 library;
 
 import 'dart:convert';
@@ -11,12 +12,10 @@ import 'dart:math' as math;
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../app_version.dart';
 import '../data/case_repository.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
@@ -43,10 +42,6 @@ abstract final class CaseListTexts {
   static const repeat = 'Repetir';
   static const soonBody = 'Llega en una próxima actualización.';
   static const howToPlay = 'Cómo jugar';
-  static const copyFeedback = 'Copiar feedback de playtest';
-  static const feedbackCopied =
-      'Feedback copiado al portapapeles: pégalo en el chat de Claude para '
-      'calibrar el generador';
   static const reopen = 'Reabrir caso';
   static const keepPlaying = 'Continuar';
   static const investigate = 'Investigar';
@@ -90,7 +85,7 @@ class CaseListScreen extends ConsumerStatefulWidget {
 class _CaseListScreenState extends ConsumerState<CaseListScreen> {
   @override
   Widget build(BuildContext context) {
-    final cases = ref.watch(casesProvider);
+    final cases = ref.watch(campaignProvider(kMundoMansion));
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final p = context.pal;
 
@@ -111,6 +106,10 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
           data: (all) {
             // Solo los casos de la V1: Experto y Élite no se abren.
             final list = playableCases(all);
+            // Número de cada caso en la campaña (Nº 1 a Nº 10).
+            final numberOf = {
+              for (final (i, pc) in list.indexed) pc.caseId: i + 1,
+            };
             final done = <String, Map<String, dynamic>>{};
             for (final pc in list) {
               final raw = prefs?.getString('done:${pc.caseId}');
@@ -137,11 +136,7 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
             var folderNo = 0;
             return Column(
               children: [
-                _TopBar(
-                  solved: done.length,
-                  total: list.length,
-                  onCopyFeedback: () => _copyFeedback(context, ref),
-                ),
+                _TopBar(solved: done.length, total: list.length),
                 Expanded(
                   child: ListView(
                     padding: const EdgeInsets.only(bottom: 60),
@@ -166,6 +161,7 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
                               done: done,
                               inProgress: inProgress,
                               currentId: currentId,
+                              numberOf: numberOf,
                             ),
                           ] else
                             const SizedBox.shrink()
@@ -181,42 +177,14 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
       ),
     );
   }
-
-  Future<void> _copyFeedback(BuildContext context, WidgetRef ref) async {
-    final prefs = await SharedPreferences.getInstance();
-    final cases = ref.read(casesProvider).valueOrNull ?? [];
-    final report = buildFeedbackReport(
-      version: kAppVersion,
-      now: DateTime.now(),
-      cases: [
-        for (final pc in cases)
-          FeedbackCaseData(
-            caseId: pc.caseId,
-            difficulty: pc.difficulty,
-            doneRaw: prefs.getString('done:${pc.caseId}'),
-            gameRaw: prefs.getString('game:${pc.caseId}'),
-            notes: prefs.getString('fb:${pc.caseId}'),
-          ),
-      ],
-    );
-    await Clipboard.setData(ClipboardData(text: report));
-    if (context.mounted) {
-      showAppToast(context, CaseListTexts.feedbackCopied);
-    }
-  }
 }
 
-/// Barra superior fija: volver, marca, progreso, ayuda y exportar feedback.
+/// Barra superior fija: volver, título, progreso y ayuda.
 class _TopBar extends StatelessWidget {
-  const _TopBar({
-    required this.solved,
-    required this.total,
-    required this.onCopyFeedback,
-  });
+  const _TopBar({required this.solved, required this.total});
 
   final int solved;
   final int total;
-  final VoidCallback onCopyFeedback;
 
   @override
   Widget build(BuildContext context) {
@@ -273,12 +241,6 @@ class _TopBar extends StatelessWidget {
                 Icons.help_outline_rounded,
                 CaseListTexts.howToPlay,
                 () => showTutorialDialog(context),
-              ),
-              const SizedBox(width: 6),
-              square(
-                Icons.copy_all_rounded,
-                CaseListTexts.copyFeedback,
-                onCopyFeedback,
               ),
             ],
           ),
@@ -492,8 +454,10 @@ class _EvidenceBoard extends StatelessWidget {
     required this.done,
     required this.inProgress,
     required this.currentId,
+    required this.numberOf,
   });
 
+  final Map<String, int> numberOf;
   final List<PuzzleCase> cases;
   final Map<String, Map<String, dynamic>> done;
   final Map<String, SavedGameInfo> inProgress;
@@ -529,7 +493,7 @@ class _EvidenceBoard extends StatelessWidget {
                     offset: Offset(_snake(i) * amplitude, 0),
                     child: _CaseFile(
                       pc: pc,
-                      number: i + 1,
+                      number: numberOf[pc.caseId] ?? i + 1,
                       tilt: (i.isEven ? -1 : 1) * 0.045,
                       doneInfo: done[pc.caseId],
                       savedGame: inProgress[pc.caseId],
@@ -809,7 +773,7 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             children: [
               InfoChip(
                 icon: Icons.speed_rounded,
-                text: pc.difficulty,
+                text: difficultyName(pc.difficulty),
                 color: diffColor,
               ),
               InfoChip(

@@ -34,10 +34,13 @@ abstract final class HomeTexts {
   static const worlds = 'Mundos';
   static const challengeTab = 'Reto diario';
   static const todayCase = 'EL CASO DE HOY';
-  static const notStarted = 'Estado: no iniciado';
   static const challengeNote =
       'Simulación: aún sin servidor, no hay intento oficial ni cierre a '
       'medianoche';
+  static const stateNew = 'Estado: no iniciado';
+  static const stateOpen = 'Estado: en curso';
+  static const stateDone = 'Estado: resuelto';
+  static const noChallenge = 'El caso de hoy no está disponible.';
   static const playToday = 'Jugar el caso de hoy';
   static const weekPoints = 'PUNTOS DE LA SEMANA';
   static const ranking = 'Ranking';
@@ -49,9 +52,30 @@ abstract final class HomeTexts {
 int solvedIn(List<PuzzleCase> cases, SharedPreferences? prefs) =>
     cases.where((c) => prefs?.getString('done:${c.caseId}') != null).length;
 
-void _playToday(BuildContext context, List<PuzzleCase> cases) {
-  final pc = todaysChallenge(cases, DateTime.now());
-  if (pc != null) context.go('/play/${pc.caseId}');
+/// Los casos del Mundo 1 en el orden de la campaña (vacío mientras cargan).
+List<PuzzleCase> worldCases(WidgetRef ref) =>
+    ref.watch(campaignProvider(kMundoMansion)).valueOrNull ?? const [];
+
+/// El reto de hoy (null si aún carga o ese día no existe).
+DailyChallenge? todaysChallengeOf(WidgetRef ref) => todaysChallenge(
+  ref.watch(dailyChallengesProvider).valueOrNull ?? const [],
+  DateTime.now(),
+);
+
+void _playToday(BuildContext context, DailyChallenge? today) {
+  if (today != null) context.go('/play/${today.puzzle.caseId}');
+}
+
+/// Estado del reto de hoy según lo guardado: sin iniciar, en curso o
+/// resuelto (las claves `done:` y `game:` más el id del caso).
+String challengeStateText(PuzzleCase pc, SharedPreferences? prefs) {
+  if (prefs?.getString('done:${pc.caseId}') != null) {
+    return HomeTexts.stateDone;
+  }
+  if (prefs?.getString('game:${pc.caseId}') != null) {
+    return HomeTexts.stateOpen;
+  }
+  return HomeTexts.stateNew;
 }
 
 // ---------- INICIO ----------
@@ -63,9 +87,7 @@ class HomeTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
-    final playable = playableCases(
-      ref.watch(casesProvider).valueOrNull ?? const [],
-    );
+    final playable = worldCases(ref);
     final solved = solvedIn(playable, prefs);
     final hour = DateTime.now().hour;
     final greeting = hour < 12
@@ -73,7 +95,7 @@ class HomeTab extends ConsumerWidget {
         : hour < 19
         ? 'Buenas tardes'
         : 'Buenas noches';
-    final today = todaysChallenge(playable, DateTime.now());
+    final today = todaysChallengeOf(ref);
 
     return ListView(
       padding: const EdgeInsets.all(18),
@@ -130,12 +152,16 @@ class HomeTab extends ConsumerWidget {
                   children: [
                     InfoChip(
                       icon: Icons.speed_rounded,
-                      text: difficultyName(today.difficulty),
-                      color: p.difficulty(today.difficulty),
+                      text: difficultyName(today.puzzle.difficulty),
+                      color: p.difficulty(today.puzzle.difficulty),
                     ),
                     InfoChip(
                       icon: Icons.grid_on_rounded,
-                      text: '${today.map.size}×${today.map.size}',
+                      text: '${today.puzzle.map.size}×${today.puzzle.map.size}',
+                    ),
+                    InfoChip(
+                      icon: Icons.event_rounded,
+                      text: 'Día ${today.day} de $kChallengeDays',
                     ),
                   ],
                 ),
@@ -144,9 +170,7 @@ class HomeTab extends ConsumerWidget {
               AppButton(
                 label: HomeTexts.playChallenge,
                 color: p.danger,
-                onTap: today == null
-                    ? null
-                    : () => _playToday(context, playable),
+                onTap: today == null ? null : () => _playToday(context, today),
               ),
             ],
           ),
@@ -194,7 +218,11 @@ class HomeTab extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    // Wrap: con el texto del sistema grande la etiqueta DEMO
+                    // baja a otra línea en vez de desbordar.
+                    Wrap(
+                      spacing: 8,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           HomeTexts.shop,
@@ -204,7 +232,6 @@ class HomeTab extends ConsumerWidget {
                             spacing: 1.4,
                           ),
                         ),
-                        const SizedBox(width: 8),
                         const DemoBadge(),
                       ],
                     ),
@@ -287,9 +314,7 @@ class WorldsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
-    final playable = playableCases(
-      ref.watch(casesProvider).valueOrNull ?? const [],
-    );
+    final playable = worldCases(ref);
     final solved = solvedIn(playable, prefs);
     final open = kWorlds.where((w) => w.available).length;
     return ListView(
@@ -369,10 +394,8 @@ class ChallengeTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
-    final playable = playableCases(
-      ref.watch(casesProvider).valueOrNull ?? const [],
-    );
-    final today = todaysChallenge(playable, DateTime.now());
+    final prefs = ref.watch(prefsProvider).valueOrNull;
+    final today = todaysChallengeOf(ref);
     const days = [
       ('L', true),
       ('M', true),
@@ -447,10 +470,23 @@ class ChallengeTab extends ConsumerWidget {
             children: [
               const SectionLabel(HomeTexts.todayCase),
               const SizedBox(height: 6),
-              Text(
-                HomeTexts.notStarted,
-                style: context.note(18, color: p.text),
-              ),
+              if (today != null) ...[
+                Text(
+                  'Día ${today.day} de $kChallengeDays · '
+                  '${difficultyName(today.puzzle.difficulty)} · '
+                  '${today.puzzle.map.size}×${today.puzzle.map.size}',
+                  style: context.body(15, color: p.text),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  challengeStateText(today.puzzle, prefs),
+                  style: context.note(18, color: p.text),
+                ),
+              ] else
+                Text(
+                  HomeTexts.noChallenge,
+                  style: context.note(18, color: p.text),
+                ),
               Text(
                 HomeTexts.challengeNote,
                 style: context.note(15, color: p.softText),
@@ -459,9 +495,7 @@ class ChallengeTab extends ConsumerWidget {
               AppButton(
                 label: HomeTexts.playToday,
                 color: p.danger,
-                onTap: today == null
-                    ? null
-                    : () => _playToday(context, playable),
+                onTap: today == null ? null : () => _playToday(context, today),
               ),
             ],
           ),
@@ -561,10 +595,15 @@ class ProfileTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
-    final playable = playableCases(
-      ref.watch(casesProvider).valueOrNull ?? const [],
-    );
-    final solved = solvedIn(playable, prefs);
+    // Casos cerrados: los del Mundo 1 y los retos (el banco de pruebas no
+    // cuenta).
+    final solved = solvedIn([
+      ...worldCases(ref),
+      for (final c
+          in ref.watch(dailyChallengesProvider).valueOrNull ??
+              const <DailyChallenge>[])
+        c.puzzle,
+    ], prefs);
     final nickname = prefs?.getString('profile:nick') ?? 'Detective';
     final initial = nickname.isEmpty ? 'D' : nickname[0].toUpperCase();
 

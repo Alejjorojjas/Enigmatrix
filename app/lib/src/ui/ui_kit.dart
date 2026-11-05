@@ -108,6 +108,8 @@ class AppCard extends StatelessWidget {
       box = Semantics(
         button: true,
         label: semanticsLabel,
+        // Con etiqueta propia, el texto de adentro no se lee dos veces.
+        excludeSemantics: semanticsLabel != null,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: onTap,

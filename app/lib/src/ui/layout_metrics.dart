@@ -8,16 +8,30 @@
 ///  - compacta (pantallas más bajas, por ejemplo 360x640): se prioriza el
 ///    tablero. La pista queda en una sola línea que se expande al tocarla (flota
 ///    sobre la interfaz, sin empujar nada) y Resolver va al lado de la pista.
+///
+/// Con el texto del sistema agrandado (hasta 1,3 en la partida) los bloques que
+/// llevan texto crecen lo justo (título, retratos y pista) y el tablero cede
+/// ese alto: así nada desborda. A escala 1 las medidas son las de siempre.
 library;
 
 import 'dart:math' as math;
 import 'dart:ui';
+
+import 'package:flutter/painting.dart' show TextScaler;
+
+/// Mayor escala de texto que respeta la pantalla de partida (la interfaz de
+/// juego tiene alturas medidas; más allá de esto se queda en 1,3).
+const double kGameMaxTextScale = 1.3;
 
 class ScreenMetrics {
   const ScreenMetrics._({
     required this.compact,
     required this.boardSide,
     required this.stageHeight,
+    required this.titleRowHeight,
+    required this.portraitRowHeight,
+    required this.hintMaxHeight,
+    required this.hintCompactHeight,
   });
 
   /// true = distribución compacta (pantalla baja).
@@ -28,6 +42,18 @@ class ScreenMetrics {
 
   /// Alto del escenario: el tablero más su margen vertical.
   final double stageHeight;
+
+  /// Alto de la fila del título (con el texto del sistema ya aplicado).
+  final double titleRowHeight;
+
+  /// Alto de la bandeja de retratos (retrato y nombre).
+  final double portraitRowHeight;
+
+  /// Tope de la pista de 3 líneas (distribución normal).
+  final double hintMaxHeight;
+
+  /// Alto de la pista de una línea (distribución compacta).
+  final double hintCompactHeight;
 
   /// Margen lateral de la interfaz y del tablero, en píxeles.
   static const double sidePad = 12;
@@ -59,50 +85,100 @@ class ScreenMetrics {
   static const double stageMarginCompact = 6;
   static const double hintCompact = 46;
 
+  // ---- bloques que crecen con el texto del sistema ------------------------------
+
+  /// Píxeles de reserva cuando el texto del sistema está agrandado.
+  static const double textScaleSlack = 6;
+
+  /// Fila del título: dos líneas (17 y 13 px, interlineado 1,15).
+  static double titleRowFor(TextScaler s, {required bool compact}) => math.max(
+    compact ? headerRow2Compact : headerRow2Normal,
+    s.scale(34.5) + 1,
+  );
+
+  /// Bandeja de retratos: retrato, 2 px y el nombre (13 px, interlineado 1,15).
+  static double portraitRowFor(TextScaler s) =>
+      math.max(portraitRow, portraitBox + 2 + s.scale(14.95) + 1);
+
+  /// Pista de 3 líneas (15 px, interlineado 1,2) más su recuadro.
+  static double hintMaxFor(TextScaler s) =>
+      math.max(hintMaxNormal, s.scale(18) * 3 + 25);
+
+  /// Pista de una línea más su recuadro.
+  static double hintCompactFor(TextScaler s) =>
+      math.max(hintCompact, s.scale(18) + 22);
+
   /// Distribución compacta si lo que queda de alto no alcanza para la normal
   /// con la pista de 3 líneas.
-  static double normalNeeded(double side) =>
+  static double normalNeeded(
+    double side, {
+    double titleRow = headerRow2Normal,
+    double portraits = portraitRow,
+    double hintMax = hintMaxNormal,
+  }) =>
       headerTopNormal +
       headerRow1 +
       headerGapNormal +
-      headerRow2Normal +
+      titleRow +
       gapNormal +
       side +
       2 * stageMarginNormal +
       gapNormal +
       toolbarNormal +
       gapNormal +
-      portraitRow +
+      portraits +
       4 +
-      hintMaxNormal +
+      hintMax +
       gapNormal +
       resolveNormal +
       gapNormal;
 
   /// Alto que piden, como mínimo, todos los bloques de abajo en la compacta.
-  static const double bottomCompactMin = toolbarCompact +
-      gapCompact +
-      portraitRow +
-      gapCompact +
-      hintCompact +
-      gapCompact;
+  static double bottomCompactMinFor({
+    double portraits = portraitRow,
+    double hint = hintCompact,
+  }) =>
+      toolbarCompact + gapCompact + portraits + gapCompact + hint + gapCompact;
 
-  factory ScreenMetrics.of(Size box) {
+  factory ScreenMetrics.of(
+    Size box, {
+    TextScaler textScaler = TextScaler.noScaling,
+  }) {
+    final titleNormal = titleRowFor(textScaler, compact: false);
+    final titleCompact = titleRowFor(textScaler, compact: true);
+    final portraits = portraitRowFor(textScaler);
+    final hintMax = hintMaxFor(textScaler);
+    final hintCompactH = hintCompactFor(textScaler);
+    // Con el texto agrandado se reservan unos píxeles para el borde de las
+    // pieles y el redondeo de las líneas de texto.
+    final slack = textScaler.scale(1) > 1 ? textScaleSlack : 0.0;
     // En pantallas anchas y bajas el tablero se achica para que quepa todo.
     final maxSide = box.height -
-        (headerTopCompact + headerRow1 + headerRow2Compact + headerGapCompact) -
+        (headerTopCompact + headerRow1 + titleCompact + headerGapCompact) -
         2 * stageMarginCompact -
-        bottomCompactMin;
+        bottomCompactMinFor(portraits: portraits, hint: hintCompactH) -
+        slack;
     final side = math.max(0.0, math.min(box.width - 2 * sidePad, maxSide));
-    final compact = box.height < normalNeeded(side);
+    final needed = normalNeeded(
+      side,
+      titleRow: titleNormal,
+      portraits: portraits,
+      hintMax: hintMax,
+    ) +
+        slack;
+    final compact = box.height < needed;
     final margin = compact ? stageMarginCompact : stageMarginNormal;
     // Si sobra alto en la distribución normal, el escenario lo aprovecha para
     // mostrar más mesa alrededor del tablero (hasta 24 px de más).
-    final extra = compact ? 0.0 : math.min(24.0, math.max(0.0, box.height - normalNeeded(side)));
+    final extra = compact ? 0.0 : math.min(24.0, math.max(0.0, box.height - needed));
     return ScreenMetrics._(
       compact: compact,
       boardSide: side,
       stageHeight: side + 2 * margin + extra,
+      titleRowHeight: compact ? titleCompact : titleNormal,
+      portraitRowHeight: portraits,
+      hintMaxHeight: hintMax,
+      hintCompactHeight: hintCompactH,
     );
   }
 

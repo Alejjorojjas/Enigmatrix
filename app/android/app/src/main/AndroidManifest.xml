@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Necesario para descargar tipografias (google_fonts) y para el
-         backend de Fase 2. Permiso normal, sin implicaciones de Data Safety. -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Sin permiso INTERNET: desde la 0.5.0+5 las tipografias van empaquetadas
+         dentro de la app (assets/fonts) y no se baja nada. El permiso vuelve en
+         la etapa 5, cuando entre Firebase (Auth, Firestore, Functions, FCM). -->
     <application
         android:label="Enigmatrix"
         android:allowBackup="false"

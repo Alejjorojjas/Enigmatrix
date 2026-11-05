@@ -390,18 +390,19 @@ class CaseRepository {
   }
 }
 
+/// Los 20 casos del banco de pruebas (desarrollo). No es la lista normal de
+/// la app: se carga solo cuando se abre el banco desde Configuración o cuando
+/// una partida pide uno de esos casos.
 final casesProvider = FutureProvider<List<PuzzleCase>>(
   (ref) => CaseRepository.loadAll(),
 );
 
 /// Casos de campaña de un mundo ("mansion"), en el orden en que se juegan.
-/// Todavía no los muestra ninguna pantalla: la interfaz los conecta en una
-/// ronda posterior.
 final campaignProvider = FutureProvider.family<List<PuzzleCase>, String>(
   (ref, world) => CaseRepository.loadCampaign(world),
 );
 
-/// Los 30 retos diarios por número de día. Todavía sin pantalla.
+/// Los 30 retos diarios por número de día.
 final dailyChallengesProvider = FutureProvider<List<DailyChallenge>>(
   (ref) => CaseRepository.loadDailyChallenges(),
 );
@@ -411,13 +412,26 @@ final tutorialCaseProvider = FutureProvider<PuzzleCase>(
   (ref) => CaseRepository.loadTutorial(),
 );
 
+/// Busca un caso por su id: primero en el Mundo 1, luego en los retos y, al
+/// final, en el banco de pruebas (que solo se carga si hace falta). Null
+/// mientras no se haya cargado la lista donde está.
 final caseByIdProvider = Provider.family<PuzzleCase?, String>((ref, id) {
-  final cases = ref.watch(casesProvider).valueOrNull;
-  if (cases == null) return null;
-  for (final c in cases) {
-    if (c.caseId == id) return c;
+  PuzzleCase? find(Iterable<PuzzleCase>? list) {
+    if (list == null) return null;
+    for (final c in list) {
+      if (c.caseId == id) return c;
+    }
+    return null;
   }
-  return null;
+
+  final world = find(ref.watch(campaignProvider(kMundoMansion)).valueOrNull);
+  if (world != null) return world;
+  final challenges = ref.watch(dailyChallengesProvider).valueOrNull;
+  final daily = find(
+    challenges == null ? null : [for (final c in challenges) c.puzzle],
+  );
+  if (daily != null) return daily;
+  return find(ref.watch(casesProvider).valueOrNull);
 });
 
 // ---------- Partidas en curso y reporte de feedback (solo lectura) ----------

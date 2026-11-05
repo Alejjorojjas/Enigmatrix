@@ -4,7 +4,6 @@
 library;
 
 import 'package:enigmatrix/main.dart';
-import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/app_settings.dart';
 import 'package:enigmatrix/src/ui/home_shell.dart';
 import 'package:enigmatrix/src/ui/skin_theme.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/content_overrides.dart';
 
 Future<BuildContext> _pumpApp(
   WidgetTester tester, {
@@ -27,7 +27,7 @@ Future<BuildContext> _pumpApp(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        casesProvider.overrideWith((_) async => const []),
+        ...contentOverrides(const []),
         initialSettingsProvider.overrideWithValue(settings),
       ],
       child: const EnigmatrixApp(),

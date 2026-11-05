@@ -8,7 +8,6 @@ library;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../board/scene/palette.dart';
 import '../board/scene/skins.dart';
@@ -114,15 +113,20 @@ extension SkinPaletteUi on SkinPalette {
   /// Texto secundario que se lee también sobre el fondo de la pantalla.
   Color get softText => Color.lerp(text, bg, 0.28)!;
 
-  /// Color de texto o ícono legible sobre [c].
+  /// Color de texto o ícono legible sobre [c]: el más legible de los tres
+  /// colores de texto de la paleta (el oscuro de la pastilla, el claro de la
+  /// pastilla y el del acento).
   Color onColor(Color c) {
-    // El más legible de los dos: el oscuro (pill) o el claro (onPill).
     double ratio(Color a) {
       final la = a.computeLuminance(), lc = c.computeLuminance();
       return (math.max(la, lc) + 0.05) / (math.min(la, lc) + 0.05);
     }
 
-    return ratio(pill) >= ratio(onPill) ? pill : onPill;
+    var best = pill;
+    for (final o in [onPill, onAccent]) {
+      if (ratio(o) > ratio(best)) best = o;
+    }
+    return best;
   }
 
   /// Color de una dificultad.
@@ -341,12 +345,21 @@ class SkinUi {
   }
 }
 
-/// Fuente de las tipografías de la interfaz: Baloo 2 (titulares), Quicksand
-/// (cuerpo) y Patrick Hand (notas manuscritas de la piel Papel), de
-/// google_fonts. Con [useWebFonts] apagado (solo en las pruebas, que no tienen
-/// red) se usa la letra por omisión, que allí es Roboto.
+/// Tipografías de la interfaz, empaquetadas dentro de la app (H-07, licencia
+/// OFL en `assets/fonts/`): Baloo 2 (titulares), Quicksand (cuerpo) y Patrick
+/// Hand (notas manuscritas de la piel Papel). No se baja nada de internet.
+///
+/// Baloo 2 y Quicksand son fuentes variables, así que además del peso se fija
+/// el eje `wght` de forma explícita: así cada peso se ve con su grosor real y
+/// no con uno "falso".
 abstract final class UiFonts {
-  static bool useWebFonts = true;
+  static const balooFamily = 'Baloo2';
+  static const quicksandFamily = 'Quicksand';
+  static const handFamily = 'PatrickHand';
+
+  static List<FontVariation> _wght(FontWeight? w) => [
+    FontVariation.weight((w ?? FontWeight.w400).value.toDouble()),
+  ];
 
   static TextStyle baloo({
     double? fontSize,
@@ -354,21 +367,15 @@ abstract final class UiFonts {
     Color? color,
     double? letterSpacing,
     double? height,
-  }) => useWebFonts
-      ? GoogleFonts.baloo2(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-          letterSpacing: letterSpacing,
-          height: height,
-        )
-      : TextStyle(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-          letterSpacing: letterSpacing,
-          height: height,
-        );
+  }) => TextStyle(
+    fontFamily: balooFamily,
+    fontVariations: _wght(fontWeight),
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    color: color,
+    letterSpacing: letterSpacing,
+    height: height,
+  );
 
   static TextStyle quicksand({
     double? fontSize,
@@ -376,31 +383,46 @@ abstract final class UiFonts {
     Color? color,
     double? letterSpacing,
     double? height,
-  }) => useWebFonts
-      ? GoogleFonts.quicksand(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-          letterSpacing: letterSpacing,
-          height: height,
-        )
-      : TextStyle(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          color: color,
-          letterSpacing: letterSpacing,
-          height: height,
-        );
+  }) => TextStyle(
+    fontFamily: quicksandFamily,
+    fontVariations: _wght(fontWeight),
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+    color: color,
+    letterSpacing: letterSpacing,
+    height: height,
+  );
 
   static TextStyle hand({double? fontSize, Color? color, double? height}) =>
-      useWebFonts
-      ? GoogleFonts.patrickHand(
-          fontSize: fontSize,
-          color: color,
-          height: height,
-        )
-      : TextStyle(fontSize: fontSize, color: color, height: height);
+      TextStyle(
+        fontFamily: handFamily,
+        fontSize: fontSize,
+        color: color,
+        height: height,
+      );
 
-  static TextTheme quicksandTheme(TextTheme base) =>
-      useWebFonts ? GoogleFonts.quicksandTextTheme(base) : base;
+  /// El tema de texto de Material con Quicksand en todos sus estilos.
+  static TextTheme quicksandTheme(TextTheme base) {
+    TextStyle? q(TextStyle? s) => s?.copyWith(
+      fontFamily: quicksandFamily,
+      fontVariations: _wght(s.fontWeight),
+    );
+    return TextTheme(
+      displayLarge: q(base.displayLarge),
+      displayMedium: q(base.displayMedium),
+      displaySmall: q(base.displaySmall),
+      headlineLarge: q(base.headlineLarge),
+      headlineMedium: q(base.headlineMedium),
+      headlineSmall: q(base.headlineSmall),
+      titleLarge: q(base.titleLarge),
+      titleMedium: q(base.titleMedium),
+      titleSmall: q(base.titleSmall),
+      bodyLarge: q(base.bodyLarge),
+      bodyMedium: q(base.bodyMedium),
+      bodySmall: q(base.bodySmall),
+      labelLarge: q(base.labelLarge),
+      labelMedium: q(base.labelMedium),
+      labelSmall: q(base.labelSmall),
+    );
+  }
 }

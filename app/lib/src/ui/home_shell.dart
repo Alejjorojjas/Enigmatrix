@@ -4,6 +4,8 @@
 /// estructura queda final. El primer arranque abre el tutorial obligatorio.
 library;
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -110,8 +112,12 @@ class _NavBar extends StatelessWidget {
           top: false,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+            // El alto crece con el texto del sistema (ícono + rótulo + aire).
             child: SizedBox(
-              height: 62,
+              height: math.max(
+                62.0,
+                26 + MediaQuery.textScalerOf(context).scale(17) + 18,
+              ),
               child: Row(
                 children: [
                   for (final (i, item) in items.indexed)

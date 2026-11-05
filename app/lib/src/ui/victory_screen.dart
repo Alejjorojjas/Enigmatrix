@@ -283,7 +283,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                   label: VictoryTexts.keepGoing,
                   onTap: () => _saveAnd(() {
                     Navigator.of(context).pop();
-                    context.go('/casos');
+                    context.go(exitRouteFor(pc.caseId));
                   }),
                 ),
                 const SizedBox(height: 8),

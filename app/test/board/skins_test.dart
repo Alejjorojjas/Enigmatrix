@@ -9,6 +9,7 @@ import 'package:enigmatrix/src/board/scene/furniture_art.dart';
 import 'package:enigmatrix/src/board/scene/portrait_art.dart';
 import 'package:enigmatrix/src/board/scene/skin.dart';
 import 'package:enigmatrix/src/board/scene/skins.dart';
+import 'package:enigmatrix/src/ui/skin_theme.dart' show SkinPaletteUi;
 
 import '../support/board_rig.dart';
 
@@ -97,15 +98,33 @@ void main() {
               expect(_contrast(p.onPill, p.pill), greaterThanOrEqualTo(4.5));
               expect(
                 _contrast(p.onToolActive, p.toolActive),
-                greaterThanOrEqualTo(3.0),
+                greaterThanOrEqualTo(4.5),
               );
               expect(
                 _contrast(p.onAccent, p.accent),
-                greaterThanOrEqualTo(3.0),
+                greaterThanOrEqualTo(4.5),
+                reason: 'onAccent sobre accent, ${p.mode}',
               );
             }
           },
         );
+
+        test('los botones de color (acento, peligro y bien) llegan a AA 4,5:1 '
+            'con su texto, en los dos modos', () {
+          for (final p in [light, dark]) {
+            for (final (name, fill) in [
+              ('accent', p.accent),
+              ('danger', p.danger),
+              ('good', p.good),
+            ]) {
+              expect(
+                _contrast(p.onColor(fill), fill),
+                greaterThanOrEqualTo(4.5),
+                reason: '$name en ${p.mode} (${spec.id})',
+              );
+            }
+          }
+        });
 
         test('la piel construida en cada modo usa la paleta de ese modo', () {
           for (final m in Brightness.values) {

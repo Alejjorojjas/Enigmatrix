@@ -8,7 +8,6 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/app_settings.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/saved_game.dart';
@@ -28,6 +27,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/game_ui.dart' show loadBankCase;
+import 'support/content_overrides.dart';
 
 const _skins = ['ilustrada', 'papel'];
 const _modes = [ThemeMode.light, ThemeMode.dark];
@@ -104,7 +104,7 @@ Future<void> _pump(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
-        casesProvider.overrideWith((_) async => list),
+        ...contentOverrides(list),
         initialSettingsProvider.overrideWithValue(
           AppSettings(skinId: skin, themeMode: mode),
         ),
@@ -309,9 +309,18 @@ void main() {
           expect(_contrast(p.softText, p.bg), greaterThanOrEqualTo(4.5));
           expect(_contrast(p.softText, p.surface), greaterThanOrEqualTo(4.5));
           expect(_contrast(p.textDim, p.surface), greaterThanOrEqualTo(3.5));
+          // Botones con color de acento: AA (4,5:1) con su texto.
           expect(
             _contrast(p.onColor(p.accent), p.accent),
-            greaterThanOrEqualTo(3.5),
+            greaterThanOrEqualTo(4.5),
+          );
+          expect(
+            _contrast(p.onColor(p.danger), p.danger),
+            greaterThanOrEqualTo(4.5),
+          );
+          expect(
+            _contrast(p.onColor(p.good), p.good),
+            greaterThanOrEqualTo(4.5),
           );
           expect(_contrast(p.onPill, p.pill), greaterThanOrEqualTo(4.5));
           expect(_contrast(p.accent, p.surface), greaterThanOrEqualTo(3));

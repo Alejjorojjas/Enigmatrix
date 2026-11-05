@@ -160,7 +160,7 @@ class _PortraitRowState extends State<PortraitRow> {
     final chars = pc.characters;
     const chip = ScreenMetrics.portraitBox;
     return SizedBox(
-      height: ScreenMetrics.portraitRow,
+      height: ScreenMetrics.portraitRowFor(MediaQuery.textScalerOf(context)),
       child: LayoutBuilder(
         builder: (context, box) {
           // Si todos caben, se reparten el ancho; si no, se deslizan.
@@ -356,10 +356,10 @@ class _PortraitChipState extends State<_PortraitChip>
                               shape: BoxShape.circle,
                               border: Border.all(color: p.bg, width: 2),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.check,
                               size: 12,
-                              color: Colors.white,
+                              color: p.onColor(p.good),
                             ),
                           ),
                         ),

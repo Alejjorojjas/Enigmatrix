@@ -96,7 +96,7 @@ class ChromeBox extends StatelessWidget {
             // Fibra de papel dentro de cada recorte.
             child: CustomPaint(
               painter: _GrainPainter(
-                Colors.white.withValues(alpha: p.isDark ? 0.10 : 0.30),
+                p.paperEdge.withValues(alpha: p.isDark ? 0.14 : 0.30),
               ),
               child: child,
             ),
@@ -192,7 +192,9 @@ class PaperFibers extends StatelessWidget {
       child: CustomPaint(
         painter: _FibersPainter(
           seed,
-          Colors.white.withValues(alpha: context.pal.isDark ? 0.08 : 0.34),
+          context.pal.paperEdge.withValues(
+            alpha: context.pal.isDark ? 0.12 : 0.34,
+          ),
         ),
         size: Size.infinite,
       ),

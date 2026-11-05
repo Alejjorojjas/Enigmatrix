@@ -4,13 +4,16 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_version.dart';
 import '../game/app_settings.dart';
 import 'appearance_picker.dart';
 import 'case_list_screen.dart' show prefsProvider;
+import 'feedback_report.dart';
 import 'skin_theme.dart';
 import 'tutorial_dialog.dart';
 import 'ui_kit.dart';
@@ -25,6 +28,13 @@ abstract final class SheetTexts {
   static const sound = 'Sonido';
   static const music = 'Música';
   static const haptics = 'Vibración';
+  static const reduceMotion = 'Reducir movimiento';
+  static const reduceMotionHint =
+      'Menos rebotes, sacudidas y partículas en el tablero.';
+  static const devTitle = 'Banco de pruebas (desarrollo)';
+  static const devBody =
+      'Los 20 casos de prueba, para revisar el motor. No son parte del juego.';
+  static const devOpen = 'Abrir banco de pruebas';
   static const notifications = 'Notificaciones';
   static const language = 'Idioma';
   static const spanish = 'Español';
@@ -200,6 +210,16 @@ class _SettingsSheet extends ConsumerWidget {
           value: false,
           onChanged: null,
         ),
+        SwitchRow(
+          icon: Icons.slow_motion_video_rounded,
+          label: SheetTexts.reduceMotion,
+          value: settings.reduceMotion,
+          onChanged: notifier.setReduceMotion,
+        ),
+        Text(
+          SheetTexts.reduceMotionHint,
+          style: context.note(14, color: p.softText),
+        ),
         const Divider(height: 24),
         Text(AppearanceTexts.title, style: context.display(19)),
         const SizedBox(height: 10),
@@ -228,11 +248,65 @@ class _SettingsSheet extends ConsumerWidget {
           SheetTexts.accountBody,
           style: context.note(15, color: p.softText),
         ),
+        const Divider(height: 24),
+        const _DevSection(),
         const SizedBox(height: 10),
         Text(
           'Enigmatrix v$kAppVersion',
           style: context.body(13, weight: FontWeight.w600, color: p.textDim),
         ),
+      ],
+    );
+  }
+}
+
+/// Banco de pruebas (desarrollo) y copia del feedback de la prueba de juego.
+class _DevSection extends ConsumerStatefulWidget {
+  const _DevSection();
+
+  @override
+  ConsumerState<_DevSection> createState() => _DevSectionState();
+}
+
+class _DevSectionState extends ConsumerState<_DevSection> {
+  bool _copied = false;
+
+  Future<void> _copy() async {
+    final report = await buildReportFor(ref);
+    await Clipboard.setData(ClipboardData(text: report));
+    if (mounted) setState(() => _copied = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.pal;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(SheetTexts.devTitle, style: context.display(19)),
+        const SizedBox(height: 4),
+        Text(SheetTexts.devBody, style: context.note(15, color: p.softText)),
+        const SizedBox(height: 12),
+        AppButton(
+          label: SheetTexts.devOpen,
+          quiet: true,
+          onTap: () {
+            final router = GoRouter.of(context);
+            Navigator.pop(context);
+            router.go('/banco');
+          },
+        ),
+        const SizedBox(height: 10),
+        AppButton(
+          label: FeedbackTexts.copy,
+          quiet: true,
+          icon: Icons.copy_all_rounded,
+          onTap: _copy,
+        ),
+        if (_copied) ...[
+          const SizedBox(height: 10),
+          const NoticeBox(FeedbackTexts.copied),
+        ],
       ],
     );
   }

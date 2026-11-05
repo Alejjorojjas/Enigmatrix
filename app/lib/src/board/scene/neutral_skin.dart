@@ -44,7 +44,7 @@ class NeutralSkin extends BoardSkin {
         accent: const Color(0xFF2F6FB5),
         onAccent: const Color(0xFFFFFFFF),
         danger: const Color(0xFFB3412F),
-        good: const Color(0xFF3E8A5A),
+        good: const Color(0xFF2F7449),
         toolActive: const Color(0xFF2F6FB5),
         onToolActive: const Color(0xFFFFFFFF),
         pill: const Color(0xFF2A2D34),

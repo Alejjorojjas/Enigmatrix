@@ -1,5 +1,7 @@
 # Enigmatrix - Revisión de seguridad Fase 1
 
+> ACTUALIZACIÓN 05-11-2026 (versión 0.5.0+5, H-07): las tipografías (Baloo 2, Quicksand y Patrick Hand, licencia OFL) ahora van **dentro de la app** y ya no se descargan de Google. El permiso **INTERNET** se quitó del manifiesto principal de Android porque solo lo usaba esa descarga; vuelve en la etapa 5 (Firebase). Donde este documento diga que la app declara INTERNET o descarga las fuentes con google_fonts, eso ya no aplica.
+
 > ACTUALIZACIÓN 04-11-2026 (auditoría 04-11-2026, hallazgos H-36, H-05 y H-07): esta revisión es del 12-07-2026 y se conserva. Dos de sus frases quedaron desfasadas respecto al código y se corrigen con notas debajo: (1) el permiso INTERNET ya no "llega con el template de debug", el manifiesto principal lo declara; (2) el build de publicación ya no usa la firma de debug por defecto, pero sigue pudiendo caer en ella si falta `key.properties`. Revisión actual de seguridad de la auditoría: `production/revisiones/2026-11-04-auditoria-proyecto.md`.
 
 Fecha: 2026-07-12. Alcance: app local (banco de pruebas), sin backend, sin

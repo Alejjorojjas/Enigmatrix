@@ -21,10 +21,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/game_ui.dart';
+import 'support/content_overrides.dart';
 
 PuzzleCase _loadTutorial() => PuzzleCase.fromJson(
   jsonDecode(
@@ -55,7 +55,6 @@ const _adela = 'c1', _bruno = 'c2', _clara = 'c3', _dario = 'c4', _elena = 'c5';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
   // Letra real (Roboto) para medir bien la interfaz.
   setUpAll(loadRoboto);
   final pc = _loadTutorial();
@@ -293,7 +292,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           gameTickerEnabledProvider.overrideWithValue(false),
-          casesProvider.overrideWith((_) async => bank ?? const []),
+          ...contentOverrides(bank ?? const []),
           tutorialCaseProvider.overrideWith((_) async => pc),
         ],
       );

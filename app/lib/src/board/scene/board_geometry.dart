@@ -4,6 +4,12 @@ library;
 import 'dart:math' as math;
 import 'dart:ui';
 
+/// Margen horizontal y vertical con que la escena ajusta el tablero al área de
+/// juego. La capa de semántica usa los mismos para caer justo sobre cada
+/// casilla.
+const double kSceneMargin = 12;
+const double kSceneMarginY = 2;
+
 class BoardGeometry {
   /// Lado de la cuadrícula (6 u 8).
   final int n;

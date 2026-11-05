@@ -1,5 +1,7 @@
 # Enigmatrix - Checklist de publicación en tiendas
 
+> ACTUALIZACIÓN 05-11-2026 (versión 0.5.0+5, H-07): las tipografías (Baloo 2, Quicksand y Patrick Hand, licencia OFL) ahora van **dentro de la app** y ya no se descargan de Google. El permiso **INTERNET** se quitó del manifiesto principal de Android porque solo lo usaba esa descarga; vuelve en la etapa 5 (Firebase). Donde este documento diga que la app declara INTERNET o descarga las fuentes con google_fonts, eso ya no aplica.
+
 > ACTUALIZACIÓN 04-11-2026 (auditoría 04-11-2026, hallazgos H-36, H-05, H-07, H-09, H-11 y H-35): este checklist se puso al día contra el código. **Hoy no se puede subir nada a las tiendas** y no se declara ninguna edad ni cuestionario mientras estén abiertos los temas de abajo. Lo anterior se conserva; las filas corregidas llevan una nota "04-11-2026".
 >
 > Condiciones que bloquean la prueba cerrada en Google Play y la revisión de Apple:

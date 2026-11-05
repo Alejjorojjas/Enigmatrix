@@ -6,6 +6,8 @@
 ///  - `cfg:modo`      "sistema", "claro" u "oscuro".
 ///  - `cfg:sonido`    bool, por omisión true.
 ///  - `cfg:vibracion` bool, por omisión true.
+///  - `cfg:movimiento-reducido` bool, "Reducir movimiento" (apagado; el
+///                    sistema también puede pedirlo desde el teléfono).
 ///  - `cfg:fps`       bool, medidor de FPS de depuración (apagado).
 library;
 
@@ -39,6 +41,7 @@ class AppSettings implements BoardSettings {
   static const modeKey = 'cfg:modo';
   static const soundKey = 'cfg:sonido';
   static const hapticsKey = 'cfg:vibracion';
+  static const reduceMotionKey = 'cfg:movimiento-reducido';
   static const fpsKey = 'cfg:fps';
 
   final String skinId;
@@ -108,6 +111,7 @@ class AppSettings implements BoardSettings {
       themeMode: modeFromText(str(modeKey)),
       soundOn: flag(soundKey, true),
       hapticsOn: flag(hapticsKey, true),
+      reduceMotion: flag(reduceMotionKey, false),
       fpsMeter: flag(fpsKey, false),
     );
   }
@@ -212,6 +216,14 @@ class SettingsNotifier extends Notifier<AppSettings> {
     if (on == state.hapticsOn) return;
     state = state.copyWith(hapticsOn: on);
     _save((p) => p.setBool(AppSettings.hapticsKey, on));
+  }
+
+  /// "Reducir movimiento": sin rebotes, sacudidas ni partículas. El director
+  /// de feedback lo aplica (junto con la opción del sistema).
+  void setReduceMotion(bool on) {
+    if (on == state.reduceMotion) return;
+    state = state.copyWith(reduceMotion: on);
+    _save((p) => p.setBool(AppSettings.reduceMotionKey, on));
   }
 
   void setFpsMeter(bool on) {

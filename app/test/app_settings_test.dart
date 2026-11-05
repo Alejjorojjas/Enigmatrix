@@ -3,7 +3,6 @@
 /// cfg:vibracion), se leen al arrancar y se cambian desde Configuración.
 library;
 
-import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/app_settings.dart';
 import 'package:enigmatrix/src/game/feedback_providers.dart';
 import 'package:enigmatrix/src/ui/skin_theme.dart' show resolveBrightness;
@@ -11,8 +10,8 @@ import 'package:enigmatrix/src/ui/home_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/content_overrides.dart';
 
 Future<ProviderContainer> _container([AppSettings? initial]) async {
   final c = ProviderContainer(
@@ -26,7 +25,6 @@ Future<ProviderContainer> _container([AppSettings? initial]) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   group('valores de arranque', () {
     test('piel Ilustrada, modo Sistema, sonido y vibración encendidos', () {
@@ -249,7 +247,7 @@ void main() {
       addTearDown(tester.view.reset);
       final c = ProviderContainer(
         overrides: [
-          casesProvider.overrideWith((_) async => const []),
+          ...contentOverrides(const []),
           initialSettingsProvider.overrideWithValue(
             const AppSettings(fpsMeter: false),
           ),

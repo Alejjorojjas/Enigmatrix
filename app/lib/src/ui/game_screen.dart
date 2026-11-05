@@ -31,6 +31,7 @@ import '../game/app_settings.dart';
 import '../game/board_interaction.dart';
 import '../game/feedback_providers.dart';
 import '../game/game_controller.dart';
+import 'board_semantics.dart';
 import 'fps_overlay.dart';
 import 'game_chrome.dart';
 import 'game_menu.dart';
@@ -39,7 +40,7 @@ import 'game_tray.dart';
 import 'layout_metrics.dart';
 import 'skin_theme.dart';
 import 'tutorial_coach.dart';
-import 'v1_scope.dart' show caseTitle;
+import 'v1_scope.dart' show caseTitle, exitRouteFor;
 import 'victory_screen.dart';
 
 /// Textos de la pantalla de partida (centralizados para traducir en 4.3).
@@ -119,9 +120,14 @@ class _GameView extends ConsumerWidget {
       mode,
       MediaQuery.platformBrightnessOf(context),
     );
-    return Theme(
-      data: SkinUi.theme(skinId, brightness),
-      child: _GameBody(pc: pc, tutorial: tutorial),
+    // La partida tiene alturas medidas: respeta el texto del sistema hasta
+    // 1,3 (las medidas crecen con él, ver ScreenMetrics) y no pasa de ahí.
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: kGameMaxTextScale,
+      child: Theme(
+        data: SkinUi.theme(skinId, brightness),
+        child: _GameBody(pc: pc, tutorial: tutorial),
+      ),
     );
   }
 }
@@ -392,7 +398,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
       return;
     }
     if (ref.read(gameControllerProvider(pc)).solved) {
-      context.go('/casos');
+      context.go(exitRouteFor(pc.caseId));
       return;
     }
     controller.holdClock();
@@ -418,8 +424,8 @@ class _GameBodyState extends ConsumerState<_GameBody> {
       return;
     }
     await controller.saveNow();
-    // '/casos' y no '/': la raíz pasa por la pantalla de carga.
-    if (mounted) context.go('/casos');
+    // Nunca '/': la raíz pasa por la pantalla de carga.
+    if (mounted) context.go(exitRouteFor(pc.caseId));
   }
 
   void _resolve() {
@@ -529,7 +535,10 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     required bool loading,
   }) {
     final coach = tutorial ? kTutorialCoachHeight + 6 : 0.0;
-    final m = ScreenMetrics.of(Size(box.maxWidth, box.maxHeight - coach));
+    final m = ScreenMetrics.of(
+      Size(box.maxWidth, box.maxHeight - coach),
+      textScaler: MediaQuery.textScalerOf(context),
+    );
     final lower = Column(
       children: [
         if (tutorial) ...[
@@ -548,6 +557,12 @@ class _GameBodyState extends ConsumerState<_GameBody> {
               live: _live,
               onSkip: _game.skipReveal,
               onTouch: _onBoardTouch,
+              // Lectores de pantalla: una descripción por casilla (H-56).
+              semanticsLayer: BoardSemanticsLayer(
+                pc: pc,
+                onTapCell: _interaction.tapCell,
+                onHoldCell: _interaction.holdCell,
+              ),
             ),
             radius: 6,
           ),
@@ -662,9 +677,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
 
   Widget _titleRow(ScreenMetrics m) {
     final p = context.pal;
-    final h = m.compact
-        ? ScreenMetrics.headerRow2Compact
-        : ScreenMetrics.headerRow2Normal;
+    final h = m.titleRowHeight;
     final size = pc.map.size;
     return SizedBox(
       height: h,
@@ -872,7 +885,11 @@ class _BoardStage extends StatelessWidget {
     required this.live,
     required this.onSkip,
     this.onTouch,
+    this.semanticsLayer,
   });
+
+  /// Capa invisible con la semántica de cada casilla.
+  final Widget? semanticsLayer;
 
   final BoardGame game;
   final ValueNotifier<String?> toast;
@@ -900,6 +917,7 @@ class _BoardStage extends StatelessWidget {
             onPointerCancel: (e) => game.pointerCancel(e.pointer),
             child: GameWidget(key: const ValueKey('tablero'), game: game),
           ),
+          if (semanticsLayer != null) Positioned.fill(child: semanticsLayer!),
           // Aviso corto ("Elige primero a un sospechoso").
           Positioned(
             left: 16,

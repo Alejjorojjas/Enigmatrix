@@ -5,7 +5,6 @@ library;
 
 import 'dart:convert';
 
-import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/saved_game.dart';
 import 'package:enigmatrix/src/ui/case_list_screen.dart';
@@ -15,8 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/content_overrides.dart';
 
 Future<List<PuzzleCase>> _loadRealCases() async {
   final raw = await rootBundle.loadString('assets/cases/index.json');
@@ -38,7 +37,7 @@ Future<void> _pumpShell(WidgetTester tester) async {
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [casesProvider.overrideWith((_) async => const [])],
+      overrides: [...contentOverrides(const [])],
       child: const MaterialApp(home: HomeShell()),
     ),
   );
@@ -54,7 +53,6 @@ Future<void> _openTab(WidgetTester tester, IconData icon) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   group('etiquetas DEMO', () {
     testWidgets('Inicio: el chip de vidas y la racha llevan DEMO', (
@@ -132,7 +130,7 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [casesProvider.overrideWith((_) async => cases)],
+          overrides: [...contentOverrides(cases)],
           child: const MaterialApp(home: CaseListScreen()),
         ),
       );

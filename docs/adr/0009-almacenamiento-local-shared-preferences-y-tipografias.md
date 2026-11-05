@@ -1,5 +1,7 @@
 # ADR-0009: Almacenamiento local con shared_preferences (en vez de Hive o Isar) y tipografías con google_fonts
 
+> ACTUALIZACIÓN 05-11-2026 (versión 0.5.0+5, H-07): las tipografías (Baloo 2, Quicksand y Patrick Hand, licencia OFL) ahora van **dentro de la app** y ya no se descargan de Google. El permiso **INTERNET** se quitó del manifiesto principal de Android porque solo lo usaba esa descarga; vuelve en la etapa 5 (Firebase). Donde este documento diga que la app declara INTERNET o descarga las fuentes con google_fonts, eso ya no aplica.
+
 - **Estado**: Propuesto (retroactivo). Escrito el 04-11-2026 para dejar por escrito dos decisiones ya tomadas en el código; falta que se acepten formalmente.
 - **Fecha**: 10-06-2026 (almacenamiento local, primer commit de la app) y 11-07-2026 (tipografías con `google_fonts`)
 - **Decisores**: el arquitecto (decisión técnica reversible, delegada); Alejandro no participó en la elección de estas librerías.

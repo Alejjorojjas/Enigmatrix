@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:enigmatrix_engine/enigmatrix_engine.dart' show kMundoMansion;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'src/data/case_repository.dart';
 import 'src/game/app_settings.dart';
 import 'src/game/feedback_providers.dart';
 import 'src/game/game_controller.dart';
+import 'src/ui/bank_screen.dart';
 import 'src/ui/case_list_screen.dart';
 import 'src/ui/game_screen.dart';
 import 'src/ui/home_shell.dart';
@@ -40,6 +42,8 @@ final _router = GoRouter(
     GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
     GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
     GoRoute(path: '/casos', builder: (_, __) => const CaseListScreen()),
+    // Banco de pruebas (desarrollo): se abre desde Configuración.
+    GoRoute(path: '/banco', builder: (_, __) => const BankScreen()),
     // Tutorial (regla 11): caso propio, aparte del banco de casos.
     GoRoute(
       path: '/tutorial',
@@ -86,8 +90,10 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
 
   @override
   Widget build(BuildContext context) {
-    // Precarga de casos al arrancar.
-    ref.watch(casesProvider);
+    // Precarga del Mundo 1 y del reto diario al arrancar. El banco de pruebas
+    // (desarrollo) se carga solo cuando se abre desde Configuración.
+    ref.watch(campaignProvider(kMundoMansion));
+    ref.watch(dailyChallengesProvider);
     // Un solo tema para toda la app: la piel y el modo que el jugador elige
     // en Configuración (Sistema sigue al teléfono).
     final skinId = ref.watch(settingsProvider.select((s) => s.skinId));

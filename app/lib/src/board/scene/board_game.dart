@@ -114,8 +114,13 @@ class BoardGame extends FlameGame implements VisualSink {
   void _relayout() {
     final s = viewSize;
     if (s.isEmpty) return;
-    // 12 px a los lados: el tablero ocupa el ancho disponible.
-    geometry = BoardGeometry.fit(session.size, s, margin: 12, marginY: 2);
+    // 12 px a los lados (kSceneMargin): el tablero ocupa el ancho disponible.
+    geometry = BoardGeometry.fit(
+      session.size,
+      s,
+      margin: kSceneMargin,
+      marginY: kSceneMarginY,
+    );
     background.rebuild(s, pixelRatio);
     overlay.rebuild(s);
   }

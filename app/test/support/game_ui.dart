@@ -107,6 +107,10 @@ Future<GameRig> pumpGameScreen(
         builder: (_, _) => const Scaffold(body: Text('LISTA DE CASOS')),
       ),
       GoRoute(
+        path: '/banco',
+        builder: (_, _) => const Scaffold(body: Text('LISTA DE CASOS')),
+      ),
+      GoRoute(
         path: '/tutorial',
         builder: (_, _) =>
             const GameScreen(caseId: kTutorialCaseId, tutorial: true),
@@ -197,4 +201,21 @@ Future<bool> loadRoboto() async {
   }
   await loader.load();
   return true;
+}
+
+/// Carga las tipografías empaquetadas de la interfaz (Baloo 2, Quicksand y
+/// Patrick Hand) desde assets/fonts. `flutter test` no las registra solo (sin
+/// esto todo el texto sale como cuadrados de la letra de prueba) y así las
+/// pruebas miden los mismos anchos que verá el jugador.
+Future<void> loadAppFonts() async {
+  const files = {
+    'Baloo2': 'assets/fonts/baloo2/Baloo2-Variable.ttf',
+    'Quicksand': 'assets/fonts/quicksand/Quicksand-Variable.ttf',
+    'PatrickHand': 'assets/fonts/patrickhand/PatrickHand-Regular.ttf',
+  };
+  for (final e in files.entries) {
+    final loader = FontLoader(e.key)
+      ..addFont(Future.value(File(e.value).readAsBytesSync().buffer.asByteData()));
+    await loader.load();
+  }
 }

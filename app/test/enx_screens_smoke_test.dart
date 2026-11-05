@@ -5,15 +5,14 @@ library;
 import 'dart:convert';
 
 import 'package:enigmatrix/main.dart';
-import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/ui/case_list_screen.dart';
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/content_overrides.dart';
 
 Future<List<PuzzleCase>> _loadRealCases() async {
   final raw = await rootBundle.loadString('assets/cases/index.json');
@@ -30,8 +29,6 @@ Future<List<PuzzleCase>> _loadRealCases() async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  // Sin red en tests: google_fonts usa la fuente de fallback.
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   testWidgets('el camino de casos construye y pinta', (tester) async {
     SharedPreferences.setMockInitialValues({'tutorial:v2:done': true});
@@ -39,7 +36,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [casesProvider.overrideWith((_) async => cases!)],
+        overrides: [...contentOverrides(cases!)],
         child: const MaterialApp(home: CaseListScreen()),
       ),
     );
@@ -61,7 +58,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [casesProvider.overrideWith((_) async => cases!)],
+        overrides: [...contentOverrides(cases!)],
         child: const MaterialApp(home: CaseListScreen()),
       ),
     );
@@ -96,7 +93,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [casesProvider.overrideWith((_) async => cases)],
+        overrides: [...contentOverrides(cases)],
         child: const MaterialApp(home: CaseListScreen()),
       ),
     );
@@ -117,7 +114,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [casesProvider.overrideWith((_) async => cases!)],
+        overrides: [...contentOverrides(cases!)],
         child: const EnigmatrixApp(),
       ),
     );
@@ -138,7 +135,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [casesProvider.overrideWith((_) async => cases!)],
+        overrides: [...contentOverrides(cases!)],
         child: const EnigmatrixApp(),
       ),
     );
