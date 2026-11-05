@@ -19,6 +19,13 @@
 
   Pruebas: tools 65 y app 98, todas pasan; analyze sin errores. Falta la guía de la prueba de juego.
 - **Etapa 2, prototipo gráfico (`prototipos/tablero-flame/`):** la parte técnica está hecha (Flame, director de feedback, sonidos propios generados por código, medidor de FPS, 85 tests). Se están construyendo dos pieles, "Ilustrada" (cualidades de la referencia de Alejandro del 05-11-2026, ver [docs/referencias-visuales/](../../docs/referencias-visuales/README.md)) y "Papel", con modo claro y oscuro que sigue al teléfono. Falta medir en el Android de gama media de Alejandro.
+- **05-11-2026, prototipo corregido y aprobado en dirección.** Alejandro dijo "sí me gustó" y confirmó las herramientas:
+  - Anotar = candidato.
+  - Tachar = X a mano.
+  - Confirmar = un toque fija al sospechoso, además de mantener oprimido o arrastrar. Así se cumple el gesto alternativo de la regla 20 del ADR-0012.
+  - Borrar = borrador.
+
+  Tablero a todo el ancho (336 px a 360 de ancho). Commit `3ee6487`. Siguen pendientes: qué piel prefiere, la medición de FPS en su teléfono y cómo se hace el arte final.
 - **Compilación:** el JAVA_HOME por defecto del PC es Java 11, y para compilar Android hay que usar `JAVA_HOME=C:/Program Files/Java/jdk-17`.
 - **Protección:** Alejandro creó el repositorio privado `https://github.com/Alejjorojjas/Enigmatrix` y autorizó los commits el 04-11-2026. Los commits llevan solo su autoría, sin coautoría de Claude. Siguen sin autorizar: sacar el proyecto de OneDrive, versionar `app/pubspec.lock` y cambiar la firma.
 - **Documentos:** puestos al día el 04-11-2026 y revisados por el arquitecto y por dos verificadores independientes. El índice con el estado de cada documento está en [docs/README.md](../../docs/README.md) y hay registros de decisión nuevos (ADR 0003 a 0012).
