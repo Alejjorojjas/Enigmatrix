@@ -7,7 +7,6 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:enigmatrix/src/board/board_strings.dart';
 import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/game_controller.dart';
@@ -20,6 +19,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/game_ui.dart';
+import 'support/l10n.dart';
 
 PuzzleCase _loadCase() {
   final j =
@@ -638,8 +638,8 @@ void main() {
     ) async {
       await pumpGame(tester);
       await tapCell(tester, firstFreeCell(pc));
-      expect(find.text(BoardStrings.pickSuspectFirst), findsOneWidget);
-      expect(BoardStrings.pickSuspectFirst, 'Elige primero a un sospechoso');
+      expect(find.text(l10nEs.boardPickSuspectFirst), findsOneWidget);
+      expect(l10nEs.boardPickSuspectFirst, 'Elige primero a un sospechoso');
       await tester.pump(const Duration(seconds: 3));
     });
 
@@ -718,9 +718,9 @@ void main() {
     });
 
     test('mensaje de casillas que no cuadran, con plural correcto', () {
-      expect(BoardStrings.wrongCells(1), '1 casilla no cuadra');
-      expect(BoardStrings.wrongCells(2), '2 casillas no cuadran');
-      expect(BoardStrings.wrongCells(5), '5 casillas no cuadran');
+      expect(l10nEs.boardWrongCells(1), '1 casilla no cuadra');
+      expect(l10nEs.boardWrongCells(2), '2 casillas no cuadran');
+      expect(l10nEs.boardWrongCells(5), '5 casillas no cuadran');
     });
 
     testWidgets('Resolver con casillas mal cuenta cuántas, no cuáles', (

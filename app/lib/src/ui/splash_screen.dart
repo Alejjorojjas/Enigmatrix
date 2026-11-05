@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/l10n.dart';
 import '../data/case_repository.dart';
 import '../game/game_config.dart';
 import 'logo.dart';
@@ -63,9 +64,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 child: const PaperLogo(size: 168),
               ),
               const SizedBox(height: 26),
-              Text('Enigmatrix', style: context.display(42, spacing: 1)),
               Text(
-                'Un misterio de papel',
+                context.l10n.appTitle,
+                style: context.display(42, spacing: 1),
+              ),
+              Text(
+                context.l10n.splashTagline,
                 style: context.note(20, color: p.softText),
               ),
               const SizedBox(height: 34),
@@ -77,7 +81,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   builder: (_, v, __) => AppProgressBar(
                     value: v,
                     height: 12,
-                    semanticsLabel: 'Cargando',
+                    semanticsLabel: context.l10n.splashLoading,
                   ),
                 ),
               ),

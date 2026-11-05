@@ -9,44 +9,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
 import '../app_version.dart';
 import '../game/app_settings.dart';
 import '../game/dev_tools.dart';
 import 'appearance_picker.dart';
 import 'case_list_screen.dart' show prefsProvider;
+import 'dev_texts.dart';
 import 'feedback_report.dart';
 import 'skin_theme.dart';
 import 'tutorial_dialog.dart';
 import 'ui_kit.dart';
-
-/// Textos de las hojas (centralizados para traducir en la ronda 4.3).
-abstract final class SheetTexts {
-  static const shop = 'Tienda';
-  static const premium = 'Premium';
-  static const premiumBody =
-      'Sin anuncios · vidas ilimitadas · sin ventajas de ranking';
-  static const settings = 'Configuración';
-  static const sound = 'Sonido';
-  static const music = 'Música';
-  static const haptics = 'Vibración';
-  static const reduceMotion = 'Reducir movimiento';
-  static const reduceMotionHint =
-      'Menos rebotes, sacudidas y partículas en el tablero.';
-  static const devTitle = 'Banco de pruebas (desarrollo)';
-  static const devBody =
-      'Los 20 casos de prueba, para revisar el motor. No son parte del juego.';
-  static const devOpen = 'Abrir banco de pruebas';
-  static const notifications = 'Notificaciones';
-  static const language = 'Idioma';
-  static const spanish = 'Español';
-  static const account = 'Cuenta y compras';
-  static const accountBody =
-      'Restaurar compras, cerrar sesión y eliminar cuenta se activan con el '
-      'modo online.';
-  static const nickTitle = 'Tu nombre de detective';
-  static const cancel = 'Cancelar';
-  static const save = 'Guardar';
-}
 
 void openHowToPlay(BuildContext context) => showTutorialDialog(context);
 
@@ -68,10 +41,11 @@ class _ShopSheetState extends State<_ShopSheet> {
   @override
   Widget build(BuildContext context) {
     final p = context.pal;
-    const items = [
-      (Icons.favorite_rounded, '10 vidas', r'$0.99'),
-      (Icons.shield_rounded, '3 protectores de racha', r'$0.99'),
-      (Icons.shield_rounded, '10 protectores de racha', r'$2.99'),
+    // Precios simulados (DEMO): se reemplazan por los de la tienda real.
+    final items = [
+      (Icons.favorite_rounded, context.l10n.shopLives(10), r'$0.99'),
+      (Icons.shield_rounded, context.l10n.shopProtectors(3), r'$0.99'),
+      (Icons.shield_rounded, context.l10n.shopProtectors(10), r'$2.99'),
     ];
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -79,7 +53,7 @@ class _ShopSheetState extends State<_ShopSheet> {
       children: [
         Row(
           children: [
-            Text(SheetTexts.shop, style: context.display(24)),
+            Text(context.l10n.sheetShop, style: context.display(24)),
             const SizedBox(width: 10),
             const DemoBadge(),
           ],
@@ -106,7 +80,7 @@ class _ShopSheetState extends State<_ShopSheet> {
               ],
             ),
           ),
-        if (_notice) const NoticeBox(UiTexts.demoNotice),
+        if (_notice) NoticeBox(context.l10n.uiDemoNotice),
       ],
     );
   }
@@ -136,30 +110,30 @@ class _PremiumSheetState extends State<_PremiumSheet> {
       children: [
         Row(
           children: [
-            Text(SheetTexts.premium, style: context.display(24)),
+            Text(context.l10n.sheetPremium, style: context.display(24)),
             const SizedBox(width: 10),
             const DemoBadge(),
           ],
         ),
         const SizedBox(height: 4),
         Text(
-          SheetTexts.premiumBody,
+          context.l10n.sheetPremiumBody,
           style: context.note(16, color: p.softText),
         ),
         const SizedBox(height: 16),
         AppButton(
-          label: r'Mensual · $4.99',
+          label: context.l10n.premiumMonthly(r'$4.99'),
           onTap: () => setState(() => _notice = true),
         ),
         const SizedBox(height: 10),
         AppButton(
-          label: r'Anual · $29.99 (ahorra 50%)',
+          label: context.l10n.premiumYearly(r'$29.99'),
           color: p.danger,
           onTap: () => setState(() => _notice = true),
         ),
         if (_notice) ...[
           const SizedBox(height: 12),
-          const NoticeBox(UiTexts.demoNotice),
+          NoticeBox(context.l10n.uiDemoNotice),
         ],
       ],
     );
@@ -183,46 +157,46 @@ class _SettingsSheet extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(SheetTexts.settings, style: context.display(24)),
+        Text(context.l10n.sheetSettings, style: context.display(24)),
         const SizedBox(height: 6),
         // Sonido y Vibración ya funcionan; Música y Notificaciones siguen
         // "Próximamente" hasta sus etapas.
         SwitchRow(
           icon: Icons.volume_up_rounded,
-          label: SheetTexts.sound,
+          label: context.l10n.sheetSound,
           value: settings.soundOn,
           onChanged: notifier.setSound,
         ),
-        const SwitchRow(
+        SwitchRow(
           icon: Icons.music_note_rounded,
-          label: SheetTexts.music,
+          label: context.l10n.sheetMusic,
           value: false,
           onChanged: null,
         ),
         SwitchRow(
           icon: Icons.vibration_rounded,
-          label: SheetTexts.haptics,
+          label: context.l10n.sheetHaptics,
           value: settings.hapticsOn,
           onChanged: notifier.setHaptics,
         ),
-        const SwitchRow(
+        SwitchRow(
           icon: Icons.notifications_rounded,
-          label: SheetTexts.notifications,
+          label: context.l10n.sheetNotifications,
           value: false,
           onChanged: null,
         ),
         SwitchRow(
           icon: Icons.slow_motion_video_rounded,
-          label: SheetTexts.reduceMotion,
+          label: context.l10n.sheetReduceMotion,
           value: settings.reduceMotion,
           onChanged: notifier.setReduceMotion,
         ),
         Text(
-          SheetTexts.reduceMotionHint,
+          context.l10n.sheetReduceMotionHint,
           style: context.note(14, color: p.softText),
         ),
         const Divider(height: 24),
-        Text(AppearanceTexts.title, style: context.display(19)),
+        Text(context.l10n.appearanceTitle, style: context.display(19)),
         const SizedBox(height: 10),
         AppearancePicker(labelStyle: context.body(14, color: p.softText)),
         const Divider(height: 24),
@@ -230,9 +204,11 @@ class _SettingsSheet extends ConsumerWidget {
           children: [
             Icon(Icons.language_rounded, size: 24, color: p.text),
             const SizedBox(width: 12),
-            Expanded(child: Text(SheetTexts.language, style: context.body(16))),
+            Expanded(
+              child: Text(context.l10n.sheetLanguage, style: context.body(16)),
+            ),
             Text(
-              SheetTexts.spanish,
+              context.l10n.sheetSpanish,
               style: context.body(15, color: p.softText),
             ),
           ],
@@ -240,13 +216,15 @@ class _SettingsSheet extends ConsumerWidget {
         const SizedBox(height: 14),
         Row(
           children: [
-            Flexible(child: Text(SheetTexts.account, style: context.body(16))),
+            Flexible(
+              child: Text(context.l10n.sheetAccount, style: context.body(16)),
+            ),
             const SizedBox(width: 8),
             const DemoBadge(),
           ],
         ),
         Text(
-          SheetTexts.accountBody,
+          context.l10n.sheetAccountBody,
           style: context.note(15, color: p.softText),
         ),
         // Banco de pruebas y feedback de playtest: solo con ENX_DEV (H-66).
@@ -256,7 +234,7 @@ class _SettingsSheet extends ConsumerWidget {
         ],
         const SizedBox(height: 10),
         Text(
-          'Enigmatrix v$kAppVersion',
+          context.l10n.settingsVersion(kAppVersion),
           style: context.body(13, weight: FontWeight.w600, color: p.textDim),
         ),
       ],
@@ -287,12 +265,15 @@ class _DevSectionState extends ConsumerState<_DevSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(SheetTexts.devTitle, style: context.display(19)),
+        Text(DevTexts.bankEntryTitle, style: context.display(19)),
         const SizedBox(height: 4),
-        Text(SheetTexts.devBody, style: context.note(15, color: p.softText)),
+        Text(
+          DevTexts.bankEntryBody,
+          style: context.note(15, color: p.softText),
+        ),
         const SizedBox(height: 12),
         AppButton(
-          label: SheetTexts.devOpen,
+          label: DevTexts.bankEntryOpen,
           quiet: true,
           onTap: () {
             final router = GoRouter.of(context);
@@ -302,14 +283,14 @@ class _DevSectionState extends ConsumerState<_DevSection> {
         ),
         const SizedBox(height: 10),
         AppButton(
-          label: FeedbackTexts.copy,
+          label: DevTexts.feedbackCopy,
           quiet: true,
           icon: Icons.copy_all_rounded,
           onTap: _copy,
         ),
         if (_copied) ...[
           const SizedBox(height: 10),
-          const NoticeBox(FeedbackTexts.copied),
+          const NoticeBox(DevTexts.feedbackCopied),
         ],
       ],
     );
@@ -329,12 +310,12 @@ void editNickname(
   showDialog<void>(
     context: context,
     builder: (ctx) => AlertDialog(
-      title: Text(SheetTexts.nickTitle, style: ctx.display(20)),
+      title: Text(ctx.l10n.sheetNickTitle, style: ctx.display(20)),
       content: TextField(controller: ctl, maxLength: 16, style: ctx.body(16)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx),
-          child: const Text(SheetTexts.cancel),
+          child: Text(ctx.l10n.sheetCancel),
         ),
         FilledButton(
           onPressed: () async {
@@ -344,7 +325,7 @@ void editNickname(
             }
             if (ctx.mounted) Navigator.pop(ctx);
           },
-          child: const Text(SheetTexts.save),
+          child: Text(ctx.l10n.sheetSave),
         ),
       ],
     ),

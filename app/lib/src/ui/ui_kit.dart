@@ -7,20 +7,10 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../board/scene/palette.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
-
-/// Textos que se repiten en varias pantallas (centralizados para traducir en
-/// la ronda 4.3).
-abstract final class UiTexts {
-  static const demo = 'DEMO';
-  static const comingSoon = 'Próximamente';
-  static const back = 'Volver';
-  static const close = 'Cerrar';
-  static const demoNotice =
-      'Función simulada: se activa con el modo online (Fase 2)';
-}
 
 /// Fondo de pantalla: el color de la piel, una luz suave arriba y, en Papel,
 /// la fibra del cartón.
@@ -232,7 +222,7 @@ class DemoBadge extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
         child: Text(
-          UiTexts.demo,
+          context.l10n.uiDemo,
           style: context.body(
             13,
             weight: FontWeight.w800,
@@ -260,7 +250,7 @@ class SoonBadge extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         child: Text(
-          UiTexts.comingSoon,
+          context.l10n.uiComingSoon,
           style: context.body(13, color: p.textDim),
         ),
       ),

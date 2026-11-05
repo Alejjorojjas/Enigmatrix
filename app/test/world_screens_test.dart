@@ -27,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/content_overrides.dart';
 import 'support/game_ui.dart' show loadBankCase;
+import 'support/l10n.dart';
 
 late List<PuzzleCase> _world;
 late List<DailyChallenge> _retos;
@@ -68,6 +69,9 @@ Future<GoRouter> _pumpApp(
         initialSettingsProvider.overrideWithValue(AppSettings(skinId: skin)),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: kL10nDelegates,
+        supportedLocales: kL10nLocales,
+        locale: kL10nLocale,
         routerConfig: router,
         theme: SkinUi.theme(skin, Brightness.light),
         darkTheme: SkinUi.theme(skin, Brightness.dark),
@@ -345,6 +349,9 @@ void main() {
         ProviderScope(
           overrides: contentOverrides(_world),
           child: MaterialApp(
+            localizationsDelegates: kL10nDelegates,
+            supportedLocales: kL10nLocales,
+            locale: kL10nLocale,
             theme: SkinUi.theme('ilustrada', Brightness.light),
             home: const HomeShell(),
           ),

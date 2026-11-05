@@ -23,6 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/content_overrides.dart';
 import 'support/game_ui.dart' show loadBankCase;
+import 'support/l10n.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -176,7 +177,7 @@ void main() {
 
   group('alcance de la V1 con la configuración', () {
     test('worldsFor respeta orden y disponibilidad de la configuración', () {
-      final defaults = worldsFor(const GameConfig());
+      final defaults = worldsFor(const GameConfig(), l10nEs);
       expect(defaults.map((w) => w.name), [
         'La Mansión',
         'El Hotel',
@@ -193,6 +194,7 @@ void main() {
             WorldConfig('inventado', available: false),
           ],
         ),
+        l10nEs,
       );
       expect(custom.map((w) => w.id), ['hotel', 'inventado']);
       expect(custom.first.name, 'El Hotel');
@@ -353,6 +355,9 @@ void main() {
             devToolsProvider.overrideWithValue(dev),
           ],
           child: MaterialApp.router(
+            localizationsDelegates: kL10nDelegates,
+            supportedLocales: kL10nLocales,
+            locale: kL10nLocale,
             routerConfig: router,
             theme: SkinUi.theme('ilustrada', Brightness.light),
           ),
@@ -399,6 +404,9 @@ void main() {
                 devToolsProvider.overrideWithValue(dev),
               ],
               child: MaterialApp(
+                localizationsDelegates: kL10nDelegates,
+                supportedLocales: kL10nLocales,
+                locale: kL10nLocale,
                 theme: SkinUi.theme('ilustrada', Brightness.light),
                 home: Consumer(
                   builder: (ctx, ref, _) => Scaffold(

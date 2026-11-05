@@ -47,7 +47,6 @@ class TokenStyle {
 
 abstract class BoardSkin {
   String get id;
-  String get displayName;
 
   /// Modo (claro u oscuro) con el que se construyó esta piel.
   Brightness get mode;

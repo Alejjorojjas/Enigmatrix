@@ -4,7 +4,6 @@
 /// el cierre con la secuencia de revelar. Con la letra real (Roboto).
 library;
 
-import 'package:enigmatrix/src/board/board_strings.dart';
 import 'package:enigmatrix/src/board/feedback/feedback_plan.dart';
 import 'package:enigmatrix/src/board/scene/board_game.dart';
 import 'package:enigmatrix/src/board/scene/skins.dart';
@@ -13,7 +12,6 @@ import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/feedback_providers.dart';
 import 'package:enigmatrix/src/game/game_controller.dart';
 import 'package:enigmatrix/src/game/saved_game.dart';
-import 'package:enigmatrix/src/ui/game_screen.dart' show ScreenTexts;
 import 'package:enigmatrix/src/ui/game_toolbar.dart';
 import 'package:enigmatrix/src/ui/game_tray.dart';
 import 'package:enigmatrix/src/ui/layout_metrics.dart';
@@ -25,6 +23,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/game_ui.dart';
+import 'support/l10n.dart';
 
 /// Tamaños de letra de todo texto visible que bajan de [minSize] px.
 List<String> _smallTexts(WidgetTester tester, {double minSize = 13}) {
@@ -294,7 +293,7 @@ void main() {
       ].first;
       await pickSuspect(tester, firstChar);
       await tapCell(tester, blocked);
-      expect(find.text(BoardStrings.blockedCell), findsOneWidget);
+      expect(find.text(l10nEs.boardBlockedCell), findsOneWidget);
       expect(
         rig.container.read(gameControllerProvider(small)).board.isEmpty,
         isTrue,
@@ -763,7 +762,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('boton-resolver')));
       await settle(tester, 2);
       expect(
-        find.text(BoardStrings.missingSuspects(small.characters.length - 1)),
+        find.text(l10nEs.boardMissingSuspects(small.characters.length - 1)),
         findsOneWidget,
       );
       await tester.pump(const Duration(seconds: 3));
@@ -784,7 +783,7 @@ void main() {
       await settle(tester, 2);
       await tester.tap(find.byKey(const ValueKey('boton-resolver')));
       await settle(tester, 3);
-      expect(find.bySemanticsLabel(BoardStrings.wrongCells(2)), findsWidgets);
+      expect(find.bySemanticsLabel(l10nEs.boardWrongCells(2)), findsWidgets);
       expect(
         rig.container.read(gameControllerProvider(small)).errorCells,
         isEmpty,
@@ -807,19 +806,19 @@ void main() {
       await settle(tester, 2);
       // Sin error todavía: tocar el tablero no avisa de bloqueo.
       await tapCell(tester, firstFreeCell(small));
-      expect(find.text(ScreenTexts.lockedWait), findsNothing);
+      expect(find.text(l10nEs.gameScreenLockedWait), findsNothing);
 
       await tester.tap(find.byKey(const ValueKey('boton-resolver')));
       await settle(tester, 3);
       expect(rig.container.read(gameControllerProvider(small)).locked, isTrue);
       await tapCell(tester, firstFreeCell(small));
-      expect(find.text(ScreenTexts.lockedWait), findsOneWidget);
+      expect(find.text(l10nEs.gameScreenLockedWait), findsOneWidget);
 
       // Pasan los 3 s y el aviso se apaga.
       await tester.pump(const Duration(seconds: 4));
       await settle(tester, 4);
       expect(rig.container.read(gameControllerProvider(small)).locked, isFalse);
-      expect(find.text(ScreenTexts.lockedWait), findsNothing);
+      expect(find.text(l10nEs.gameScreenLockedWait), findsNothing);
     });
 
     testWidgets('el encabezado muestra el título de la historia si existe y '

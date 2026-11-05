@@ -1,0 +1,1703 @@
+{
+  "@@locale": "es",
+  "uiDemo": "DEMO",
+  "@uiDemo": {
+    "description": "Etiqueta que marca como simulado (DEMO) lo que aún no tiene servidor."
+  },
+  "uiComingSoon": "Próximamente",
+  "@uiComingSoon": {
+    "description": "Etiqueta de lo que todavía no se puede abrir."
+  },
+  "uiBack": "Volver",
+  "@uiBack": {
+    "description": "Botón y etiqueta de accesibilidad para volver atrás."
+  },
+  "uiDemoNotice": "Función simulada: se activa con el modo online (Fase 2)",
+  "@uiDemoNotice": {
+    "description": "Aviso de las funciones simuladas de la tienda y las compras."
+  },
+  "navHome": "Inicio",
+  "@navHome": {
+    "description": "Pestaña Inicio de la barra inferior."
+  },
+  "navWorlds": "Mundos",
+  "@navWorlds": {
+    "description": "Pestaña Mundos de la barra inferior."
+  },
+  "navChallenge": "Reto",
+  "@navChallenge": {
+    "description": "Pestaña Reto de la barra inferior."
+  },
+  "navRanking": "Ranking",
+  "@navRanking": {
+    "description": "Pestaña Ranking de la barra inferior."
+  },
+  "navProfile": "Perfil",
+  "@navProfile": {
+    "description": "Pestaña Perfil de la barra inferior."
+  },
+  "homeChallengeLabel": "RETO DIARIO",
+  "@homeChallengeLabel": {
+    "description": "Rótulo de la tarjeta del reto diario en Inicio."
+  },
+  "homeChallengeTitle": "El caso de hoy te espera",
+  "@homeChallengeTitle": {
+    "description": "Título de la tarjeta del reto diario en Inicio."
+  },
+  "homePlayChallenge": "Jugar el reto",
+  "@homePlayChallenge": {
+    "description": "Botón para jugar el reto diario desde Inicio."
+  },
+  "homeWorldLabel": "MUNDO 1 · LA MANSIÓN",
+  "@homeWorldLabel": {
+    "description": "Rótulo de la tarjeta del Mundo 1 en Inicio."
+  },
+  "homeKeepInvestigating": "Continuar investigando",
+  "@homeKeepInvestigating": {
+    "description": "Botón que lleva a la lista de casos del Mundo 1."
+  },
+  "homeShop": "TIENDA",
+  "@homeShop": {
+    "description": "Rótulo de la tarjeta de la tienda en Inicio."
+  },
+  "homeShopSub": "Vidas y protectores de racha",
+  "@homeShopSub": {
+    "description": "Subtítulo de la tarjeta de la tienda."
+  },
+  "homeSee": "Ver",
+  "@homeSee": {
+    "description": "Botón que abre la tienda."
+  },
+  "homeWorlds": "Mundos",
+  "@homeWorlds": {
+    "description": "Título de la pestaña Mundos."
+  },
+  "homeChallengeTab": "Reto diario",
+  "@homeChallengeTab": {
+    "description": "Título de la pestaña Reto diario."
+  },
+  "homeTodayCase": "EL CASO DE HOY",
+  "@homeTodayCase": {
+    "description": "Rótulo del bloque del caso de hoy en la pestaña Reto."
+  },
+  "homeChallengeNote": "Simulación: aún sin servidor, no hay intento oficial ni cierre a medianoche",
+  "@homeChallengeNote": {
+    "description": "Aclaración de que el reto diario aún no es oficial."
+  },
+  "homeStateNew": "Estado: no iniciado",
+  "@homeStateNew": {
+    "description": "Estado del reto de hoy: sin iniciar."
+  },
+  "homeStateOpen": "Estado: en curso",
+  "@homeStateOpen": {
+    "description": "Estado del reto de hoy: en curso."
+  },
+  "homeStateDone": "Estado: resuelto",
+  "@homeStateDone": {
+    "description": "Estado del reto de hoy: resuelto."
+  },
+  "homeNoChallenge": "El caso de hoy no está disponible.",
+  "@homeNoChallenge": {
+    "description": "Aviso cuando el reto de hoy no está disponible."
+  },
+  "homePlayToday": "Jugar el caso de hoy",
+  "@homePlayToday": {
+    "description": "Botón para jugar el caso de hoy en la pestaña Reto."
+  },
+  "homeWeekPoints": "PUNTOS DE LA SEMANA",
+  "@homeWeekPoints": {
+    "description": "Rótulo de los puntos de la semana."
+  },
+  "homeRanking": "Ranking",
+  "@homeRanking": {
+    "description": "Título de la pestaña Ranking."
+  },
+  "homeRankingSub": "Semanal · se conecta en el modo online",
+  "@homeRankingSub": {
+    "description": "Subtítulo de la pestaña Ranking."
+  },
+  "homeYou": "Tú (detective)",
+  "@homeYou": {
+    "description": "Nombre de la fila del propio jugador en el ranking."
+  },
+  "caseListTitle": "Casos",
+  "@caseListTitle": {
+    "description": "Título de la lista de casos del Mundo 1."
+  },
+  "caseListNextCase": "SIGUIENTE CASO",
+  "@caseListNextCase": {
+    "description": "Rótulo de la tarjeta del siguiente caso por jugar."
+  },
+  "caseListTutorial": "TUTORIAL",
+  "@caseListTutorial": {
+    "description": "Rótulo de la tarjeta del tutorial."
+  },
+  "caseListTutorialBody": "Caso de práctica paso a paso (no cuenta como Caso 1)",
+  "@caseListTutorialBody": {
+    "description": "Descripción de la tarjeta del tutorial."
+  },
+  "caseListTutorialDone": "Completado: puedes repetirlo",
+  "@caseListTutorialDone": {
+    "description": "Descripción del tutorial ya completado."
+  },
+  "caseListStart": "Empezar",
+  "@caseListStart": {
+    "description": "Botón para empezar un caso."
+  },
+  "caseListRepeat": "Repetir",
+  "@caseListRepeat": {
+    "description": "Botón para repetir el tutorial."
+  },
+  "caseListSoonBody": "Llega en una próxima actualización.",
+  "@caseListSoonBody": {
+    "description": "Aviso de las dificultades que llegan en una actualización."
+  },
+  "caseListHowToPlay": "Cómo jugar",
+  "@caseListHowToPlay": {
+    "description": "Botón que abre las instrucciones de juego."
+  },
+  "caseListReopen": "Reabrir caso",
+  "@caseListReopen": {
+    "description": "Botón para reabrir un caso ya cerrado."
+  },
+  "caseListKeepPlaying": "Continuar",
+  "@caseListKeepPlaying": {
+    "description": "Botón para continuar un caso en curso."
+  },
+  "caseListInvestigate": "Investigar",
+  "@caseListInvestigate": {
+    "description": "Botón para investigar el siguiente caso."
+  },
+  "gameMenuTitle": "Más acciones",
+  "@gameMenuTitle": {
+    "description": "Título de la hoja de más acciones de la partida."
+  },
+  "gameMenuRedo": "Rehacer",
+  "@gameMenuRedo": {
+    "description": "Acción de rehacer el último movimiento deshecho."
+  },
+  "gameMenuClear": "Limpiar tablero",
+  "@gameMenuClear": {
+    "description": "Acción de limpiar el tablero."
+  },
+  "gameMenuClearTitle": "¿Limpiar tablero?",
+  "@gameMenuClearTitle": {
+    "description": "Título del diálogo de confirmación de limpiar el tablero."
+  },
+  "gameMenuClearBody": "Se borran las marcas del tablero y de las pistas. El tiempo y los errores se mantienen.",
+  "@gameMenuClearBody": {
+    "description": "Explicación del diálogo de limpiar el tablero."
+  },
+  "gameMenuCancel": "Cancelar",
+  "@gameMenuCancel": {
+    "description": "Botón de cancelar en el diálogo de limpiar."
+  },
+  "gameMenuClearConfirm": "Limpiar",
+  "@gameMenuClearConfirm": {
+    "description": "Botón que confirma limpiar el tablero."
+  },
+  "gameMenuView": "Vista del tablero",
+  "@gameMenuView": {
+    "description": "Rótulo del selector de vista del tablero."
+  },
+  "gameMenuViewMap": "Mapa",
+  "@gameMenuViewMap": {
+    "description": "Vista del tablero: mapa."
+  },
+  "gameMenuViewNotes": "Notas",
+  "@gameMenuViewNotes": {
+    "description": "Vista del tablero: notas."
+  },
+  "gameMenuAutoX": "Auto-X",
+  "@gameMenuAutoX": {
+    "description": "Nombre del interruptor que tacha solo fila y columna."
+  },
+  "gameMenuAutoXHelp": "Al confirmar a alguien, tacha su fila y columna automáticamente",
+  "@gameMenuAutoXHelp": {
+    "description": "Explicación del interruptor Auto-X."
+  },
+  "gameMenuLegend": "Leyenda y reglas",
+  "@gameMenuLegend": {
+    "description": "Opción que abre la leyenda y las reglas."
+  },
+  "gameMenuClueMark": "Marca de la pista",
+  "@gameMenuClueMark": {
+    "description": "Rótulo del selector de marca de la pista."
+  },
+  "gameMenuMarkNormal": "Normal",
+  "@gameMenuMarkNormal": {
+    "description": "Marca de pista normal."
+  },
+  "gameMenuMarkHighlight": "Destacar",
+  "@gameMenuMarkHighlight": {
+    "description": "Marca de pista destacada."
+  },
+  "gameMenuMarkStrike": "Tachar",
+  "@gameMenuMarkStrike": {
+    "description": "Marca de pista tachada."
+  },
+  "gameScreenSkip": "Saltar",
+  "@gameScreenSkip": {
+    "description": "Botón para saltar el tutorial."
+  },
+  "gameScreenPaused": "Partida en pausa",
+  "@gameScreenPaused": {
+    "description": "Título de la pantalla de pausa."
+  },
+  "gameScreenPausedBody": "El reloj está detenido y el tablero oculto. Toca Continuar para seguir.",
+  "@gameScreenPausedBody": {
+    "description": "Explicación de la pantalla de pausa."
+  },
+  "gameScreenResume": "Continuar",
+  "@gameScreenResume": {
+    "description": "Botón que reanuda la partida pausada."
+  },
+  "gameScreenExitTitle": "Salir del caso",
+  "@gameScreenExitTitle": {
+    "description": "Título del diálogo de salir de un caso."
+  },
+  "gameScreenExitBody": "Tu avance queda guardado. ¿Salir del caso?",
+  "@gameScreenExitBody": {
+    "description": "Pregunta del diálogo de salir de un caso."
+  },
+  "gameScreenKeepPlaying": "Seguir jugando",
+  "@gameScreenKeepPlaying": {
+    "description": "Botón para seguir jugando en lugar de salir."
+  },
+  "gameScreenLeave": "Salir",
+  "@gameScreenLeave": {
+    "description": "Botón que confirma salir."
+  },
+  "gameScreenExitTutorialTitle": "Salir del tutorial",
+  "@gameScreenExitTutorialTitle": {
+    "description": "Título del diálogo de salir del tutorial."
+  },
+  "gameScreenExitTutorialBody": "El tutorial no guarda avance. Si sales, podrás repetirlo desde la lista de casos. ¿Salir?",
+  "@gameScreenExitTutorialBody": {
+    "description": "Pregunta del diálogo de salir del tutorial."
+  },
+  "gameScreenKeepPracticing": "Seguir practicando",
+  "@gameScreenKeepPracticing": {
+    "description": "Botón para seguir practicando en el tutorial."
+  },
+  "gameScreenReplaceTitle": "¿Reemplazar confirmado?",
+  "@gameScreenReplaceTitle": {
+    "description": "Título del diálogo de reemplazar una casilla confirmada."
+  },
+  "gameScreenReplaceBody": "Esta casilla ya tiene una decisión confirmada. ¿Quieres reemplazarla?",
+  "@gameScreenReplaceBody": {
+    "description": "Pregunta del diálogo de reemplazar una casilla confirmada."
+  },
+  "gameScreenCancel": "Cancelar",
+  "@gameScreenCancel": {
+    "description": "Botón de cancelar en el diálogo de reemplazar."
+  },
+  "gameScreenReplace": "Reemplazar",
+  "@gameScreenReplace": {
+    "description": "Botón que confirma reemplazar."
+  },
+  "gameScreenLockedWait": "Espera un momento…",
+  "@gameScreenLockedWait": {
+    "description": "Aviso mientras el botón Resolver está bloqueado."
+  },
+  "gameHintEmpty": "Toca un retrato para ver su pista.",
+  "@gameHintEmpty": {
+    "description": "Texto de la bandeja cuando no hay pista seleccionada."
+  },
+  "gameHintExpandLabel": "Pista completa",
+  "@gameHintExpandLabel": {
+    "description": "Etiqueta de accesibilidad de la pista completa."
+  },
+  "gameHintMore": "ver más",
+  "@gameHintMore": {
+    "description": "Enlace para ver el resto de una pista larga."
+  },
+  "gameToolbarToolNotes": "Anotar",
+  "@gameToolbarToolNotes": {
+    "description": "Herramienta de anotar candidatos."
+  },
+  "gameToolbarToolCross": "Tachar",
+  "@gameToolbarToolCross": {
+    "description": "Herramienta de tachar casillas."
+  },
+  "gameToolbarToolPlace": "Confirmar",
+  "@gameToolbarToolPlace": {
+    "description": "Herramienta de confirmar un sospechoso."
+  },
+  "gameToolbarToolErase": "Borrar",
+  "@gameToolbarToolErase": {
+    "description": "Herramienta de borrar una casilla."
+  },
+  "gameToolbarResolve": "Resolver",
+  "@gameToolbarResolve": {
+    "description": "Botón para resolver el caso."
+  },
+  "gameToolbarViewSummary": "Ver resumen",
+  "@gameToolbarViewSummary": {
+    "description": "Botón para ver el resumen del caso resuelto."
+  },
+  "gameToolbarUndo": "Deshacer",
+  "@gameToolbarUndo": {
+    "description": "Botón de deshacer."
+  },
+  "gameToolbarBack": "Salir del caso",
+  "@gameToolbarBack": {
+    "description": "Botón para salir del caso."
+  },
+  "gameToolbarMenu": "Más acciones",
+  "@gameToolbarMenu": {
+    "description": "Botón del menú de más acciones."
+  },
+  "gameToolbarVictim": "Víctima",
+  "@gameToolbarVictim": {
+    "description": "Rótulo de la víctima."
+  },
+  "tutorialDialogHeader": "CÓMO JUGAR",
+  "@tutorialDialogHeader": {
+    "description": "Encabezado del diálogo de cómo jugar."
+  },
+  "tutorialDialogSkip": "Omitir",
+  "@tutorialDialogSkip": {
+    "description": "Botón para omitir el diálogo de cómo jugar."
+  },
+  "tutorialDialogNext": "Siguiente",
+  "@tutorialDialogNext": {
+    "description": "Botón para pasar a la página siguiente."
+  },
+  "tutorialDialogStartPractice": "Empezar la práctica",
+  "@tutorialDialogStartPractice": {
+    "description": "Botón que abre el caso de práctica."
+  },
+  "tutorialDialogGo": "¡A investigar!",
+  "@tutorialDialogGo": {
+    "description": "Botón final del diálogo de cómo jugar."
+  },
+  "victoryStamp": "CASO CERRADO",
+  "@victoryStamp": {
+    "description": "Sello de la pantalla de victoria."
+  },
+  "victoryGoodJob": "Buen trabajo, detective.",
+  "@victoryGoodJob": {
+    "description": "Felicitación de la pantalla de victoria."
+  },
+  "victoryReport": "INFORME DEL CASO",
+  "@victoryReport": {
+    "description": "Rótulo del informe del caso."
+  },
+  "victoryTime": "Tiempo",
+  "@victoryTime": {
+    "description": "Rótulo del tiempo empleado."
+  },
+  "victoryErrors": "Errores",
+  "@victoryErrors": {
+    "description": "Rótulo de los errores cometidos."
+  },
+  "victoryKeepGoing": "Continuar",
+  "@victoryKeepGoing": {
+    "description": "Botón para continuar tras la victoria."
+  },
+  "victoryLookBoard": "Seguir mirando el tablero",
+  "@victoryLookBoard": {
+    "description": "Botón para seguir mirando el tablero resuelto."
+  },
+  "sheetShop": "Tienda",
+  "@sheetShop": {
+    "description": "Título de la hoja de la tienda."
+  },
+  "sheetPremium": "Premium",
+  "@sheetPremium": {
+    "description": "Título de la hoja Premium."
+  },
+  "sheetPremiumBody": "Sin anuncios · vidas ilimitadas · sin ventajas de ranking",
+  "@sheetPremiumBody": {
+    "description": "Beneficios de Premium."
+  },
+  "sheetSettings": "Configuración",
+  "@sheetSettings": {
+    "description": "Título de la hoja de configuración."
+  },
+  "sheetSound": "Sonido",
+  "@sheetSound": {
+    "description": "Interruptor de sonido."
+  },
+  "sheetMusic": "Música",
+  "@sheetMusic": {
+    "description": "Interruptor de música."
+  },
+  "sheetHaptics": "Vibración",
+  "@sheetHaptics": {
+    "description": "Interruptor de vibración."
+  },
+  "sheetReduceMotion": "Reducir movimiento",
+  "@sheetReduceMotion": {
+    "description": "Interruptor de reducir movimiento."
+  },
+  "sheetReduceMotionHint": "Menos rebotes, sacudidas y partículas en el tablero.",
+  "@sheetReduceMotionHint": {
+    "description": "Explicación de reducir movimiento."
+  },
+  "sheetNotifications": "Notificaciones",
+  "@sheetNotifications": {
+    "description": "Fila de notificaciones."
+  },
+  "sheetLanguage": "Idioma",
+  "@sheetLanguage": {
+    "description": "Fila de idioma."
+  },
+  "sheetSpanish": "Español",
+  "@sheetSpanish": {
+    "description": "Nombre del idioma español."
+  },
+  "sheetAccount": "Cuenta y compras",
+  "@sheetAccount": {
+    "description": "Título del bloque de cuenta y compras."
+  },
+  "sheetAccountBody": "Restaurar compras, cerrar sesión y eliminar cuenta se activan con el modo online.",
+  "@sheetAccountBody": {
+    "description": "Explicación del bloque de cuenta y compras."
+  },
+  "sheetNickTitle": "Tu nombre de detective",
+  "@sheetNickTitle": {
+    "description": "Título del diálogo para cambiar el nombre."
+  },
+  "sheetCancel": "Cancelar",
+  "@sheetCancel": {
+    "description": "Botón de cancelar del diálogo de nombre."
+  },
+  "sheetSave": "Guardar",
+  "@sheetSave": {
+    "description": "Botón de guardar del diálogo de nombre."
+  },
+  "appearanceTitle": "Aspecto del juego",
+  "@appearanceTitle": {
+    "description": "Título del bloque de aspecto del juego."
+  },
+  "appearanceSkin": "Piel",
+  "@appearanceSkin": {
+    "description": "Rótulo del selector de piel."
+  },
+  "appearanceMode": "Modo",
+  "@appearanceMode": {
+    "description": "Rótulo del selector de modo."
+  },
+  "appearanceSystem": "Sistema",
+  "@appearanceSystem": {
+    "description": "Modo que sigue al teléfono."
+  },
+  "appearanceLight": "Claro",
+  "@appearanceLight": {
+    "description": "Modo claro."
+  },
+  "appearanceDark": "Oscuro",
+  "@appearanceDark": {
+    "description": "Modo oscuro."
+  },
+  "boardSemanticsNoCandidates": "candidatos: ninguno",
+  "@boardSemanticsNoCandidates": {
+    "description": "Etiqueta de accesibilidad de una casilla sin candidatos."
+  },
+  "boardSemanticsNoConfirmed": "confirmado: ninguno",
+  "@boardSemanticsNoConfirmed": {
+    "description": "Etiqueta de accesibilidad de una casilla sin confirmado."
+  },
+  "boardSemanticsCrossed": "tachada",
+  "@boardSemanticsCrossed": {
+    "description": "Etiqueta de accesibilidad de una casilla tachada."
+  },
+  "boardSemanticsHoldHint": "Mantén oprimido para confirmar",
+  "@boardSemanticsHoldHint": {
+    "description": "Pista de accesibilidad del gesto de mantener oprimido."
+  },
+  "difficultyBeginner": "Principiante",
+  "@difficultyBeginner": {
+    "description": "Nombre de la dificultad Principiante."
+  },
+  "difficultyCasual": "Casual",
+  "@difficultyCasual": {
+    "description": "Nombre de la dificultad Casual."
+  },
+  "difficultyIntermediate": "Intermedio",
+  "@difficultyIntermediate": {
+    "description": "Nombre de la dificultad Intermedio."
+  },
+  "difficultyExpert": "Experto",
+  "@difficultyExpert": {
+    "description": "Nombre de la dificultad Experto."
+  },
+  "difficultyElite": "Élite",
+  "@difficultyElite": {
+    "description": "Nombre de la dificultad Élite."
+  },
+  "worldMansion": "La Mansión",
+  "@worldMansion": {
+    "description": "Nombre del Mundo 1."
+  },
+  "worldHotel": "El Hotel",
+  "@worldHotel": {
+    "description": "Nombre del mundo El Hotel (próximamente)."
+  },
+  "worldMuseum": "El Museo",
+  "@worldMuseum": {
+    "description": "Nombre del mundo El Museo (próximamente)."
+  },
+  "worldTrain": "El Tren",
+  "@worldTrain": {
+    "description": "Nombre del mundo El Tren (próximamente)."
+  },
+  "worldHospital": "El Hospital",
+  "@worldHospital": {
+    "description": "Nombre del mundo El Hospital (próximamente)."
+  },
+  "appTitle": "Enigmatrix",
+  "@appTitle": {
+    "description": "Nombre del juego (título de la app y de la pantalla de carga)."
+  },
+  "skinIllustrated": "Ilustrada",
+  "@skinIllustrated": {
+    "description": "Nombre de la piel Ilustrada."
+  },
+  "skinPaper": "Papel",
+  "@skinPaper": {
+    "description": "Nombre de la piel Papel."
+  },
+  "skinNeutral": "Neutra",
+  "@skinNeutral": {
+    "description": "Nombre de la piel neutra (solo para pruebas internas)."
+  },
+  "splashTagline": "Un misterio de papel",
+  "@splashTagline": {
+    "description": "Lema bajo el nombre del juego en la pantalla de carga."
+  },
+  "splashLoading": "Cargando",
+  "@splashLoading": {
+    "description": "Etiqueta de accesibilidad de la barra de carga inicial."
+  },
+  "homeGreetingMorning": "Buenos días,",
+  "@homeGreetingMorning": {
+    "description": "Saludo de Inicio antes de las 12 h."
+  },
+  "homeGreetingAfternoon": "Buenas tardes,",
+  "@homeGreetingAfternoon": {
+    "description": "Saludo de Inicio entre las 12 y las 19 h."
+  },
+  "homeGreetingEvening": "Buenas noches,",
+  "@homeGreetingEvening": {
+    "description": "Saludo de Inicio desde las 19 h."
+  },
+  "homeDetective": "detective",
+  "@homeDetective": {
+    "description": "Segunda línea del saludo de Inicio."
+  },
+  "homeStreakLine": "Racha: {streak, plural, =1{1 día} other{{streak} días}} · Caso del día (simulación: aún sin servidor)",
+  "@homeStreakLine": {
+    "description": "Línea de la tarjeta del reto diario con la racha simulada.",
+    "placeholders": {
+      "streak": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeDayOf": "Día {day} de {total}",
+  "@challengeDayOf": {
+    "description": "Día del reto dentro del ciclo de retos.",
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSolvedCount": "{total, plural, =1{{solved} de 1 caso cerrado} other{{solved} de {total} casos cerrados}}",
+  "@homeSolvedCount": {
+    "description": "Casos cerrados del Mundo 1 sobre el total.",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeWorldProgress": "Progreso del Mundo 1",
+  "@homeWorldProgress": {
+    "description": "Etiqueta de accesibilidad de la barra de progreso del Mundo 1."
+  },
+  "homeNextLife": "+1 en {time}",
+  "@homeNextLife": {
+    "description": "Tiempo simulado hasta la próxima vida.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "worldsAvailable": "{total, plural, =1{{open} de 1 disponible} other{{open} de {total} disponibles}}",
+  "@worldsAvailable": {
+    "description": "Subtítulo de Mundos: cuántos mundos se pueden abrir.",
+    "placeholders": {
+      "open": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "worldsEnter": "{name}: entrar",
+  "@worldsEnter": {
+    "description": "Etiqueta de accesibilidad de un mundo disponible.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "worldsProgress": "Progreso de {name}",
+  "@worldsProgress": {
+    "description": "Etiqueta de accesibilidad de la barra de progreso de un mundo.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeStreakTitle": "{streak, plural, =1{1 día de racha} other{{streak} días de racha}}",
+  "@challengeStreakTitle": {
+    "description": "Título de la racha simulada en la pestaña Reto.",
+    "placeholders": {
+      "streak": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeBestStreak": "Mejor racha: {best} · protectores: {protectors}",
+  "@challengeBestStreak": {
+    "description": "Racha máxima y protectores simulados.",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      },
+      "protectors": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeWeekdayMon": "L",
+  "@challengeWeekdayMon": {
+    "description": "Inicial del lunes en la tira de la semana."
+  },
+  "challengeWeekdayTue": "M",
+  "@challengeWeekdayTue": {
+    "description": "Inicial del martes en la tira de la semana."
+  },
+  "challengeWeekdayWed": "X",
+  "@challengeWeekdayWed": {
+    "description": "Inicial del miércoles en la tira de la semana."
+  },
+  "challengeWeekdayThu": "J",
+  "@challengeWeekdayThu": {
+    "description": "Inicial del jueves en la tira de la semana."
+  },
+  "challengeWeekdayFri": "V",
+  "@challengeWeekdayFri": {
+    "description": "Inicial del viernes en la tira de la semana."
+  },
+  "challengeWeekdaySat": "S",
+  "@challengeWeekdaySat": {
+    "description": "Inicial del sábado en la tira de la semana."
+  },
+  "challengeWeekdaySun": "D",
+  "@challengeWeekdaySun": {
+    "description": "Inicial del domingo en la tira de la semana."
+  },
+  "challengeTodaySummary": "Día {day} de {total} · {difficulty} · {size}×{size}",
+  "@challengeTodaySummary": {
+    "description": "Resumen del reto de hoy: día, dificultad y tamaño del tablero.",
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "difficulty": {
+        "type": "String"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsShort": "{points} pts",
+  "@pointsShort": {
+    "description": "Puntos abreviados.",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "profileDefaultNick": "Detective",
+  "@profileDefaultNick": {
+    "description": "Nombre por defecto del jugador."
+  },
+  "profileChangeName": "Cambiar nombre",
+  "@profileChangeName": {
+    "description": "Tooltip del botón que edita el nombre del jugador."
+  },
+  "profileSince": "🇨🇴 · detective desde julio 2026",
+  "@profileSince": {
+    "description": "Línea simulada bajo el nombre en el perfil."
+  },
+  "profileSolvedLabel": "casos cerrados",
+  "@profileSolvedLabel": {
+    "description": "Rótulo de la cifra de casos cerrados en el perfil."
+  },
+  "profileStreakLabel": "racha actual",
+  "@profileStreakLabel": {
+    "description": "Rótulo de la cifra de racha actual en el perfil."
+  },
+  "profileBestStreakLabel": "mejor racha",
+  "@profileBestStreakLabel": {
+    "description": "Rótulo de la cifra de mejor racha en el perfil."
+  },
+  "profileWeekPointsLabel": "puntos semana",
+  "@profileWeekPointsLabel": {
+    "description": "Rótulo de la cifra de puntos semanales en el perfil."
+  },
+  "profileMenuShop": "Tienda",
+  "@profileMenuShop": {
+    "description": "Fila del menú del perfil que abre la tienda."
+  },
+  "profileMenuPremium": "Premium",
+  "@profileMenuPremium": {
+    "description": "Fila del menú del perfil que abre Premium."
+  },
+  "profileMenuHowToPlay": "Cómo jugar",
+  "@profileMenuHowToPlay": {
+    "description": "Fila del menú del perfil que abre las instrucciones."
+  },
+  "profileMenuSettings": "Configuración",
+  "@profileMenuSettings": {
+    "description": "Fila del menú del perfil que abre la configuración."
+  },
+  "shopLives": "{count, plural, =1{1 vida} other{{count} vidas}}",
+  "@shopLives": {
+    "description": "Producto simulado de la tienda: paquete de vidas.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shopProtectors": "{count, plural, =1{1 protector de racha} other{{count} protectores de racha}}",
+  "@shopProtectors": {
+    "description": "Producto simulado de la tienda: protectores de racha.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "premiumMonthly": "Mensual · {price}",
+  "@premiumMonthly": {
+    "description": "Botón de la suscripción mensual simulada.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumYearly": "Anual · {price} (ahorra 50%)",
+  "@premiumYearly": {
+    "description": "Botón de la suscripción anual simulada.",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsVersion": "Enigmatrix v{version}",
+  "@settingsVersion": {
+    "description": "Versión de la app al pie de la configuración.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialDialogWelcomeTitle": "Bienvenido, detective",
+  "@tutorialDialogWelcomeTitle": {
+    "description": "Título de la primera página (bienvenida) del diálogo de cómo jugar."
+  },
+  "tutorialDialogWelcomeLine1": "En cada caso hay un grupo de sospechosos, una víctima y UNA verdad.",
+  "@tutorialDialogWelcomeLine1": {
+    "description": "Línea 1 de la primera página (bienvenida) del diálogo de cómo jugar."
+  },
+  "tutorialDialogWelcomeLine2": "Tu misión: descubrir dónde estaba cada persona usando pura lógica.",
+  "@tutorialDialogWelcomeLine2": {
+    "description": "Línea 2 de la primera página (bienvenida) del diálogo de cómo jugar."
+  },
+  "tutorialDialogWelcomeLine3": "Nada de adivinar — cada caso tiene una única solución deducible.",
+  "@tutorialDialogWelcomeLine3": {
+    "description": "Línea 3 de la primera página (bienvenida) del diálogo de cómo jugar."
+  },
+  "tutorialDialogBoardTitle": "El tablero",
+  "@tutorialDialogBoardTitle": {
+    "description": "Título de la segunda página (el tablero) del diálogo de cómo jugar."
+  },
+  "tutorialDialogBoardLine1": "El mapa es una cuadrícula con habitaciones y muebles.",
+  "@tutorialDialogBoardLine1": {
+    "description": "Línea 1 de la segunda página (el tablero) del diálogo de cómo jugar."
+  },
+  "tutorialDialogBoardLine2": "REGLA DE ORO: hay exactamente UNA persona por fila y UNA por columna, como en un sudoku.",
+  "@tutorialDialogBoardLine2": {
+    "description": "Línea 2 de la segunda página (el tablero) del diálogo de cómo jugar."
+  },
+  "tutorialDialogBoardLine3": "Las casillas con muebles que bloquean (mesas, plantas, cajas) no pueden ocuparse. Sobre sillas, camas, sofás y alfombras SÍ puede haber alguien.",
+  "@tutorialDialogBoardLine3": {
+    "description": "Línea 3 de la segunda página (el tablero) del diálogo de cómo jugar."
+  },
+  "tutorialDialogCluesTitle": "Las pistas",
+  "@tutorialDialogCluesTitle": {
+    "description": "Título de la tercera página (las pistas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogCluesLine1": "Cada sospechoso tiene una pista en su tarjeta: \"estaba sobre una cama\", \"junto a una planta\"…",
+  "@tutorialDialogCluesLine1": {
+    "description": "Línea 1 de la tercera página (las pistas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogCluesLine2": "\"Junto a\" significa en una casilla vecina (arriba, abajo, izquierda o derecha) de la misma habitación.",
+  "@tutorialDialogCluesLine2": {
+    "description": "Línea 2 de la tercera página (las pistas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogCluesLine3": "Cruza las pistas con la regla de filas y columnas para descartar casillas.",
+  "@tutorialDialogCluesLine3": {
+    "description": "Línea 3 de la tercera página (las pistas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogMarksTitle": "Tus marcas",
+  "@tutorialDialogMarksTitle": {
+    "description": "Título de la cuarta página (las marcas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogMarksLine1": "TOCA una casilla para anotar un CANDIDATO (una letra pequeña).",
+  "@tutorialDialogMarksLine1": {
+    "description": "Línea 1 de la cuarta página (las marcas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogMarksLine2": "MANTÉN PRESIONADO (o usa la herramienta Confirmar) para CONFIRMAR a alguien: se tachan su fila y su columna automáticamente.",
+  "@tutorialDialogMarksLine2": {
+    "description": "Línea 2 de la cuarta página (las marcas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogMarksLine3": "Usa Tachar para descartar casillas y Borrar para limpiar. Deshacer siempre está disponible.",
+  "@tutorialDialogMarksLine3": {
+    "description": "Línea 3 de la cuarta página (las marcas) del diálogo de cómo jugar."
+  },
+  "tutorialDialogSolveTitle": "Resolver el caso",
+  "@tutorialDialogSolveTitle": {
+    "description": "Título de la quinta página (resolver el caso) del diálogo de cómo jugar."
+  },
+  "tutorialDialogSolveLine1": "Cuando todos estén confirmados, pulsa RESOLVER.",
+  "@tutorialDialogSolveLine1": {
+    "description": "Línea 1 de la quinta página (resolver el caso) del diálogo de cómo jugar."
+  },
+  "tutorialDialogSolveLine2": "Si todo está correcto: el asesino es quien quedó A SOLAS con la víctima en la misma habitación. El sistema lo revela.",
+  "@tutorialDialogSolveLine2": {
+    "description": "Línea 2 de la quinta página (resolver el caso) del diálogo de cómo jugar."
+  },
+  "tutorialDialogSolveLine3": "Si algo no cuadra, el juego te dice cuántas casillas fallan, pero no cuáles: hay que volver a deducir. ¡Suerte, detective!",
+  "@tutorialDialogSolveLine3": {
+    "description": "Línea 3 de la quinta página (resolver el caso) del diálogo de cómo jugar."
+  },
+  "caseListLoadError": "Error cargando casos: {error}",
+  "@caseListLoadError": {
+    "description": "Mensaje cuando no se pueden cargar los casos.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "caseListFolderNumber": "EXPEDIENTE Nº{index}",
+  "@caseListFolderNumber": {
+    "description": "Pestaña de cada carpeta de dificultad con su número de expediente.",
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "caseListBoardSize": "Tablero {size}×{size}",
+  "@caseListBoardSize": {
+    "description": "Tamaño del tablero de los casos de una carpeta.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "caseListDifficultyProgress": "Progreso de {difficulty}",
+  "@caseListDifficultyProgress": {
+    "description": "Etiqueta de accesibilidad de la barra de progreso de una dificultad.",
+    "placeholders": {
+      "difficulty": {
+        "type": "String"
+      }
+    }
+  },
+  "caseListTileLabel": "Caso {number}: {title}",
+  "@caseListTileLabel": {
+    "description": "Etiqueta de accesibilidad de la ficha de un caso.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "caseListTileLabelDone": "Caso {number}: {title}, cerrado",
+  "@caseListTileLabelDone": {
+    "description": "Etiqueta de accesibilidad de la ficha de un caso ya cerrado.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "caseListNumberShort": "Nº {number}",
+  "@caseListNumberShort": {
+    "description": "Número de caso sobre la ficha.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "caseListInProgressTag": "En curso · {time}",
+  "@caseListInProgressTag": {
+    "description": "Etiqueta sobre la ficha de un caso empezado, con el tiempo jugado.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "caseListInProgressTagStrong": "EN CURSO · {time}",
+  "@caseListInProgressTagStrong": {
+    "description": "Etiqueta destacada del caso actual empezado, con el tiempo jugado.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "caseListSheetTitle": "Caso Nº{number} — {title}",
+  "@caseListSheetTitle": {
+    "description": "Título de la hoja con el detalle de un caso.",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "caseListSuspects": "{count, plural, =1{1 sospechoso} other{{count} sospechosos}}",
+  "@caseListSuspects": {
+    "description": "Cantidad de sospechosos de un caso.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "caseListClues": "{count, plural, =1{1 pista} other{{count} pistas}}",
+  "@caseListClues": {
+    "description": "Cantidad de pistas de un caso.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "caseListWeapon": "arma homicida",
+  "@caseListWeapon": {
+    "description": "Chip que indica que el caso tiene arma homicida."
+  },
+  "caseListClosedIn": "Caso cerrado en {time} s · {errors, plural, =1{1 error} other{{errors} errores}}",
+  "@caseListClosedIn": {
+    "description": "Resultado de un caso ya cerrado: segundos y errores.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "errors": {
+        "type": "int"
+      }
+    }
+  },
+  "caseListInProgressInfo": "En curso: {time} jugados · {errors, plural, =1{1 error} other{{errors} errores}}",
+  "@caseListInProgressInfo": {
+    "description": "Avance de un caso empezado: tiempo jugado y errores.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "errors": {
+        "type": "int"
+      }
+    }
+  },
+  "gameLegendExtraTitle": "INFORMACIÓN ADICIONAL",
+  "@gameLegendExtraTitle": {
+    "description": "Título del bloque de información adicional de la leyenda."
+  },
+  "gameLegendRoomsTitle": "HABITACIONES",
+  "@gameLegendRoomsTitle": {
+    "description": "Título del bloque de habitaciones de la leyenda."
+  },
+  "gameLegendRoomWeapons": "{room}  ·  armas: {weapons}",
+  "@gameLegendRoomWeapons": {
+    "description": "Habitación de la leyenda con las armas que hay en ella.",
+    "placeholders": {
+      "room": {
+        "type": "String"
+      },
+      "weapons": {
+        "type": "String"
+      }
+    }
+  },
+  "gameLegendFurnitureTitle": "MUEBLES",
+  "@gameLegendFurnitureTitle": {
+    "description": "Título del bloque de muebles de la leyenda."
+  },
+  "gameLegendFurnitureNote": "Pisables: puedes colocar gente encima. Los demás bloquean su casilla.",
+  "@gameLegendFurnitureNote": {
+    "description": "Explicación de los muebles pisables en la leyenda."
+  },
+  "gameLegendStandable": "{name} ◦",
+  "@gameLegendStandable": {
+    "description": "Mueble pisable en la leyenda, marcado con un círculo.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "gameLegendStandableKey": "◦ = pisable",
+  "@gameLegendStandableKey": {
+    "description": "Clave del círculo que marca los muebles pisables."
+  },
+  "gameLegendRulesTitle": "REGLAS",
+  "@gameLegendRulesTitle": {
+    "description": "Título del bloque de reglas de la leyenda."
+  },
+  "gameLegendRulesBody": "Una persona por fila y por columna. El asesino quedó a solas con la víctima en la misma habitación. Ubica a todos, incluida la víctima.",
+  "@gameLegendRulesBody": {
+    "description": "Resumen de las reglas en la leyenda."
+  },
+  "gameHintPlaced": "{label}, ya colocado",
+  "@gameHintPlaced": {
+    "description": "Etiqueta de accesibilidad de un retrato ya colocado en el tablero.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "gameHintVictimLabel": "{name} ({victim})",
+  "@gameHintVictimLabel": {
+    "description": "Etiqueta de accesibilidad del retrato de la víctima.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      }
+    }
+  },
+  "gameHintClueSemantics": "{name}: {clue}",
+  "@gameHintClueSemantics": {
+    "description": "Etiqueta de accesibilidad de la pista de un personaje.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "clue": {
+        "type": "String"
+      }
+    }
+  },
+  "gameToolbarTime": "Tiempo {time}",
+  "@gameToolbarTime": {
+    "description": "Etiqueta de accesibilidad del cronómetro.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSemanticsBoard": "Tablero de {n} por {n} casillas",
+  "@boardSemanticsBoard": {
+    "description": "Etiqueta de accesibilidad del tablero completo.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "boardSemanticsPosition": "Fila {row}, columna {col}",
+  "@boardSemanticsPosition": {
+    "description": "Posición de una casilla leída por el lector de pantalla.",
+    "placeholders": {
+      "row": {
+        "type": "int"
+      },
+      "col": {
+        "type": "int"
+      }
+    }
+  },
+  "boardSemanticsBesideObjects": "junto a {names}",
+  "@boardSemanticsBesideObjects": {
+    "description": "Muebles de las casillas vecinas (lista separada por comas).",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSemanticsOnObject": "sobre {name}",
+  "@boardSemanticsOnObject": {
+    "description": "Mueble pisable que cubre la casilla.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSemanticsBlockedBy": "ocupada por {name}: no se puede usar",
+  "@boardSemanticsBlockedBy": {
+    "description": "Mueble que bloquea la casilla.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSemanticsCandidates": "candidatos: {names}",
+  "@boardSemanticsCandidates": {
+    "description": "Candidatos anotados en la casilla (lista separada por comas).",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSemanticsConfirmed": "confirmado: {name}",
+  "@boardSemanticsConfirmed": {
+    "description": "Personaje confirmado en la casilla.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardSemanticsAutoCrossed": "descartada por {names}",
+  "@boardSemanticsAutoCrossed": {
+    "description": "Casilla tachada sola por los personajes ya confirmados (lista separada por comas).",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "victoryMurdererLine": "El asesino era {name}, que quedó a solas con la víctima.",
+  "@victoryMurdererLine": {
+    "description": "Revelación del asesino; el nombre va resaltado.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "victoryWeaponLine": "Arma homicida: {weapon}",
+  "@victoryWeaponLine": {
+    "description": "Arma homicida del caso; el nombre va resaltado.",
+    "placeholders": {
+      "weapon": {
+        "type": "String"
+      }
+    }
+  },
+  "boardPickSuspectFirst": "Elige primero a un sospechoso",
+  "@boardPickSuspectFirst": {
+    "description": "Aviso sobre el tablero: falta elegir un sospechoso antes de tocar una casilla."
+  },
+  "boardCellHasConfirmed": "Esa casilla ya tiene una ficha. Bórrala primero",
+  "@boardCellHasConfirmed": {
+    "description": "Aviso sobre el tablero: la casilla ya tiene un sospechoso confirmado."
+  },
+  "boardCellHasX": "Esa casilla está tachada",
+  "@boardCellHasX": {
+    "description": "Aviso sobre el tablero: la casilla está tachada."
+  },
+  "boardAlreadyPlaced": "Ese sospechoso ya está colocado. Bórralo para moverlo",
+  "@boardAlreadyPlaced": {
+    "description": "Aviso sobre el tablero: el sospechoso ya está confirmado en otra casilla."
+  },
+  "boardBlockedCell": "Ahí hay un mueble",
+  "@boardBlockedCell": {
+    "description": "Aviso sobre el tablero: la casilla tiene un mueble que bloquea."
+  },
+  "boardWrongCells": "{n, plural, =1{1 casilla no cuadra} other{{n} casillas no cuadran}}",
+  "@boardWrongCells": {
+    "description": "Resultado de un Resolver fallido: cuántas casillas no cuadran.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "boardMissingSuspects": "{n, plural, =1{Falta ubicar a 1 personaje} other{Faltan {n} personajes por ubicar}}",
+  "@boardMissingSuspects": {
+    "description": "Aviso de un Resolver incompleto: cuántos personajes faltan por ubicar.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "boardMurdererIs": "El asesino es {name}",
+  "@boardMurdererIs": {
+    "description": "Rótulo de la revelación del asesino sobre el tablero.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "gameScreenWrongInTutorial": "{n, plural, =1{1 casilla no cuadra} other{{n} casillas no cuadran}}: revisa las marcadas",
+  "@gameScreenWrongInTutorial": {
+    "description": "Aviso del tutorial tras un Resolver fallido.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "gameScreenTutorialHeading": "Tutorial · {title}",
+  "@gameScreenTutorialHeading": {
+    "description": "Título de la partida del tutorial.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "gameScreenPracticeHead": "Práctica · {size}×{size}",
+  "@gameScreenPracticeHead": {
+    "description": "Primera parte de la línea de estado del tutorial.",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "gameScreenCaseHead": "{difficulty} · {size}×{size}",
+  "@gameScreenCaseHead": {
+    "description": "Primera parte de la línea de estado de un caso.",
+    "placeholders": {
+      "difficulty": {
+        "type": "String"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "gameScreenCaseHeadWeapon": "{difficulty} · {size}×{size} · con arma",
+  "@gameScreenCaseHeadWeapon": {
+    "description": "Primera parte de la línea de estado de un caso con arma homicida.",
+    "placeholders": {
+      "difficulty": {
+        "type": "String"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "gameScreenStatusLine": "{head} · errores: {errors}",
+  "@gameScreenStatusLine": {
+    "description": "Línea de estado bajo el título de la partida.",
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "errors": {
+        "type": "int"
+      }
+    }
+  },
+  "tutorialCoachRowCol": "fila {row}, columna {col}",
+  "@tutorialCoachRowCol": {
+    "description": "Posición de una casilla dentro de un paso del tutorial.",
+    "placeholders": {
+      "row": {
+        "type": "int"
+      },
+      "col": {
+        "type": "int"
+      }
+    }
+  },
+  "tutorialCoachClueQuote": "«{text}»",
+  "@tutorialCoachClueQuote": {
+    "description": "Pista entre comillas latinas dentro de un paso del tutorial.",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachMisplaced": "{name} no va ahí: {why} Bórrala con BORRAR y prueba otra.",
+  "@tutorialCoachMisplaced": {
+    "description": "Aviso cuando un personaje está confirmado en la casilla equivocada.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "why": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachWhyVictim": "solo cuadra junto a una cama, sin estar encima de ella.",
+  "@tutorialCoachWhyVictim": {
+    "description": "Razón del aviso para la víctima mal colocada."
+  },
+  "tutorialCoachWhyBruno": "solo puede ir en la casilla de cama que no está tachada.",
+  "@tutorialCoachWhyBruno": {
+    "description": "Razón del aviso para Bruno mal colocado."
+  },
+  "tutorialCoachWhyClara": "solo cuadra en la única casilla libre de su habitación.",
+  "@tutorialCoachWhyClara": {
+    "description": "Razón del aviso para Clara mal colocada."
+  },
+  "tutorialCoachWarnXOnSolution": "Esa X tapa la casilla de alguien. Bórrala con BORRAR.",
+  "@tutorialCoachWarnXOnSolution": {
+    "description": "Aviso cuando una X manual tapa la casilla de un personaje."
+  },
+  "tutorialCoachWarnFiveWrong": "Los cinco están puestos, pero alguno no cuadra. Relee las pistas de los que dudes.",
+  "@tutorialCoachWarnFiveWrong": {
+    "description": "Aviso cuando los cinco personajes están puestos pero alguno está mal."
+  },
+  "tutorialCoachWarnBoardCorrect": "Ese tablero es el correcto; para el experimento hay que intercambiarlos.",
+  "@tutorialCoachWarnBoardCorrect": {
+    "description": "Aviso cuando el jugador dejó el tablero correcto en el paso del experimento."
+  },
+  "tutorialCoachBlockResolve": "Aún no: antes del Resolver final hay un experimento. Sigue la tarjeta de arriba (o pulsa Saltar).",
+  "@tutorialCoachBlockResolve": {
+    "description": "Aviso cuando se pulsa Resolver demasiado pronto en el tutorial."
+  },
+  "tutorialCoachStep0": "Este es un caso de práctica con solo 5 personajes. No cuenta como ningún caso de la lista. Abajo del mapa están los sospechosos: toca uno y verás su pista.",
+  "@tutorialCoachStep0": {
+    "description": "Paso 1 del tutorial: presentación del caso de práctica."
+  },
+  "tutorialCoachStep1": "Regla de oro: UNA persona por fila y UNA por columna, como en un sudoku. Hay que ubicar a todos, incluida la víctima: {victim} (su retrato dice «Víctima»).",
+  "@tutorialCoachStep1": {
+    "description": "Paso 2 del tutorial: la regla de oro.",
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep2": "Pista de {victim}: {clue}. Toca su retrato y luego TOCA una casilla donde pueda estar: queda anotada como candidato (su letra).",
+  "@tutorialCoachStep2": {
+    "description": "Paso 3 del tutorial: anotar un candidato.",
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "clue": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep3Place": "{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, toca esa casilla.",
+  "@tutorialCoachStep3Place": {
+    "description": "Paso 4 del tutorial: confirmar a la víctima (herramienta Confirmar ya activa).",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      },
+      "cell": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep3Tool": "{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, pulsa CONFIRMAR y toca esa casilla.",
+  "@tutorialCoachStep3Tool": {
+    "description": "Paso 4 del tutorial: confirmar a la víctima (falta elegir la herramienta).",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      },
+      "cell": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep4": "¿Viste? Al confirmar a {victim}, el juego tachó con X claras su fila y su columna (es el interruptor Auto-X del menú ⋮): ahí ya no puede haber nadie más.",
+  "@tutorialCoachStep4": {
+    "description": "Paso 5 del tutorial: la X automática.",
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep5": "Pista de {bruno}: {clue}. Casi todas las casillas de cama quedaron tachadas: solo una sigue libre, {cell}. Confirma a {bruno} ahí.",
+  "@tutorialCoachStep5": {
+    "description": "Paso 6 del tutorial: confirmar a Bruno.",
+    "placeholders": {
+      "bruno": {
+        "type": "String"
+      },
+      "clue": {
+        "type": "String"
+      },
+      "cell": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep6AnyCell": "una casilla en {area} que no sea el sofá",
+  "@tutorialCoachStep6AnyCell": {
+    "description": "Casilla sugerida para ensayar la X cuando no hay una concreta.",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep6Cross": "Con TACHAR activo, toca {where}. Esa X la pones tú: sirve para descartar lo que sabes que no puede ser.",
+  "@tutorialCoachStep6Cross": {
+    "description": "Paso 7 del tutorial: X a mano con la herramienta Tachar activa.",
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep6Tool": "{elena} está sobre un sofá, en {area}: ahí nadie más puede estar. Descártalo: pulsa TACHAR en la barra y toca una casilla de esa habitación.",
+  "@tutorialCoachStep6Tool": {
+    "description": "Paso 7 del tutorial: X a mano, falta elegir la herramienta.",
+    "placeholders": {
+      "elena": {
+        "type": "String"
+      },
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep7": "Para pensar sin el dibujo, abre el menú ⋮ (arriba a la derecha) y cambia a la vista NOTAS.",
+  "@tutorialCoachStep7": {
+    "description": "Paso 8 del tutorial: cambiar a la vista Notas."
+  },
+  "tutorialCoachStep8": "NOTAS esconde los muebles y los nombres: queda la cuadrícula con tus marcas, ideal para repasar filas y columnas. Vuelve a MAPA desde el menú ⋮.",
+  "@tutorialCoachStep8": {
+    "description": "Paso 9 del tutorial: volver a la vista Mapa."
+  },
+  "tutorialCoachStep9": "Pista de {clara}: {clue}. Con las X que hay, en {area} solo queda una casilla libre: {cell}. Confirma a {clara} ahí.",
+  "@tutorialCoachStep9": {
+    "description": "Paso 10 del tutorial: confirmar a Clara.",
+    "placeholders": {
+      "clara": {
+        "type": "String"
+      },
+      "clue": {
+        "type": "String"
+      },
+      "area": {
+        "type": "String"
+      },
+      "cell": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep10": "Faltan {elena} ({elenaClue}) y {dario} ({darioClue}). Termina tú con las X y la regla de fila y columna.",
+  "@tutorialCoachStep10": {
+    "description": "Paso 11 del tutorial: terminar el tablero.",
+    "placeholders": {
+      "elena": {
+        "type": "String"
+      },
+      "elenaClue": {
+        "type": "String"
+      },
+      "dario": {
+        "type": "String"
+      },
+      "darioClue": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep11": "¡Todos bien ubicados! Antes de resolver, un experimento: equivoquémonos a propósito. Primero quita a {elena} y a {dario}: pulsa BORRAR y toca cada ficha en el mapa.",
+  "@tutorialCoachStep11": {
+    "description": "Paso 12 del tutorial: borrar dos fichas para el experimento.",
+    "placeholders": {
+      "elena": {
+        "type": "String"
+      },
+      "dario": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep12": "Ahora cámbialos de sitio: {elena} en {elenaCell} y {dario} en {darioCell}. Elige su retrato, pulsa CONFIRMAR y toca la casilla.",
+  "@tutorialCoachStep12": {
+    "description": "Paso 13 del tutorial: intercambiar dos personajes.",
+    "placeholders": {
+      "elena": {
+        "type": "String"
+      },
+      "elenaCell": {
+        "type": "String"
+      },
+      "dario": {
+        "type": "String"
+      },
+      "darioCell": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep13": "Con el tablero lleno pero mal, pulsa RESOLVER (abajo). En el tutorial el juego marca en rojo las casillas que no cuadran.",
+  "@tutorialCoachStep13": {
+    "description": "Paso 14 del tutorial: Resolver fallido."
+  },
+  "tutorialCoachStep14": "Las casillas rojas no cuadran: {elena} no está sobre un sofá, como exige su pista, y por eso falla también {dario}. En una partida real solo verás CUÁNTAS no cuadran.",
+  "@tutorialCoachStep14": {
+    "description": "Paso 15 del tutorial: explicación de las casillas rojas.",
+    "placeholders": {
+      "elena": {
+        "type": "String"
+      },
+      "dario": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep15": "Para corregir, pulsa BORRAR otra vez y toca a {elena} y a {dario} en el mapa para limpiarlos.",
+  "@tutorialCoachStep15": {
+    "description": "Paso 16 del tutorial: borrar para corregir.",
+    "placeholders": {
+      "elena": {
+        "type": "String"
+      },
+      "dario": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep16": "Ahora ponlos bien: {elena} en {elenaCell} (sobre el sofá) y {dario} en {darioCell} (a solas).",
+  "@tutorialCoachStep16": {
+    "description": "Paso 17 del tutorial: poner a los dos en su sitio.",
+    "placeholders": {
+      "elena": {
+        "type": "String"
+      },
+      "elenaCell": {
+        "type": "String"
+      },
+      "dario": {
+        "type": "String"
+      },
+      "darioCell": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachStep17": "¡Tablero completo y correcto! Pulsa RESOLVER: si todo cuadra, sabrás quién quedó a solas con la víctima. Ese es el asesino.",
+  "@tutorialCoachStep17": {
+    "description": "Paso 18 del tutorial: Resolver final."
+  },
+  "tutorialCoachLoadError": "No se pudo abrir el tutorial.",
+  "@tutorialCoachLoadError": {
+    "description": "Mensaje cuando no se puede cargar el caso del tutorial."
+  },
+  "tutorialCoachBackToCases": "Volver a los casos",
+  "@tutorialCoachBackToCases": {
+    "description": "Botón para volver a la lista de casos desde el error del tutorial."
+  },
+  "tutorialCoachProgress": "TUTORIAL · {index}/{total}",
+  "@tutorialCoachProgress": {
+    "description": "Progreso de los pasos de la guía del tutorial.",
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tutorialCoachWarning": "⚠ {text}",
+  "@tutorialCoachWarning": {
+    "description": "Aviso de la guía con el símbolo de advertencia delante.",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialCoachGotIt": "Entendido",
+  "@tutorialCoachGotIt": {
+    "description": "Botón para pasar al siguiente paso manual de la guía."
+  },
+  "tutorialEndTitle": "¡Práctica superada!",
+  "@tutorialEndTitle": {
+    "description": "Título del cierre del tutorial."
+  },
+  "tutorialEndMurderer": "El asesino era {name}: fue la única persona que quedó a solas con la víctima.",
+  "@tutorialEndMurderer": {
+    "description": "Revelación del asesino al terminar el tutorial.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tutorialEndSummary": "Ya sabes ubicar, descartar con X, usar Notas, borrar y resolver. Esto era solo práctica: tu Caso 1 te espera sin empezar.",
+  "@tutorialEndSummary": {
+    "description": "Resumen de lo aprendido al terminar el tutorial."
+  },
+  "tutorialEndGoToCases": "Ir a los casos",
+  "@tutorialEndGoToCases": {
+    "description": "Botón que lleva a la lista de casos al terminar el tutorial."
+  },
+  "tutorialEndLookBoard": "Seguir mirando el tablero",
+  "@tutorialEndLookBoard": {
+    "description": "Botón para cerrar el cierre del tutorial y seguir mirando el tablero."
+  }
+}

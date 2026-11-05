@@ -16,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'support/content_overrides.dart';
+import 'support/l10n.dart';
 
 Future<List<PuzzleCase>> _loadRealCases() async {
   final raw = await rootBundle.loadString('assets/cases/index.json');
@@ -38,7 +39,12 @@ Future<void> _pumpShell(WidgetTester tester) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [...contentOverrides(const [])],
-      child: const MaterialApp(home: HomeShell()),
+      child: MaterialApp(
+        localizationsDelegates: kL10nDelegates,
+        supportedLocales: kL10nLocales,
+        locale: kL10nLocale,
+        home: HomeShell(),
+      ),
     ),
   );
   await tester.pump();
@@ -131,7 +137,12 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [...contentOverrides(cases)],
-          child: const MaterialApp(home: CaseListScreen()),
+          child: MaterialApp(
+            localizationsDelegates: kL10nDelegates,
+            supportedLocales: kL10nLocales,
+            locale: kL10nLocale,
+            home: CaseListScreen(),
+          ),
         ),
       );
       await tester.pump();

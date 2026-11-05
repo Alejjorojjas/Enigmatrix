@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'l10n/l10n.dart';
 import 'src/board/audio/audio_service.dart';
 import 'src/data/case_repository.dart';
 import 'src/game/app_settings.dart';
@@ -115,8 +116,13 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
     final skinId = ref.watch(settingsProvider.select((s) => s.skinId));
     final mode = ref.watch(settingsProvider.select((s) => s.themeMode));
     return MaterialApp.router(
-      title: 'Enigmatrix',
+      onGenerateTitle: (context) => context.l10n.appTitle,
       debugShowCheckedModeBanner: false,
+      // Solo español por ahora: la app fuerza el idioma (sumar otro es
+      // agregar su .arb y su Locale en supportedLocales).
+      locale: kAppLocale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: _router,
       themeMode: mode,
       theme: SkinUi.theme(skinId, Brightness.light),

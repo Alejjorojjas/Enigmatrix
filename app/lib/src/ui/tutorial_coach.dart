@@ -17,8 +17,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
 import '../data/case_repository.dart';
 import '../game/game_controller.dart';
+import 'clue_text.dart';
 import 'ui_kit.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
@@ -70,14 +72,14 @@ enum TutorialTarget {
 /// salvo en el [isFinal], que termina al resolver el caso.
 class TutorialStep {
   final String emoji;
-  final String Function(GameState s) text;
+  final String Function(AppLocalizations l10n, GameState s) text;
   final bool Function(GameState s)? advanceWhen;
 
   /// Elemento que se señala con un marco mientras dura el paso.
   final TutorialTarget? Function(GameState s)? target;
 
   /// Aviso (en rojo) cuando el jugador va por mal camino.
-  final String? Function(GameState s)? warning;
+  final String? Function(AppLocalizations l10n, GameState s)? warning;
   final bool isFinal;
 
   const TutorialStep({
@@ -99,11 +101,15 @@ bool tutorialBoardIsCorrect(GameState s) => s.pc.solution.positions.entries
 /// Mientras la guía no llegue al último paso, el Resolver que acierta queda
 /// en espera: antes hay que ver el Resolver fallido. Devuelve el aviso a
 /// mostrar, o null si se puede resolver.
-String? tutorialResolveBlock(PuzzleCase pc, GameState s, int step) {
+String? tutorialResolveBlock(
+  AppLocalizations l10n,
+  PuzzleCase pc,
+  GameState s,
+  int step,
+) {
   if (!tutorialBoardIsCorrect(s)) return null; // fallar siempre es posible
   if (step >= buildTutorialSteps(pc).length - 1) return null;
-  return 'Aún no: antes del Resolver final hay un experimento. '
-      'Sigue la tarjeta de arriba (o pulsa Saltar).';
+  return l10n.tutorialCoachBlockResolve;
 }
 
 /// Los pasos de un caso (se arman una sola vez por caso).
@@ -157,23 +163,23 @@ class TutorialSpot extends ConsumerWidget {
 
 /// Los pasos, escritos para el caso del tutorial (c1 Adela la víctima,
 /// c2 Bruno, c3 Clara, c4 Dario, c5 Elena). Las casillas y los nombres salen
-/// del propio caso; un test fija que el caso siga encajando con el guion.
+/// del propio caso; un test fija que el caso siga encajando con el guion. Los
+/// textos viven en el .arb y se piden con el idioma activo en cada llamada.
 List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
   const victim = 'c1', bruno = 'c2', clara = 'c3', dario = 'c4', elena = 'c5';
   final pos = pc.solution.positions;
   final size = pc.map.size;
 
   String n(String id) => pc.character(id).nameEs;
-  String rc(int cell) => 'fila ${cell ~/ size + 1}, columna ${cell % size + 1}';
+  String rc(AppLocalizations l, int cell) =>
+      l.tutorialCoachRowCol(cell ~/ size + 1, cell % size + 1);
   String area(int cell) =>
       pc.map.areas.firstWhere((a) => a.id == pc.map.areaIdOf(cell)).nameEs;
-  String clue(String id) {
+  String clue(AppLocalizations l, String id) {
     final c = pc.clueFor(id);
     if (c == null) return '';
-    final text = c
-        .cardTextEs(pc.map, pc.names)
-        .replaceFirst(RegExp(r'\.$'), '');
-    return '«$text»';
+    final text = clueText(pc, c).replaceFirst(RegExp(r'\.$'), '');
+    return l.tutorialCoachClueQuote(text);
   }
 
   bool at(GameState s, String id) => s.board.confirmedCellOf(id) == pos[id];
@@ -190,10 +196,11 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
       s.board.confirmedCells.length >= pc.characters.length &&
       !tutorialBoardIsCorrect(s);
 
-  String? misplaced(GameState s, String id, String why) {
+  // Aviso de un personaje puesto donde no va; [why] es la razón, ya traducida.
+  String? misplaced(AppLocalizations l, GameState s, String id, String why) {
     final cell = s.board.confirmedCellOf(id);
     if (cell == null || cell == pos[id]) return null;
-    return '${n(id)} no va ahí: $why Bórrala con BORRAR y prueba otra.';
+    return l.tutorialCoachMisplaced(n(id), why);
   }
 
   // Una casilla del Porche (la habitación del sofá) para ensayar la X: nadie
@@ -223,209 +230,172 @@ List<TutorialStep> buildTutorialSteps(PuzzleCase pc) {
     // 0
     TutorialStep(
       emoji: '🕵️',
-      text: (_) =>
-          'Este es un caso de práctica con solo 5 personajes. No cuenta '
-          'como ningún caso de la lista. Abajo del mapa están los '
-          'sospechosos: toca uno y verás su pista.',
+      text: (l, _) => l.tutorialCoachStep0,
       target: (_) => TutorialTarget.portraits,
     ),
     // 1
     TutorialStep(
       emoji: '📏',
-      text: (_) =>
-          'Regla de oro: UNA persona por fila y UNA por columna, '
-          'como en un sudoku. Hay que ubicar a todos, incluida la víctima: '
-          '${n(victim)} (su retrato dice «Víctima»).',
+      text: (l, _) => l.tutorialCoachStep1(n(victim)),
       target: (_) => TutorialTarget.board,
     ),
     // 2
     TutorialStep(
       emoji: '✏️',
-      text: (_) =>
-          'Pista de ${n(victim)}: ${clue(victim)}. Toca su retrato '
-          'y luego TOCA una casilla donde pueda estar: queda anotada como '
-          'candidato (su letra).',
+      text: (l, _) => l.tutorialCoachStep2(n(victim), clue(l, victim)),
       advanceWhen: anyMark,
       target: (_) => TutorialTarget.board,
     ),
     // 3
     TutorialStep(
       emoji: '📌',
-      text: (s) =>
-          '${area(pos[victim]!)}: la única casilla junto a una cama sin ser '
-          'cama es ${rc(pos[victim]!)}. Con ${n(victim)} elegida, '
-          '${s.toolMode == ToolMode.place ? 'toca esa casilla.' : 'pulsa CONFIRMAR y toca esa casilla.'}',
+      text: (l, s) => s.toolMode == ToolMode.place
+          ? l.tutorialCoachStep3Place(
+              area(pos[victim]!),
+              rc(l, pos[victim]!),
+              n(victim),
+            )
+          : l.tutorialCoachStep3Tool(
+              area(pos[victim]!),
+              rc(l, pos[victim]!),
+              n(victim),
+            ),
       advanceWhen: (s) => at(s, victim),
       target: boardOr(TutorialTarget.toolPlace, ToolMode.place),
-      warning: (s) => misplaced(
-        s,
-        victim,
-        'solo cuadra junto a una cama, sin estar encima de ella.',
-      ),
+      warning: (l, s) => misplaced(l, s, victim, l.tutorialCoachWhyVictim),
     ),
     // 4
     TutorialStep(
       emoji: '❌',
-      text: (_) =>
-          '¿Viste? Al confirmar a ${n(victim)}, el juego tachó con '
-          'X claras su fila y su columna (es el interruptor Auto-X del '
-          'menú ⋮): ahí ya no puede haber nadie más.',
+      text: (l, _) => l.tutorialCoachStep4(n(victim)),
       target: (_) => TutorialTarget.board,
     ),
     // 5
     TutorialStep(
       emoji: '🛏️',
-      text: (_) =>
-          'Pista de ${n(bruno)}: ${clue(bruno)}. Casi todas las '
-          'casillas de cama quedaron tachadas: solo una sigue libre, '
-          '${rc(pos[bruno]!)}. Confirma a ${n(bruno)} ahí.',
+      text: (l, _) =>
+          l.tutorialCoachStep5(n(bruno), clue(l, bruno), rc(l, pos[bruno]!)),
       advanceWhen: (s) => at(s, bruno),
       target: (_) => TutorialTarget.board,
-      warning: (s) => misplaced(
-        s,
-        bruno,
-        'solo puede ir en la casilla de cama que no está tachada.',
-      ),
+      warning: (l, s) => misplaced(l, s, bruno, l.tutorialCoachWhyBruno),
     ),
     // 6
     TutorialStep(
       emoji: '✖️',
-      text: (s) {
-        final cell = suggestX(s);
-        final where = cell == null
-            ? 'una casilla en ${area(pos[elena]!)} que no sea el sofá'
-            : rc(cell);
-        return s.toolMode == ToolMode.cross
-            ? 'Con TACHAR activo, toca $where. Esa X la pones tú: sirve para '
-                  'descartar lo que sabes que no puede ser.'
-            : '${n(elena)} está sobre un sofá, en ${area(pos[elena]!)}: ahí '
-                  'nadie más puede estar. Descártalo: pulsa TACHAR en la '
-                  'barra y toca una casilla de esa habitación.';
+      text: (l, s) {
+        if (s.toolMode == ToolMode.cross) {
+          final cell = suggestX(s);
+          final where = cell == null
+              ? l.tutorialCoachStep6AnyCell(area(pos[elena]!))
+              : rc(l, cell);
+          return l.tutorialCoachStep6Cross(where);
+        }
+        return l.tutorialCoachStep6Tool(n(elena), area(pos[elena]!));
       },
       advanceWhen: anyManualX,
       target: boardOr(TutorialTarget.toolCross, ToolMode.cross),
-      warning: (s) => manualXOnSolution(s)
-          ? 'Esa X tapa la casilla de alguien. Bórrala con BORRAR.'
-          : null,
+      warning: (l, s) =>
+          manualXOnSolution(s) ? l.tutorialCoachWarnXOnSolution : null,
     ),
     // 7
     TutorialStep(
       emoji: '🗒️',
-      text: (_) =>
-          'Para pensar sin el dibujo, abre el menú ⋮ (arriba a la derecha) '
-          'y cambia a la vista NOTAS.',
+      text: (l, _) => l.tutorialCoachStep7,
       advanceWhen: (s) => !s.mapMode,
       target: (_) => TutorialTarget.menu,
     ),
     // 8
     TutorialStep(
       emoji: '🧮',
-      text: (_) =>
-          'NOTAS esconde los muebles y los nombres: queda la cuadrícula con '
-          'tus marcas, ideal para repasar filas y columnas. Vuelve a MAPA '
-          'desde el menú ⋮.',
+      text: (l, _) => l.tutorialCoachStep8,
       advanceWhen: (s) => s.mapMode,
       target: (_) => TutorialTarget.menu,
     ),
     // 9
     TutorialStep(
       emoji: '🛁',
-      text: (_) =>
-          'Pista de ${n(clara)}: ${clue(clara)}. Con las X que hay, '
-          'en ${area(pos[clara]!)} solo queda una casilla libre: '
-          '${rc(pos[clara]!)}. Confirma a ${n(clara)} ahí.',
+      text: (l, _) => l.tutorialCoachStep9(
+        n(clara),
+        clue(l, clara),
+        area(pos[clara]!),
+        rc(l, pos[clara]!),
+      ),
       advanceWhen: (s) => at(s, clara),
       target: (_) => TutorialTarget.board,
-      warning: (s) => misplaced(
-        s,
-        clara,
-        'solo cuadra en la única casilla libre de su habitación.',
-      ),
+      warning: (l, s) => misplaced(l, s, clara, l.tutorialCoachWhyClara),
     ),
     // 10
     TutorialStep(
       emoji: '🧩',
-      text: (_) =>
-          'Faltan ${n(elena)} (${clue(elena)}) y ${n(dario)} '
-          '(${clue(dario)}). Termina tú con las X y la regla de fila y '
-          'columna.',
+      text: (l, _) => l.tutorialCoachStep10(
+        n(elena),
+        clue(l, elena),
+        n(dario),
+        clue(l, dario),
+      ),
       advanceWhen: tutorialBoardIsCorrect,
       target: (_) => TutorialTarget.board,
-      warning: (s) => fiveWrong(s)
-          ? 'Los cinco están puestos, pero alguno no cuadra. Relee las '
-                'pistas de los que dudes.'
-          : null,
+      warning: (l, s) => fiveWrong(s) ? l.tutorialCoachWarnFiveWrong : null,
     ),
     // 11
     TutorialStep(
       emoji: '🧽',
-      text: (_) =>
-          '¡Todos bien ubicados! Antes de resolver, un experimento: '
-          'equivoquémonos a propósito. Primero quita a ${n(elena)} y a '
-          '${n(dario)}: pulsa BORRAR y toca cada ficha en el mapa.',
+      text: (l, _) => l.tutorialCoachStep11(n(elena), n(dario)),
       advanceWhen: (s) => gone(s, elena) && gone(s, dario),
       target: boardOr(TutorialTarget.toolErase, ToolMode.erase),
     ),
     // 12
     TutorialStep(
       emoji: '🔀',
-      text: (_) =>
-          'Ahora cámbialos de sitio: ${n(elena)} en ${rc(pos[dario]!)} '
-          'y ${n(dario)} en ${rc(pos[elena]!)}. Elige su retrato, pulsa '
-          'CONFIRMAR y toca la casilla.',
+      text: (l, _) => l.tutorialCoachStep12(
+        n(elena),
+        rc(l, pos[dario]!),
+        n(dario),
+        rc(l, pos[elena]!),
+      ),
       advanceWhen: (s) =>
           s.board.confirmedCellOf(elena) == pos[dario] &&
           s.board.confirmedCellOf(dario) == pos[elena],
       target: (_) => TutorialTarget.board,
-      warning: (s) => tutorialBoardIsCorrect(s)
-          ? 'Ese tablero es el correcto; para el experimento hay que '
-                'intercambiarlos.'
-          : null,
+      warning: (l, s) =>
+          tutorialBoardIsCorrect(s) ? l.tutorialCoachWarnBoardCorrect : null,
     ),
     // 13
     TutorialStep(
       emoji: '⚖️',
-      text: (_) =>
-          'Con el tablero lleno pero mal, pulsa RESOLVER (abajo). '
-          'En el tutorial el juego marca en rojo las casillas que no '
-          'cuadran.',
+      text: (l, _) => l.tutorialCoachStep13,
       advanceWhen: (s) => s.errorCells.isNotEmpty,
       target: (_) => TutorialTarget.resolve,
     ),
     // 14
     TutorialStep(
       emoji: '🔴',
-      text: (_) =>
-          'Las casillas rojas no cuadran: ${n(elena)} no está sobre un sofá, '
-          'como exige su pista, y por eso falla también ${n(dario)}. En una '
-          'partida real solo verás CUÁNTAS no cuadran.',
+      text: (l, _) => l.tutorialCoachStep14(n(elena), n(dario)),
       target: (_) => TutorialTarget.board,
     ),
     // 15
     TutorialStep(
       emoji: '🧹',
-      text: (_) =>
-          'Para corregir, pulsa BORRAR otra vez y toca a ${n(elena)} y a '
-          '${n(dario)} en el mapa para limpiarlos.',
+      text: (l, _) => l.tutorialCoachStep15(n(elena), n(dario)),
       advanceWhen: (s) => gone(s, elena) && gone(s, dario),
       target: boardOr(TutorialTarget.toolErase, ToolMode.erase),
     ),
     // 16
     TutorialStep(
       emoji: '🔧',
-      text: (_) =>
-          'Ahora ponlos bien: ${n(elena)} en ${rc(pos[elena]!)} '
-          '(sobre el sofá) y ${n(dario)} en ${rc(pos[dario]!)} (a solas).',
+      text: (l, _) => l.tutorialCoachStep16(
+        n(elena),
+        rc(l, pos[elena]!),
+        n(dario),
+        rc(l, pos[dario]!),
+      ),
       advanceWhen: tutorialBoardIsCorrect,
       target: (_) => TutorialTarget.board,
     ),
     // 17
     TutorialStep(
       emoji: '🏁',
-      text: (_) =>
-          '¡Tablero completo y correcto! Pulsa RESOLVER: si todo '
-          'cuadra, sabrás quién quedó a solas con la víctima. Ese es el '
-          'asesino.',
+      text: (l, _) => l.tutorialCoachStep17,
       target: (_) => TutorialTarget.resolve,
       isFinal: true,
     ),
@@ -457,13 +427,13 @@ class _TutorialLoaderState extends ConsumerState<TutorialLoader> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'No se pudo abrir el tutorial.',
+                  context.l10n.tutorialCoachLoadError,
                   textAlign: TextAlign.center,
                   style: context.note(18, color: context.pal.text),
                 ),
                 const SizedBox(height: 16),
                 AppButton(
-                  label: 'Volver a los casos',
+                  label: context.l10n.tutorialCoachBackToCases,
                   expand: false,
                   onTap: () => context.go('/casos'),
                 ),
@@ -519,7 +489,7 @@ class _TutorialCoachState extends ConsumerState<TutorialCoach> {
       });
     }
 
-    final warning = step.warning?.call(state);
+    final warning = step.warning?.call(context.l10n, state);
 
     return SizedBox(
       height: kTutorialCoachHeight,
@@ -545,7 +515,7 @@ class _TutorialCoachState extends ConsumerState<TutorialCoach> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              step.text(state),
+                              step.text(context.l10n, state),
                               style: TextStyle(
                                 fontSize: 14,
                                 height: 1.25,
@@ -556,7 +526,7 @@ class _TutorialCoachState extends ConsumerState<TutorialCoach> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 4),
                                 child: Text(
-                                  '⚠ $warning',
+                                  context.l10n.tutorialCoachWarning(warning),
                                   style: TextStyle(
                                     fontSize: 13,
                                     height: 1.2,
@@ -577,7 +547,10 @@ class _TutorialCoachState extends ConsumerState<TutorialCoach> {
                 child: Row(
                   children: [
                     Text(
-                      'TUTORIAL · ${index + 1}/${_steps.length}',
+                      context.l10n.tutorialCoachProgress(
+                        index + 1,
+                        _steps.length,
+                      ),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
@@ -597,9 +570,9 @@ class _TutorialCoachState extends ConsumerState<TutorialCoach> {
                           horizontal: 14,
                           vertical: 2,
                         ),
-                        semanticsLabel: 'Entendido',
+                        semanticsLabel: context.l10n.tutorialCoachGotIt,
                         child: Text(
-                          'Entendido',
+                          context.l10n.tutorialCoachGotIt,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
@@ -652,7 +625,7 @@ Future<void> showTutorialEnd(
                   const Text('🎓', style: TextStyle(fontSize: 48)),
                   const SizedBox(height: 6),
                   Text(
-                    '¡Práctica superada!',
+                    ctx.l10n.tutorialEndTitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 23,
@@ -662,16 +635,13 @@ Future<void> showTutorialEnd(
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'El asesino era ${murderer?.nameEs ?? '?'}: fue la única '
-                    'persona que quedó a solas con la víctima.',
+                    ctx.l10n.tutorialEndMurderer(murderer?.nameEs ?? '?'),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 17, height: 1.35, color: p.text),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Ya sabes ubicar, descartar con X, usar Notas, borrar y '
-                    'resolver. Esto era solo práctica: tu Caso 1 te espera '
-                    'sin empezar.',
+                    ctx.l10n.tutorialEndSummary,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, height: 1.35, color: p.text),
                   ),
@@ -687,9 +657,9 @@ Future<void> showTutorialEnd(
                       color: p.accent,
                       radius: 18,
                       minSize: const Size(0, 50),
-                      semanticsLabel: 'Ir a los casos',
+                      semanticsLabel: ctx.l10n.tutorialEndGoToCases,
                       child: Text(
-                        'Ir a los casos',
+                        ctx.l10n.tutorialEndGoToCases,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w800,
@@ -702,7 +672,7 @@ Future<void> showTutorialEnd(
                   TextButton(
                     onPressed: () => Navigator.of(ctx).pop(),
                     child: Text(
-                      'Seguir mirando el tablero',
+                      ctx.l10n.tutorialEndLookBoard,
                       style: TextStyle(fontSize: 15, color: p.textDim),
                     ),
                   ),

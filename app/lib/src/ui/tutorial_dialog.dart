@@ -9,6 +9,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
 import 'ui_kit.dart';
@@ -38,42 +39,34 @@ class _Page {
   const _Page(this.icon, this.title, this.lines);
 }
 
-const _pages = [
-  _Page(Icons.search_rounded, 'Bienvenido, detective', [
-    'En cada caso hay un grupo de sospechosos, una víctima y UNA verdad.',
-    'Tu misión: descubrir dónde estaba cada persona usando pura lógica.',
-    'Nada de adivinar — cada caso tiene una única solución deducible.',
+/// Las páginas del diálogo, con los textos del idioma activo.
+List<_Page> _pagesOf(AppLocalizations l10n) => [
+  _Page(Icons.search_rounded, l10n.tutorialDialogWelcomeTitle, [
+    l10n.tutorialDialogWelcomeLine1,
+    l10n.tutorialDialogWelcomeLine2,
+    l10n.tutorialDialogWelcomeLine3,
   ]),
-  _Page(Icons.map_rounded, 'El tablero', [
-    'El mapa es una cuadrícula con habitaciones y muebles.',
-    'REGLA DE ORO: hay exactamente UNA persona por fila y UNA por columna, como en un sudoku.',
-    'Las casillas con muebles que bloquean (mesas, plantas, cajas) no pueden ocuparse. Sobre sillas, camas, sofás y alfombras SÍ puede haber alguien.',
+  _Page(Icons.map_rounded, l10n.tutorialDialogBoardTitle, [
+    l10n.tutorialDialogBoardLine1,
+    l10n.tutorialDialogBoardLine2,
+    l10n.tutorialDialogBoardLine3,
   ]),
-  _Page(Icons.description_rounded, 'Las pistas', [
-    'Cada sospechoso tiene una pista en su tarjeta: "estaba sobre una cama", "junto a una planta"…',
-    '"Junto a" significa en una casilla vecina (arriba, abajo, izquierda o derecha) de la misma habitación.',
-    'Cruza las pistas con la regla de filas y columnas para descartar casillas.',
+  _Page(Icons.description_rounded, l10n.tutorialDialogCluesTitle, [
+    l10n.tutorialDialogCluesLine1,
+    l10n.tutorialDialogCluesLine2,
+    l10n.tutorialDialogCluesLine3,
   ]),
-  _Page(Icons.edit_rounded, 'Tus marcas', [
-    'TOCA una casilla para anotar un CANDIDATO (una letra pequeña).',
-    'MANTÉN PRESIONADO (o usa la herramienta Confirmar) para CONFIRMAR a alguien: se tachan su fila y su columna automáticamente.',
-    'Usa Tachar para descartar casillas y Borrar para limpiar. Deshacer siempre está disponible.',
+  _Page(Icons.edit_rounded, l10n.tutorialDialogMarksTitle, [
+    l10n.tutorialDialogMarksLine1,
+    l10n.tutorialDialogMarksLine2,
+    l10n.tutorialDialogMarksLine3,
   ]),
-  _Page(Icons.balance_rounded, 'Resolver el caso', [
-    'Cuando todos estén confirmados, pulsa RESOLVER.',
-    'Si todo está correcto: el asesino es quien quedó A SOLAS con la víctima en la misma habitación. El sistema lo revela.',
-    'Si algo no cuadra, el juego te dice cuántas casillas fallan, pero no cuáles: hay que volver a deducir. ¡Suerte, detective!',
+  _Page(Icons.balance_rounded, l10n.tutorialDialogSolveTitle, [
+    l10n.tutorialDialogSolveLine1,
+    l10n.tutorialDialogSolveLine2,
+    l10n.tutorialDialogSolveLine3,
   ]),
 ];
-
-/// Textos del diálogo (centralizados para traducir en la ronda 4.3).
-abstract final class TutorialDialogTexts {
-  static const header = 'CÓMO JUGAR';
-  static const skip = 'Omitir';
-  static const next = 'Siguiente';
-  static const startPractice = 'Empezar la práctica';
-  static const go = '¡A investigar!';
-}
 
 class _TutorialDialog extends StatefulWidget {
   final bool thenPractice;
@@ -96,7 +89,8 @@ class _TutorialDialogState extends State<_TutorialDialog> {
   @override
   Widget build(BuildContext context) {
     final p = context.pal;
-    final isLast = _page == _pages.length - 1;
+    final pages = _pagesOf(context.l10n);
+    final isLast = _page == pages.length - 1;
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -113,15 +107,15 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                 padding: const EdgeInsets.fromLTRB(18, 10, 8, 0),
                 child: Row(
                   children: [
-                    const SectionLabel(
-                      TutorialDialogTexts.header,
+                    SectionLabel(
+                      context.l10n.tutorialDialogHeader,
                       icon: Icons.menu_book_rounded,
                     ),
                     const Spacer(),
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(
-                        TutorialDialogTexts.skip,
+                        context.l10n.tutorialDialogSkip,
                         style: context.body(15, color: p.softText),
                       ),
                     ),
@@ -131,10 +125,10 @@ class _TutorialDialogState extends State<_TutorialDialog> {
               Expanded(
                 child: PageView.builder(
                   controller: _controller,
-                  itemCount: _pages.length,
+                  itemCount: pages.length,
                   onPageChanged: (i) => setState(() => _page = i),
                   itemBuilder: (_, i) {
-                    final pg = _pages[i];
+                    final pg = pages[i];
                     // Se desplaza: en pantallas bajas el contenido no cabe.
                     return SingleChildScrollView(
                       padding: const EdgeInsets.fromLTRB(24, 6, 24, 8),
@@ -185,7 +179,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (var i = 0; i < _pages.length; i++)
+                        for (var i = 0; i < pages.length; i++)
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             width: i == _page ? 24 : 9,
@@ -203,9 +197,9 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                     AppButton(
                       label: isLast
                           ? (widget.thenPractice
-                                ? TutorialDialogTexts.startPractice
-                                : TutorialDialogTexts.go)
-                          : TutorialDialogTexts.next,
+                                ? context.l10n.tutorialDialogStartPractice
+                                : context.l10n.tutorialDialogGo)
+                          : context.l10n.tutorialDialogNext,
                       color: isLast ? p.danger : null,
                       onTap: () {
                         if (isLast) {

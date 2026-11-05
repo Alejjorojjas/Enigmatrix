@@ -15,8 +15,8 @@ library;
 
 import 'dart:async';
 
+import '../../../l10n/l10n.dart';
 import '../board_settings.dart';
-import '../board_strings.dart';
 import 'feedback_event.dart';
 import 'feedback_plan.dart';
 
@@ -38,6 +38,7 @@ abstract class HapticSink {
 
 class FeedbackDirector {
   FeedbackDirector({
+    required this.l10n,
     required this.settings,
     required this.visuals,
     required this.sounds,
@@ -46,6 +47,9 @@ class FeedbackDirector {
     void Function(Duration, void Function())? schedule,
   })  : _nowMs = nowMs ?? _defaultNow,
         _schedule = schedule ?? ((d, f) => Timer(d, f));
+
+  /// Textos del idioma activo (avisos sobre el tablero).
+  final AppLocalizations l10n;
 
   BoardSettings settings;
   final VisualSink visuals;
@@ -231,11 +235,11 @@ class FeedbackDirector {
 
       case PlacementRejected():
         final text = switch (e.problem) {
-          PlacementProblem.noSuspect => BoardStrings.pickSuspectFirst,
-          PlacementProblem.cellHasConfirmed => BoardStrings.cellHasConfirmed,
-          PlacementProblem.cellHasX => BoardStrings.cellHasX,
-          PlacementProblem.alreadyPlaced => BoardStrings.alreadyPlaced,
-          PlacementProblem.blocked => BoardStrings.blockedCell,
+          PlacementProblem.noSuspect => l10n.boardPickSuspectFirst,
+          PlacementProblem.cellHasConfirmed => l10n.boardCellHasConfirmed,
+          PlacementProblem.cellHasX => l10n.boardCellHasX,
+          PlacementProblem.alreadyPlaced => l10n.boardAlreadyPlaced,
+          PlacementProblem.blocked => l10n.boardBlockedCell,
         };
         return FeedbackPlan(
           visuals: [
@@ -247,7 +251,7 @@ class FeedbackDirector {
         );
 
       case SolveFailed():
-        final text = BoardStrings.wrongCells(e.wrongCells);
+        final text = l10n.boardWrongCells(e.wrongCells);
         return FeedbackPlan(
           visuals: [
             if (_reduced)
@@ -268,7 +272,7 @@ class FeedbackDirector {
         return FeedbackPlan(
           visuals: [
             VisualEffect(VisualKind.message,
-                text: BoardStrings.missingSuspects(e.missing)),
+                text: l10n.boardMissingSuspects(e.missing)),
           ],
           haptics: const [HapticPulse(HapticKind.light)],
         );

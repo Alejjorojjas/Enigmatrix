@@ -108,8 +108,6 @@ class PaperSkin extends ArtSkin {
   @override
   String get id => idName;
   @override
-  String get displayName => 'Papel';
-  @override
   ChromeKind get chrome => ChromeKind.paper;
   @override
   late final SkinPalette palette = paletteFor(mode);

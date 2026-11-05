@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'game_chrome.dart';
 import 'home_tabs.dart';
@@ -20,15 +21,6 @@ import 'tutorial_dialog.dart';
 import 'ui_kit.dart';
 
 export 'mock_data.dart';
-
-/// Rótulos de las pestañas.
-abstract final class NavTexts {
-  static const home = 'Inicio';
-  static const worlds = 'Mundos';
-  static const challenge = 'Reto';
-  static const ranking = 'Ranking';
-  static const profile = 'Perfil';
-}
 
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
@@ -95,11 +87,11 @@ class _NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.pal;
     final items = [
-      (Icons.home_rounded, NavTexts.home, p.danger),
-      (Icons.map_rounded, NavTexts.worlds, p.good),
-      (Icons.today_rounded, NavTexts.challenge, p.accent),
-      (Icons.emoji_events_rounded, NavTexts.ranking, p.medal(0)),
-      (Icons.person_rounded, NavTexts.profile, p.world(0)),
+      (Icons.home_rounded, context.l10n.navHome, p.danger),
+      (Icons.map_rounded, context.l10n.navWorlds, p.good),
+      (Icons.today_rounded, context.l10n.navChallenge, p.accent),
+      (Icons.emoji_events_rounded, context.l10n.navRanking, p.medal(0)),
+      (Icons.person_rounded, context.l10n.navProfile, p.world(0)),
     ];
     return ColoredBox(
       color: p.surface,

@@ -5,10 +5,11 @@ library;
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../board/scene/skin.dart';
 import '../game/game_controller.dart' show ClueMark;
+import 'clue_text.dart';
 import 'game_chrome.dart';
-import 'game_toolbar.dart' show GameTexts;
 import 'layout_metrics.dart';
 import 'skin_theme.dart';
 
@@ -17,14 +18,6 @@ class TrayPulse {
   final int serial;
   final String charId;
   const TrayPulse(this.serial, this.charId);
-}
-
-/// Textos de la pista (centralizados).
-abstract final class HintTexts {
-  static const empty = 'Toca un retrato para ver su pista.';
-  static const expandLabel = 'Pista completa';
-  static const more = 'ver más';
-  static const openFull = 'Abrir la pista completa';
 }
 
 /// Bandeja: fila de retratos y, debajo, el recuadro de la pista. En la
@@ -300,12 +293,15 @@ class _PortraitChipState extends State<_PortraitChip>
   Widget build(BuildContext context) {
     final p = context.pal;
     final label = widget.victim
-        ? '${widget.name} (${GameTexts.victim})'
+        ? context.l10n.gameHintVictimLabel(
+            widget.name,
+            context.l10n.gameToolbarVictim,
+          )
         : widget.name;
     return Semantics(
       button: true,
       selected: widget.selected,
-      label: widget.placed ? '$label, ya colocado' : label,
+      label: widget.placed ? context.l10n.gameHintPlaced(label) : label,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -368,7 +364,7 @@ class _PortraitChipState extends State<_PortraitChip>
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  widget.victim ? GameTexts.victim : widget.name,
+                  widget.victim ? context.l10n.gameToolbarVictim : widget.name,
                   maxLines: 1,
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
@@ -458,10 +454,12 @@ class _HintBoxState extends State<HintBox> {
     }
   }
 
-  String? get _clueText {
+  String? _clueText(BuildContext context) {
     final id = widget.selectedChar;
     if (id == null) return null;
-    return widget.pc.clueFor(id)?.cardTextEs(widget.pc.map, widget.pc.names);
+    final clue = widget.pc.clueFor(id);
+    if (clue == null) return null;
+    return clueText(widget.pc, clue, locale: Localizations.localeOf(context));
   }
 
   TextSpan _span(BuildContext context) {
@@ -470,7 +468,7 @@ class _HintBoxState extends State<HintBox> {
     final fontSize = widget.compact ? 14.0 : 15.0;
     if (id == null) {
       return TextSpan(
-        text: HintTexts.empty,
+        text: context.l10n.gameHintEmpty,
         style: TextStyle(fontSize: fontSize, height: 1.2, color: p.textDim),
       );
     }
@@ -497,7 +495,7 @@ class _HintBoxState extends State<HintBox> {
             decoration: TextDecoration.none,
           ),
         ),
-        TextSpan(text: _clueText ?? HintTexts.empty),
+        TextSpan(text: _clueText(context) ?? context.l10n.gameHintEmpty),
       ],
     );
   }
@@ -561,7 +559,7 @@ class _HintBoxState extends State<HintBox> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 6),
                       child: Text(
-                        HintTexts.more,
+                        context.l10n.gameHintMore,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
@@ -602,8 +600,11 @@ class _HintBoxState extends State<HintBox> {
       child: Semantics(
         container: true,
         label: id == null
-            ? HintTexts.empty
-            : '${widget.pc.character(id).nameEs}: ${_clueText ?? ''}',
+            ? context.l10n.gameHintEmpty
+            : context.l10n.gameHintClueSemantics(
+                widget.pc.character(id).nameEs,
+                _clueText(context) ?? '',
+              ),
         excludeSemantics: true,
         child: box,
       ),
@@ -631,7 +632,7 @@ class _HintBoxState extends State<HintBox> {
               },
               onLongPress: widget.onOpenFull,
               child: Semantics(
-                label: HintTexts.expandLabel,
+                label: context.l10n.gameHintExpandLabel,
                 child: ChromeBox(
                   color: fill,
                   radius: 14,

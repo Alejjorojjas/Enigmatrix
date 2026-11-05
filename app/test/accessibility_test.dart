@@ -29,6 +29,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/content_overrides.dart';
 import 'support/game_ui.dart';
+import 'support/l10n.dart';
 
 late PuzzleCase _pc;
 late List<PuzzleCase> _world;
@@ -104,6 +105,9 @@ Future<GoRouter> _pumpShell(
         ),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: kL10nDelegates,
+        supportedLocales: kL10nLocales,
+        locale: kL10nLocale,
         routerConfig: router,
         themeMode: mode,
         theme: SkinUi.theme(skin, Brightness.light),
@@ -159,7 +163,7 @@ void main() {
               map.orthNeighbors(i).any((n) => map.objectAt(n) != null))
             i,
       ].first;
-      final label = cellSemanticsLabel(_pc, BoardState.empty(), cell);
+      final label = cellSemanticsLabel(l10nEs, _pc, BoardState.empty(), cell);
       expect(
         label,
         startsWith(
@@ -184,16 +188,19 @@ void main() {
           .board;
       // Siempre en el orden de los personajes del caso.
       expect(
-        cellSemanticsLabel(_pc, board, free[0]),
+        cellSemanticsLabel(l10nEs, _pc, board, free[0]),
         contains('candidatos: ${a.nameEs}, ${b.nameEs}, confirmado: ninguno'),
       );
       board = board.placeConfirmed(free[0], a.id).board;
       expect(
-        cellSemanticsLabel(_pc, board, free[0]),
+        cellSemanticsLabel(l10nEs, _pc, board, free[0]),
         contains('confirmado: ${a.nameEs}'),
       );
       board = BoardState.empty().placeX(free[1], XLevel.small).board;
-      expect(cellSemanticsLabel(_pc, board, free[1]), contains('tachada'));
+      expect(
+        cellSemanticsLabel(l10nEs, _pc, board, free[1]),
+        contains('tachada'),
+      );
     });
 
     test(
@@ -206,6 +213,7 @@ void main() {
         ];
         if (blocked.isEmpty) return;
         final label = cellSemanticsLabel(
+          l10nEs,
           _pc,
           BoardState.empty(),
           blocked.first,
@@ -218,7 +226,7 @@ void main() {
     test('no revela la solución: es igual con el tablero vacío', () {
       final map = _pc.map;
       for (var i = 0; i < map.size * map.size; i++) {
-        final label = cellSemanticsLabel(_pc, BoardState.empty(), i);
+        final label = cellSemanticsLabel(l10nEs, _pc, BoardState.empty(), i);
         for (final c in _pc.characters) {
           expect(label, isNot(contains(c.nameEs)), reason: 'casilla $i');
         }
@@ -239,7 +247,7 @@ void main() {
           findsNWidgets(n * n),
         );
         expect(
-          find.bySemanticsLabel(BoardSemanticsTexts.board(n)),
+          find.bySemanticsLabel(l10nEs.boardSemanticsBoard(n)),
           findsOneWidget,
         );
 

@@ -10,6 +10,7 @@ import 'package:enigmatrix/src/board/board_settings.dart';
 import 'package:enigmatrix/src/board/feedback/feedback_director.dart';
 import 'package:enigmatrix/src/board/feedback/feedback_plan.dart';
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
+import 'l10n.dart';
 
 /// Opciones del tablero que cambian en el medio de la prueba.
 class GameSettings implements BoardSettings {
@@ -63,6 +64,7 @@ class Rig {
   final List<(int, void Function())> scheduled = [];
 
   late final FeedbackDirector director = FeedbackDirector(
+    l10n: l10nEs,
     settings: settings,
     visuals: visual,
     sounds: sound,

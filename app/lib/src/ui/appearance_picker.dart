@@ -6,20 +6,18 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../board/scene/skins.dart';
+import '../../l10n/l10n.dart';
 import '../game/app_settings.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
 
-/// Textos del selector (centralizados para traducir en la ronda 4.3).
-abstract final class AppearanceTexts {
-  static const title = 'Aspecto del juego';
-  static const skin = 'Piel';
-  static const mode = 'Modo';
-  static const system = 'Sistema';
-  static const light = 'Claro';
-  static const dark = 'Oscuro';
-}
+/// Nombre visible de una piel (los textos viven en el .arb).
+String skinName(AppLocalizations l10n, String id) => switch (id) {
+  'ilustrada' => l10n.skinIllustrated,
+  'papel' => l10n.skinPaper,
+  'neutra' => l10n.skinNeutral,
+  _ => id,
+};
 
 class AppearancePicker extends ConsumerWidget {
   const AppearancePicker({super.key, this.labelStyle});
@@ -36,27 +34,26 @@ class AppearancePicker extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(AppearanceTexts.skin, style: label),
+        Text(context.l10n.appearanceSkin, style: label),
         const SizedBox(height: 6),
         _Segments<String>(
           key: const ValueKey('selector-piel'),
           value: settings.skinId == 'neutra' ? kDefaultSkin : settings.skinId,
           options: [
-            for (final id in kPlayerSkins)
-              (id, SkinRegistry.spec(id).displayName),
+            for (final id in kPlayerSkins) (id, skinName(context.l10n, id)),
           ],
           onChanged: notifier.setSkin,
         ),
         const SizedBox(height: 12),
-        Text(AppearanceTexts.mode, style: label),
+        Text(context.l10n.appearanceMode, style: label),
         const SizedBox(height: 6),
         _Segments<ThemeMode>(
           key: const ValueKey('selector-modo'),
           value: settings.themeMode,
-          options: const [
-            (ThemeMode.system, AppearanceTexts.system),
-            (ThemeMode.light, AppearanceTexts.light),
-            (ThemeMode.dark, AppearanceTexts.dark),
+          options: [
+            (ThemeMode.system, context.l10n.appearanceSystem),
+            (ThemeMode.light, context.l10n.appearanceLight),
+            (ThemeMode.dark, context.l10n.appearanceDark),
           ],
           onChanged: notifier.setThemeMode,
         ),

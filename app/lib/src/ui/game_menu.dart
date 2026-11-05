@@ -7,37 +7,15 @@ import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/l10n.dart';
 import '../game/app_settings.dart';
 import '../game/dev_tools.dart';
 import '../game/game_controller.dart';
 import 'appearance_picker.dart';
+import 'clue_text.dart';
+import 'dev_texts.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
-
-/// Textos del menú y de las hojas (centralizados para traducir en 4.3).
-abstract final class MenuTexts {
-  static const title = 'Más acciones';
-  static const redo = 'Rehacer';
-  static const clear = 'Limpiar tablero';
-  static const clearTitle = '¿Limpiar tablero?';
-  static const clearBody =
-      'Se borran las marcas del tablero y de las pistas. '
-      'El tiempo y los errores se mantienen.';
-  static const cancel = 'Cancelar';
-  static const clearConfirm = 'Limpiar';
-  static const view = 'Vista del tablero';
-  static const viewMap = 'Mapa';
-  static const viewNotes = 'Notas';
-  static const autoX = 'Auto-X';
-  static const autoXHelp =
-      'Al confirmar a alguien, tacha su fila y columna automáticamente';
-  static const legend = 'Leyenda y reglas';
-  static const fps = 'Medidor de FPS (pruebas)';
-  static const clueMark = 'Marca de la pista';
-  static const markNormal = 'Normal';
-  static const markHighlight = 'Destacar';
-  static const markStrike = 'Tachar';
-}
 
 /// Abre una hoja inferior que se pinta con la piel y el modo de AHORA: si el
 /// jugador los cambia con la hoja abierta (menú), la hoja cambia con ellos.
@@ -167,7 +145,7 @@ class GameMenuSheet extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              MenuTexts.title,
+              context.l10n.gameMenuTitle,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -178,7 +156,7 @@ class GameMenuSheet extends ConsumerWidget {
             row(
               key: const ValueKey('menu-rehacer'),
               icon: Icons.redo,
-              label: MenuTexts.redo,
+              label: context.l10n.gameMenuRedo,
               onTap: canRedo && !solved
                   ? () {
                       controller.redo();
@@ -189,7 +167,7 @@ class GameMenuSheet extends ConsumerWidget {
             row(
               key: const ValueKey('menu-limpiar'),
               icon: Icons.cleaning_services_outlined,
-              label: MenuTexts.clear,
+              label: context.l10n.gameMenuClear,
               onTap: boardEmpty || solved
                   ? null
                   : () async {
@@ -197,16 +175,16 @@ class GameMenuSheet extends ConsumerWidget {
                       final yes = await showDialog<bool>(
                         context: context,
                         builder: (ctx) => AlertDialog(
-                          title: const Text(MenuTexts.clearTitle),
-                          content: const Text(MenuTexts.clearBody),
+                          title: Text(ctx.l10n.gameMenuClearTitle),
+                          content: Text(ctx.l10n.gameMenuClearBody),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(ctx, false),
-                              child: const Text(MenuTexts.cancel),
+                              child: Text(ctx.l10n.gameMenuCancel),
                             ),
                             FilledButton(
                               onPressed: () => Navigator.pop(ctx, true),
-                              child: const Text(MenuTexts.clearConfirm),
+                              child: Text(ctx.l10n.gameMenuClearConfirm),
                             ),
                           ],
                         ),
@@ -219,7 +197,7 @@ class GameMenuSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              MenuTexts.view,
+              context.l10n.gameMenuView,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
@@ -238,9 +216,15 @@ class GameMenuSheet extends ConsumerWidget {
                     TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                   ),
                 ),
-                segments: const [
-                  ButtonSegment(value: true, label: Text(MenuTexts.viewMap)),
-                  ButtonSegment(value: false, label: Text(MenuTexts.viewNotes)),
+                segments: [
+                  ButtonSegment(
+                    value: true,
+                    label: Text(context.l10n.gameMenuViewMap),
+                  ),
+                  ButtonSegment(
+                    value: false,
+                    label: Text(context.l10n.gameMenuViewNotes),
+                  ),
                 ],
                 selected: {mapMode},
                 onSelectionChanged: (sel) {
@@ -254,7 +238,7 @@ class GameMenuSheet extends ConsumerWidget {
               key: const ValueKey('menu-autox'),
               contentPadding: EdgeInsets.zero,
               title: Text(
-                MenuTexts.autoX,
+                context.l10n.gameMenuAutoX,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -262,7 +246,7 @@ class GameMenuSheet extends ConsumerWidget {
                 ),
               ),
               subtitle: Text(
-                MenuTexts.autoXHelp,
+                context.l10n.gameMenuAutoXHelp,
                 style: TextStyle(fontSize: 13, color: p.textDim),
               ),
               value: autoX,
@@ -271,7 +255,7 @@ class GameMenuSheet extends ConsumerWidget {
             row(
               key: const ValueKey('menu-leyenda'),
               icon: Icons.menu_book_rounded,
-              label: MenuTexts.legend,
+              label: context.l10n.gameMenuLegend,
               onTap: () {
                 Navigator.of(context).pop();
                 showLegendSheet(context, pc);
@@ -286,7 +270,7 @@ class GameMenuSheet extends ConsumerWidget {
                 key: const ValueKey('menu-fps'),
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  MenuTexts.fps,
+                  DevTexts.fpsMenu,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -370,7 +354,7 @@ class _FullClueSheet extends ConsumerWidget {
                 ),
               ),
               child: Text(
-                clue.cardTextEs(pc.map, pc.names),
+                clueText(pc, clue, locale: Localizations.localeOf(context)),
                 style: TextStyle(
                   fontSize: 18,
                   height: 1.4,
@@ -386,7 +370,7 @@ class _FullClueSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              MenuTexts.clueMark,
+              context.l10n.gameMenuClueMark,
               style: TextStyle(fontSize: 14, color: p.textDim),
             ),
             const SizedBox(height: 6),
@@ -397,21 +381,21 @@ class _FullClueSheet extends ConsumerWidget {
                 style: const ButtonStyle(
                   minimumSize: WidgetStatePropertyAll(Size(0, 52)),
                 ),
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: ClueMark.normal,
-                    icon: Icon(Icons.radio_button_unchecked),
-                    label: Text(MenuTexts.markNormal),
+                    icon: const Icon(Icons.radio_button_unchecked),
+                    label: Text(context.l10n.gameMenuMarkNormal),
                   ),
                   ButtonSegment(
                     value: ClueMark.highlighted,
-                    icon: Icon(Icons.star_rounded),
-                    label: Text(MenuTexts.markHighlight),
+                    icon: const Icon(Icons.star_rounded),
+                    label: Text(context.l10n.gameMenuMarkHighlight),
                   ),
                   ButtonSegment(
                     value: ClueMark.struck,
-                    icon: Icon(Icons.strikethrough_s),
-                    label: Text(MenuTexts.markStrike),
+                    icon: const Icon(Icons.strikethrough_s),
+                    label: Text(context.l10n.gameMenuMarkStrike),
                   ),
                 ],
                 selected: {mark},
@@ -492,12 +476,13 @@ class LegendSheet extends ConsumerWidget {
             if (extras.isNotEmpty)
               _section(
                 context,
-                title: 'INFORMACIÓN ADICIONAL',
+                title: context.l10n.gameLegendExtraTitle,
                 children: [
                   for (final e in extras)
                     Builder(
                       builder: (context) {
                         final i = pc.clues.indexOf(e);
+                        final locale = Localizations.localeOf(context);
                         return InkWell(
                           onTap: () => controller.cycleClue(i),
                           child: ConstrainedBox(
@@ -507,7 +492,7 @@ class LegendSheet extends ConsumerWidget {
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 4),
                               child: Text(
-                                '· ${e.textEs(pc.map, pc.names)}',
+                                '· ${clueText(pc, e, locale: locale, card: false)}',
                                 style: switch (marks[i]) {
                                   ClueMark.normal => body,
                                   ClueMark.highlighted => body.copyWith(
@@ -529,14 +514,21 @@ class LegendSheet extends ConsumerWidget {
               ),
             _section(
               context,
-              title: 'HABITACIONES',
+              title: context.l10n.gameLegendRoomsTitle,
               children: [
                 for (final area in pc.map.areas)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
                     child: Text(
-                      '${area.nameEs}'
-                      '${pc.map.weaponsInArea(area.id).isEmpty ? '' : '  ·  armas: ${pc.map.weaponsInArea(area.id).map((w) => w.nameEs).join(', ')}'}',
+                      pc.map.weaponsInArea(area.id).isEmpty
+                          ? area.nameEs
+                          : context.l10n.gameLegendRoomWeapons(
+                              area.nameEs,
+                              pc.map
+                                  .weaponsInArea(area.id)
+                                  .map((w) => w.nameEs)
+                                  .join(', '),
+                            ),
                       style: body,
                     ),
                   ),
@@ -544,11 +536,10 @@ class LegendSheet extends ConsumerWidget {
             ),
             _section(
               context,
-              title: 'MUEBLES',
+              title: context.l10n.gameLegendFurnitureTitle,
               children: [
                 Text(
-                  'Pisables: puedes colocar gente encima. '
-                  'Los demás bloquean su casilla.',
+                  context.l10n.gameLegendFurnitureNote,
                   style: TextStyle(fontSize: 13, color: p.textDim),
                 ),
                 const SizedBox(height: 8),
@@ -568,7 +559,9 @@ class LegendSheet extends ConsumerWidget {
                           border: Border.all(color: p.line),
                         ),
                         child: Text(
-                          '${type.nameEs}${type.standable ? ' ◦' : ''}',
+                          type.standable
+                              ? context.l10n.gameLegendStandable(type.nameEs)
+                              : type.nameEs,
                           style: TextStyle(fontSize: 13, color: p.text),
                         ),
                       ),
@@ -576,19 +569,17 @@ class LegendSheet extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '◦ = pisable',
+                  context.l10n.gameLegendStandableKey,
                   style: TextStyle(fontSize: 13, color: p.textDim),
                 ),
               ],
             ),
             _section(
               context,
-              title: 'REGLAS',
+              title: context.l10n.gameLegendRulesTitle,
               children: [
                 Text(
-                  'Una persona por fila y por columna. El asesino quedó a '
-                  'solas con la víctima en la misma habitación. Ubica a '
-                  'todos, incluida la víctima.',
+                  context.l10n.gameLegendRulesBody,
                   style: TextStyle(fontSize: 14, height: 1.5, color: p.textDim),
                 ),
               ],

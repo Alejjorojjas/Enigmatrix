@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_version.dart';
 import '../data/case_repository.dart';
+import 'dev_texts.dart';
 import 'ui_kit.dart';
 
 /// Los casos que entran al reporte: Mundo 1, retos y banco, sin repetir. Si
@@ -77,14 +78,6 @@ Future<void> copyFeedbackReport(BuildContext context, WidgetRef ref) async {
   final report = await buildReportFor(ref);
   await Clipboard.setData(ClipboardData(text: report));
   if (context.mounted) {
-    showAppToast(context, FeedbackTexts.copied);
+    showAppToast(context, DevTexts.feedbackCopied);
   }
-}
-
-/// Textos del reporte (centralizados para traducir en la ronda 4.3).
-abstract final class FeedbackTexts {
-  static const copy = 'Copiar feedback de playtest';
-  static const copied =
-      'Feedback copiado al portapapeles: pégalo en el chat de Claude para '
-      'calibrar el generador';
 }

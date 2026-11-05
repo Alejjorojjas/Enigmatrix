@@ -10,21 +10,12 @@ import 'package:go_router/go_router.dart';
 
 import '../data/case_repository.dart';
 import 'case_list_screen.dart' show prefsProvider;
+import '../../l10n/l10n.dart';
+import 'dev_texts.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
 import 'ui_kit.dart';
 import 'v1_scope.dart';
-
-/// Textos del banco de pruebas (centralizados para traducir en la ronda 4.3).
-abstract final class BankTexts {
-  static const title = 'Banco de pruebas';
-  static const subtitle =
-      'Solo para desarrollo: estos casos no forman parte del juego.';
-  static const back = 'Volver';
-  static const done = 'Resuelto';
-  static const open = 'En curso';
-  static const error = 'No se pudo cargar el banco de pruebas';
-}
 
 class BankScreen extends ConsumerWidget {
   const BankScreen({super.key});
@@ -45,12 +36,12 @@ class BankScreen extends ConsumerWidget {
                 child: Row(
                   children: [
                     Tooltip(
-                      message: BankTexts.back,
+                      message: context.l10n.uiBack,
                       child: ChromeButton(
                         onTap: () => context.go('/home'),
                         radius: 14,
                         color: p.surface,
-                        semanticsLabel: BankTexts.back,
+                        semanticsLabel: context.l10n.uiBack,
                         padding: EdgeInsets.zero,
                         minSize: const Size(SkinUi.minTouch, SkinUi.minTouch),
                         child: Icon(
@@ -62,7 +53,10 @@ class BankScreen extends ConsumerWidget {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: Text(BankTexts.title, style: context.display(22)),
+                      child: Text(
+                        DevTexts.bankTitle,
+                        style: context.display(22),
+                      ),
                     ),
                   ],
                 ),
@@ -70,7 +64,7 @@ class BankScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(18, 0, 18, 8),
                 child: Text(
-                  BankTexts.subtitle,
+                  DevTexts.bankSubtitle,
                   style: context.note(15, color: p.softText),
                 ),
               ),
@@ -82,7 +76,7 @@ class BankScreen extends ConsumerWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Text(
-                        '${BankTexts.error}: $e',
+                        '${DevTexts.bankError}: $e',
                         textAlign: TextAlign.center,
                         style: context.body(16, color: p.danger),
                       ),
@@ -111,8 +105,8 @@ class BankScreen extends ConsumerWidget {
   }
 
   static String? _stateOf(String? done, String? game) {
-    if (done != null) return BankTexts.done;
-    return game != null ? BankTexts.open : null;
+    if (done != null) return DevTexts.bankDone;
+    return game != null ? DevTexts.bankOpen : null;
   }
 }
 
@@ -130,9 +124,12 @@ class _BankRow extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       accent: p.difficulty(pc.difficulty),
-      semanticsLabel:
-          '$title, ${difficultyName(pc.difficulty)}, tablero '
-          '${pc.map.size} por ${pc.map.size}${state == null ? '' : ', $state'}',
+      semanticsLabel: DevTexts.bankRowSemantics(
+        title,
+        difficultyName(context.l10n, pc.difficulty),
+        pc.map.size,
+        state,
+      ),
       onTap: () => context.go('/play/${pc.caseId}'),
       child: Row(
         children: [
@@ -145,9 +142,11 @@ class _BankRow extends StatelessWidget {
                   style: context.body(16, weight: FontWeight.w800),
                 ),
                 Text(
-                  '${difficultyName(pc.difficulty)} · '
-                  '${pc.map.size}×${pc.map.size}'
-                  '${state == null ? '' : ' · $state'}',
+                  DevTexts.bankRowSubtitle(
+                    difficultyName(context.l10n, pc.difficulty),
+                    pc.map.size,
+                    state,
+                  ),
                   style: context.body(
                     14,
                     weight: FontWeight.w600,

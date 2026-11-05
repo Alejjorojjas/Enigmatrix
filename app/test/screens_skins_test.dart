@@ -17,7 +17,6 @@ import 'package:enigmatrix/src/ui/game_chrome.dart';
 import 'package:enigmatrix/src/ui/home_shell.dart';
 import 'package:enigmatrix/src/ui/skin_theme.dart';
 import 'package:enigmatrix/src/ui/splash_screen.dart';
-import 'package:enigmatrix/src/ui/ui_kit.dart';
 import 'package:enigmatrix/src/ui/v1_scope.dart';
 import 'package:enigmatrix/src/ui/victory_screen.dart';
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
@@ -29,6 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/game_ui.dart' show loadBankCase;
 import 'support/content_overrides.dart';
+import 'support/l10n.dart';
 
 const _skins = ['ilustrada', 'papel'];
 const _modes = [ThemeMode.light, ThemeMode.dark];
@@ -111,6 +111,9 @@ Future<void> _pump(
         ),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: kL10nDelegates,
+        supportedLocales: kL10nLocales,
+        locale: kL10nLocale,
         routerConfig: router,
         themeMode: mode,
         theme: SkinUi.theme(skin, Brightness.light),
@@ -205,7 +208,7 @@ final _scenarios = <_Scenario>[
     // Un toque en comprar muestra el aviso de función simulada dentro.
     await t.tap(find.widgetWithText(ChromeButton, r'$0.99').first);
     await _settle(t);
-    expect(find.text(UiTexts.demoNotice), findsOneWidget);
+    expect(find.text(l10nEs.uiDemoNotice), findsOneWidget);
   }),
   _Scenario('Premium', (t, skin, mode, size) async {
     await _shell(t, skin, mode, size);
@@ -213,7 +216,7 @@ final _scenarios = <_Scenario>[
     await _tapScrolled(t, find.text('Premium'));
     await t.tap(find.widgetWithText(ChromeButton, r'MENSUAL · $4.99'));
     await _settle(t);
-    expect(find.text(UiTexts.demoNotice), findsOneWidget);
+    expect(find.text(l10nEs.uiDemoNotice), findsOneWidget);
   }),
   _Scenario('diálogo del tutorial', (t, skin, mode, size) async {
     await _shell(t, skin, mode, size);

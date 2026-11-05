@@ -12,27 +12,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
 import '../game/dev_tools.dart';
 import '../game/game_controller.dart';
+import 'dev_texts.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
 import 'ui_kit.dart';
 import 'v1_scope.dart';
 
-/// Textos de la victoria (centralizados para traducir en la ronda 4.3).
-abstract final class VictoryTexts {
-  static const stamp = 'CASO CERRADO';
-  static const goodJob = 'Buen trabajo, detective.';
-  static const report = 'INFORME DEL CASO';
-  static const murdererWas = 'El asesino era ';
-  static const murdererTail = ', que quedó a solas con la víctima.';
-  static const weapon = 'Arma homicida: ';
-  static const time = 'Tiempo';
-  static const errors = 'Errores';
-  static const feedback = 'FEEDBACK DE PLAYTEST';
-  static const feedbackHint = '¿Pistas confusas? ¿Dificultad justa?…';
-  static const keepGoing = 'Continuar';
-  static const lookBoard = 'Seguir mirando el tablero';
+/// Arma una frase con un dato resaltado: pide la frase con un marcador en
+/// lugar del dato y lo reemplaza por un tramo con [style]. Así el orden de las
+/// palabras lo decide cada idioma y no el código.
+TextSpan _withHighlight(
+  String Function(String marker) phrase,
+  String value,
+  TextStyle style,
+) {
+  const marker = '\u0001';
+  final parts = phrase(marker).split(marker);
+  return TextSpan(
+    children: [
+      TextSpan(text: parts.first),
+      TextSpan(text: value, style: style),
+      if (parts.length > 1) TextSpan(text: parts.sublist(1).join(marker)),
+    ],
+  );
 }
 
 String _fmt(int seconds) =>
@@ -146,7 +151,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                             borderRadius: BorderRadius.circular(11),
                           ),
                           child: Text(
-                            VictoryTexts.stamp,
+                            context.l10n.victoryStamp,
                             style: context.display(
                               30,
                               color: p.danger,
@@ -160,7 +165,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  VictoryTexts.goodJob,
+                  context.l10n.victoryGoodJob,
                   textAlign: TextAlign.center,
                   style: context.display(20, color: p.accent),
                 ),
@@ -182,24 +187,19 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                   padding: const EdgeInsets.all(18),
                   child: Column(
                     children: [
-                      const SectionLabel(VictoryTexts.report),
+                      SectionLabel(context.l10n.victoryReport),
                       const SizedBox(height: 6),
                       Container(height: 2, color: p.line),
                       const SizedBox(height: 12),
                       Text.rich(
-                        TextSpan(
-                          children: [
-                            const TextSpan(text: VictoryTexts.murdererWas),
-                            TextSpan(
-                              text: murderer?.nameEs ?? '?',
-                              style: context.body(
-                                17,
-                                weight: FontWeight.w800,
-                                color: p.danger,
-                              ),
-                            ),
-                            const TextSpan(text: VictoryTexts.murdererTail),
-                          ],
+                        _withHighlight(
+                          context.l10n.victoryMurdererLine,
+                          murderer?.nameEs ?? '?',
+                          context.body(
+                            17,
+                            weight: FontWeight.w800,
+                            color: p.danger,
+                          ),
                         ),
                         textAlign: TextAlign.center,
                         style: context.body(16),
@@ -208,18 +208,14 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                         Padding(
                           padding: const EdgeInsets.only(top: 6),
                           child: Text.rich(
-                            TextSpan(
-                              children: [
-                                const TextSpan(text: VictoryTexts.weapon),
-                                TextSpan(
-                                  text: weapon.nameEs,
-                                  style: context.body(
-                                    16,
-                                    weight: FontWeight.w800,
-                                    color: p.accent,
-                                  ),
-                                ),
-                              ],
+                            _withHighlight(
+                              context.l10n.victoryWeaponLine,
+                              weapon.nameEs,
+                              context.body(
+                                16,
+                                weight: FontWeight.w800,
+                                color: p.accent,
+                              ),
                             ),
                             textAlign: TextAlign.center,
                             style: context.body(16),
@@ -231,7 +227,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                           Expanded(
                             child: StatTile(
                               value: _fmt(state.elapsedSeconds),
-                              label: VictoryTexts.time,
+                              label: context.l10n.victoryTime,
                               icon: Icons.timer_outlined,
                               color: p.world(0),
                             ),
@@ -240,7 +236,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                           Expanded(
                             child: StatTile(
                               value: '${state.errorCount}',
-                              label: VictoryTexts.errors,
+                              label: context.l10n.victoryErrors,
                               icon: state.errorCount == 0
                                   ? Icons.verified_outlined
                                   : Icons.close_rounded,
@@ -264,14 +260,14 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SectionLabel(VictoryTexts.feedback),
+                        const SectionLabel(DevTexts.feedbackTitle),
                         const SizedBox(height: 8),
                         TextField(
                           controller: _fb,
                           maxLines: 3,
                           style: context.body(15, weight: FontWeight.w600),
                           decoration: InputDecoration(
-                            hintText: VictoryTexts.feedbackHint,
+                            hintText: DevTexts.feedbackHint,
                             hintStyle: context.body(
                               15,
                               weight: FontWeight.w600,
@@ -286,7 +282,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 const SizedBox(height: 20),
 
                 AppButton(
-                  label: VictoryTexts.keepGoing,
+                  label: context.l10n.victoryKeepGoing,
                   onTap: () => _saveAnd(() {
                     Navigator.of(context).pop();
                     context.go(exitRouteFor(pc.caseId));
@@ -296,7 +292,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 TextButton(
                   onPressed: () => _saveAnd(() => Navigator.of(context).pop()),
                   child: Text(
-                    VictoryTexts.lookBoard,
+                    context.l10n.victoryLookBoard,
                     style: context.body(15, color: p.softText),
                   ),
                 ),

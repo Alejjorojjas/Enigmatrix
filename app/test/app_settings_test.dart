@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'support/content_overrides.dart';
+import 'support/l10n.dart';
 
 Future<ProviderContainer> _container([AppSettings? initial]) async {
   final c = ProviderContainer(
@@ -257,7 +258,12 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: c,
-          child: const MaterialApp(home: HomeShell()),
+          child: MaterialApp(
+            localizationsDelegates: kL10nDelegates,
+            supportedLocales: kL10nLocales,
+            locale: kL10nLocale,
+            home: HomeShell(),
+          ),
         ),
       );
       await tester.pump();

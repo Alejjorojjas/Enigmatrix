@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
   flutter_riverpod: ^2.6.1
   go_router: ^16.0.0
   shared_preferences: ^2.3.0
@@ -33,6 +36,10 @@ flutter_launcher_icons:
 
 flutter:
   uses-material-design: true
+  # Textos traducibles: gen-l10n genera lib/l10n/app_localizations*.dart a
+  # partir de lib/l10n/app_es.arb (ver l10n.yaml). Los archivos generados se
+  # versionan para compilar sin pasos extra.
+  generate: true
   assets:
     - assets/cases/
     - assets/config/

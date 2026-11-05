@@ -5,23 +5,10 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../game/game_controller.dart' show ToolMode;
 import 'game_chrome.dart';
 import 'skin_theme.dart';
-
-/// Textos de la partida que se repiten (centralizados para traducir en 4.3).
-abstract final class GameTexts {
-  static const toolNotes = 'Anotar';
-  static const toolCross = 'Tachar';
-  static const toolPlace = 'Confirmar';
-  static const toolErase = 'Borrar';
-  static const resolve = 'Resolver';
-  static const viewSummary = 'Ver resumen';
-  static const undo = 'Deshacer';
-  static const back = 'Salir del caso';
-  static const menu = 'Más acciones';
-  static const victim = 'Víctima';
-}
 
 class ToolBar extends StatelessWidget {
   const ToolBar({
@@ -46,10 +33,14 @@ class ToolBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tools = <(ToolMode, IconData, String)>[
-      (ToolMode.notes, Icons.edit_outlined, GameTexts.toolNotes),
-      (ToolMode.cross, Icons.close, GameTexts.toolCross),
-      (ToolMode.place, Icons.check, GameTexts.toolPlace),
-      (ToolMode.erase, Icons.cleaning_services_outlined, GameTexts.toolErase),
+      (ToolMode.notes, Icons.edit_outlined, context.l10n.gameToolbarToolNotes),
+      (ToolMode.cross, Icons.close, context.l10n.gameToolbarToolCross),
+      (ToolMode.place, Icons.check, context.l10n.gameToolbarToolPlace),
+      (
+        ToolMode.erase,
+        Icons.cleaning_services_outlined,
+        context.l10n.gameToolbarToolErase,
+      ),
     ];
     Widget button(ToolMode m, IconData icon, String label) {
       final b = ToolButton(
@@ -140,7 +131,7 @@ class TimerPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.pal;
     return Semantics(
-      label: 'Tiempo ${format(seconds)}',
+      label: context.l10n.gameToolbarTime(format(seconds)),
       excludeSemantics: true,
       child: ChromeBox(
         color: p.pill,
@@ -237,7 +228,9 @@ class ResolveBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.pal;
-    final label = solved ? GameTexts.viewSummary : GameTexts.resolve;
+    final label = solved
+        ? context.l10n.gameToolbarViewSummary
+        : context.l10n.gameToolbarResolve;
     return SizedBox(
       width: fill ? double.infinity : null,
       child: ChromeButton(

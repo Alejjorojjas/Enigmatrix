@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../board/board_strings.dart';
+import '../../l10n/l10n.dart';
 import '../board/feedback/feedback_director.dart';
 import '../board/feedback/feedback_plan.dart';
 import '../board/fps_recorder.dart';
@@ -41,48 +41,8 @@ import 'game_tray.dart';
 import 'layout_metrics.dart';
 import 'skin_theme.dart';
 import 'tutorial_coach.dart';
-import 'v1_scope.dart' show caseTitle, exitRouteFor;
+import 'v1_scope.dart' show caseTitle, difficultyName, exitRouteFor;
 import 'victory_screen.dart';
-
-/// Textos de la pantalla de partida (centralizados para traducir en 4.3).
-abstract final class ScreenTexts {
-  static const skip = 'Saltar';
-  static const tutorialTitle = 'Tutorial';
-  static const paused = 'Partida en pausa';
-  static const pausedBody =
-      'El reloj está detenido y el tablero oculto. Toca Continuar para seguir.';
-  static const resume = 'Continuar';
-  static const errors = 'errores';
-  static const withWeapon = 'con arma';
-  static const exitTitle = 'Salir del caso';
-  static const exitBody = 'Tu avance queda guardado. ¿Salir del caso?';
-  static const keepPlaying = 'Seguir jugando';
-  static const leave = 'Salir';
-  static const exitTutorialTitle = 'Salir del tutorial';
-  static const exitTutorialBody =
-      'El tutorial no guarda avance. Si sales, podrás repetirlo desde la '
-      'lista de casos. ¿Salir?';
-  static const keepPracticing = 'Seguir practicando';
-  static const replaceTitle = '¿Reemplazar confirmado?';
-  static const replaceBody =
-      'Esta casilla ya tiene una decisión confirmada. ¿Quieres reemplazarla?';
-  static const cancel = 'Cancelar';
-  static const replace = 'Reemplazar';
-  static const practice = 'Práctica';
-  static const lockedWait = 'Espera un momento…';
-
-  static String wrongInTutorial(int n) =>
-      '${BoardStrings.wrongCells(n)}: revisa las marcadas';
-
-  static String difficulty(String d) => switch (d) {
-    'principiante' => 'Principiante',
-    'casual' => 'Casual',
-    'intermedio' => 'Intermedio',
-    'experto' => 'Experto',
-    'elite' => 'Élite',
-    _ => d,
-  };
-}
 
 class GameScreen extends ConsumerWidget {
   final String caseId;
@@ -222,6 +182,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
   void _buildScene() {
     _sounds = ref.read(soundSinkProvider);
     _director = FeedbackDirector(
+      l10n: context.l10n,
       settings: _effectiveSettings(),
       visuals: _router,
       sounds: _sounds,
@@ -230,6 +191,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     _scene = SceneSession(pc: pc, director: _director);
     final dpr = MediaQuery.devicePixelRatioOf(context);
     _game = BoardGame(
+      l10n: context.l10n,
       session: _scene,
       settings: _effectiveSettings(),
       skin: _skin,
@@ -323,7 +285,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
   void _onBoardTouch() {
     if (ref.read(gameControllerProvider(pc)).locked) {
       _showToast(
-        ScreenTexts.lockedWait,
+        context.l10n.gameScreenLockedWait,
         duration: const Duration(milliseconds: 1500),
       );
     }
@@ -337,7 +299,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     if (tutorial) {
       final n = ref.read(gameControllerProvider(pc)).wrongCount;
       _showToast(
-        ScreenTexts.wrongInTutorial(n),
+        context.l10n.gameScreenWrongInTutorial(n),
         duration: const Duration(milliseconds: 3200),
       );
     }
@@ -350,16 +312,16 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     final yes = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(ScreenTexts.replaceTitle),
-        content: const Text(ScreenTexts.replaceBody),
+        title: Text(ctx.l10n.gameScreenReplaceTitle),
+        content: Text(ctx.l10n.gameScreenReplaceBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(ScreenTexts.cancel),
+            child: Text(ctx.l10n.gameScreenCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(ScreenTexts.replace),
+            child: Text(ctx.l10n.gameScreenReplace),
           ),
         ],
       ),
@@ -381,16 +343,16 @@ class _GameBodyState extends ConsumerState<_GameBody> {
       final leave = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text(ScreenTexts.exitTutorialTitle),
-          content: const Text(ScreenTexts.exitTutorialBody),
+          title: Text(ctx.l10n.gameScreenExitTutorialTitle),
+          content: Text(ctx.l10n.gameScreenExitTutorialBody),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text(ScreenTexts.keepPracticing),
+              child: Text(ctx.l10n.gameScreenKeepPracticing),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text(ScreenTexts.leave),
+              child: Text(ctx.l10n.gameScreenLeave),
             ),
           ],
         ),
@@ -406,16 +368,16 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     final leave = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(ScreenTexts.exitTitle),
-        content: const Text(ScreenTexts.exitBody),
+        title: Text(ctx.l10n.gameScreenExitTitle),
+        content: Text(ctx.l10n.gameScreenExitBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text(ScreenTexts.keepPlaying),
+            child: Text(ctx.l10n.gameScreenKeepPlaying),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text(ScreenTexts.leave),
+            child: Text(ctx.l10n.gameScreenLeave),
           ),
         ],
       ),
@@ -434,6 +396,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     if (tutorial) {
       // Antes del Resolver final la guía enseña uno fallido.
       final block = tutorialResolveBlock(
+        context.l10n,
         pc,
         state,
         ref.read(tutorialStepProvider),
@@ -631,7 +594,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
       children: [
         IconSquare(
           icon: Icons.arrow_back,
-          label: GameTexts.back,
+          label: context.l10n.gameToolbarBack,
           onTap: _requestExit,
         ),
         const Spacer(),
@@ -660,7 +623,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
             );
             return IconSquare(
               icon: Icons.undo,
-              label: GameTexts.undo,
+              label: context.l10n.gameToolbarUndo,
               onTap: canUndo
                   ? ref.read(gameControllerProvider(pc).notifier).undo
                   : null,
@@ -672,7 +635,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
           TutorialTarget.menu,
           IconSquare(
             icon: Icons.more_vert,
-            label: GameTexts.menu,
+            label: context.l10n.gameToolbarMenu,
             onTap: () => showGameMenu(context, pc),
           ),
           radius: 16,
@@ -696,7 +659,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
               children: [
                 Text(
                   tutorial
-                      ? '${ScreenTexts.tutorialTitle} · ${caseTitle(pc)}'
+                      ? context.l10n.gameScreenTutorialHeading(caseTitle(pc))
                       : caseTitle(pc),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -712,13 +675,20 @@ class _GameBodyState extends ConsumerState<_GameBody> {
                     final errors = ref.watch(
                       gameControllerProvider(pc).select((s) => s.errorCount),
                     );
+                    final difficulty = difficultyName(
+                      context.l10n,
+                      pc.difficulty,
+                    );
                     final head = tutorial
-                        ? '${ScreenTexts.practice} · $size×$size'
-                        : '${ScreenTexts.difficulty(pc.difficulty)} · '
-                              '$size×$size'
-                              '${pc.hasWeapon ? ' · ${ScreenTexts.withWeapon}' : ''}';
+                        ? context.l10n.gameScreenPracticeHead(size)
+                        : pc.hasWeapon
+                        ? context.l10n.gameScreenCaseHeadWeapon(
+                            difficulty,
+                            size,
+                          )
+                        : context.l10n.gameScreenCaseHead(difficulty, size);
                     return Text(
-                      '$head · ${ScreenTexts.errors}: $errors',
+                      context.l10n.gameScreenStatusLine(head, errors),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -749,9 +719,9 @@ class _GameBodyState extends ConsumerState<_GameBody> {
                     horizontal: 12,
                     vertical: 2,
                   ),
-                  semanticsLabel: ScreenTexts.skip,
+                  semanticsLabel: context.l10n.gameScreenSkip,
                   child: Text(
-                    ScreenTexts.skip,
+                    context.l10n.gameScreenSkip,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -982,14 +952,14 @@ class _BoardStage extends StatelessWidget {
                       onTap: onSkip,
                       color: p.accent,
                       radius: 18,
-                      semanticsLabel: ScreenTexts.skip,
+                      semanticsLabel: context.l10n.gameScreenSkip,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.fast_forward, color: p.onAccent),
                           const SizedBox(width: 6),
                           Text(
-                            ScreenTexts.skip,
+                            context.l10n.gameScreenSkip,
                             style: TextStyle(
                               fontWeight: FontWeight.w800,
                               color: p.onAccent,
@@ -1032,7 +1002,7 @@ class _PausedCover extends StatelessWidget {
                   Icon(Icons.pause_circle_outline, size: 56, color: p.accent),
                   const SizedBox(height: 12),
                   Text(
-                    ScreenTexts.paused,
+                    context.l10n.gameScreenPaused,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 22,
@@ -1042,7 +1012,7 @@ class _PausedCover extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    ScreenTexts.pausedBody,
+                    context.l10n.gameScreenPausedBody,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, height: 1.4, color: p.text),
                   ),
@@ -1053,14 +1023,14 @@ class _PausedCover extends StatelessWidget {
                     color: p.accent,
                     radius: 20,
                     minSize: const Size(200, 52),
-                    semanticsLabel: ScreenTexts.resume,
+                    semanticsLabel: context.l10n.gameScreenResume,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.play_arrow_rounded, color: p.onAccent),
                         const SizedBox(width: 6),
                         Text(
-                          ScreenTexts.resume,
+                          context.l10n.gameScreenResume,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w800,

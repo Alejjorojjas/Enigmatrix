@@ -16,6 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
 import '../data/case_repository.dart';
 import '../game/game_config.dart';
 import 'game_chrome.dart';
@@ -28,25 +29,6 @@ import 'v1_scope.dart';
 final prefsProvider = FutureProvider<SharedPreferences>(
   (_) => SharedPreferences.getInstance(),
 );
-
-/// Textos de la lista de casos (centralizados para traducir en la ronda 4.3).
-abstract final class CaseListTexts {
-  static const title = 'Casos';
-  static const folder = 'EXPEDIENTE';
-  static const nextCase = 'SIGUIENTE CASO';
-  static const inProgress = 'En curso';
-  static const tutorial = 'TUTORIAL';
-  static const tutorialBody =
-      'Caso de práctica paso a paso (no cuenta como Caso 1)';
-  static const tutorialDone = 'Completado: puedes repetirlo';
-  static const start = 'Empezar';
-  static const repeat = 'Repetir';
-  static const soonBody = 'Llega en una próxima actualización.';
-  static const howToPlay = 'Cómo jugar';
-  static const reopen = 'Reabrir caso';
-  static const keepPlaying = 'Continuar';
-  static const investigate = 'Investigar';
-}
 
 /// Altura fija de cada fila del camino (permite que el hilo conozca la
 /// posición exacta de cada ficha).
@@ -98,7 +80,7 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Text(
-                'Error cargando casos: $e',
+                context.l10n.caseListLoadError('$e'),
                 textAlign: TextAlign.center,
                 style: context.body(16, color: p.danger),
               ),
@@ -218,7 +200,7 @@ class _TopBar extends StatelessWidget {
             children: [
               square(
                 Icons.arrow_back_rounded,
-                'Volver',
+                context.l10n.uiBack,
                 () => context.go('/home'),
               ),
               const SizedBox(width: 8),
@@ -227,7 +209,7 @@ class _TopBar extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    CaseListTexts.title,
+                    context.l10n.caseListTitle,
                     style: context.display(22, spacing: 0.5),
                   ),
                 ),
@@ -241,7 +223,7 @@ class _TopBar extends StatelessWidget {
               const SizedBox(width: 6),
               square(
                 Icons.help_outline_rounded,
-                CaseListTexts.howToPlay,
+                context.l10n.caseListHowToPlay,
                 () => showTutorialDialog(context),
               ),
             ],
@@ -282,7 +264,7 @@ class _CaseFolderHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _FolderTab(
-                text: '${CaseListTexts.folder} Nº$index',
+                text: context.l10n.caseListFolderNumber(index),
                 color: color,
               ),
               ChromeBox(
@@ -304,11 +286,11 @@ class _CaseFolderHeader extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                difficultyName(difficulty),
+                                difficultyName(context.l10n, difficulty),
                                 style: context.display(21),
                               ),
                               Text(
-                                'Tablero $size×$size',
+                                context.l10n.caseListBoardSize(size),
                                 style: context.body(
                                   14,
                                   weight: FontWeight.w600,
@@ -328,8 +310,9 @@ class _CaseFolderHeader extends StatelessWidget {
                     AppProgressBar(
                       value: count == 0 ? 0 : solved / count,
                       color: color,
-                      semanticsLabel:
-                          'Progreso de ${difficultyName(difficulty)}',
+                      semanticsLabel: context.l10n.caseListDifficultyProgress(
+                        difficultyName(context.l10n, difficulty),
+                      ),
                     ),
                   ],
                 ),
@@ -364,7 +347,7 @@ class _SoonFolderHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _FolderTab(
-                  text: '${CaseListTexts.folder} Nº$index',
+                  text: context.l10n.caseListFolderNumber(index),
                   color: p.surfaceAlt,
                   textColor: p.textDim,
                 ),
@@ -385,7 +368,7 @@ class _SoonFolderHeader extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              difficultyName(difficulty),
+                              difficultyName(context.l10n, difficulty),
                               style: context.display(21),
                             ),
                             const SizedBox(height: 4),
@@ -395,7 +378,7 @@ class _SoonFolderHeader extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              CaseListTexts.soonBody,
+                              context.l10n.caseListSoonBody,
                               style: context.body(
                                 13,
                                 weight: FontWeight.w600,
@@ -649,9 +632,9 @@ class _CaseFileState extends ConsumerState<_CaseFile>
           radius: 22,
           padding: EdgeInsets.zero,
           minSize: const Size(_tileSize - 6, _tileSize - 6),
-          semanticsLabel:
-              'Caso ${widget.number}: $title'
-              '${isDone ? ', cerrado' : ''}',
+          semanticsLabel: isDone
+              ? context.l10n.caseListTileLabelDone(widget.number, title)
+              : context.l10n.caseListTileLabel(widget.number, title),
           child: SizedBox(
             width: _tileSize - 8,
             height: _tileSize - 8,
@@ -679,7 +662,7 @@ class _CaseFileState extends ConsumerState<_CaseFile>
                 Positioned(
                   bottom: 6,
                   child: Text(
-                    'Nº ${widget.number}',
+                    context.l10n.caseListNumberShort(widget.number),
                     style: context.body(
                       13,
                       weight: FontWeight.w800,
@@ -708,9 +691,9 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             children: [
               if (widget.savedGame != null) ...[
                 _Tag(
-                  text:
-                      '${CaseListTexts.inProgress} · '
-                      '${formatElapsed(widget.savedGame!.elapsed)}',
+                  text: context.l10n.caseListInProgressTag(
+                    formatElapsed(widget.savedGame!.elapsed),
+                  ),
                 ),
                 const SizedBox(height: 6),
               ],
@@ -735,8 +718,10 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             ),
             child: _Tag(
               text: widget.savedGame != null
-                  ? 'EN CURSO · ${formatElapsed(widget.savedGame!.elapsed)}'
-                  : CaseListTexts.nextCase,
+                  ? context.l10n.caseListInProgressTagStrong(
+                      formatElapsed(widget.savedGame!.elapsed),
+                    )
+                  : context.l10n.caseListNextCase,
               strong: true,
             ),
           ),
@@ -761,7 +746,7 @@ class _CaseFileState extends ConsumerState<_CaseFile>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Caso Nº${widget.number} — ${caseTitle(pc)}',
+            ctx.l10n.caseListSheetTitle(widget.number, caseTitle(pc)),
             style: ctx.display(22),
           ),
           if (premise != null && premise.trim().isNotEmpty) ...[
@@ -775,7 +760,7 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             children: [
               InfoChip(
                 icon: Icons.speed_rounded,
-                text: difficultyName(pc.difficulty),
+                text: difficultyName(context.l10n, pc.difficulty),
                 color: diffColor,
               ),
               InfoChip(
@@ -784,16 +769,16 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               ),
               InfoChip(
                 icon: Icons.group_outlined,
-                text: '${pc.characters.length} sospechosos',
+                text: context.l10n.caseListSuspects(pc.characters.length),
               ),
               InfoChip(
                 icon: Icons.search_rounded,
-                text: '${pc.clues.length} pistas',
+                text: context.l10n.caseListClues(pc.clues.length),
               ),
               if (pc.hasWeapon)
                 InfoChip(
                   icon: Icons.colorize,
-                  text: 'arma homicida',
+                  text: context.l10n.caseListWeapon,
                   color: p.medal(0),
                 ),
             ],
@@ -802,8 +787,10 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Text(
-                'Caso cerrado en ${done['time']} s · ${done['errors']} '
-                'errores',
+                context.l10n.caseListClosedIn(
+                  '${done['time']}',
+                  (done['errors'] as num?)?.toInt() ?? 0,
+                ),
                 style: ctx.body(15, color: p.good),
               ),
             ),
@@ -811,18 +798,20 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Text(
-                'En curso: ${formatElapsed(widget.savedGame!.elapsed)} '
-                'jugados · ${widget.savedGame!.errors ?? 0} errores',
+                context.l10n.caseListInProgressInfo(
+                  formatElapsed(widget.savedGame!.elapsed),
+                  widget.savedGame!.errors ?? 0,
+                ),
                 style: ctx.body(15, color: p.accent),
               ),
             ),
           const SizedBox(height: 18),
           AppButton(
             label: done != null
-                ? CaseListTexts.reopen
+                ? context.l10n.caseListReopen
                 : widget.savedGame != null
-                ? CaseListTexts.keepPlaying
-                : CaseListTexts.investigate,
+                ? context.l10n.caseListKeepPlaying
+                : context.l10n.caseListInvestigate,
             color: done != null ? diffColor : null,
             onTap: () {
               Navigator.pop(ctx);
@@ -897,9 +886,9 @@ class _TutorialNode extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SectionLabel(CaseListTexts.tutorial),
+                          SectionLabel(context.l10n.caseListTutorial),
                           Text(
-                            CaseListTexts.tutorialBody,
+                            context.l10n.caseListTutorialBody,
                             style: context.note(16, color: p.text),
                           ),
                           if (played)
@@ -913,7 +902,7 @@ class _TutorialNode extends StatelessWidget {
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
-                                    CaseListTexts.tutorialDone,
+                                    context.l10n.caseListTutorialDone,
                                     style: context.body(
                                       13,
                                       weight: FontWeight.w700,
@@ -930,7 +919,9 @@ class _TutorialNode extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 AppButton(
-                  label: played ? CaseListTexts.repeat : CaseListTexts.start,
+                  label: played
+                      ? context.l10n.caseListRepeat
+                      : context.l10n.caseListStart,
                   quiet: played,
                   onTap: () => context.go('/tutorial'),
                 ),

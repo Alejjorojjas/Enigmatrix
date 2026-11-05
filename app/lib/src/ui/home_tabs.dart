@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
 import '../data/case_repository.dart';
 import '../game/game_config.dart';
 import 'case_list_screen.dart' show prefsProvider;
@@ -20,34 +21,6 @@ import 'mock_data.dart';
 import 'skin_theme.dart';
 import 'ui_kit.dart';
 import 'v1_scope.dart';
-
-/// Textos de las pestañas (centralizados para traducir en la ronda 4.3).
-abstract final class HomeTexts {
-  static const challengeLabel = 'RETO DIARIO';
-  static const challengeTitle = 'El caso de hoy te espera';
-  static const challengeSim = 'Caso del día (simulación: aún sin servidor)';
-  static const playChallenge = 'Jugar el reto';
-  static const worldLabel = 'MUNDO 1 · LA MANSIÓN';
-  static const keepInvestigating = 'Continuar investigando';
-  static const shop = 'TIENDA';
-  static const shopSub = 'Vidas y protectores de racha';
-  static const see = 'Ver';
-  static const worlds = 'Mundos';
-  static const challengeTab = 'Reto diario';
-  static const todayCase = 'EL CASO DE HOY';
-  static const challengeNote =
-      'Simulación: aún sin servidor, no hay intento oficial ni cierre a '
-      'medianoche';
-  static const stateNew = 'Estado: no iniciado';
-  static const stateOpen = 'Estado: en curso';
-  static const stateDone = 'Estado: resuelto';
-  static const noChallenge = 'El caso de hoy no está disponible.';
-  static const playToday = 'Jugar el caso de hoy';
-  static const weekPoints = 'PUNTOS DE LA SEMANA';
-  static const ranking = 'Ranking';
-  static const rankingSub = 'Semanal · se conecta en el modo online';
-  static const you = 'Tú (detective)';
-}
 
 /// Cuántos de [cases] están cerrados según lo guardado.
 int solvedIn(List<PuzzleCase> cases, SharedPreferences? prefs) =>
@@ -70,14 +43,18 @@ void _playToday(BuildContext context, DailyChallenge? today) {
 
 /// Estado del reto de hoy según lo guardado: sin iniciar, en curso o
 /// resuelto (las claves `done:` y `game:` más el id del caso).
-String challengeStateText(PuzzleCase pc, SharedPreferences? prefs) {
+String challengeStateText(
+  AppLocalizations l10n,
+  PuzzleCase pc,
+  SharedPreferences? prefs,
+) {
   if (prefs?.getString('done:${pc.caseId}') != null) {
-    return HomeTexts.stateDone;
+    return l10n.homeStateDone;
   }
   if (prefs?.getString('game:${pc.caseId}') != null) {
-    return HomeTexts.stateOpen;
+    return l10n.homeStateOpen;
   }
-  return HomeTexts.stateNew;
+  return l10n.homeStateNew;
 }
 
 // ---------- INICIO ----------
@@ -93,10 +70,10 @@ class HomeTab extends ConsumerWidget {
     final solved = solvedIn(playable, prefs);
     final hour = DateTime.now().hour;
     final greeting = hour < 12
-        ? 'Buenos días'
+        ? context.l10n.homeGreetingMorning
         : hour < 19
-        ? 'Buenas tardes'
-        : 'Buenas noches';
+        ? context.l10n.homeGreetingAfternoon
+        : context.l10n.homeGreetingEvening;
     final today = todaysChallengeOf(ref);
 
     return ListView(
@@ -110,11 +87,8 @@ class HomeTab extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$greeting,',
-                    style: context.note(17, color: p.softText),
-                  ),
-                  Text('detective', style: context.display(26)),
+                  Text(greeting, style: context.note(17, color: p.softText)),
+                  Text(context.l10n.homeDetective, style: context.display(26)),
                 ],
               ),
             ),
@@ -131,7 +105,7 @@ class HomeTab extends ConsumerWidget {
                 children: [
                   Flexible(
                     child: SectionLabel(
-                      HomeTexts.challengeLabel,
+                      context.l10n.homeChallengeLabel,
                       color: p.danger,
                       icon: Icons.local_fire_department_rounded,
                     ),
@@ -141,9 +115,9 @@ class HomeTab extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              Text(HomeTexts.challengeTitle, style: context.display(20)),
+              Text(context.l10n.homeChallengeTitle, style: context.display(20)),
               Text(
-                'Racha: $mockStreak días · ${HomeTexts.challengeSim}',
+                context.l10n.homeStreakLine(mockStreak),
                 style: context.note(15, color: p.softText),
               ),
               if (today != null) ...[
@@ -154,7 +128,10 @@ class HomeTab extends ConsumerWidget {
                   children: [
                     InfoChip(
                       icon: Icons.speed_rounded,
-                      text: difficultyName(today.puzzle.difficulty),
+                      text: difficultyName(
+                        context.l10n,
+                        today.puzzle.difficulty,
+                      ),
                       color: p.difficulty(today.puzzle.difficulty),
                     ),
                     InfoChip(
@@ -163,16 +140,17 @@ class HomeTab extends ConsumerWidget {
                     ),
                     InfoChip(
                       icon: Icons.event_rounded,
-                      text:
-                          'Día ${today.day} de '
-                          '${ref.watch(gameConfigProvider).challengeDays}',
+                      text: context.l10n.challengeDayOf(
+                        today.day,
+                        ref.watch(gameConfigProvider).challengeDays,
+                      ),
                     ),
                   ],
                 ),
               ],
               const SizedBox(height: 14),
               AppButton(
-                label: HomeTexts.playChallenge,
+                label: context.l10n.homePlayChallenge,
                 color: p.danger,
                 onTap: today == null ? null : () => _playToday(context, today),
               ),
@@ -185,13 +163,13 @@ class HomeTab extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionLabel(
-                HomeTexts.worldLabel,
+                context.l10n.homeWorldLabel,
                 color: p.good,
                 icon: Icons.map_rounded,
               ),
               const SizedBox(height: 8),
               Text(
-                '$solved de ${playable.length} casos cerrados',
+                context.l10n.homeSolvedCount(solved, playable.length),
                 style: context.display(20),
               ),
               const SizedBox(height: 10),
@@ -199,11 +177,11 @@ class HomeTab extends ConsumerWidget {
                 value: playable.isEmpty ? 0 : solved / playable.length,
                 color: p.good,
                 height: 14,
-                semanticsLabel: 'Progreso del Mundo 1',
+                semanticsLabel: context.l10n.homeWorldProgress,
               ),
               const SizedBox(height: 14),
               AppButton(
-                label: HomeTexts.keepInvestigating,
+                label: context.l10n.homeKeepInvestigating,
                 onTap: () => context.go('/casos'),
               ),
             ],
@@ -229,7 +207,7 @@ class HomeTab extends ConsumerWidget {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
-                          HomeTexts.shop,
+                          context.l10n.homeShop,
                           style: context.body(
                             14,
                             weight: FontWeight.w800,
@@ -240,7 +218,7 @@ class HomeTab extends ConsumerWidget {
                       ],
                     ),
                     Text(
-                      HomeTexts.shopSub,
+                      context.l10n.homeShopSub,
                       style: context.note(15, color: p.softText),
                     ),
                   ],
@@ -248,7 +226,7 @@ class HomeTab extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               AppButton(
-                label: HomeTexts.see,
+                label: context.l10n.homeSee,
                 expand: false,
                 onTap: () => openShopSheet(context),
               ),
@@ -287,7 +265,7 @@ class _LivesChip extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '+1 en $mockNextLife',
+              context.l10n.homeNextLife(mockNextLife),
               style: context.body(
                 13,
                 weight: FontWeight.w600,
@@ -323,21 +301,23 @@ class WorldsTab extends ConsumerWidget {
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final playable = worldCases(ref);
     final solved = solvedIn(playable, prefs);
-    final worlds = worldsFor(ref.watch(gameConfigProvider));
+    final worlds = worldsFor(ref.watch(gameConfigProvider), context.l10n);
     final open = worlds.where((w) => w.available).length;
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
         PageHeader(
-          title: HomeTexts.worlds,
-          subtitle: '$open de ${worlds.length} disponibles',
+          title: context.l10n.homeWorlds,
+          subtitle: context.l10n.worldsAvailable(open, worlds.length),
         ),
         for (final (i, w) in worlds.indexed)
           Opacity(
             opacity: w.available ? 1 : 0.62,
             child: AppCard(
               accent: w.available ? p.world(i) : null,
-              semanticsLabel: w.available ? '${w.name}: entrar' : null,
+              semanticsLabel: w.available
+                  ? context.l10n.worldsEnter(w.name)
+                  : null,
               onTap: w.available ? () => context.go('/casos') : null,
               child: Row(
                 children: [
@@ -354,7 +334,10 @@ class WorldsTab extends ConsumerWidget {
                         const SizedBox(height: 2),
                         if (w.available) ...[
                           Text(
-                            '$solved de ${playable.length} casos cerrados',
+                            context.l10n.homeSolvedCount(
+                              solved,
+                              playable.length,
+                            ),
                             style: context.body(
                               14,
                               weight: FontWeight.w600,
@@ -367,7 +350,7 @@ class WorldsTab extends ConsumerWidget {
                                 ? 0
                                 : solved / playable.length,
                             color: p.world(i),
-                            semanticsLabel: 'Progreso de ${w.name}',
+                            semanticsLabel: context.l10n.worldsProgress(w.name),
                           ),
                         ] else
                           const Align(
@@ -404,19 +387,19 @@ class ChallengeTab extends ConsumerWidget {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final today = todaysChallengeOf(ref);
-    const days = [
-      ('L', true),
-      ('M', true),
-      ('X', true),
-      ('J', false),
-      ('V', false),
-      ('S', false),
-      ('D', false),
+    final days = [
+      (context.l10n.challengeWeekdayMon, true),
+      (context.l10n.challengeWeekdayTue, true),
+      (context.l10n.challengeWeekdayWed, true),
+      (context.l10n.challengeWeekdayThu, false),
+      (context.l10n.challengeWeekdayFri, false),
+      (context.l10n.challengeWeekdaySat, false),
+      (context.l10n.challengeWeekdaySun, false),
     ];
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        const PageHeader(title: HomeTexts.challengeTab),
+        PageHeader(title: context.l10n.homeChallengeTab),
         AppCard(
           accent: p.danger,
           child: Column(
@@ -431,12 +414,18 @@ class ChallengeTab extends ConsumerWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 8,
                 children: [
-                  Text('$mockStreak días de racha', style: context.display(26)),
+                  Text(
+                    context.l10n.challengeStreakTitle(mockStreak),
+                    style: context.display(26),
+                  ),
                   const DemoBadge(),
                 ],
               ),
               Text(
-                'Mejor racha: $mockBestStreak · protectores: $mockProtectors',
+                context.l10n.challengeBestStreak(
+                  mockBestStreak,
+                  mockProtectors,
+                ),
                 textAlign: TextAlign.center,
                 style: context.note(16, color: p.softText),
               ),
@@ -476,33 +465,35 @@ class ChallengeTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SectionLabel(HomeTexts.todayCase),
+              SectionLabel(context.l10n.homeTodayCase),
               const SizedBox(height: 6),
               if (today != null) ...[
                 Text(
-                  'Día ${today.day} de '
-                  '${ref.watch(gameConfigProvider).challengeDays} · '
-                  '${difficultyName(today.puzzle.difficulty)} · '
-                  '${today.puzzle.map.size}×${today.puzzle.map.size}',
+                  context.l10n.challengeTodaySummary(
+                    today.day,
+                    ref.watch(gameConfigProvider).challengeDays,
+                    difficultyName(context.l10n, today.puzzle.difficulty),
+                    today.puzzle.map.size,
+                  ),
                   style: context.body(15, color: p.text),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  challengeStateText(today.puzzle, prefs),
+                  challengeStateText(context.l10n, today.puzzle, prefs),
                   style: context.note(18, color: p.text),
                 ),
               ] else
                 Text(
-                  HomeTexts.noChallenge,
+                  context.l10n.homeNoChallenge,
                   style: context.note(18, color: p.text),
                 ),
               Text(
-                HomeTexts.challengeNote,
+                context.l10n.homeChallengeNote,
                 style: context.note(15, color: p.softText),
               ),
               const SizedBox(height: 14),
               AppButton(
-                label: HomeTexts.playToday,
+                label: context.l10n.homePlayToday,
                 color: p.danger,
                 onTap: today == null ? null : () => _playToday(context, today),
               ),
@@ -513,15 +504,18 @@ class ChallengeTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 children: [
-                  Flexible(child: SectionLabel(HomeTexts.weekPoints)),
-                  SizedBox(width: 8),
-                  DemoBadge(),
+                  Flexible(child: SectionLabel(context.l10n.homeWeekPoints)),
+                  const SizedBox(width: 8),
+                  const DemoBadge(),
                 ],
               ),
               const SizedBox(height: 4),
-              Text('$mockWeeklyPoints pts', style: context.display(24)),
+              Text(
+                context.l10n.pointsShort(mockWeeklyPoints),
+                style: context.display(24),
+              ),
             ],
           ),
         ),
@@ -541,15 +535,15 @@ class RankingTab extends StatelessWidget {
     // El jugador entra en el orden real por puntos (datos simulados).
     final rows = <(String, int, String, bool)>[
       for (final b in mockBots) (b.$1, b.$2, b.$3, false),
-      (HomeTexts.you, mockWeeklyPoints, '🇨🇴', true),
+      (context.l10n.homeYou, mockWeeklyPoints, '🇨🇴', true),
     ]..sort((a, b) => b.$2.compareTo(a.$2));
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        const PageHeader(
-          title: HomeTexts.ranking,
-          subtitle: HomeTexts.rankingSub,
-          badge: DemoBadge(),
+        PageHeader(
+          title: context.l10n.homeRanking,
+          subtitle: context.l10n.homeRankingSub,
+          badge: const DemoBadge(),
         ),
         for (final (i, r) in rows.indexed)
           AppCard(
@@ -586,7 +580,10 @@ class RankingTab extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                Text('${r.$2} pts', style: context.display(17)),
+                Text(
+                  context.l10n.pointsShort(r.$2),
+                  style: context.display(17),
+                ),
               ],
             ),
           ),
@@ -613,8 +610,11 @@ class ProfileTab extends ConsumerWidget {
               const <DailyChallenge>[])
         c.puzzle,
     ], prefs);
-    final nickname = prefs?.getString('profile:nick') ?? 'Detective';
-    final initial = nickname.isEmpty ? 'D' : nickname[0].toUpperCase();
+    final nickname =
+        prefs?.getString('profile:nick') ?? context.l10n.profileDefaultNick;
+    final initial =
+        (nickname.isEmpty ? context.l10n.profileDefaultNick : nickname)[0]
+            .toUpperCase();
 
     return ListView(
       padding: const EdgeInsets.all(18),
@@ -650,7 +650,7 @@ class ProfileTab extends ConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Cambiar nombre',
+                    tooltip: context.l10n.profileChangeName,
                     constraints: const BoxConstraints(
                       minWidth: SkinUi.minTouch,
                       minHeight: SkinUi.minTouch,
@@ -666,7 +666,7 @@ class ProfileTab extends ConsumerWidget {
                 spacing: 8,
                 children: [
                   Text(
-                    '🇨🇴 · detective desde julio 2026',
+                    context.l10n.profileSince,
                     style: context.note(16, color: p.softText),
                   ),
                   const DemoBadge(),
@@ -681,7 +681,7 @@ class ProfileTab extends ConsumerWidget {
             Expanded(
               child: StatTile(
                 value: '$solved',
-                label: 'casos cerrados',
+                label: context.l10n.profileSolvedLabel,
                 icon: Icons.folder_special_rounded,
                 color: p.good,
               ),
@@ -690,7 +690,7 @@ class ProfileTab extends ConsumerWidget {
             Expanded(
               child: StatTile(
                 value: '$mockStreak',
-                label: 'racha actual',
+                label: context.l10n.profileStreakLabel,
                 icon: Icons.local_fire_department_rounded,
                 color: p.danger,
                 demo: true,
@@ -704,7 +704,7 @@ class ProfileTab extends ConsumerWidget {
             Expanded(
               child: StatTile(
                 value: '$mockBestStreak',
-                label: 'mejor racha',
+                label: context.l10n.profileBestStreakLabel,
                 icon: Icons.military_tech_rounded,
                 color: p.medal(0),
                 demo: true,
@@ -714,7 +714,7 @@ class ProfileTab extends ConsumerWidget {
             Expanded(
               child: StatTile(
                 value: '$mockWeeklyPoints',
-                label: 'puntos semana',
+                label: context.l10n.profileWeekPointsLabel,
                 icon: Icons.stars_rounded,
                 color: p.accent,
                 demo: true,
@@ -729,24 +729,24 @@ class ProfileTab extends ConsumerWidget {
             children: [
               _MenuRow(
                 icon: Icons.storefront_rounded,
-                label: 'Tienda',
+                label: context.l10n.profileMenuShop,
                 demo: true,
                 onTap: () => openShopSheet(context),
               ),
               _MenuRow(
                 icon: Icons.workspace_premium_rounded,
-                label: 'Premium',
+                label: context.l10n.profileMenuPremium,
                 demo: true,
                 onTap: () => openPremiumSheet(context),
               ),
               _MenuRow(
                 icon: Icons.help_outline_rounded,
-                label: 'Cómo jugar',
+                label: context.l10n.profileMenuHowToPlay,
                 onTap: () => openHowToPlay(context),
               ),
               _MenuRow(
                 icon: Icons.settings_rounded,
-                label: 'Configuración',
+                label: context.l10n.profileMenuSettings,
                 onTap: () => openSettingsSheet(context),
               ),
             ],

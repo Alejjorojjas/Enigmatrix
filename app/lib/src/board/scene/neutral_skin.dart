@@ -25,8 +25,6 @@ class NeutralSkin extends BoardSkin {
   @override
   String get id => idName;
   @override
-  String get displayName => 'Neutra';
-  @override
   ChromeKind get chrome => ChromeKind.flat;
 
   // ---- paleta -------------------------------------------------------------------

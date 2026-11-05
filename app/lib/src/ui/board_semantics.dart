@@ -10,29 +10,10 @@ import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/l10n.dart';
 import '../board/scene/board_geometry.dart';
 import '../game/board_state.dart';
 import '../game/game_controller.dart';
-
-/// Textos de la semántica del tablero (centralizados para traducir en la
-/// ronda 4.3).
-abstract final class BoardSemanticsTexts {
-  static String board(int n) => 'Tablero de $n por $n casillas';
-  static String position(int row, int col) => 'Fila $row, columna $col';
-  static String besideObjects(Iterable<String> names) =>
-      'junto a ${names.join(', ')}';
-  static String onObject(String name) => 'sobre $name';
-  static String blockedBy(String name) => 'ocupada por $name: no se puede usar';
-  static const noCandidates = 'candidatos: ninguno';
-  static String candidates(Iterable<String> names) =>
-      'candidatos: ${names.join(', ')}';
-  static const noConfirmed = 'confirmado: ninguno';
-  static String confirmed(String name) => 'confirmado: $name';
-  static const crossed = 'tachada';
-  static String autoCrossed(Iterable<String> names) =>
-      'descartada por ${names.join(', ')}';
-  static const holdHint = 'Mantén oprimido para confirmar';
-}
 
 /// Descripción hablada de una casilla. Función pura (se prueba sin pantalla).
 ///
@@ -40,11 +21,16 @@ abstract final class BoardSemanticsTexts {
 /// lado, los candidatos, el confirmado y si está tachada. No dice nada que el
 /// jugador no vea ya en el tablero (no revela la solución ni las casillas que
 /// no cuadran).
-String cellSemanticsLabel(PuzzleCase pc, BoardState board, int cell) {
+String cellSemanticsLabel(
+  AppLocalizations l10n,
+  PuzzleCase pc,
+  BoardState board,
+  int cell,
+) {
   final map = pc.map;
   String nameOf(String id) => pc.character(id).nameEs;
   final parts = <String>[
-    BoardSemanticsTexts.position(map.row(cell) + 1, map.col(cell) + 1),
+    l10n.boardSemanticsPosition(map.row(cell) + 1, map.col(cell) + 1),
     map.area(map.areaIdOf(cell)).nameEs,
   ];
 
@@ -52,8 +38,8 @@ String cellSemanticsLabel(PuzzleCase pc, BoardState board, int cell) {
   if (here != null) {
     parts.add(
       here.blocks
-          ? BoardSemanticsTexts.blockedBy(here.type.indefEs)
-          : BoardSemanticsTexts.onObject(here.type.indefEs),
+          ? l10n.boardSemanticsBlockedBy(here.type.indefEs)
+          : l10n.boardSemanticsOnObject(here.type.indefEs),
     );
   }
   // Muebles de las casillas de al lado (sin repetir el de esta casilla).
@@ -64,7 +50,9 @@ String cellSemanticsLabel(PuzzleCase pc, BoardState board, int cell) {
     final name = o.type.indefEs;
     if (!beside.contains(name)) beside.add(name);
   }
-  if (beside.isNotEmpty) parts.add(BoardSemanticsTexts.besideObjects(beside));
+  if (beside.isNotEmpty) {
+    parts.add(l10n.boardSemanticsBesideObjects(beside.join(', ')));
+  }
 
   if (map.isOccupiable(cell)) {
     final content = board.cell(cell);
@@ -75,23 +63,25 @@ String cellSemanticsLabel(PuzzleCase pc, BoardState board, int cell) {
     ];
     parts.add(
       cands.isEmpty
-          ? BoardSemanticsTexts.noCandidates
-          : BoardSemanticsTexts.candidates(cands),
+          ? l10n.boardSemanticsNoCandidates
+          : l10n.boardSemanticsCandidates(cands.join(', ')),
     );
     final conf = content.confirmed;
     parts.add(
       conf == null
-          ? BoardSemanticsTexts.noConfirmed
-          : BoardSemanticsTexts.confirmed(nameOf(conf)),
+          ? l10n.boardSemanticsNoConfirmed
+          : l10n.boardSemanticsConfirmed(nameOf(conf)),
     );
     if (content.x != null) {
-      parts.add(BoardSemanticsTexts.crossed);
+      parts.add(l10n.boardSemanticsCrossed);
     } else if (content.autoXFrom.isNotEmpty) {
       parts.add(
-        BoardSemanticsTexts.autoCrossed([
-          for (final c in pc.characters)
-            if (content.autoXFrom.contains(c.id)) c.nameEs,
-        ]),
+        l10n.boardSemanticsAutoCrossed(
+          [
+            for (final c in pc.characters)
+              if (content.autoXFrom.contains(c.id)) c.nameEs,
+          ].join(', '),
+        ),
       );
     }
   }
@@ -127,7 +117,7 @@ class BoardSemanticsLayer extends ConsumerWidget {
         return Semantics(
           container: true,
           explicitChildNodes: true,
-          label: BoardSemanticsTexts.board(n),
+          label: context.l10n.boardSemanticsBoard(n),
           child: Stack(
             children: [
               for (var i = 0; i < n * n; i++)
@@ -135,12 +125,12 @@ class BoardSemanticsLayer extends ConsumerWidget {
                   rect: geo.cellRect(i),
                   child: Semantics(
                     button: pc.map.isOccupiable(i),
-                    label: cellSemanticsLabel(pc, board, i),
+                    label: cellSemanticsLabel(context.l10n, pc, board, i),
                     onTap: pc.map.isOccupiable(i) ? () => onTapCell(i) : null,
                     onLongPress: pc.map.isOccupiable(i)
                         ? () => onHoldCell(i)
                         : null,
-                    onLongPressHint: BoardSemanticsTexts.holdHint,
+                    onLongPressHint: context.l10n.boardSemanticsHoldHint,
                     child: const SizedBox.expand(),
                   ),
                 ),

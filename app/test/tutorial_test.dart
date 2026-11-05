@@ -25,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/game_ui.dart';
 import 'support/content_overrides.dart';
+import 'support/l10n.dart';
 
 PuzzleCase _loadTutorial() => PuzzleCase.fromJson(
   jsonDecode(
@@ -111,13 +112,13 @@ void main() {
         clueMarks: const [],
       );
       for (final (i, step) in steps.indexed) {
-        final text = step.text(s);
+        final text = step.text(l10nEs, s);
         expect(text, isNotEmpty, reason: 'paso $i');
         expect(text.contains(r'$'), isFalse, reason: 'paso $i');
         expect(text.contains('null'), isFalse, reason: 'paso $i');
       }
       // Enseña Confirmar, la X (Tachar), las notas, Borrar y el Resolver.
-      final all = [for (final st in steps) st.text(s)].join(' ');
+      final all = [for (final st in steps) st.text(l10nEs, s)].join(' ');
       for (final word in [
         'CONFIRMAR',
         'TACHAR',
@@ -168,11 +169,11 @@ void main() {
       expect(done(3), isFalse);
       c.placeSuspect(0, charId: _adela, confirm: true);
       expect(done(3), isFalse);
-      expect(steps[3].warning!(st()), contains('Adela no va ahí'));
+      expect(steps[3].warning!(l10nEs, st()), contains('Adela no va ahí'));
       c.eraseCell(0);
       confirm(_adela);
       expect(done(3), isTrue);
-      expect(steps[3].warning!(st()), isNull);
+      expect(steps[3].warning!(l10nEs, st()), isNull);
 
       // 5: Bruno en la única cama libre (4 es manual: Auto-X).
       expect(steps[4].manual, isTrue);
@@ -184,9 +185,9 @@ void main() {
       expect(done(6), isFalse);
       c.placeXMark(20, XLevel.small);
       expect(done(6), isTrue);
-      expect(steps[6].warning!(st()), isNull);
+      expect(steps[6].warning!(l10nEs, st()), isNull);
       c.placeXMark(pos[_elena]!, XLevel.small);
-      expect(steps[6].warning!(st()), contains('Esa X tapa'));
+      expect(steps[6].warning!(l10nEs, st()), contains('Esa X tapa'));
       c.eraseCell(pos[_elena]!);
 
       // 7 y 8: Notas y de vuelta a Mapa.
@@ -210,9 +211,9 @@ void main() {
       expect(tutorialBoardIsCorrect(st()), isTrue);
 
       // Con el tablero correcto, el Resolver que acierta espera al final.
-      expect(tutorialResolveBlock(pc, st(), 11), isNotNull);
-      expect(tutorialResolveBlock(pc, st(), 16), isNotNull);
-      expect(tutorialResolveBlock(pc, st(), 17), isNull);
+      expect(tutorialResolveBlock(l10nEs, pc, st(), 11), isNotNull);
+      expect(tutorialResolveBlock(l10nEs, pc, st(), 16), isNotNull);
+      expect(tutorialResolveBlock(l10nEs, pc, st(), 17), isNull);
 
       // 11: quitar a Elena y a Dario (Borrar o lo que sea).
       expect(done(11), isFalse);
@@ -225,16 +226,16 @@ void main() {
       expect(done(12), isFalse);
       confirm(_elena);
       confirm(_dario);
-      expect(steps[12].warning!(st()), contains('correcto'));
+      expect(steps[12].warning!(l10nEs, st()), contains('correcto'));
       c.eraseCell(pos[_elena]!);
       c.eraseCell(pos[_dario]!);
       confirm(_elena, pos[_dario]);
       confirm(_dario, pos[_elena]);
       expect(done(12), isTrue);
-      expect(steps[12].warning!(st()), isNull);
+      expect(steps[12].warning!(l10nEs, st()), isNull);
 
       // Con el tablero mal, Resolver siempre falla (no se bloquea).
-      expect(tutorialResolveBlock(pc, st(), 13), isNull);
+      expect(tutorialResolveBlock(l10nEs, pc, st(), 13), isNull);
 
       // 13: Resolver fallido: SOLO el tutorial señala las casillas exactas.
       expect(done(13), isFalse);
@@ -312,7 +313,12 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
-          child: MaterialApp.router(routerConfig: router),
+          child: MaterialApp.router(
+            localizationsDelegates: kL10nDelegates,
+            supportedLocales: kL10nLocales,
+            locale: kL10nLocale,
+            routerConfig: router,
+          ),
         ),
       );
       await _settle(tester);
@@ -689,7 +695,7 @@ void main() {
       final offenders = <String>[];
       for (final (i, step) in steps.indexed) {
         final painter = TextPainter(
-          text: TextSpan(text: step.text(s), style: style),
+          text: TextSpan(text: step.text(l10nEs, s), style: style),
           textDirection: TextDirection.ltr,
         )..layout(maxWidth: width);
         // Alto disponible para el texto: 132 - 6 - 4 - 38 de pie - 6.

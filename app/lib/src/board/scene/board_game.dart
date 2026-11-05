@@ -13,6 +13,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart' show Color;
 
+import '../../../l10n/l10n.dart';
 import '../feedback/feedback_director.dart';
 import '../feedback/feedback_event.dart';
 import '../feedback/feedback_plan.dart';
@@ -20,7 +21,6 @@ import '../feedback/reveal_timeline.dart';
 import '../scene_session.dart';
 import '../gesture_interpreter.dart';
 import '../board_settings.dart';
-import '../board_strings.dart';
 import 'board_geometry.dart';
 import 'layers.dart';
 import 'skin.dart';
@@ -30,11 +30,15 @@ enum RevealPhase { idle, running, runningCanSkip, done }
 
 class BoardGame extends FlameGame implements VisualSink {
   BoardGame({
+    required this.l10n,
     required this.session,
     required this.settings,
     required this.skin,
     this.pixelRatio = 2.0,
   });
+
+  /// Textos del idioma activo (rótulo de la revelación del asesino).
+  final AppLocalizations l10n;
 
   final SceneSession session;
   BoardSettings settings;
@@ -302,7 +306,7 @@ class BoardGame extends FlameGame implements VisualSink {
     _revealReduced = reduced;
     overlay.resetReveal();
     overlay.darkTarget = 0.55;
-    overlay.label = BoardStrings.murdererIs(reveal.murdererName);
+    overlay.label = l10n.boardMurdererIs(reveal.murdererName);
     revealPhase.value = RevealPhase.running;
     onRevealStarted?.call();
   }

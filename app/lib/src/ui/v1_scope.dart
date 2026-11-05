@@ -11,6 +11,7 @@ library;
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 
+import '../../l10n/l10n.dart';
 import '../data/case_repository.dart' show DailyChallenge;
 import '../game/game_config.dart';
 
@@ -47,7 +48,7 @@ String caseTitle(PuzzleCase pc) {
   return (t == null || t.trim().isEmpty) ? pc.map.nameEs : t;
 }
 
-/// Mundos del juego: id, nombre y si ya está disponible.
+/// Mundos del juego: id, nombre (ya traducido) y si ya está disponible.
 class WorldInfo {
   const WorldInfo(this.id, this.name, this.available);
 
@@ -56,22 +57,21 @@ class WorldInfo {
   final bool available;
 }
 
-/// Nombres visibles de los mundos (son textos: se quedan en el código y
-/// pasarán a .arb en la etapa 4). La lista y la disponibilidad salen de la
-/// configuración.
-const kWorldNames = {
-  'mansion': 'La Mansión',
-  'hotel': 'El Hotel',
-  'museo': 'El Museo',
-  'tren': 'El Tren',
-  'hospital': 'El Hospital',
+/// Nombre visible de un mundo (los textos viven en el .arb); si el id no
+/// tiene nombre conocido se muestra el propio id.
+String worldName(AppLocalizations l10n, String id) => switch (id) {
+  'mansion' => l10n.worldMansion,
+  'hotel' => l10n.worldHotel,
+  'museo' => l10n.worldMuseum,
+  'tren' => l10n.worldTrain,
+  'hospital' => l10n.worldHospital,
+  _ => id,
 };
 
-/// Los mundos en el orden de la configuración, con su nombre visible (si el
-/// id no tiene nombre conocido se muestra el propio id).
-List<WorldInfo> worldsFor(GameConfig config) => [
+/// Los mundos en el orden de la configuración, con su nombre visible.
+List<WorldInfo> worldsFor(GameConfig config, AppLocalizations l10n) => [
   for (final w in config.worlds)
-    WorldInfo(w.id, kWorldNames[w.id] ?? w.id, w.available),
+    WorldInfo(w.id, worldName(l10n, w.id), w.available),
 ];
 
 /// Día del reto (1 a [GameConfig.challengeDays]) que corresponde a una fecha
@@ -111,11 +111,11 @@ String exitRouteFor(String caseId) {
 }
 
 /// Nombre de una dificultad para mostrar ("principiante" -> "Principiante").
-String difficultyName(String d) => switch (d) {
-  'principiante' => 'Principiante',
-  'casual' => 'Casual',
-  'intermedio' => 'Intermedio',
-  'experto' => 'Experto',
-  'elite' => 'Élite',
+String difficultyName(AppLocalizations l10n, String d) => switch (d) {
+  'principiante' => l10n.difficultyBeginner,
+  'casual' => l10n.difficultyCasual,
+  'intermedio' => l10n.difficultyIntermediate,
+  'experto' => l10n.difficultyExpert,
+  'elite' => l10n.difficultyElite,
   _ => d,
 };

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../board/fps_recorder.dart';
-import '../board/board_strings.dart';
+import 'dev_texts.dart';
 import 'skin_theme.dart';
 
 /// Línea con los cuadros por segundo en vivo (se pone bajo el cronómetro).
@@ -32,7 +32,7 @@ class FpsReadout extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              fps > 0 ? '${fps.round()} fps' : '-- fps',
+              fps > 0 ? DevTexts.fpsLive(fps.round()) : DevTexts.fpsNone,
               key: const ValueKey('fps-en-vivo'),
               style: TextStyle(
                 color: color,
@@ -46,7 +46,7 @@ class FpsReadout extends StatelessWidget {
               const SizedBox(width: 4),
               Icon(Icons.fiber_manual_record, size: 9, color: pal.danger),
               Text(
-                'midiendo',
+                DevTexts.fpsMeasuring,
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.0,
@@ -68,12 +68,15 @@ void showFpsReport(BuildContext context, FpsReport r) {
     ..showSnackBar(
       SnackBar(
         content: Text(
-          'Resolver: mín ${r.minFps.toStringAsFixed(0)} · prom ${r.averageFps.toStringAsFixed(0)}',
+          DevTexts.fpsSolve(
+            r.minFps.toStringAsFixed(0),
+            r.averageFps.toStringAsFixed(0),
+          ),
           style: const TextStyle(fontSize: 14),
         ),
         duration: const Duration(seconds: 8),
         action: SnackBarAction(
-          label: BoardStrings.copyResult,
+          label: DevTexts.fpsCopyResult,
           textColor: context.pal.accent,
           onPressed: () => Clipboard.setData(ClipboardData(text: r.toText())),
         ),
@@ -88,7 +91,7 @@ Future<void> copyReport(BuildContext context, FpsReport r) async {
     ..hideCurrentSnackBar()
     ..showSnackBar(
       const SnackBar(
-        content: Text(BoardStrings.copied),
+        content: Text(DevTexts.fpsCopied),
         duration: Duration(seconds: 2),
       ),
     );

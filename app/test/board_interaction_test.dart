@@ -4,7 +4,6 @@
 /// falsos.
 library;
 
-import 'package:enigmatrix/src/board/board_strings.dart';
 import 'package:enigmatrix/src/board/feedback/feedback_plan.dart';
 import 'package:enigmatrix/src/game/board_interaction.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
@@ -14,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'support/board_rig.dart';
+import 'support/l10n.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -88,7 +88,7 @@ void main() {
   group('Anotar', () {
     test('sin sospechoso elegido avisa y no cambia el tablero', () {
       io.tapCell(0);
-      expect(messages(), [BoardStrings.pickSuspectFirst]);
+      expect(messages(), [l10nEs.boardPickSuspectFirst]);
       expect(read().board.isEmpty, isTrue);
     });
 
@@ -149,7 +149,7 @@ void main() {
       io.holdCell(0);
       io.selectSuspect(second);
       io.tapCell(0);
-      expect(messages(), contains(BoardStrings.cellHasConfirmed));
+      expect(messages(), contains(l10nEs.boardCellHasConfirmed));
     });
 
     test('sobre una casilla tachada, avisa', () {
@@ -157,7 +157,7 @@ void main() {
       io.tapCell(0);
       io.selectSuspect(first);
       io.tapCell(0);
-      expect(messages(), contains(BoardStrings.cellHasX));
+      expect(messages(), contains(l10nEs.boardCellHasX));
     });
 
     test('un sospechoso ya colocado no se coloca dos veces', () {
@@ -174,7 +174,7 @@ void main() {
       ].first;
       controller.toggleAutoX();
       io.holdCell(other);
-      expect(messages(), contains(BoardStrings.alreadyPlaced));
+      expect(messages(), contains(l10nEs.boardAlreadyPlaced));
     });
 
     test('un mueble que bloquea avisa', () {
@@ -184,7 +184,7 @@ void main() {
       ].first;
       io.selectSuspect(first);
       io.tapCell(blocked);
-      expect(messages(), [BoardStrings.blockedCell]);
+      expect(messages(), [l10nEs.boardBlockedCell]);
     });
   });
 
@@ -199,7 +199,7 @@ void main() {
     test('Confirmar sin sospechoso avisa', () {
       controller.setToolMode(ToolMode.place);
       io.tapCell(0);
-      expect(messages(), [BoardStrings.pickSuspectFirst]);
+      expect(messages(), [l10nEs.boardPickSuspectFirst]);
     });
 
     test('Confirmar sobre otra ficha pregunta si se reemplaza', () async {
@@ -251,7 +251,7 @@ void main() {
       final fb = io.solve();
       expect(fb, ActionFeedback.incompleteBoard);
       expect(messages(), [
-        BoardStrings.missingSuspects(pc.characters.length - 1),
+        l10nEs.boardMissingSuspects(pc.characters.length - 1),
       ]);
     });
 
@@ -276,7 +276,7 @@ void main() {
       final err = rig.visual.played.firstWhere(
         (e) => e.kind == VisualKind.errorText,
       );
-      expect(err.text, BoardStrings.wrongCells(2));
+      expect(err.text, l10nEs.boardWrongCells(2));
       expect(rig.sound.played.map((c) => c.id), contains(SoundId.zumbido));
       // Regla 9: no se dicen cuáles.
       expect(read().errorCells, isEmpty);

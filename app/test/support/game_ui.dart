@@ -23,6 +23,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'l10n.dart';
 
 /// Carga un caso real del banco por su nombre de archivo (sin .json).
 PuzzleCase loadBankCase(String name) => PuzzleCase.fromJson(
@@ -127,7 +128,12 @@ Future<GameRig> pumpGameScreen(
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp.router(routerConfig: router),
+      child: MaterialApp.router(
+        localizationsDelegates: kL10nDelegates,
+        supportedLocales: kL10nLocales,
+        locale: kL10nLocale,
+        routerConfig: router,
+      ),
     ),
   );
   await settle(tester);

@@ -107,8 +107,6 @@ class IllustratedSkin extends ArtSkin {
   @override
   String get id => idName;
   @override
-  String get displayName => 'Ilustrada';
-  @override
   ChromeKind get chrome => ChromeKind.ink;
   @override
   late final SkinPalette palette = paletteFor(mode);
