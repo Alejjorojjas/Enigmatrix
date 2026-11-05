@@ -2,19 +2,17 @@
 
 > Archivo de checkpoint. Toda sesión de trabajo lo lee al empezar y lo actualiza al cerrar un hito. Se mantiene corto a propósito: el historial completo está en [historial.md](historial.md).
 
-## Estado hoy (05-11-2026, tarde)
+## Estado hoy (05-11-2026, noche)
 
-- **Versión actual: `0.5.0+5`** (commit `6e18cb8`), con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.5.0+5-arm64.apk`. Incluye:
-  - el tablero de Flame con dos pieles (Ilustrada y Papel) en modo claro y oscuro, en todas las pantallas;
-  - el Mundo 1 "La Mansión" (10 casos con título y premisa) y el reto diario (30 días, DEMO);
-  - tipografías dentro de la app, sin permiso INTERNET;
-  - accesibilidad básica: semántica del tablero, texto hasta 1,3, Reducir movimiento y contraste AA.
+- **Versión actual: `0.6.0+6`** (ronda 4.3b), con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.6.0+6-arm64.apk`, compilado con `ENX_DEV=true`. Además de lo de la 0.5.0+5 (dos pieles, Mundo 1 y reto DEMO, tipografías incluidas y accesibilidad básica), trae:
+  - textos centralizados en `app/lib/l10n/app_es.arb` (H-63);
+  - valores de juego en `app/assets/config/game_config.json` (H-65);
+  - banco de pruebas, feedback y medidor de FPS solo con `--dart-define=ENX_DEV=true` (H-66).
 
-  Pruebas: tools 279 y app 540, todas pasan; analyze limpio.
+  Pruebas: tools 279 y app 625, todas pasan; analyze limpio. Detalle en [bitacora-cuentas.md](bitacora-cuentas.md).
 - **Prueba de juego n.º 1:** con la versión **0.3.0+3 congelada** (ADR-0014), con 3 a 5 personas y la guía en [guia-prueba-1.md](../prueba-de-juego/guia-prueba-1.md). La hace Alejandro; todavía no hay resultados.
-- **Hecho del plan** ([production/planes/2026-11-05-etapas-3-y-4.md](../planes/2026-11-05-etapas-3-y-4.md)): rondas 3.1, 3.2, 4.1, 4.2 y 4.3a.
+- **Hecho del plan** ([production/planes/2026-11-05-etapas-3-y-4.md](../planes/2026-11-05-etapas-3-y-4.md)): rondas 3.1, 3.2, 4.1, 4.2, 4.3a y 4.3b.
 - **Pendiente técnico:**
-  - Ronda 4.3b: textos centralizados para traducir, valores de juego a configuración y limpieza de restos.
   - Medir FPS en el teléfono de Alejandro y probar TalkBack real.
   - El texto de la partida tiene un tope de 1,3.
   - Experto y Élite necesitan trabajo de motor para la V2 (ver `production/revisiones/2026-11-05-medicion-12x12-16x16.md`).
@@ -26,7 +24,7 @@
 - **Preguntas abiertas:** 6 (premium), 7 (hora del reto), 8 (víctima), 12 (ayudas y puntos), 16 (edad), 17 (identidad legal), 18 (qué ve la tienda) y 23 (mundos bloqueados; hoy se muestran como "Próximamente"). Antes de publicar también falta decidir el servidor (etapa 5) y los trámites de tienda (etapa 6).
 - **Próximos pasos:**
   1. Alejandro hace la prueba de juego con la 0.3.0+3 y trae los resultados.
-  2. Ronda 4.3b.
+  2. Medir FPS con la 0.6.0+6 en su teléfono.
   3. Con los resultados de la prueba: recalibrar los rangos de dificultad y, si hace falta, regenerar casos.
   4. Planear las etapas 5 (Firebase) y 6 (tiendas) y responder las preguntas abiertas de publicación.
 

@@ -24,31 +24,31 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 - **Auditoría e investigación gráfica**: `production/revisiones/`.
 - **Índice de documentos**: `docs/README.md`.
 - **APK entregables**: `D:\OneDrive\Documentos\Repositorios GitHub\Proyecto Enigmatrix\APKs\`. Cada versión se copia ahí con su nombre para que no la pise la siguiente compilación.
-- **Compilar Android**: requiere `JAVA_HOME="C:/Program Files/Java/jdk-17"` (el JDK por defecto del PC es 11): `cd app && JAVA_HOME="C:/Program Files/Java/jdk-17" flutter build apk --release --split-per-abi`.
+- **Compilar Android**: requiere `JAVA_HOME="C:/Program Files/Java/jdk-17"` (el JDK por defecto del PC es 11): `cd app && JAVA_HOME="C:/Program Files/Java/jdk-17" flutter build apk --release --split-per-abi --dart-define=ENX_DEV=true`. Compila en la carpeta principal, no en un worktree: solo allí está la firma. Sin `ENX_DEV=true` no aparecen el banco de pruebas, el feedback ni el medidor de FPS (para la tienda se compila sin la bandera).
 - **Pruebas**:
   - motor: `cd tools && dart test` (279 pasan);
-  - app: `cd app && flutter analyze && flutter test` (540 pasan).
+  - app: `cd app && flutter analyze && flutter test` (625 pasan).
 
-## Estado al 05-11-2026
+## Estado al 05-11-2026 (después de la ronda 4.3b)
 
-- **Versión actual**: 0.5.0+5, commit `6e18cb8` y bitácora en `a4dca02`. Incluye:
-  - tablero de Flame con dos pieles (Ilustrada y Papel) en modo claro y oscuro en toda la app;
+- **Versión actual**: 0.6.0+6. Incluye todo lo de la 0.5.0+5:
+  - tablero de Flame con dos pieles (Ilustrada y Papel) en modo claro y oscuro;
   - Mundo 1 "La Mansión" con 10 casos y el reto diario de 30 días (DEMO);
-  - tipografías incluidas en la app, sin permiso INTERNET;
+  - tipografías incluidas, sin permiso INTERNET;
   - accesibilidad básica.
+
+  Y además:
+  - textos en `app/lib/l10n/app_es.arb`;
+  - valores de juego en `app/assets/config/game_config.json`;
+  - herramientas de desarrollo detrás de `ENX_DEV`.
 - **Prueba de juego n.º 1**: la hace Alejandro con la versión **0.3.0+3 congelada** y la guía de `production/prueba-de-juego/guia-prueba-1.md`. No cambies esa versión.
 
 ## Qué sigue, en orden
 
-1. **Ronda 4.3b**:
-   - textos de la app centralizados para traducir después (las pistas ya tienen su formateador en `tools`);
-   - valores de juego escritos en el código pasados a configuración (H-65);
-   - limpieza de restos del banco de pruebas (H-66);
-   - versión 0.6.0+6.
-
-   Cierra con un QA independiente, tu propia revisión visual (web, 360×740, las dos pieles, claro y oscuro), el commit, el APK copiado a `APKs\` y la anotación en la bitácora.
+1. **Medir FPS** en el teléfono de Alejandro con la 0.6.0+6 (medidor en el menú de la partida) y probar TalkBack.
 2. **Cuando Alejandro traiga los resultados de la prueba de juego**: recalibrar los rangos de dificultad en `tools/lib/src/difficulty_ranges.dart` (son provisionales) y, si hace falta, regenerar casos con `build-plan` y los planes de `tools/data/mundos/`.
 3. **Planear las etapas 5 (Firebase) y 6 (Google Play)** con Alejandro. Preguntas abiertas: 6, 7, 8, 12, 16, 17, 18 y 23 (ver la sección 5 de la auditoría en `production/revisiones/2026-11-04-auditoria-proyecto.md`).
+4. Restos menores de H-66 sin hacer: versión con `package_info_plus`, vocabulario "Caso Nº"/"Expediente", pantalla de error con Reintentar y lints más estrictos.
 
 ## OBLIGATORIO: la bitácora compartida
 
