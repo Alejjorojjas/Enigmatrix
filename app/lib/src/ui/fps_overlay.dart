@@ -27,7 +27,7 @@ class FpsReadout extends StatelessWidget {
         final fps = rec.liveFps;
         final color = fps >= 55
             ? pal.good
-            : (fps >= 30 ? const Color(0xFFE0A526) : pal.danger);
+            : (fps >= 30 ? pal.medal(0) : pal.danger);
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -35,18 +35,24 @@ class FpsReadout extends StatelessWidget {
               fps > 0 ? '${fps.round()} fps' : '-- fps',
               key: const ValueKey('fps-en-vivo'),
               style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 11,
-                  height: 1.0,
-                  fontFeatures: const [FontFeature.tabularFigures()]),
+                color: color,
+                fontWeight: FontWeight.w800,
+                fontSize: 13,
+                height: 1.0,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
             if (rec.recording) ...[
               const SizedBox(width: 4),
               Icon(Icons.fiber_manual_record, size: 9, color: pal.danger),
-              Text('midiendo',
-                  style: TextStyle(
-                      fontSize: 10, height: 1.0, color: pal.onPill.withValues(alpha: 0.7))),
+              Text(
+                'midiendo',
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.0,
+                  color: pal.onPill.withValues(alpha: 0.7),
+                ),
+              ),
             ],
           ],
         );
@@ -59,18 +65,20 @@ class FpsReadout extends StatelessWidget {
 void showFpsReport(BuildContext context, FpsReport r) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(
-      content: Text(
-        'Resolver: mín ${r.minFps.toStringAsFixed(0)} · prom ${r.averageFps.toStringAsFixed(0)}',
-        style: const TextStyle(fontSize: 14),
+    ..showSnackBar(
+      SnackBar(
+        content: Text(
+          'Resolver: mín ${r.minFps.toStringAsFixed(0)} · prom ${r.averageFps.toStringAsFixed(0)}',
+          style: const TextStyle(fontSize: 14),
+        ),
+        duration: const Duration(seconds: 8),
+        action: SnackBarAction(
+          label: BoardStrings.copyResult,
+          textColor: context.pal.accent,
+          onPressed: () => Clipboard.setData(ClipboardData(text: r.toText())),
+        ),
       ),
-      duration: const Duration(seconds: 8),
-      action: SnackBarAction(
-        label: BoardStrings.copyResult,
-        textColor: context.pal.accent,
-        onPressed: () => Clipboard.setData(ClipboardData(text: r.toText())),
-      ),
-    ));
+    );
 }
 
 Future<void> copyReport(BuildContext context, FpsReport r) async {
@@ -78,8 +86,10 @@ Future<void> copyReport(BuildContext context, FpsReport r) async {
   if (!context.mounted) return;
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(const SnackBar(
-      content: Text(BoardStrings.copied),
-      duration: Duration(seconds: 2),
-    ));
+    ..showSnackBar(
+      const SnackBar(
+        content: Text(BoardStrings.copied),
+        duration: Duration(seconds: 2),
+      ),
+    );
 }

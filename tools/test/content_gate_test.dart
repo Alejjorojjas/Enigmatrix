@@ -18,9 +18,10 @@ void main() {
   group('puerta de contenido sobre los assets reales', () {
     final files = caseFilesIn(casesDir);
 
-    test('hay casos que revisar (20 del banco de pruebas y 1 de tutorial)',
-        () {
-      expect(files.length, 20);
+    test(
+        'hay casos que revisar (20 del banco, 10 del Mundo 1, 30 de reto y '
+        '1 de tutorial)', () {
+      expect(files.length, 60);
       expect(caseFilesIn(tutorialDir).length, 1);
     });
 
@@ -46,11 +47,11 @@ void main() {
 
     test('la puerta completa (casos, catálogo e índice) pasa sin problemas',
         () {
-      final report = runContentGate(
-          casesDir: casesDir, tutorialDir: tutorialDir);
+      final report =
+          runContentGate(casesDir: casesDir, tutorialDir: tutorialDir);
       expect(report.allProblems, isEmpty);
       expect(report.passed, isTrue);
-      expect(report.checks.length, 21);
+      expect(report.checks.length, 61);
     });
 
     test('el catálogo lista exactamente los archivos que existen', () {
@@ -60,12 +61,21 @@ void main() {
       expect([...cat.files]..sort(), onDisk);
     });
 
-    test('el índice heredado lista exactamente los archivos que existen', () {
-      final idx = (jsonDecode(
-              File('${casesDir.path}/index.json').readAsStringSync()) as List)
-          .cast<String>();
-      final onDisk = [for (final f in files) f.uri.pathSegments.last]..sort();
-      expect([...idx]..sort(), onDisk);
+    test(
+        'el índice heredado lista exactamente los 20 casos del banco de '
+        'pruebas (los mundos reales solo van en el catálogo)', () {
+      final idx =
+          (jsonDecode(File('${casesDir.path}/index.json').readAsStringSync())
+                  as List)
+              .cast<String>();
+      final cat = CaseCatalog.fromJsonString(
+          File('${casesDir.path}/catalogo.json').readAsStringSync());
+      final banco = [
+        for (final e in cat.entries)
+          if (e.mundo == kBancoDePruebas) e.archivo
+      ]..sort();
+      expect(banco.length, 20);
+      expect([...idx]..sort(), banco);
     });
   });
 
@@ -128,12 +138,12 @@ void main() {
         File('${tmp.path}/$name').writeAsStringSync(caseJson(id));
 
     void writeCatalog(List<Map<String, Object>> casos) =>
-        File('${tmp.path}/catalogo.json').writeAsStringSync(
-            jsonEncode({'version': 1, 'casos': casos}));
+        File('${tmp.path}/catalogo.json')
+            .writeAsStringSync(jsonEncode({'version': 1, 'casos': casos}));
 
     Map<String, Object> entry(String id, String file, int orden) => {
           'id': id,
-          'mundo': 'prueba',
+          'mundo': kBancoDePruebas,
           'tipo': 'campana',
           'dificultad': 'test',
           'orden': orden,

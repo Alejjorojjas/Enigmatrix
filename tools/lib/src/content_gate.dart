@@ -9,6 +9,7 @@ import 'deduction.dart';
 import 'puzzle_case.dart';
 import 'uniqueness.dart';
 import 'validator.dart';
+import 'world.dart';
 
 class CaseCheck {
   final String caseId;
@@ -49,6 +50,8 @@ CaseCheck checkCaseContent(PuzzleCase pc,
         'declarada (${pc.solution.lethalWeaponId})');
   }
 
+  problems.addAll(contentTextProblems(pc));
+
   var unique = false;
   final u = UniquenessChecker.analyze(pc, limits: limits);
   if (u.capped) {
@@ -78,6 +81,85 @@ CaseCheck checkCaseContent(PuzzleCase pc,
     tier: pure ? d.maxTier : null,
     problems: problems,
   );
+}
+
+/// Palabras que no deben aparecer en el título ni en la premisa (docs/13:
+/// cozy mystery, sin gore, sin armas de fuego, sin lenguaje vulgar, nunca
+/// "Infantil"). Se comparan sin tildes y como palabra suelta.
+const kForbiddenStoryWords = [
+  'sangre',
+  'sangriento',
+  'sangrienta',
+  'cadaver',
+  'mutilado',
+  'mutilada',
+  'descuartizado',
+  'descuartizada',
+  'degollado',
+  'degollada',
+  'apunalado',
+  'apunalada',
+  'destripado',
+  'destripada',
+  'pistola',
+  'revolver',
+  'escopeta',
+  'rifle',
+  'disparo',
+  'disparos',
+  'tiroteo',
+  'bomba',
+  'granada',
+  'infantil',
+  'nino',
+  'nina',
+  'ninos',
+  'ninas',
+];
+
+/// Largo máximo del título y de la premisa (pillar 3: se lee en una frase).
+const kMaxTitleChars = 40;
+const kMaxPremiseChars = 220;
+
+/// Problemas de TEXTO de un caso (no de lógica): armas del mapa que no
+/// cumplen docs/13 (nunca de fuego) y, si hay historia, título y premisa
+/// presentes en español, de largo razonable y sin palabras prohibidas.
+List<String> contentTextProblems(PuzzleCase pc) {
+  final problems = <String>[];
+  for (final w in pc.map.weapons) {
+    final bad = forbiddenWeaponWord(w.nameEs) ?? forbiddenWeaponWord(w.id);
+    if (bad != null) {
+      problems.add('arma no permitida (${w.nameEs}): contiene "$bad"');
+    }
+  }
+  final story = pc.story;
+  if (story != null) {
+    final title = story.title('es');
+    final premise = story.premise('es');
+    if (title == null) problems.add('la historia no tiene título en español');
+    if (premise == null) {
+      problems.add('la historia no tiene premisa en español');
+    }
+    void lint(String what, String? text, int max) {
+      if (text == null) return;
+      if (text.trim() != text || text.contains('\n')) {
+        problems.add('$what tiene espacios o saltos de línea de más');
+      }
+      if (text.length > max) {
+        problems.add('$what supera $max caracteres (${text.length})');
+      }
+      final words = foldEs(text).split(RegExp('[^a-z]+'));
+      for (final w in kForbiddenStoryWords) {
+        if (words.contains(w)) {
+          problems.add('$what contiene la palabra no permitida "$w"');
+        }
+      }
+    }
+
+    lint('el título', title, kMaxTitleChars);
+    lint('la premisa', premise, kMaxPremiseChars);
+  }
+  return problems;
 }
 
 bool _same(Map<String, int> a, Map<String, int> b) =>

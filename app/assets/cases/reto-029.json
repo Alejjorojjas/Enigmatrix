@@ -1,0 +1,418 @@
+{
+  "caseId": "reto-029",
+  "mapId": "mapa-casual-s149-v3",
+  "map": {
+    "id": "mapa-casual-s149-v3",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          42,
+          43,
+          44,
+          48,
+          49,
+          50,
+          51,
+          52,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          16,
+          24,
+          25,
+          26,
+          32,
+          33,
+          34,
+          35,
+          40,
+          41
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          13,
+          14,
+          15,
+          23
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          0,
+          1,
+          8,
+          9,
+          10,
+          17,
+          18
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          2,
+          3,
+          11,
+          12,
+          19,
+          20,
+          27,
+          28,
+          36,
+          37
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          21,
+          22,
+          29,
+          30,
+          31,
+          38,
+          39,
+          45,
+          46,
+          47,
+          53,
+          54,
+          55,
+          62,
+          63
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "planta-1",
+        "type": "planta",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "sillon-2",
+        "type": "sillon",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "sillon-3",
+        "type": "sillon",
+        "cells": [
+          49
+        ]
+      },
+      {
+        "id": "sofa-4",
+        "type": "sofa",
+        "cells": [
+          52,
+          51
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          41
+        ]
+      },
+      {
+        "id": "silla-8",
+        "type": "silla",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "mesa-9",
+        "type": "mesa",
+        "cells": [
+          4,
+          5
+        ]
+      },
+      {
+        "id": "silla-10",
+        "type": "silla",
+        "cells": [
+          23
+        ]
+      },
+      {
+        "id": "silla-11",
+        "type": "silla",
+        "cells": [
+          0
+        ]
+      },
+      {
+        "id": "planta-12",
+        "type": "planta",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "armario-13",
+        "type": "armario",
+        "cells": [
+          12
+        ]
+      },
+      {
+        "id": "armario-14",
+        "type": "armario",
+        "cells": [
+          36
+        ]
+      },
+      {
+        "id": "cama-15",
+        "type": "cama",
+        "cells": [
+          28,
+          27
+        ]
+      },
+      {
+        "id": "mesa-16",
+        "type": "mesa",
+        "cells": [
+          63,
+          62
+        ]
+      },
+      {
+        "id": "silla-17",
+        "type": "silla",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "mesa-18",
+        "type": "mesa",
+        "cells": [
+          54,
+          46
+        ]
+      },
+      {
+        "id": "planta-19",
+        "type": "planta",
+        "cells": [
+          53
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "cocina"
+      },
+      {
+        "id": "atizador",
+        "name_es": "el atizador de la chimenea",
+        "category": "contundente",
+        "area": "galeria"
+      },
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c8",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Amparo",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Eugenia",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Fermín",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Genoveva",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c7",
+      "name_es": "Rosario",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Valeria",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "in_area",
+      "subject": "c1",
+      "area": "dormitorio"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "comedor"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "estudio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c3",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c4",
+      "area": "invernadero"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "armario"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "cocina"
+        },
+        {
+          "type": "on_object",
+          "subject": "c6",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "on_object",
+      "subject": "c7",
+      "group": "sofa"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c8",
+      "group": "planta"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 2,
+      "c2": 8,
+      "c3": 23,
+      "c4": 30,
+      "c5": 37,
+      "c6": 41,
+      "c7": 51,
+      "c8": 60
+    },
+    "murderer": "c7"
+  },
+  "metrics": {
+    "deductionSteps": 5,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El invitado madrugador"
+    },
+    "premise": {
+      "es": "Alguien llegó a la mansión antes que el resto y nadie recuerda haberlo recibido. Al caer la noche, una de las personas presentes yace sin vida."
+    }
+  }
+}

@@ -13,10 +13,12 @@ import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/feedback_providers.dart';
 import 'package:enigmatrix/src/game/game_controller.dart';
 import 'package:enigmatrix/src/game/saved_game.dart';
+import 'package:enigmatrix/src/ui/game_screen.dart' show ScreenTexts;
 import 'package:enigmatrix/src/ui/game_toolbar.dart';
 import 'package:enigmatrix/src/ui/game_tray.dart';
 import 'package:enigmatrix/src/ui/layout_metrics.dart';
 import 'package:enigmatrix/src/ui/skin_theme.dart';
+import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -420,6 +422,8 @@ void main() {
       final rig = await pumpGameScreen(tester, small);
       expect(find.byKey(const ValueKey('fps-en-vivo')), findsNothing);
       await openMenu(tester);
+      await tester.ensureVisible(find.byKey(const ValueKey('menu-fps')));
+      await tester.pump(const Duration(milliseconds: 200));
       await tester.tap(find.byKey(const ValueKey('menu-fps')));
       await tester.pump(const Duration(milliseconds: 200));
       expect(rig.container.read(settingsProvider).fpsMeter, isTrue);
@@ -755,6 +759,56 @@ void main() {
       );
       await tester.pump(const Duration(seconds: 4));
       handle.dispose();
+    });
+
+    testWidgets('tocar el tablero durante el bloqueo de 3 s avisa "Espera un '
+        'momento…" y deja de avisar al desbloquearse', (tester) async {
+      final rig = await pumpGameScreen(tester, small);
+      final c = rig.container.read(gameControllerProvider(small).notifier);
+      final entries = small.solution.positions.entries.toList();
+      c.toggleAutoX();
+      c.placeSuspect(entries[1].value, charId: entries[0].key, confirm: true);
+      c.placeSuspect(entries[0].value, charId: entries[1].key, confirm: true);
+      for (final e in entries.skip(2)) {
+        c.placeSuspect(e.value, charId: e.key, confirm: true);
+      }
+      await settle(tester, 2);
+      // Sin error todavía: tocar el tablero no avisa de bloqueo.
+      await tapCell(tester, firstFreeCell(small));
+      expect(find.text(ScreenTexts.lockedWait), findsNothing);
+
+      await tester.tap(find.byKey(const ValueKey('boton-resolver')));
+      await settle(tester, 3);
+      expect(rig.container.read(gameControllerProvider(small)).locked, isTrue);
+      await tapCell(tester, firstFreeCell(small));
+      expect(find.text(ScreenTexts.lockedWait), findsOneWidget);
+
+      // Pasan los 3 s y el aviso se apaga.
+      await tester.pump(const Duration(seconds: 4));
+      await settle(tester, 4);
+      expect(rig.container.read(gameControllerProvider(small)).locked, isFalse);
+      expect(find.text(ScreenTexts.lockedWait), findsNothing);
+    });
+
+    testWidgets('el encabezado muestra el título de la historia si existe y '
+        'si no el nombre del mapa', (tester) async {
+      final withStory = small.withStory(
+        CaseStory(
+          world: 'mansion',
+          title: const {'es': 'La última cena'},
+          premise: const {'es': 'Una cena que acaba mal.'},
+        ),
+      );
+      await pumpGameScreen(tester, withStory);
+      expect(find.text('La última cena'), findsOneWidget);
+      expect(find.text(small.map.nameEs), findsNothing);
+    });
+
+    testWidgets('sin historia el encabezado conserva el nombre del mapa', (
+      tester,
+    ) async {
+      await pumpGameScreen(tester, small);
+      expect(find.text(small.map.nameEs), findsOneWidget);
     });
 
     testWidgets('resolver bien corre la secuencia y abre el resumen', (

@@ -39,6 +39,7 @@ import 'game_tray.dart';
 import 'layout_metrics.dart';
 import 'skin_theme.dart';
 import 'tutorial_coach.dart';
+import 'v1_scope.dart' show caseTitle;
 import 'victory_screen.dart';
 
 /// Textos de la pantalla de partida (centralizados para traducir en 4.3).
@@ -66,6 +67,7 @@ abstract final class ScreenTexts {
   static const cancel = 'Cancelar';
   static const replace = 'Reemplazar';
   static const practice = 'Práctica';
+  static const lockedWait = 'Espera un momento…';
 
   static String wrongInTutorial(int n) =>
       '${BoardStrings.wrongCells(n)}: revisa las marcadas';
@@ -309,6 +311,17 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     });
   }
 
+  /// Toque en el tablero: durante el bloqueo de 3 s que sigue a un Resolver
+  /// fallido el tablero no responde, así que se avisa en vez de callar.
+  void _onBoardTouch() {
+    if (ref.read(gameControllerProvider(pc)).locked) {
+      _showToast(
+        ScreenTexts.lockedWait,
+        duration: const Duration(milliseconds: 1500),
+      );
+    }
+  }
+
   /// Resolver fallido: el tablero dibuja "N casillas no cuadran". Aquí se
   /// avisa también a los lectores de pantalla y, en el tutorial, se agrega
   /// que miren las casillas marcadas en rojo.
@@ -534,6 +547,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
               toast: _toast,
               live: _live,
               onSkip: _game.skipReveal,
+              onTouch: _onBoardTouch,
             ),
             radius: 6,
           ),
@@ -663,8 +677,8 @@ class _GameBodyState extends ConsumerState<_GameBody> {
               children: [
                 Text(
                   tutorial
-                      ? '${ScreenTexts.tutorialTitle} · ${pc.map.nameEs}'
-                      : pc.map.nameEs,
+                      ? '${ScreenTexts.tutorialTitle} · ${caseTitle(pc)}'
+                      : caseTitle(pc),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -857,12 +871,16 @@ class _BoardStage extends StatelessWidget {
     required this.toast,
     required this.live,
     required this.onSkip,
+    this.onTouch,
   });
 
   final BoardGame game;
   final ValueNotifier<String?> toast;
   final ValueNotifier<String?> live;
   final VoidCallback onSkip;
+
+  /// Se llama en cada toque sobre el tablero (aviso del bloqueo de 3 s).
+  final VoidCallback? onTouch;
 
   @override
   Widget build(BuildContext context) {
@@ -873,7 +891,10 @@ class _BoardStage extends StatelessWidget {
         children: [
           Listener(
             behavior: HitTestBehavior.opaque,
-            onPointerDown: (e) => game.pointerDown(e.pointer, e.localPosition),
+            onPointerDown: (e) {
+              onTouch?.call();
+              game.pointerDown(e.pointer, e.localPosition);
+            },
             onPointerMove: (e) => game.pointerMove(e.pointer, e.localPosition),
             onPointerUp: (e) => game.pointerUp(e.pointer, e.localPosition),
             onPointerCancel: (e) => game.pointerCancel(e.pointer),

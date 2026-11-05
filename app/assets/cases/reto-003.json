@@ -1,0 +1,392 @@
+{
+  "caseId": "reto-003",
+  "mapId": "mapa-casual-s104-v3",
+  "map": {
+    "id": "mapa-casual-s104-v3",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          10,
+          11,
+          17,
+          18,
+          19,
+          26,
+          34,
+          42,
+          43,
+          44,
+          51,
+          52,
+          58,
+          59,
+          60
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          12,
+          13,
+          14,
+          15,
+          21,
+          22,
+          23,
+          31
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          0,
+          8,
+          9,
+          16,
+          24,
+          25,
+          32,
+          33,
+          40,
+          41,
+          48,
+          49,
+          50,
+          56,
+          57
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          20,
+          27,
+          28,
+          29,
+          30,
+          35,
+          36,
+          37,
+          38,
+          45,
+          46,
+          53
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          39,
+          47,
+          54,
+          55,
+          61,
+          62,
+          63
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "silla-1",
+        "type": "silla",
+        "cells": [
+          44
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          19
+        ]
+      },
+      {
+        "id": "cama-4",
+        "type": "cama",
+        "cells": [
+          51,
+          52
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "armario-6",
+        "type": "armario",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "sillon-7",
+        "type": "sillon",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "armario-8",
+        "type": "armario",
+        "cells": [
+          14
+        ]
+      },
+      {
+        "id": "silla-9",
+        "type": "silla",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "silla-10",
+        "type": "silla",
+        "cells": [
+          57
+        ]
+      },
+      {
+        "id": "barra-11",
+        "type": "barra",
+        "cells": [
+          56,
+          48
+        ]
+      },
+      {
+        "id": "barra-12",
+        "type": "barra",
+        "cells": [
+          0,
+          8
+        ]
+      },
+      {
+        "id": "caja-13",
+        "type": "caja",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "armario-14",
+        "type": "armario",
+        "cells": [
+          38
+        ]
+      },
+      {
+        "id": "armario-15",
+        "type": "armario",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "armario-16",
+        "type": "armario",
+        "cells": [
+          37
+        ]
+      },
+      {
+        "id": "mesa-17",
+        "type": "mesa",
+        "cells": [
+          55,
+          54
+        ]
+      },
+      {
+        "id": "planta-18",
+        "type": "planta",
+        "cells": [
+          61
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "bodega"
+      },
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "dormitorio"
+      },
+      {
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
+        "area": "invernadero"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c2",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Alberto",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Leandro",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c5",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Silvestre",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Ximena",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "beside_object",
+      "subject": "c1",
+      "group": "sillon"
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c2"
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "caja"
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "armario"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "caja"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "barra"
+    },
+    {
+      "type": "same_area",
+      "a": "c7",
+      "b": "c5"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c8",
+      "group": "silla"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 6,
+      "c2": 15,
+      "c3": 18,
+      "c4": 27,
+      "c5": 36,
+      "c6": 40,
+      "c7": 53,
+      "c8": 57
+    },
+    "murderer": "c1"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Una carta sin remitente"
+    },
+    "premise": {
+      "es": "Una carta sin remitente llega a la mansión en la bandeja del correo. Antes de que nadie la abra, alguien es hallado sin vida."
+    }
+  }
+}

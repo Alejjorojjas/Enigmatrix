@@ -182,17 +182,15 @@ void main() {
   });
 
   group('assets reales', () {
-    test('catalogo.json: 20 casos banco-de-pruebas, campaña, orden 1 a 20, '
-        'mismo orden que mostraba la lista antes', () {
+    test('catalogo.json: los 20 del banco de pruebas son campaña, orden 1 a '
+        '20, mismo orden que mostraba la lista antes', () {
       final cat = CaseCatalog.fromJsonString(
         File('assets/cases/catalogo.json').readAsStringSync(),
       );
-      expect(cat.entries, hasLength(20));
-      expect(cat.entries.every((e) => e.mundo == kBancoDePruebas), isTrue);
-      expect(cat.entries.every((e) => e.tipo == CaseKind.campana), isTrue);
-      expect(cat.entries.map((e) => e.orden), [
-        for (var i = 1; i <= 20; i++) i,
-      ]);
+      final banco = cat.where(mundo: kBancoDePruebas);
+      expect(banco, hasLength(20));
+      expect(banco.every((e) => e.tipo == CaseKind.campana), isTrue);
+      expect(banco.map((e) => e.orden), [for (var i = 1; i <= 20; i++) i]);
     });
 
     test('CaseRepository.loadAll carga los 20 en el orden del catálogo y con '
@@ -204,6 +202,18 @@ void main() {
         for (var i = 1; i <= 5; i++) 'caso-intermedio-s$i',
       ];
       expect(cases.map((c) => c.caseId), expected);
+    });
+
+    test('index.json solo lista los 20 del banco de pruebas', () {
+      final idx =
+          (jsonDecode(File('assets/cases/index.json').readAsStringSync())
+                  as List)
+              .cast<String>();
+      expect(idx, hasLength(20));
+      expect(
+        idx.any((n) => n.startsWith('mansion-') || n.startsWith('reto-')),
+        isFalse,
+      );
     });
 
     test('el orden del catálogo coincide con el del respaldo por índice', () {
@@ -223,7 +233,7 @@ void main() {
       final cat = CaseCatalog.fromJsonString(
         File('assets/cases/catalogo.json').readAsStringSync(),
       );
-      expect(cat.entries.map((e) => e.id), byIndex);
+      expect(cat.where(mundo: kBancoDePruebas).map((e) => e.id), byIndex);
     });
 
     test('el tutorial no está en el catálogo', () {

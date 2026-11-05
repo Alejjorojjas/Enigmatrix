@@ -42,7 +42,7 @@ void main() {
         entry('a', 1),
         CatalogEntry(
             id: 'r1',
-            mundo: 'la-mansion',
+            mundo: kBancoDePruebas,
             tipo: CaseKind.reto,
             dificultad: 'intermedio',
             orden: 2,
@@ -82,8 +82,8 @@ void main() {
     });
 
     test('tolera el BOM al inicio', () {
-      final c = CaseCatalog.parse(
-          '﻿${jsonEncode({'version': 1, 'casos': []})}');
+      final c =
+          CaseCatalog.parse('﻿${jsonEncode({'version': 1, 'casos': []})}');
       expect(c.catalog.entries, isEmpty);
     });
 
@@ -102,18 +102,23 @@ void main() {
     final cat = CaseCatalog.fromJsonString(
         File('../app/assets/cases/catalogo.json').readAsStringSync());
 
-    test('los 20 casos van como banco-de-pruebas, campaña, orden 1 a 20', () {
-      expect(cat.entries.length, 20);
+    final banco = cat.where(mundo: kBancoDePruebas);
+
+    test('los 20 casos del banco de pruebas van como campaña, orden 1 a 20',
+        () {
       expect(cat.consistencyProblems(), isEmpty);
-      expect(cat.entries.every((e) => e.mundo == kBancoDePruebas), isTrue);
-      expect(cat.entries.every((e) => e.tipo == CaseKind.campana), isTrue);
-      expect([for (final e in cat.entries) e.orden],
-          [for (var i = 1; i <= 20; i++) i]);
+      expect(banco.length, 20);
+      expect(banco.every((e) => e.tipo == CaseKind.campana), isTrue);
+      expect(
+          [for (final e in banco) e.orden], [for (var i = 1; i <= 20; i++) i]);
     });
 
-    test('conserva los ids actuales (las claves de progreso no cambian) y '
+    test(
+        'conserva los ids actuales (las claves de progreso no cambian) y '
         'el orden numérico actual de la lista', () {
-      expect([for (final e in cat.entries) e.id], [
+      expect([
+        for (final e in banco) e.id
+      ], [
         for (var i = 1; i <= 8; i++) 'caso-principiante-s$i',
         for (final i in [1, 2, 3, 4, 5, 20, 21]) 'caso-casual-s$i',
         for (var i = 1; i <= 5; i++) 'caso-intermedio-s$i',
@@ -143,20 +148,20 @@ void main() {
       final r = addCasesToCatalog(
           casesDir: casesDir(),
           sources: [a, b],
-          mundo: 'la-mansion',
+          mundo: kBancoDePruebas,
           tipo: CaseKind.campana);
       expect(r.errors, isEmpty);
       expect([for (final e in r.added) '${e.id}:${e.orden}'], ['a:1', 'b:2']);
       expect(File('${casesDir().path}/a.json').existsSync(), isTrue);
       final cat = CaseCatalog.fromJsonString(
           File('${casesDir().path}/catalogo.json').readAsStringSync());
-      expect(cat.byId('b')!.mundo, 'la-mansion');
+      expect(cat.byId('b')!.mundo, kBancoDePruebas);
       // Segunda tanda: sigue el orden.
       final c = src('c.json', cabanaCase(cabanaPin, caseId: 'c'));
       final r2 = addCasesToCatalog(
           casesDir: casesDir(),
           sources: [c],
-          mundo: 'la-mansion',
+          mundo: kBancoDePruebas,
           tipo: CaseKind.reto);
       expect(r2.added.single.orden, 3);
       expect(r2.added.single.tipo, CaseKind.reto);
@@ -168,10 +173,11 @@ void main() {
       addCasesToCatalog(
           casesDir: casesDir(),
           sources: [src('a.json', cabanaCase(cabanaPin, caseId: 'a'))],
-          mundo: 'm',
+          mundo: kBancoDePruebas,
           tipo: CaseKind.campana);
-      final idx = jsonDecode(
-          File('${casesDir().path}/index.json').readAsStringSync()) as List;
+      final idx =
+          jsonDecode(File('${casesDir().path}/index.json').readAsStringSync())
+              as List;
       expect(idx, ['a.json', 'z.json']);
     });
 
@@ -180,21 +186,20 @@ void main() {
       addCasesToCatalog(
           casesDir: casesDir(),
           sources: [a],
-          mundo: 'm',
+          mundo: kBancoDePruebas,
           tipo: CaseKind.campana);
-      final antes =
-          File('${casesDir().path}/catalogo.json').readAsStringSync();
+      final antes = File('${casesDir().path}/catalogo.json').readAsStringSync();
       final dup = src('otro.json', cabanaCase(cabanaPin, caseId: 'a'));
       final nuevo = src('n.json', cabanaCase(cabanaPin, caseId: 'n'));
       final r = addCasesToCatalog(
           casesDir: casesDir(),
           sources: [nuevo, dup],
-          mundo: 'm',
+          mundo: kBancoDePruebas,
           tipo: CaseKind.campana);
       expect(r.errors, isNotEmpty);
       expect(r.added, isEmpty);
-      expect(File('${casesDir().path}/catalogo.json').readAsStringSync(),
-          antes);
+      expect(
+          File('${casesDir().path}/catalogo.json').readAsStringSync(), antes);
       expect(File('${casesDir().path}/n.json').existsSync(), isFalse);
     });
 
@@ -203,7 +208,7 @@ void main() {
       final r = addCasesToCatalog(
           casesDir: casesDir(),
           sources: [malo],
-          mundo: 'm',
+          mundo: kBancoDePruebas,
           tipo: CaseKind.campana);
       expect(r.errors.join(' '), contains('puerta de contenido'));
       expect(File('${casesDir().path}/catalogo.json').existsSync(), isFalse);

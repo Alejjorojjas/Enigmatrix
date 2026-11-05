@@ -1,0 +1,490 @@
+{
+  "caseId": "reto-028",
+  "mapId": "mapa-intermedio-s104-v4",
+  "map": {
+    "id": "mapa-intermedio-s104-v4",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          30,
+          39,
+          40,
+          47,
+          48,
+          49,
+          50,
+          56,
+          57,
+          58,
+          59,
+          68
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          62,
+          65,
+          66,
+          67,
+          69,
+          71,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          9,
+          10,
+          11,
+          12,
+          18,
+          19,
+          27,
+          28,
+          36,
+          45
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          5,
+          6,
+          7,
+          8,
+          13,
+          14,
+          15,
+          16,
+          17,
+          21,
+          22,
+          25,
+          26,
+          31,
+          34
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          23,
+          24,
+          32,
+          33,
+          35,
+          41,
+          42,
+          43,
+          44,
+          51,
+          52,
+          53,
+          60,
+          61,
+          70
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          20,
+          29,
+          37,
+          38,
+          46,
+          54,
+          55,
+          63,
+          64,
+          72
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "sillon-1",
+        "type": "sillon",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "armario-2",
+        "type": "armario",
+        "cells": [
+          59
+        ]
+      },
+      {
+        "id": "armario-3",
+        "type": "armario",
+        "cells": [
+          48
+        ]
+      },
+      {
+        "id": "silla-4",
+        "type": "silla",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "sofa-5",
+        "type": "sofa",
+        "cells": [
+          77,
+          76
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          78,
+          79
+        ]
+      },
+      {
+        "id": "sofa-7",
+        "type": "sofa",
+        "cells": [
+          62,
+          71
+        ]
+      },
+      {
+        "id": "silla-8",
+        "type": "silla",
+        "cells": [
+          75
+        ]
+      },
+      {
+        "id": "silla-9",
+        "type": "silla",
+        "cells": [
+          1
+        ]
+      },
+      {
+        "id": "armario-10",
+        "type": "armario",
+        "cells": [
+          2
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          11
+        ]
+      },
+      {
+        "id": "silla-12",
+        "type": "silla",
+        "cells": [
+          9
+        ]
+      },
+      {
+        "id": "armario-13",
+        "type": "armario",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "silla-14",
+        "type": "silla",
+        "cells": [
+          34
+        ]
+      },
+      {
+        "id": "alfombra-15",
+        "type": "alfombra",
+        "cells": [
+          8,
+          7
+        ]
+      },
+      {
+        "id": "armario-16",
+        "type": "armario",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "piano-17",
+        "type": "piano",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "piano-18",
+        "type": "piano",
+        "cells": [
+          24
+        ]
+      },
+      {
+        "id": "alfombra-19",
+        "type": "alfombra",
+        "cells": [
+          43,
+          44
+        ]
+      },
+      {
+        "id": "silla-20",
+        "type": "silla",
+        "cells": [
+          51
+        ]
+      },
+      {
+        "id": "planta-21",
+        "type": "planta",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "piano-22",
+        "type": "piano",
+        "cells": [
+          54
+        ]
+      },
+      {
+        "id": "piano-23",
+        "type": "piano",
+        "cells": [
+          29
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
+        "area": "vestibulo"
+      },
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "estudio"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c4",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Alberto",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Eugenia",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Leandro",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Silvestre",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Ximena",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "dormitorio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c2",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "armario"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c4"
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "piano"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c7",
+      "group": "sofa"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c8",
+      "group": "sofa"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c9",
+      "group": "alfombra"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 1,
+      "c2": 9,
+      "c3": 25,
+      "c4": 30,
+      "c5": 38,
+      "c6": 50,
+      "c7": 62,
+      "c8": 67,
+      "c9": 78
+    },
+    "murderer": "c6",
+    "lethalWeapon": "candelabro"
+  },
+  "metrics": {
+    "deductionSteps": 12,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Una herencia en disputa"
+    },
+    "premise": {
+      "es": "Una herencia en disputa mantiene tensos a los presentes toda la semana. Esa noche, uno de ellos es hallado sin vida."
+    }
+  }
+}

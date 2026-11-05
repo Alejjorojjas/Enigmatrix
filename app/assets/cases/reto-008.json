@@ -1,0 +1,427 @@
+{
+  "caseId": "reto-008",
+  "mapId": "mapa-casual-s138-v4",
+  "map": {
+    "id": "mapa-casual-s138-v4",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          8,
+          9,
+          10,
+          11,
+          16,
+          17,
+          18,
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          12,
+          13,
+          14,
+          15,
+          20,
+          21,
+          22,
+          23,
+          28,
+          29,
+          30
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          32,
+          40,
+          41,
+          42,
+          48,
+          49,
+          50,
+          56,
+          57,
+          58,
+          59,
+          60
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          19,
+          27,
+          33,
+          34,
+          35,
+          36,
+          37,
+          43,
+          44,
+          45,
+          51
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          31,
+          38,
+          39,
+          46,
+          47,
+          52,
+          53,
+          54,
+          55,
+          61,
+          62,
+          63
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "armario-1",
+        "type": "armario",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "sillon-2",
+        "type": "sillon",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "silla-3",
+        "type": "silla",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "armario-4",
+        "type": "armario",
+        "cells": [
+          9
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          12,
+          20
+        ]
+      },
+      {
+        "id": "sillon-7",
+        "type": "sillon",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "armario-8",
+        "type": "armario",
+        "cells": [
+          15
+        ]
+      },
+      {
+        "id": "silla-9",
+        "type": "silla",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "alfombra-10",
+        "type": "alfombra",
+        "cells": [
+          60,
+          59
+        ]
+      },
+      {
+        "id": "alfombra-11",
+        "type": "alfombra",
+        "cells": [
+          42,
+          50
+        ]
+      },
+      {
+        "id": "mesa-12",
+        "type": "mesa",
+        "cells": [
+          48,
+          49
+        ]
+      },
+      {
+        "id": "planta-13",
+        "type": "planta",
+        "cells": [
+          44
+        ]
+      },
+      {
+        "id": "arbusto-14",
+        "type": "arbusto",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "mesa-15",
+        "type": "mesa",
+        "cells": [
+          43,
+          35
+        ]
+      },
+      {
+        "id": "mesa-16",
+        "type": "mesa",
+        "cells": [
+          27,
+          19
+        ]
+      },
+      {
+        "id": "sillon-17",
+        "type": "sillon",
+        "cells": [
+          53
+        ]
+      },
+      {
+        "id": "planta-18",
+        "type": "planta",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "alfombra-19",
+        "type": "alfombra",
+        "cells": [
+          63,
+          55
+        ]
+      },
+      {
+        "id": "alfombra-20",
+        "type": "alfombra",
+        "cells": [
+          38,
+          46
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "baston",
+        "name_es": "el bastón de plata",
+        "category": "contundente",
+        "area": "sala-de-musica"
+      },
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras de podar",
+        "category": "cortante",
+        "area": "estudio"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c7",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Damián",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Genoveva",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Octavio",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Pilar",
+      "female": true
+    },
+    {
+      "id": "c7",
+      "name_es": "Ulises",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Wenceslao",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c2",
+      "area": "estudio"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c3",
+      "group": "silla"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c4",
+      "group": "sillon"
+    },
+    {
+      "type": "in_area",
+      "subject": "c5",
+      "area": "invernadero"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "comedor"
+        },
+        {
+          "type": "on_object",
+          "subject": "c6",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "sillon"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "on_object",
+          "subject": "c8",
+          "group": "alfombra"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 11,
+      "c3": 16,
+      "c4": 25,
+      "c5": 37,
+      "c6": 42,
+      "c7": 54,
+      "c8": 63
+    },
+    "murderer": "c8"
+  },
+  "metrics": {
+    "deductionSteps": 5,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Cena a oscuras"
+    },
+    "premise": {
+      "es": "Un apagón deja la mansión a oscuras durante la cena. Cuando vuelve la luz, una de las personas presentes yace sin vida."
+    }
+  }
+}

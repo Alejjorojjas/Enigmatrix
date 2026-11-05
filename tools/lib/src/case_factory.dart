@@ -8,6 +8,7 @@ import 'dart:math';
 import 'difficulty_ranges.dart';
 import 'generator.dart';
 import 'map_generator.dart';
+import 'world.dart';
 
 class CaseFactory {
   final DifficultyProfile profile;
@@ -20,16 +21,24 @@ class CaseFactory {
   /// Topes del solver y de tiempo por caso (H-42).
   final GenerationLimits limits;
 
+  /// Mundo temático (opcional): nombres de personajes, habitaciones y armas.
+  /// No cambia ninguna regla; sin mundo todo sale como siempre.
+  final WorldData? world;
+
   CaseFactory(
     this.profile, {
     this.withWeapon = false,
     this.maxMapAttempts = 40,
     this.range,
     this.limits = GenerationLimits.standard,
+    this.world,
   });
 
-  GenerationResult generate(int seed) {
+  /// [caseId]: id estable del caso (por ejemplo "mansion-01"). Por defecto
+  /// "caso-<dificultad>-s<semilla>".
+  GenerationResult generate(int seed, {String? caseId}) {
     final rng = Random(seed);
+    final cast = world?.pickCast(profile.size, seed);
     final rejections = <String, int>{};
     // Un solo reloj para todos los mapas de esta semilla.
     final clock = Stopwatch()..start();
@@ -47,6 +56,7 @@ class CaseFactory {
         size: profile.size,
         rng: rng,
         id: 'mapa-${profile.label}-s$seed${m > 1 ? '-v$m' : ''}',
+        world: world,
       ).build();
       if (map == null) {
         rejections.update('mapa inviable', (v) => v + 1, ifAbsent: () => 1);
@@ -61,9 +71,10 @@ class CaseFactory {
         profile,
         withWeapon: withWeapon,
         maxAttempts: 8,
-        caseIdOverride: 'caso-${profile.label}-s$seed',
+        caseIdOverride: caseId ?? 'caso-${profile.label}-s$seed',
         range: range,
         limits: limits,
+        cast: cast,
       ).generateWith(rng, seed, clock: clock);
 
       result.rejections.forEach(

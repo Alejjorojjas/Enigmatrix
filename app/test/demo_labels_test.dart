@@ -62,7 +62,7 @@ void main() {
     ) async {
       await _pumpShell(tester);
       expect(find.text('4/5'), findsOneWidget); // chip de vidas
-      expect(find.textContaining('racha:'), findsOneWidget);
+      expect(find.textContaining('Racha:'), findsOneWidget);
       // Vidas + racha (y la tarjeta del reto) muestran la etiqueta.
       expect(find.text('DEMO'), findsAtLeastNWidgets(2));
     });

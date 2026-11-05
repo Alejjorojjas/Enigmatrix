@@ -1,0 +1,496 @@
+{
+  "caseId": "mansion-08",
+  "mapId": "mapa-intermedio-s29-v6",
+  "map": {
+    "id": "mapa-intermedio-s29-v6",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          46,
+          47,
+          49,
+          50,
+          54,
+          55,
+          56,
+          57,
+          58,
+          63,
+          64,
+          65,
+          66,
+          67,
+          72,
+          73,
+          74,
+          75,
+          76
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          14,
+          23,
+          24,
+          25,
+          32,
+          33,
+          34,
+          41,
+          42,
+          43,
+          51,
+          52
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          53,
+          59,
+          60,
+          61,
+          62,
+          68,
+          69,
+          70,
+          71,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          5,
+          6,
+          7,
+          8,
+          15,
+          16,
+          17,
+          26,
+          35,
+          44
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          11,
+          18,
+          19,
+          20,
+          21,
+          27,
+          28,
+          29,
+          30,
+          36,
+          37,
+          38,
+          39,
+          40,
+          45,
+          48
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          9,
+          10,
+          12,
+          13,
+          22,
+          31
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "silla-1",
+        "type": "silla",
+        "cells": [
+          54
+        ]
+      },
+      {
+        "id": "silla-2",
+        "type": "silla",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          66
+        ]
+      },
+      {
+        "id": "mesa-4",
+        "type": "mesa",
+        "cells": [
+          65,
+          64
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          14,
+          23
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "alfombra-8",
+        "type": "alfombra",
+        "cells": [
+          51,
+          52
+        ]
+      },
+      {
+        "id": "alfombra-9",
+        "type": "alfombra",
+        "cells": [
+          59,
+          60
+        ]
+      },
+      {
+        "id": "sillon-10",
+        "type": "sillon",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "alfombra-11",
+        "type": "alfombra",
+        "cells": [
+          69,
+          70
+        ]
+      },
+      {
+        "id": "sillon-12",
+        "type": "sillon",
+        "cells": [
+          71
+        ]
+      },
+      {
+        "id": "silla-13",
+        "type": "silla",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "barra-14",
+        "type": "barra",
+        "cells": [
+          8,
+          7
+        ]
+      },
+      {
+        "id": "mesa-15",
+        "type": "mesa",
+        "cells": [
+          16,
+          15
+        ]
+      },
+      {
+        "id": "mesa-16",
+        "type": "mesa",
+        "cells": [
+          21,
+          20
+        ]
+      },
+      {
+        "id": "caja-17",
+        "type": "caja",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "armario-18",
+        "type": "armario",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "mesa-19",
+        "type": "mesa",
+        "cells": [
+          36,
+          37
+        ]
+      },
+      {
+        "id": "sillon-20",
+        "type": "sillon",
+        "cells": [
+          22
+        ]
+      },
+      {
+        "id": "silla-21",
+        "type": "silla",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "alfombra-22",
+        "type": "alfombra",
+        "cells": [
+          13,
+          12
+        ]
+      },
+      {
+        "id": "silla-23",
+        "type": "silla",
+        "cells": [
+          1
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "veneno",
+        "name_es": "el frasco de veneno",
+        "category": "veneno",
+        "area": "bodega"
+      },
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "biblioteca"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c7",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Candela",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Damián",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Heliodora",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Leonor",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Máximo",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Pilar",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Teodora",
+      "female": true
+    },
+    {
+      "id": "c9",
+      "name_es": "Valeria",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c3",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "sillon"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "caja"
+    },
+    {
+      "type": "alone_with",
+      "a": "c6",
+      "b": "c8"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c7",
+      "group": "alfombra"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "silla"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c9",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "alfombra"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 2,
+      "c2": 17,
+      "c3": 25,
+      "c4": 31,
+      "c5": 39,
+      "c6": 46,
+      "c7": 59,
+      "c8": 63,
+      "c9": 78
+    },
+    "murderer": "c9",
+    "lethalWeapon": "abrecartas"
+  },
+  "metrics": {
+    "deductionSteps": 9,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "La llave desaparecida"
+    },
+    "premise": {
+      "es": "Una llave antigua desaparece de su gancho justo antes de la cena. Mientras la buscan, uno de los presentes es hallado sin vida."
+    }
+  }
+}

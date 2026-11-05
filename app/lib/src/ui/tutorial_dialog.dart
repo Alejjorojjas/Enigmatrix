@@ -1,14 +1,17 @@
-/// Bienvenida de primera vez (2026-07-12): ventana paginada estilo cuaderno
-/// de detective que explica cómo jugar. Aparece automáticamente en el primer
-/// arranque, se puede OMITIR, y se reabre desde el botón ? de la pantalla
-/// de casos. Desde el 04-11-2026 (regla 11, ADR-0012) el primer arranque
-/// sigue con el caso de práctica; ver tutorial_coach.dart.
+/// Bienvenida de primera vez: ventana paginada estilo cuaderno de detective
+/// que explica cómo jugar. Aparece automáticamente en el primer arranque, se
+/// puede OMITIR, y se reabre desde el botón ? de la lista de casos. Desde el
+/// 04-11-2026 (regla 11, ADR-0012) el primer arranque sigue con el caso de
+/// práctica; ver tutorial_coach.dart. Toma su aspecto de la piel y el modo
+/// activos.
 library;
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'enx_style.dart';
+import 'game_chrome.dart';
+import 'skin_theme.dart';
+import 'ui_kit.dart';
 
 const tutorialSeenKey = 'tutorial:seen';
 
@@ -24,45 +27,53 @@ Future<void> showTutorialDialog(
   await showDialog<void>(
     context: context,
     barrierDismissible: false,
-    barrierColor: const Color(0xCC3D2F1C),
     builder: (_) => _TutorialDialog(thenPractice: thenPractice),
   );
 }
 
 class _Page {
-  final String emoji;
+  final IconData icon;
   final String title;
   final List<String> lines;
-  const _Page(this.emoji, this.title, this.lines);
+  const _Page(this.icon, this.title, this.lines);
 }
 
 const _pages = [
-  _Page('🔍', 'Bienvenido, detective', [
+  _Page(Icons.search_rounded, 'Bienvenido, detective', [
     'En cada caso hay un grupo de sospechosos, una víctima y UNA verdad.',
     'Tu misión: descubrir dónde estaba cada persona usando pura lógica.',
     'Nada de adivinar — cada caso tiene una única solución deducible.',
   ]),
-  _Page('🗺️', 'El tablero', [
+  _Page(Icons.map_rounded, 'El tablero', [
     'El mapa es una cuadrícula con habitaciones y muebles.',
     'REGLA DE ORO: hay exactamente UNA persona por fila y UNA por columna, como en un sudoku.',
     'Las casillas con muebles que bloquean (mesas, plantas, cajas) no pueden ocuparse. Sobre sillas, camas, sofás y alfombras SÍ puede haber alguien.',
   ]),
-  _Page('📜', 'Las pistas', [
+  _Page(Icons.description_rounded, 'Las pistas', [
     'Cada sospechoso tiene una pista en su tarjeta: "estaba sobre una cama", "junto a una planta"…',
     '"Junto a" significa en una casilla vecina (arriba, abajo, izquierda o derecha) de la misma habitación.',
     'Cruza las pistas con la regla de filas y columnas para descartar casillas.',
   ]),
-  _Page('✏️', 'Tus marcas', [
+  _Page(Icons.edit_rounded, 'Tus marcas', [
     'TOCA una casilla para anotar un CANDIDATO (una letra pequeña).',
-    'MANTÉN PRESIONADO (o arrastra la tarjeta) para CONFIRMAR a alguien: se tachan su fila y su columna automáticamente.',
-    'Usa la X para descartar casillas, el borrador para limpiar, y la papelera para eliminar arrastrando. Deshacer y rehacer siempre disponibles.',
+    'MANTÉN PRESIONADO (o usa la herramienta Confirmar) para CONFIRMAR a alguien: se tachan su fila y su columna automáticamente.',
+    'Usa Tachar para descartar casillas y Borrar para limpiar. Deshacer siempre está disponible.',
   ]),
-  _Page('⚖️', 'Resolver el caso', [
+  _Page(Icons.balance_rounded, 'Resolver el caso', [
     'Cuando todos estén confirmados, pulsa RESOLVER.',
     'Si todo está correcto: el asesino es quien quedó A SOLAS con la víctima en la misma habitación. El sistema lo revela.',
     'Si algo no cuadra, el juego te dice cuántas casillas fallan, pero no cuáles: hay que volver a deducir. ¡Suerte, detective!',
   ]),
 ];
+
+/// Textos del diálogo (centralizados para traducir en la ronda 4.3).
+abstract final class TutorialDialogTexts {
+  static const header = 'CÓMO JUGAR';
+  static const skip = 'Omitir';
+  static const next = 'Siguiente';
+  static const startPractice = 'Empezar la práctica';
+  static const go = '¡A investigar!';
+}
 
 class _TutorialDialog extends StatefulWidget {
   final bool thenPractice;
@@ -84,53 +95,34 @@ class _TutorialDialogState extends State<_TutorialDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.pal;
     final isLast = _page == _pages.length - 1;
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.all(20),
+      elevation: 0,
+      insetPadding: const EdgeInsets.all(16),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 440, maxHeight: 560),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Enx.paper,
-            borderRadius: BorderRadius.circular(6),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x99271D0E),
-                offset: Offset(0, 10),
-                blurRadius: 24,
-              ),
-            ],
-          ),
+        constraints: const BoxConstraints(maxWidth: 440, maxHeight: 580),
+        child: ChromeBox(
+          color: p.surface,
+          radius: 22,
           child: Column(
             children: [
-              // Cinta superior + omitir.
+              // Rótulo superior + omitir.
               Padding(
-                padding: const EdgeInsets.fromLTRB(18, 12, 8, 0),
+                padding: const EdgeInsets.fromLTRB(18, 10, 8, 0),
                 child: Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 3,
-                      ),
-                      color: const Color(0xFFE8D48E),
-                      child: Text(
-                        'CÓMO JUGAR',
-                        style: Enx.font(
-                          11,
-                          weight: FontWeight.w800,
-                          color: Enx.ink,
-                          spacing: 2,
-                        ),
-                      ),
+                    const SectionLabel(
+                      TutorialDialogTexts.header,
+                      icon: Icons.menu_book_rounded,
                     ),
                     const Spacer(),
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(
-                        'Omitir',
-                        style: Enx.font(14, color: Enx.inkMuted),
+                        TutorialDialogTexts.skip,
+                        style: context.body(15, color: p.softText),
                       ),
                     ),
                   ],
@@ -142,21 +134,21 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                   itemCount: _pages.length,
                   onPageChanged: (i) => setState(() => _page = i),
                   itemBuilder: (_, i) {
-                    final p = _pages[i];
-                    // Scrolleable: en pantallas bajas el contenido no cabe.
+                    final pg = _pages[i];
+                    // Se desplaza: en pantallas bajas el contenido no cabe.
                     return SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(26, 10, 26, 8),
+                      padding: const EdgeInsets.fromLTRB(24, 6, 24, 8),
                       child: Column(
                         children: [
-                          Text(p.emoji, style: const TextStyle(fontSize: 52)),
-                          const SizedBox(height: 8),
+                          IconTile(icon: pg.icon, color: p.world(i), size: 64),
+                          const SizedBox(height: 10),
                           Text(
-                            p.title,
+                            pg.title,
                             textAlign: TextAlign.center,
-                            style: Enx.display(23, color: Enx.goldInk),
+                            style: context.display(24),
                           ),
-                          const SizedBox(height: 14),
-                          for (final line in p.lines)
+                          const SizedBox(height: 12),
+                          for (final line in pg.lines)
                             Padding(
                               padding: const EdgeInsets.only(bottom: 10),
                               child: Row(
@@ -164,16 +156,16 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                                 children: [
                                   Text(
                                     '• ',
-                                    style: Enx.font(
-                                      15,
-                                      color: Enx.crimson,
+                                    style: context.body(
+                                      16,
+                                      color: p.danger,
                                       weight: FontWeight.w800,
                                     ),
                                   ),
                                   Expanded(
                                     child: Text(
                                       line,
-                                      style: Enx.hand(18, color: Enx.ink),
+                                      style: context.note(17, color: p.text),
                                     ),
                                   ),
                                 ],
@@ -187,7 +179,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
               ),
               // Puntos de página + botón.
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: Column(
                   children: [
                     Row(
@@ -196,28 +188,26 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                         for (var i = 0; i < _pages.length; i++)
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            width: i == _page ? 22 : 8,
-                            height: 8,
+                            width: i == _page ? 24 : 9,
+                            height: 9,
                             margin: const EdgeInsets.symmetric(horizontal: 3),
                             decoration: BoxDecoration(
-                              color: i == _page ? Enx.crimson : Enx.paperShade,
-                              borderRadius: BorderRadius.circular(4),
+                              color: i == _page ? p.accent : p.surfaceAlt,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: p.line, width: 1.2),
                             ),
                           ),
                       ],
                     ),
-                    const SizedBox(height: 14),
-                    EnxButton(
+                    const SizedBox(height: 12),
+                    AppButton(
                       label: isLast
                           ? (widget.thenPractice
-                                ? 'Empezar la práctica'
-                                : '¡A investigar!')
-                          : 'Siguiente',
-                      color: isLast ? Enx.crimson : Enx.gold,
-                      textColor: isLast
-                          ? Colors.white
-                          : const Color(0xFF4A3200),
-                      onPressed: () {
+                                ? TutorialDialogTexts.startPractice
+                                : TutorialDialogTexts.go)
+                          : TutorialDialogTexts.next,
+                      color: isLast ? p.danger : null,
+                      onTap: () {
                         if (isLast) {
                           Navigator.of(context).pop();
                         } else {

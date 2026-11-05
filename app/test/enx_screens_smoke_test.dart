@@ -48,7 +48,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(find.text('Enigmatrix'), findsOneWidget);
+    expect(find.text('Casos'), findsOneWidget);
     expect(find.text('SIGUIENTE CASO'), findsOneWidget); // ficha actual
     expect(find.textContaining('EXPEDIENTE'), findsWidgets);
   });

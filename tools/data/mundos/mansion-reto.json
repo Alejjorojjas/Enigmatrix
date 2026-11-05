@@ -1,0 +1,366 @@
+{
+  "mundo": "mansion",
+  "nota": "Plan del reto diario (30 días). El número de día es el orden de esta lista; la hora de cambio del reto está pendiente (pregunta 7). Cada semana sube de Casual a Intermedio; el arma va solo en los últimos días de cada semana (pregunta 19, PENDIENTE: se puede cambiar). Ninguna semilla se repite con la campaña.",
+  "casos": [
+    {
+      "id": "reto-001",
+      "dificultad": "casual",
+      "semilla": 106,
+      "arma": false,
+      "titulo": {
+        "es": "Flores frescas"
+      },
+      "premisa": {
+        "es": "Alguien ha cambiado todas las flores de la casa antes del amanecer. Por la tarde, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "reto-002",
+      "dificultad": "casual",
+      "semilla": 117,
+      "arma": false,
+      "titulo": {
+        "es": "El eco en la escalera"
+      },
+      "premisa": {
+        "es": "Se oyen pasos en la escalera a una hora en la que todos aseguran estar quietos. Al día siguiente, uno de los presentes aparece sin vida."
+      }
+    },
+    {
+      "id": "reto-003",
+      "dificultad": "casual",
+      "semilla": 104,
+      "arma": false,
+      "titulo": {
+        "es": "Una carta sin remitente"
+      },
+      "premisa": {
+        "es": "Una carta sin remitente llega a la mansión en la bandeja del correo. Antes de que nadie la abra, alguien es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-004",
+      "dificultad": "intermedio",
+      "semilla": 110,
+      "arma": false,
+      "titulo": {
+        "es": "El vals interrumpido"
+      },
+      "premisa": {
+        "es": "El gramófono se detiene en mitad de un vals y nadie confiesa quién lo apagó. Poco después, una de las personas presentes yace sin vida."
+      }
+    },
+    {
+      "id": "reto-005",
+      "dificultad": "intermedio",
+      "semilla": 122,
+      "arma": false,
+      "titulo": {
+        "es": "Lluvia de otoño"
+      },
+      "premisa": {
+        "es": "La lluvia encierra a todos en casa durante la tarde. Cuando escampa, falta una persona en la mesa: la han hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-006",
+      "dificultad": "intermedio",
+      "semilla": 114,
+      "arma": true,
+      "titulo": {
+        "es": "La partida de ajedrez"
+      },
+      "premisa": {
+        "es": "Una partida de ajedrez queda a medias y nadie recuerda quién movía. Al caer la noche, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-007",
+      "dificultad": "intermedio",
+      "semilla": 108,
+      "arma": true,
+      "titulo": {
+        "es": "El gato inquieto"
+      },
+      "premisa": {
+        "es": "El gato de la casa maúlla sin parar y no se deja acariciar. Más tarde, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "reto-008",
+      "dificultad": "casual",
+      "semilla": 138,
+      "arma": false,
+      "titulo": {
+        "es": "Cena a oscuras"
+      },
+      "premisa": {
+        "es": "Un apagón deja la mansión a oscuras durante la cena. Cuando vuelve la luz, una de las personas presentes yace sin vida."
+      }
+    },
+    {
+      "id": "reto-009",
+      "dificultad": "casual",
+      "semilla": 132,
+      "arma": false,
+      "titulo": {
+        "es": "La subasta privada"
+      },
+      "premisa": {
+        "es": "Un coleccionista ha organizado una subasta privada en la mansión. Antes de que caiga el martillo, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-010",
+      "dificultad": "casual",
+      "semilla": 112,
+      "arma": false,
+      "titulo": {
+        "es": "Bodas de plata"
+      },
+      "premisa": {
+        "es": "La familia celebra sus bodas de plata con discursos y fotografías. En la última foto del día falta alguien: lo han hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-011",
+      "dificultad": "intermedio",
+      "semilla": 123,
+      "arma": false,
+      "titulo": {
+        "es": "Junto al fuego"
+      },
+      "premisa": {
+        "es": "El primer frío del año reúne a todos junto al fuego. Cuando se apagan las brasas, uno de los presentes ya no está: lo han hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-012",
+      "dificultad": "intermedio",
+      "semilla": 127,
+      "arma": false,
+      "titulo": {
+        "es": "Un secreto en el desayuno"
+      },
+      "premisa": {
+        "es": "Un secreto de familia sale a la luz durante el desayuno. Antes del mediodía, alguien es hallado sin vida y la mansión se llena de susurros."
+      }
+    },
+    {
+      "id": "reto-013",
+      "dificultad": "intermedio",
+      "semilla": 116,
+      "arma": true,
+      "titulo": {
+        "es": "Campanas fuera de hora"
+      },
+      "premisa": {
+        "es": "Las campanas del pueblo suenan fuera de hora y nadie sabe por qué. Entre el eco y las miradas, una de las personas presentes aparece sin vida."
+      }
+    },
+    {
+      "id": "reto-014",
+      "dificultad": "intermedio",
+      "semilla": 117,
+      "arma": true,
+      "titulo": {
+        "es": "El sombrero olvidado"
+      },
+      "premisa": {
+        "es": "Alguien olvida un sombrero en la mansión y todos juran que no es suyo. Esa noche, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-015",
+      "dificultad": "casual",
+      "semilla": 140,
+      "arma": false,
+      "titulo": {
+        "es": "El carruaje retrasado"
+      },
+      "premisa": {
+        "es": "Un carruaje llega con retraso y deja a los invitados cansados y de mal humor. Antes de la cena, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "reto-016",
+      "dificultad": "casual",
+      "semilla": 141,
+      "arma": false,
+      "titulo": {
+        "es": "Tarde de poesía"
+      },
+      "premisa": {
+        "es": "Una tarde de lectura de poemas reúne a toda la casa. En medio de un verso, alguien se levanta y no vuelve: lo hallan sin vida."
+      }
+    },
+    {
+      "id": "reto-017",
+      "dificultad": "casual",
+      "semilla": 115,
+      "arma": false,
+      "titulo": {
+        "es": "Perfume de jazmín"
+      },
+      "premisa": {
+        "es": "Un aroma de jazmín recorre la mansión y nadie sabe de dónde viene. Al anochecer, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-018",
+      "dificultad": "intermedio",
+      "semilla": 133,
+      "arma": false,
+      "titulo": {
+        "es": "El espejo partido"
+      },
+      "premisa": {
+        "es": "Un espejo se parte en dos sin que nadie lo toque, según cuentan los presentes. Esa noche, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "reto-019",
+      "dificultad": "intermedio",
+      "semilla": 139,
+      "arma": false,
+      "titulo": {
+        "es": "Concierto de cámara"
+      },
+      "premisa": {
+        "es": "Un cuarteto de cámara toca para los invitados de la mansión. Al terminar la última pieza, los aplausos se apagan: alguien yace sin vida."
+      }
+    },
+    {
+      "id": "reto-020",
+      "dificultad": "intermedio",
+      "semilla": 130,
+      "arma": true,
+      "titulo": {
+        "es": "El paraguas negro"
+      },
+      "premisa": {
+        "es": "Alguien deja un paraguas negro en la entrada y nadie lo reclama. Poco después, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "reto-021",
+      "dificultad": "intermedio",
+      "semilla": 125,
+      "arma": true,
+      "titulo": {
+        "es": "El álbum de familia"
+      },
+      "premisa": {
+        "es": "Se abre el álbum de familia para recordar viejos tiempos. Hay risas y también silencios. Antes de cerrarlo, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-022",
+      "dificultad": "casual",
+      "semilla": 145,
+      "arma": false,
+      "titulo": {
+        "es": "Día de carreras"
+      },
+      "premisa": {
+        "es": "Los invitados vuelven de las carreras de caballos con apuestas ganadas y perdidas. Esa noche, una de las personas presentes aparece sin vida."
+      }
+    },
+    {
+      "id": "reto-023",
+      "dificultad": "casual",
+      "semilla": 154,
+      "arma": false,
+      "titulo": {
+        "es": "Hojas secas"
+      },
+      "premisa": {
+        "es": "El viento llena de hojas secas el camino de la mansión y retrasa a los invitados. Al llegar el último, una de las personas presentes yace sin vida."
+      }
+    },
+    {
+      "id": "reto-024",
+      "dificultad": "casual",
+      "semilla": 116,
+      "arma": false,
+      "titulo": {
+        "es": "El tapiz torcido"
+      },
+      "premisa": {
+        "es": "El tapiz más antiguo de la casa amanece torcido y nadie confiesa haberlo tocado. Al caer la tarde, alguien es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-025",
+      "dificultad": "intermedio",
+      "semilla": 142,
+      "arma": false,
+      "titulo": {
+        "es": "Excursión al lago"
+      },
+      "premisa": {
+        "es": "Los invitados vuelven de una excursión al lago con las botas llenas de barro. Mientras se cambian, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "reto-026",
+      "dificultad": "intermedio",
+      "semilla": 148,
+      "arma": false,
+      "titulo": {
+        "es": "Partida de cartas"
+      },
+      "premisa": {
+        "es": "Una partida de cartas se alarga hasta la madrugada. Cuando cae el último naipe, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-027",
+      "dificultad": "intermedio",
+      "semilla": 132,
+      "arma": true,
+      "titulo": {
+        "es": "Eclipse de luna"
+      },
+      "premisa": {
+        "es": "Un eclipse de luna convierte la noche en terciopelo oscuro sobre la mansión. Cuando vuelve la claridad, una de las personas presentes yace sin vida."
+      }
+    },
+    {
+      "id": "reto-028",
+      "dificultad": "intermedio",
+      "semilla": 104,
+      "arma": true,
+      "titulo": {
+        "es": "Una herencia en disputa"
+      },
+      "premisa": {
+        "es": "Una herencia en disputa mantiene tensos a los presentes toda la semana. Esa noche, uno de ellos es hallado sin vida."
+      }
+    },
+    {
+      "id": "reto-029",
+      "dificultad": "casual",
+      "semilla": 149,
+      "arma": false,
+      "titulo": {
+        "es": "El invitado madrugador"
+      },
+      "premisa": {
+        "es": "Alguien llegó a la mansión antes que el resto y nadie recuerda haberlo recibido. Al caer la noche, una de las personas presentes yace sin vida."
+      }
+    },
+    {
+      "id": "reto-030",
+      "dificultad": "intermedio",
+      "semilla": 105,
+      "arma": true,
+      "titulo": {
+        "es": "La gran noche"
+      },
+      "premisa": {
+        "es": "Es la última noche de la temporada y la mansión se viste de gala. Cuando se apagan las velas, uno de los presentes es hallado sin vida y todos son sospechosos."
+      }
+    }
+  ]
+}

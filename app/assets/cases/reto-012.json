@@ -1,0 +1,490 @@
+{
+  "caseId": "reto-012",
+  "mapId": "mapa-intermedio-s127-v3",
+  "map": {
+    "id": "mapa-intermedio-s127-v3",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          46,
+          47,
+          48,
+          49,
+          50,
+          55,
+          56,
+          57,
+          58,
+          64
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          51,
+          53,
+          60,
+          61,
+          62,
+          69,
+          70,
+          71,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          7,
+          8,
+          16,
+          17,
+          23,
+          24,
+          25,
+          26,
+          33,
+          34,
+          35,
+          42,
+          43,
+          44,
+          52
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          20,
+          22,
+          28,
+          29,
+          30,
+          31,
+          32,
+          37,
+          38,
+          39,
+          40,
+          41
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          18,
+          19,
+          27,
+          36,
+          45,
+          54,
+          63,
+          72,
+          73
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          21
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          59,
+          65,
+          66,
+          67,
+          68,
+          74,
+          75,
+          76,
+          77
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "alfombra-1",
+        "type": "alfombra",
+        "cells": [
+          49,
+          50
+        ]
+      },
+      {
+        "id": "armario-2",
+        "type": "armario",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "armario-3",
+        "type": "armario",
+        "cells": [
+          47
+        ]
+      },
+      {
+        "id": "silla-4",
+        "type": "silla",
+        "cells": [
+          62
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          51
+        ]
+      },
+      {
+        "id": "mesa-6",
+        "type": "mesa",
+        "cells": [
+          71,
+          70
+        ]
+      },
+      {
+        "id": "barra-7",
+        "type": "barra",
+        "cells": [
+          79,
+          78
+        ]
+      },
+      {
+        "id": "silla-8",
+        "type": "silla",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "sillon-9",
+        "type": "sillon",
+        "cells": [
+          7
+        ]
+      },
+      {
+        "id": "planta-10",
+        "type": "planta",
+        "cells": [
+          52
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "sofa-12",
+        "type": "sofa",
+        "cells": [
+          29,
+          20
+        ]
+      },
+      {
+        "id": "sofa-13",
+        "type": "sofa",
+        "cells": [
+          30,
+          39
+        ]
+      },
+      {
+        "id": "sillon-14",
+        "type": "sillon",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "sillon-15",
+        "type": "sillon",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "arbusto-16",
+        "type": "arbusto",
+        "cells": [
+          19
+        ]
+      },
+      {
+        "id": "mesa-17",
+        "type": "mesa",
+        "cells": [
+          45,
+          54
+        ]
+      },
+      {
+        "id": "arbusto-18",
+        "type": "arbusto",
+        "cells": [
+          73
+        ]
+      },
+      {
+        "id": "alfombra-19",
+        "type": "alfombra",
+        "cells": [
+          2,
+          1
+        ]
+      },
+      {
+        "id": "sillon-20",
+        "type": "sillon",
+        "cells": [
+          0
+        ]
+      },
+      {
+        "id": "planta-21",
+        "type": "planta",
+        "cells": [
+          11
+        ]
+      },
+      {
+        "id": "piano-22",
+        "type": "piano",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "sillon-23",
+        "type": "sillon",
+        "cells": [
+          65
+        ]
+      },
+      {
+        "id": "armario-24",
+        "type": "armario",
+        "cells": [
+          74
+        ]
+      },
+      {
+        "id": "sillon-25",
+        "type": "sillon",
+        "cells": [
+          76
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras de podar",
+        "category": "cortante",
+        "area": "sala-de-musica"
+      },
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "biblioteca"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": false,
+  "victim": "c3",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Domingo",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Genoveva",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Heliodora",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c5",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Octavio",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Rodrigo",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Silvestre",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Teodora",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "only_one_on",
+      "subject": "c1",
+      "group": "sillon"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c2",
+      "group": "piano"
+    },
+    {
+      "type": "in_area",
+      "subject": "c3",
+      "area": "salon"
+    },
+    {
+      "type": "on_object",
+      "subject": "c4",
+      "group": "silla"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "sofa"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "cocina"
+        },
+        {
+          "type": "on_object",
+          "subject": "c6",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c8",
+      "b": "c7"
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c9",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "planta"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 7,
+      "c2": 14,
+      "c3": 21,
+      "c4": 35,
+      "c5": 40,
+      "c6": 51,
+      "c7": 56,
+      "c8": 64,
+      "c9": 72
+    },
+    "murderer": "c2"
+  },
+  "metrics": {
+    "deductionSteps": 8,
+    "maxTier": 3,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Un secreto en el desayuno"
+    },
+    "premise": {
+      "es": "Un secreto de familia sale a la luz durante el desayuno. Antes del mediodía, alguien es hallado sin vida y la mansión se llena de susurros."
+    }
+  }
+}

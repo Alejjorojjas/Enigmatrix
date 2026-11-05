@@ -3,13 +3,19 @@
 /// Uso:
 ///   dart run bin/enigmatrix.dart generate --difficulty tutorial|principiante|casual|intermedio
 ///       [--count N] [--seed S] [--weapons] [--out DIR] [--solution]
-///       [--tope-nodos N] [--tope-segundos S] [--sin-rango]
+///       [--tope-nodos N] [--tope-segundos S] [--sin-rango] [--mundo ID]
 ///   dart run bin/enigmatrix.dart show ARCHIVO.json [--solution]
 ///   dart run bin/enigmatrix.dart validate ARCHIVO.json
 ///   dart run bin/enigmatrix.dart measure --difficulty D --seeds 1,2,3 | --count N --seed S
 ///       [--weapons] [--tope-nodos N] [--tope-segundos S] [--sin-rango]
+///       [--mundo ID]
+///   dart run bin/enigmatrix.dart build-plan PLAN.json [--out DIR] [--solo id,id]
+///       Construye los casos de un plan (mundo, semillas explícitas, historia)
+///       y los escribe como <id>.json en DIR (por defecto out/<mundo>).
+///   dart run bin/enigmatrix.dart world-check [ID]
+///       Valida los datos de un mundo (tools/data/mundos/ID.json).
 ///   dart run bin/enigmatrix.dart catalog-add ARCHIVO.json... --mundo M
-///       [--tipo campana|reto] [--dir ../app/assets/cases]
+///       [--tipo campana|reto] [--dia-inicio N] [--dir ../app/assets/cases]
 ///   dart run bin/enigmatrix.dart catalog-check [--dir ../app/assets/cases]
 ///       [--tutorial ../app/assets/tutorial]
 library;
@@ -34,6 +40,10 @@ void main(List<String> args) {
       _validate(args.skip(1).toList());
     case 'measure':
       _measure(args.skip(1).toList());
+    case 'build-plan':
+      _buildPlan(args.skip(1).toList());
+    case 'world-check':
+      _worldCheck(args.skip(1).toList());
     case 'catalog-add':
       _catalogAdd(args.skip(1).toList());
     case 'catalog-check':
@@ -46,7 +56,7 @@ void main(List<String> args) {
 
 void _usage() {
   stdout.writeln('Comandos: generate | show | validate | measure | '
-      'catalog-add | catalog-check '
+      'build-plan | world-check | catalog-add | catalog-check '
       '(ver encabezado de bin/enigmatrix.dart)');
 }
 
@@ -73,6 +83,27 @@ GenerationLimits _limits(List<String> args) {
 DifficultyRange? _range(List<String> args) =>
     _flag(args, 'sin-rango') ? DifficultyRange.any : null;
 
+/// Mundo temático pedido con --mundo ID (tools/data/mundos/ID.json), o null.
+WorldData? _world(List<String> args) {
+  final id = _opt(args, 'mundo');
+  if (id == null) return null;
+  return _loadWorld(id);
+}
+
+WorldData _loadWorld(String id) {
+  final f = File('${defaultWorldsDir().path}/$id.json');
+  if (!f.existsSync()) {
+    stderr.writeln('No existe el mundo "$id" (${f.path}).');
+    exit(1);
+  }
+  try {
+    return loadWorldFile(f);
+  } on FormatException catch (e) {
+    stderr.writeln(e.message);
+    exit(1);
+  }
+}
+
 void _generate(List<String> args) {
   final difficulty = _opt(args, 'difficulty') ?? 'principiante';
   final count = int.parse(_opt(args, 'count') ?? '1');
@@ -83,7 +114,10 @@ void _generate(List<String> args) {
 
   final profile = DifficultyProfile.byLabel(difficulty);
   final generator = CaseFactory(profile,
-      withWeapon: weapons, range: _range(args), limits: _limits(args));
+      withWeapon: weapons,
+      range: _range(args),
+      limits: _limits(args),
+      world: _world(args));
 
   Directory(outDir).createSync(recursive: true);
   final rejectionTotals = <String, int>{};
@@ -105,8 +139,7 @@ void _generate(List<String> args) {
         const JsonEncoder.withIndent('  ').convert(pc.toJson()));
     firstPath ??= file.path;
     final m = pc.metrics!;
-    final extras =
-        result.extrasUsed > 0 ? ' +${result.extrasUsed} extras' : '';
+    final extras = result.extrasUsed > 0 ? ' +${result.extrasUsed} extras' : '';
     stdout.writeln('${pc.caseId}: ${m.clueCount} pistas$extras, '
         '${m.deductionSteps} pasos, T${m.maxTier}, única OK '
         '(${result.attempts} intentos) -> ${file.path}');
@@ -165,14 +198,16 @@ void _validate(List<String> args) {
 
 List<int> _seeds(List<String> args) {
   final list = _opt(args, 'seeds');
-  if (list != null) return [for (final x in list.split(',')) int.parse(x.trim())];
+  if (list != null)
+    return [for (final x in list.split(',')) int.parse(x.trim())];
   final count = int.parse(_opt(args, 'count') ?? '5');
   final seed = int.parse(_opt(args, 'seed') ?? '1');
   return [for (var k = 0; k < count; k++) seed + k];
 }
 
 void _measure(List<String> args) {
-  final profile = DifficultyProfile.byLabel(_opt(args, 'difficulty') ?? 'casual');
+  final profile =
+      DifficultyProfile.byLabel(_opt(args, 'difficulty') ?? 'casual');
   final seeds = _seeds(args);
   final weapons = _flag(args, 'weapons');
   final limits = _limits(args);
@@ -187,6 +222,7 @@ void _measure(List<String> args) {
     withWeapon: weapons,
     range: _range(args),
     limits: limits,
+    world: _world(args),
     onRow: (r) => stdout.writeln(formatRow(r)),
   );
   final ok = rows.where((r) => r.ok).toList();
@@ -215,7 +251,7 @@ void _catalogAdd(List<String> args) {
     exit(1);
   }
   // Los argumentos sin "--" que no sean valor de una opción son archivos.
-  final valueOpts = {'mundo', 'tipo', 'dir'};
+  final valueOpts = {'mundo', 'tipo', 'dir', 'dia-inicio'};
   final files = <File>[];
   for (var i = 0; i < args.length; i++) {
     final a = args[i];
@@ -229,8 +265,13 @@ void _catalogAdd(List<String> args) {
     stderr.writeln('Indica al menos un archivo de caso (.json).');
     exit(1);
   }
+  final diaInicio = _opt(args, 'dia-inicio');
   final r = addCasesToCatalog(
-      casesDir: _casesDir(args), sources: files, mundo: mundo, tipo: tipo);
+      casesDir: _casesDir(args),
+      sources: files,
+      mundo: mundo,
+      tipo: tipo,
+      diaInicio: diaInicio == null ? null : int.parse(diaInicio));
   if (r.errors.isNotEmpty) {
     stderr.writeln('No se agregó nada:');
     for (final e in r.errors) {
@@ -240,8 +281,63 @@ void _catalogAdd(List<String> args) {
   }
   for (final e in r.added) {
     stdout.writeln('Agregado: ${e.id} (${e.mundo}, ${e.tipo.name}, '
-        '${e.dificultad}, orden ${e.orden}) -> ${e.archivo}');
+        '${e.dificultad}, orden ${e.orden}'
+        '${e.dia == null ? '' : ', día ${e.dia}'}) -> ${e.archivo}');
   }
+}
+
+void _worldCheck(List<String> args) {
+  final ids = args.where((a) => !a.startsWith('--')).toList();
+  final id = ids.isEmpty ? 'mansion' : ids.first;
+  final w = _loadWorld(id); // sale con error si el mundo no es válido
+  stdout.writeln('Mundo "${w.id}" (${w.nameEs}): OK · '
+      '${w.cast.length} personajes, ${w.rooms.length} habitaciones, '
+      '${w.weapons.length} armas.');
+}
+
+void _buildPlan(List<String> args) {
+  final valueOpts = {'out', 'solo'};
+  final planPath = [
+    for (var i = 0; i < args.length; i++)
+      if (!args[i].startsWith('--') &&
+          !(i > 0 &&
+              args[i - 1].startsWith('--') &&
+              valueOpts.contains(args[i - 1].substring(2))))
+        args[i]
+  ];
+  if (planPath.isEmpty) {
+    stderr.writeln('Indica el archivo del plan (.json).');
+    exit(1);
+  }
+  final plan = Plan.fromFile(File(planPath.first));
+  final world = _loadWorld(plan.world);
+  final only = _opt(args, 'solo')?.split(',').toSet();
+  final outDir = Directory(_opt(args, 'out') ?? 'out/${plan.world}');
+  var ok = 0, failed = 0;
+  for (final c in plan.cases) {
+    if (only != null && !only.contains(c.id)) continue;
+    final b = buildPlanCase(c, world, limits: _limits(args));
+    final pc = b.puzzle;
+    if (pc == null) {
+      failed++;
+      stdout.writeln('${c.id}: SIN CASO (semilla ${c.seed}) '
+          '${b.rejections}');
+      continue;
+    }
+    final check = checkCaseContent(pc);
+    final f = writeCaseFile(pc, outDir);
+    final m = pc.metrics!;
+    stdout.writeln('${check.passed ? 'OK   ' : 'FALLA'} ${pc.caseId} · '
+        '${pc.difficulty} ${pc.map.size}x${pc.map.size} · '
+        '${m.deductionSteps} pasos · T${m.maxTier} · '
+        '${pc.hasWeapon ? 'con arma' : 'sin arma'} -> ${f.path}');
+    for (final p in check.problems) {
+      stdout.writeln('       PROBLEMA: $p');
+    }
+    check.passed ? ok++ : failed++;
+  }
+  stdout.writeln('\nResumen: $ok buenos, $failed con problemas.');
+  exit(failed == 0 ? 0 : 1);
 }
 
 void _catalogCheck(List<String> args) {

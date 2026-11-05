@@ -160,6 +160,356 @@
       "dificultad": "intermedio",
       "orden": 20,
       "archivo": "caso-intermedio-s5.json"
+    },
+    {
+      "id": "mansion-01",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 21,
+      "archivo": "mansion-01.json"
+    },
+    {
+      "id": "mansion-02",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 22,
+      "archivo": "mansion-02.json"
+    },
+    {
+      "id": "mansion-03",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "principiante",
+      "orden": 23,
+      "archivo": "mansion-03.json"
+    },
+    {
+      "id": "mansion-04",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 24,
+      "archivo": "mansion-04.json"
+    },
+    {
+      "id": "mansion-05",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 25,
+      "archivo": "mansion-05.json"
+    },
+    {
+      "id": "mansion-06",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "casual",
+      "orden": 26,
+      "archivo": "mansion-06.json"
+    },
+    {
+      "id": "mansion-07",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 27,
+      "archivo": "mansion-07.json"
+    },
+    {
+      "id": "mansion-08",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 28,
+      "archivo": "mansion-08.json"
+    },
+    {
+      "id": "mansion-09",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 29,
+      "archivo": "mansion-09.json"
+    },
+    {
+      "id": "mansion-10",
+      "mundo": "mansion",
+      "tipo": "campana",
+      "dificultad": "intermedio",
+      "orden": 30,
+      "archivo": "mansion-10.json"
+    },
+    {
+      "id": "reto-001",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 31,
+      "archivo": "reto-001.json",
+      "dia": 1
+    },
+    {
+      "id": "reto-002",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 32,
+      "archivo": "reto-002.json",
+      "dia": 2
+    },
+    {
+      "id": "reto-003",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 33,
+      "archivo": "reto-003.json",
+      "dia": 3
+    },
+    {
+      "id": "reto-004",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 34,
+      "archivo": "reto-004.json",
+      "dia": 4
+    },
+    {
+      "id": "reto-005",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 35,
+      "archivo": "reto-005.json",
+      "dia": 5
+    },
+    {
+      "id": "reto-006",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 36,
+      "archivo": "reto-006.json",
+      "dia": 6
+    },
+    {
+      "id": "reto-007",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 37,
+      "archivo": "reto-007.json",
+      "dia": 7
+    },
+    {
+      "id": "reto-008",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 38,
+      "archivo": "reto-008.json",
+      "dia": 8
+    },
+    {
+      "id": "reto-009",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 39,
+      "archivo": "reto-009.json",
+      "dia": 9
+    },
+    {
+      "id": "reto-010",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 40,
+      "archivo": "reto-010.json",
+      "dia": 10
+    },
+    {
+      "id": "reto-011",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 41,
+      "archivo": "reto-011.json",
+      "dia": 11
+    },
+    {
+      "id": "reto-012",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 42,
+      "archivo": "reto-012.json",
+      "dia": 12
+    },
+    {
+      "id": "reto-013",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 43,
+      "archivo": "reto-013.json",
+      "dia": 13
+    },
+    {
+      "id": "reto-014",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 44,
+      "archivo": "reto-014.json",
+      "dia": 14
+    },
+    {
+      "id": "reto-015",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 45,
+      "archivo": "reto-015.json",
+      "dia": 15
+    },
+    {
+      "id": "reto-016",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 46,
+      "archivo": "reto-016.json",
+      "dia": 16
+    },
+    {
+      "id": "reto-017",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 47,
+      "archivo": "reto-017.json",
+      "dia": 17
+    },
+    {
+      "id": "reto-018",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 48,
+      "archivo": "reto-018.json",
+      "dia": 18
+    },
+    {
+      "id": "reto-019",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 49,
+      "archivo": "reto-019.json",
+      "dia": 19
+    },
+    {
+      "id": "reto-020",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 50,
+      "archivo": "reto-020.json",
+      "dia": 20
+    },
+    {
+      "id": "reto-021",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 51,
+      "archivo": "reto-021.json",
+      "dia": 21
+    },
+    {
+      "id": "reto-022",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 52,
+      "archivo": "reto-022.json",
+      "dia": 22
+    },
+    {
+      "id": "reto-023",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 53,
+      "archivo": "reto-023.json",
+      "dia": 23
+    },
+    {
+      "id": "reto-024",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 54,
+      "archivo": "reto-024.json",
+      "dia": 24
+    },
+    {
+      "id": "reto-025",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 55,
+      "archivo": "reto-025.json",
+      "dia": 25
+    },
+    {
+      "id": "reto-026",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 56,
+      "archivo": "reto-026.json",
+      "dia": 26
+    },
+    {
+      "id": "reto-027",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 57,
+      "archivo": "reto-027.json",
+      "dia": 27
+    },
+    {
+      "id": "reto-028",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 58,
+      "archivo": "reto-028.json",
+      "dia": 28
+    },
+    {
+      "id": "reto-029",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "casual",
+      "orden": 59,
+      "archivo": "reto-029.json",
+      "dia": 29
+    },
+    {
+      "id": "reto-030",
+      "mundo": "mansion",
+      "tipo": "reto",
+      "dificultad": "intermedio",
+      "orden": 60,
+      "archivo": "reto-030.json",
+      "dia": 30
     }
   ]
 }

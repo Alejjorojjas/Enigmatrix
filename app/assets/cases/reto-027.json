@@ -1,0 +1,503 @@
+{
+  "caseId": "reto-027",
+  "mapId": "mapa-intermedio-s132-v2",
+  "map": {
+    "id": "mapa-intermedio-s132-v2",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          17,
+          25,
+          26,
+          31,
+          32,
+          33,
+          34,
+          35,
+          40,
+          41,
+          42,
+          43,
+          44,
+          52,
+          61
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          12,
+          13,
+          14,
+          15,
+          16,
+          22,
+          23,
+          24
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          0,
+          1,
+          2,
+          9,
+          10,
+          11,
+          18,
+          19,
+          20,
+          21,
+          27,
+          28,
+          30,
+          39
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          29,
+          38,
+          47,
+          48,
+          49,
+          50,
+          57,
+          58,
+          59,
+          66,
+          67,
+          68,
+          75,
+          76
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          36,
+          37,
+          45,
+          46,
+          54,
+          55,
+          56,
+          63,
+          64,
+          65,
+          72,
+          73,
+          74
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          51,
+          53,
+          60,
+          62,
+          69,
+          70,
+          71,
+          77,
+          78,
+          79,
+          80
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "mesa-1",
+        "type": "mesa",
+        "cells": [
+          34,
+          33
+        ]
+      },
+      {
+        "id": "silla-2",
+        "type": "silla",
+        "cells": [
+          40
+        ]
+      },
+      {
+        "id": "barra-3",
+        "type": "barra",
+        "cells": [
+          32,
+          31
+        ]
+      },
+      {
+        "id": "silla-4",
+        "type": "silla",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "piano-5",
+        "type": "piano",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "alfombra-7",
+        "type": "alfombra",
+        "cells": [
+          5,
+          14
+        ]
+      },
+      {
+        "id": "piano-8",
+        "type": "piano",
+        "cells": [
+          7
+        ]
+      },
+      {
+        "id": "cama-9",
+        "type": "cama",
+        "cells": [
+          11,
+          2
+        ]
+      },
+      {
+        "id": "planta-10",
+        "type": "planta",
+        "cells": [
+          0
+        ]
+      },
+      {
+        "id": "armario-11",
+        "type": "armario",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "silla-12",
+        "type": "silla",
+        "cells": [
+          27
+        ]
+      },
+      {
+        "id": "armario-13",
+        "type": "armario",
+        "cells": [
+          48
+        ]
+      },
+      {
+        "id": "alfombra-14",
+        "type": "alfombra",
+        "cells": [
+          47,
+          38
+        ]
+      },
+      {
+        "id": "alfombra-15",
+        "type": "alfombra",
+        "cells": [
+          76,
+          75
+        ]
+      },
+      {
+        "id": "alfombra-16",
+        "type": "alfombra",
+        "cells": [
+          67,
+          58
+        ]
+      },
+      {
+        "id": "alfombra-17",
+        "type": "alfombra",
+        "cells": [
+          73,
+          74
+        ]
+      },
+      {
+        "id": "alfombra-18",
+        "type": "alfombra",
+        "cells": [
+          37,
+          46
+        ]
+      },
+      {
+        "id": "silla-19",
+        "type": "silla",
+        "cells": [
+          72
+        ]
+      },
+      {
+        "id": "mesa-20",
+        "type": "mesa",
+        "cells": [
+          45,
+          36
+        ]
+      },
+      {
+        "id": "caja-21",
+        "type": "caja",
+        "cells": [
+          51
+        ]
+      },
+      {
+        "id": "armario-22",
+        "type": "armario",
+        "cells": [
+          78
+        ]
+      },
+      {
+        "id": "armario-23",
+        "type": "armario",
+        "cells": [
+          77
+        ]
+      },
+      {
+        "id": "armario-24",
+        "type": "armario",
+        "cells": [
+          53
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "dormitorio"
+      },
+      {
+        "id": "bufanda",
+        "name_es": "la bufanda de seda",
+        "category": "asfixia",
+        "area": "cocina"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c2",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Bernardo",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Elvira",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Heliodora",
+      "female": true
+    },
+    {
+      "id": "c5",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Ulises",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Valeria",
+      "female": true
+    },
+    {
+      "id": "c9",
+      "name_es": "Zacarías",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "piano"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c3",
+      "b": "c4"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "silla"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "barra"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "vestibulo"
+        },
+        {
+          "type": "on_object",
+          "subject": "c6",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c7",
+      "b": "c9"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c9",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "armario"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 17,
+      "c3": 21,
+      "c4": 28,
+      "c5": 41,
+      "c6": 47,
+      "c7": 60,
+      "c8": 63,
+      "c9": 79
+    },
+    "murderer": "c5",
+    "lethalWeapon": "bufanda"
+  },
+  "metrics": {
+    "deductionSteps": 12,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Eclipse de luna"
+    },
+    "premise": {
+      "es": "Un eclipse de luna convierte la noche en terciopelo oscuro sobre la mansión. Cuando vuelve la claridad, una de las personas presentes yace sin vida."
+    }
+  }
+}

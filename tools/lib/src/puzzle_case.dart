@@ -4,6 +4,7 @@ library;
 
 import 'clue.dart';
 import 'model.dart';
+import 'story.dart';
 
 class Solution {
   /// charId -> celda (coordenadas canónicas).
@@ -73,6 +74,11 @@ class PuzzleCase {
   final Solution solution;
   final CaseMetrics? metrics;
 
+  /// Historia del caso (mundo, título y premisa). Opcional: los casos sin
+  /// ella siguen funcionando. Es sabor, no lógica, y viaja también al
+  /// cliente (ver toClientJson).
+  final CaseStory? story;
+
   const PuzzleCase({
     required this.caseId,
     required this.map,
@@ -83,7 +89,22 @@ class PuzzleCase {
     required this.difficulty,
     required this.solution,
     this.metrics,
+    this.story,
   });
+
+  /// Copia del caso con otra historia (o sin ella si [story] es null).
+  PuzzleCase withStory(CaseStory? story) => PuzzleCase(
+        caseId: caseId,
+        map: map,
+        characters: characters,
+        victimId: victimId,
+        clues: clues,
+        hasWeapon: hasWeapon,
+        difficulty: difficulty,
+        solution: solution,
+        metrics: metrics,
+        story: story,
+      );
 
   Character character(String id) => characters.firstWhere((c) => c.id == id);
 
@@ -105,8 +126,10 @@ class PuzzleCase {
   }
 
   /// Pistas sueltas (sin tarjeta): área vacía, arma.
-  List<Clue> get extraClues =>
-      [for (final c in clues) if (c.subjectId == null) c];
+  List<Clue> get extraClues => [
+        for (final c in clues)
+          if (c.subjectId == null) c
+      ];
 
   ClueContext contextFor(Map<String, int> positions, {String? lethal}) =>
       ClueContext(
@@ -132,6 +155,7 @@ class PuzzleCase {
         'clues': [for (final c in clues) c.toJson()],
         'solution': solution.toJson(),
         if (metrics != null) 'metrics': metrics!.toJson(),
+        if (story != null) 'story': story!.toJson(),
       };
 
   /// Payload para el cliente: SIN solución, SIN arma homicida, SIN métricas.
@@ -148,6 +172,7 @@ class PuzzleCase {
             {'id': c.id, 'name_es': c.nameEs, 'female': c.female}
         ],
         'clues': [for (final c in clues) c.toJson()],
+        if (story != null) 'story': story!.toJson(),
       };
 
   /// [mapOverride] solo para fixtures de test; los casos reales traen el
@@ -178,6 +203,9 @@ class PuzzleCase {
       metrics: j['metrics'] == null
           ? null
           : CaseMetrics.fromJson((j['metrics'] as Map).cast<String, dynamic>()),
+      story: j['story'] == null
+          ? null
+          : CaseStory.fromJson((j['story'] as Map).cast<String, dynamic>()),
     );
   }
 }

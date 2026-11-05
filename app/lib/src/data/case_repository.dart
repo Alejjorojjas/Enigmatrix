@@ -123,16 +123,26 @@ class CaseSource {
 ///
 /// Prioridad: el catálogo si trae al menos una entrada válida; si no, el
 /// índice heredado. Si no sirve ninguno lanza [StateError].
-CaseSource resolveCaseSource({String? catalogRaw, String? indexRaw}) {
+///
+/// [mundo] y [tipo] (opcionales) limitan las entradas del catálogo que se
+/// devuelven. El índice heredado solo lista los casos del banco de pruebas,
+/// así que como respaldo se usa tal cual.
+CaseSource resolveCaseSource({
+  String? catalogRaw,
+  String? indexRaw,
+  String? mundo,
+  CaseKind? tipo,
+}) {
   final warnings = <String>[];
   if (catalogRaw != null) {
     try {
       final parsed = CaseCatalog.parse(catalogRaw);
       warnings.addAll([for (final e in parsed.errors) 'Catálogo: $e']);
-      if (parsed.catalog.entries.isNotEmpty) {
+      final entries = parsed.catalog.where(mundo: mundo, tipo: tipo);
+      if (entries.isNotEmpty) {
         return CaseSource(
-          files: parsed.catalog.files,
-          orderById: {for (final e in parsed.catalog.entries) e.id: e.orden},
+          files: [for (final e in entries) e.archivo],
+          orderById: {for (final e in entries) e.id: e.orden},
           fromCatalog: true,
           warnings: warnings,
         );
@@ -202,6 +212,76 @@ List<T> parseCasesTolerant<T>(
 String stripBom(String s) =>
     s.isNotEmpty && s.codeUnitAt(0) == 0xFEFF ? s.substring(1) : s;
 
+/// Entradas del catálogo de un mundo y tipo (ambos opcionales), en el orden
+/// del catálogo. Función pura. Entradas inválidas del catálogo se saltan.
+/// Lanza [StateError] si el catálogo falta o no se puede leer.
+List<CatalogEntry> selectCatalogEntries(
+  String? catalogRaw, {
+  String? mundo,
+  CaseKind? tipo,
+}) {
+  if (catalogRaw == null) {
+    throw StateError(
+      'No se pudo leer el catálogo de casos. '
+      'Reinstala la app o avisa al equipo.',
+    );
+  }
+  try {
+    return CaseCatalog.parse(
+      catalogRaw,
+    ).catalog.where(mundo: mundo, tipo: tipo);
+  } catch (e) {
+    throw StateError('Catálogo de casos ilegible: $e');
+  }
+}
+
+/// Une cada entrada con su caso ya leído (archivo -> texto JSON), conservando
+/// el orden de [entries]. Salta, avisando con [onError], las entradas cuyo
+/// archivo falta o cuyo JSON no se entiende, o cuyo id no coincide con el del
+/// catálogo (el id del catálogo manda: es la clave del progreso del jugador).
+/// Función pura: se prueba sin rootBundle.
+List<({CatalogEntry entry, PuzzleCase puzzle})> pairEntriesWithCases(
+  List<CatalogEntry> entries,
+  Map<String, String> rawByFile, {
+  void Function(String message)? onError,
+}) {
+  final out = <({CatalogEntry entry, PuzzleCase puzzle})>[];
+  for (final e in entries) {
+    final raw = rawByFile[e.archivo];
+    if (raw == null) {
+      onError?.call('Caso omitido (${e.archivo}): no se pudo leer.');
+      continue;
+    }
+    try {
+      final pc = PuzzleCase.fromJson(
+        jsonDecode(stripBom(raw)) as Map<String, dynamic>,
+      );
+      if (pc.caseId != e.id) {
+        onError?.call(
+          'Caso omitido (${e.archivo}): el catálogo dice "${e.id}" '
+          'pero el caso es "${pc.caseId}".',
+        );
+        continue;
+      }
+      out.add((entry: e, puzzle: pc));
+    } catch (err) {
+      onError?.call('Caso omitido (${e.archivo}): $err');
+    }
+  }
+  return out;
+}
+
+/// Un día del reto diario: su número (1 a 30) y el caso de ese día.
+class DailyChallenge {
+  final int day;
+  final PuzzleCase puzzle;
+  const DailyChallenge({required this.day, required this.puzzle});
+}
+
+/// Retos ordenados por número de día (copia).
+List<DailyChallenge> sortChallenges(Iterable<DailyChallenge> items) =>
+    items.toList()..sort((a, b) => a.day.compareTo(b.day));
+
 class CaseRepository {
   /// Lee el texto de un asset; null si no existe o falla.
   static Future<String?> _tryLoad(String path) async {
@@ -212,7 +292,10 @@ class CaseRepository {
     }
   }
 
-  /// Carga los casos en el orden del catálogo (assets/cases/catalogo.json).
+  /// Carga los casos del banco de pruebas en el orden del catálogo
+  /// (assets/cases/catalogo.json). Es la lista que la app muestra hoy: el
+  /// Mundo 1 y el reto diario NO entran aquí, se piden con [loadCampaign] y
+  /// [loadDailyChallenges].
   /// Si el catálogo falta o está dañado, usa index.json (orden por
   /// dificultad y número final, como antes). Un caso que no se lee o no se
   /// entiende se omite y se registra; el resto carga.
@@ -220,6 +303,7 @@ class CaseRepository {
     final source = resolveCaseSource(
       catalogRaw: await _tryLoad(kCatalogAsset),
       indexRaw: await _tryLoad(kIndexAsset),
+      mundo: kBancoDePruebas,
     );
     source.warnings.forEach(debugPrint);
     final raws = <String, String>{};
@@ -241,6 +325,61 @@ class CaseRepository {
     );
   }
 
+  /// Casos de campaña de un mundo ([world], por ejemplo [kMundoMansion]), en
+  /// el orden del catálogo (el orden en que se juegan). Un caso que no se lee
+  /// o no se entiende se omite y se registra. Lista vacía si el mundo no
+  /// existe; lanza [StateError] si el catálogo no se puede leer.
+  static Future<List<PuzzleCase>> loadCampaign(String world) async {
+    final entries = selectCatalogEntries(
+      await _tryLoad(kCatalogAsset),
+      mundo: world,
+      tipo: CaseKind.campana,
+    );
+    final pairs = await _loadEntries(entries);
+    return [for (final p in pairs) p.puzzle];
+  }
+
+  /// Los retos diarios (tipo "reto"), ordenados por día (1 a 30). La hora de
+  /// cambio de día está pendiente (pregunta 7 de la auditoría): aquí solo se
+  /// conoce el número de día. Lanza [StateError] si el catálogo no se puede
+  /// leer.
+  static Future<List<DailyChallenge>> loadDailyChallenges() async {
+    final entries = selectCatalogEntries(
+      await _tryLoad(kCatalogAsset),
+      tipo: CaseKind.reto,
+    );
+    final pairs = await _loadEntries(entries);
+    return sortChallenges([
+      for (final p in pairs)
+        if (p.entry.dia != null)
+          DailyChallenge(day: p.entry.dia!, puzzle: p.puzzle),
+    ]);
+  }
+
+  /// El reto de un día concreto, o null si no existe.
+  static Future<PuzzleCase?> loadDailyChallenge(int day) async {
+    for (final c in await loadDailyChallenges()) {
+      if (c.day == day) return c.puzzle;
+    }
+    return null;
+  }
+
+  static Future<List<({CatalogEntry entry, PuzzleCase puzzle})>> _loadEntries(
+    List<CatalogEntry> entries,
+  ) async {
+    final raws = <String, String>{};
+    for (final e in entries) {
+      try {
+        raws[e.archivo] = await rootBundle.loadString(
+          'assets/cases/${e.archivo}',
+        );
+      } catch (err) {
+        debugPrint('Caso omitido (${e.archivo}): no se pudo leer: $err');
+      }
+    }
+    return pairEntriesWithCases(entries, raws, onError: debugPrint);
+  }
+
   /// Caso del tutorial (assets/tutorial/caso-tutorial.json), separado del
   /// banco: no pasa por el catálogo, no se ordena ni cuenta como Caso 1.
   static Future<PuzzleCase> loadTutorial() async {
@@ -253,6 +392,18 @@ class CaseRepository {
 
 final casesProvider = FutureProvider<List<PuzzleCase>>(
   (ref) => CaseRepository.loadAll(),
+);
+
+/// Casos de campaña de un mundo ("mansion"), en el orden en que se juegan.
+/// Todavía no los muestra ninguna pantalla: la interfaz los conecta en una
+/// ronda posterior.
+final campaignProvider = FutureProvider.family<List<PuzzleCase>, String>(
+  (ref, world) => CaseRepository.loadCampaign(world),
+);
+
+/// Los 30 retos diarios por número de día. Todavía sin pantalla.
+final dailyChallengesProvider = FutureProvider<List<DailyChallenge>>(
+  (ref) => CaseRepository.loadDailyChallenges(),
 );
 
 /// Caso propio del tutorial, aparte del banco de casos.

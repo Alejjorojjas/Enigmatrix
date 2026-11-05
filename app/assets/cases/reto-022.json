@@ -1,0 +1,426 @@
+{
+  "caseId": "reto-022",
+  "mapId": "mapa-casual-s145-v2",
+  "map": {
+    "id": "mapa-casual-s145-v2",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          45,
+          53,
+          54,
+          60,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          5,
+          6,
+          7,
+          13,
+          14,
+          15,
+          21,
+          22,
+          23,
+          28,
+          29,
+          30,
+          31,
+          36
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          8,
+          9,
+          10,
+          11,
+          12,
+          16,
+          17,
+          18,
+          19,
+          20,
+          24,
+          25,
+          26,
+          33
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          37,
+          38,
+          39,
+          46,
+          47,
+          55
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          32,
+          40,
+          41,
+          48,
+          49,
+          50,
+          56,
+          57,
+          58
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          27,
+          34,
+          35,
+          42,
+          43,
+          44,
+          51,
+          52,
+          59
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "silla-1",
+        "type": "silla",
+        "cells": [
+          45
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          53
+        ]
+      },
+      {
+        "id": "silla-3",
+        "type": "silla",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "alfombra-4",
+        "type": "alfombra",
+        "cells": [
+          6,
+          5
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          29
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          14
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "alfombra-8",
+        "type": "alfombra",
+        "cells": [
+          10,
+          11
+        ]
+      },
+      {
+        "id": "alfombra-9",
+        "type": "alfombra",
+        "cells": [
+          4,
+          3
+        ]
+      },
+      {
+        "id": "silla-10",
+        "type": "silla",
+        "cells": [
+          9
+        ]
+      },
+      {
+        "id": "silla-11",
+        "type": "silla",
+        "cells": [
+          38
+        ]
+      },
+      {
+        "id": "silla-12",
+        "type": "silla",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "sillon-13",
+        "type": "sillon",
+        "cells": [
+          56
+        ]
+      },
+      {
+        "id": "armario-14",
+        "type": "armario",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "sillon-15",
+        "type": "sillon",
+        "cells": [
+          41
+        ]
+      },
+      {
+        "id": "caja-16",
+        "type": "caja",
+        "cells": [
+          27
+        ]
+      },
+      {
+        "id": "mesa-17",
+        "type": "mesa",
+        "cells": [
+          43,
+          35
+        ]
+      },
+      {
+        "id": "armario-18",
+        "type": "armario",
+        "cells": [
+          59
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
+        "area": "galeria"
+      },
+      {
+        "id": "veneno",
+        "name_es": "el frasco de veneno",
+        "category": "veneno",
+        "area": "comedor"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c4",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Elvira",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Fermín",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Marcela",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Octavio",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Ulises",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Valeria",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Zacarías",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "on_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "galeria"
+        },
+        {
+          "type": "on_object",
+          "subject": "c2",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "galeria"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "on_object",
+          "subject": "c5",
+          "group": "silla"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "sillon"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c7",
+      "group": "armario"
+    },
+    {
+      "type": "in_area",
+      "subject": "c8",
+      "area": "comedor"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 5,
+      "c2": 9,
+      "c3": 18,
+      "c4": 28,
+      "c5": 38,
+      "c6": 40,
+      "c7": 51,
+      "c8": 63
+    },
+    "murderer": "c1"
+  },
+  "metrics": {
+    "deductionSteps": 5,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Día de carreras"
+    },
+    "premise": {
+      "es": "Los invitados vuelven de las carreras de caballos con apuestas ganadas y perdidas. Esa noche, una de las personas presentes aparece sin vida."
+    }
+  }
+}

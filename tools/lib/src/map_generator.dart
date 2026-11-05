@@ -6,6 +6,7 @@ library;
 import 'dart:math';
 
 import 'model.dart';
+import 'world.dart';
 
 const _roomNamePool = [
   ('salon', 'el Salón'),
@@ -176,7 +177,13 @@ class MapGenerator {
   final Random rng;
   final String id;
 
-  MapGenerator({required this.size, required this.rng, required this.id});
+  /// Mundo temático (opcional): si se da, las habitaciones, los muebles por
+  /// habitación, las armas y el nombre del lugar salen de él. Sin mundo, el
+  /// generador usa los pools genéricos de siempre (mismo sorteo que antes).
+  final WorldData? world;
+
+  MapGenerator(
+      {required this.size, required this.rng, required this.id, this.world});
 
   int get _roomCount =>
       switch (size) {
@@ -215,7 +222,8 @@ class MapGenerator {
     while (assigned < total) {
       // Crece primero la habitación más pequeña que tenga frontera.
       final order = List<int>.generate(k, (a) => a)
-        ..sort((x, y) => cellsByArea[x].length.compareTo(cellsByArea[y].length));
+        ..sort(
+            (x, y) => cellsByArea[x].length.compareTo(cellsByArea[y].length));
       var grew = false;
       for (final a in order) {
         final frontier = <int>[];
@@ -238,7 +246,17 @@ class MapGenerator {
     if (cellsByArea.any((c) => c.length < minRoom)) return null;
 
     // 2. Nombres de habitaciones y del lugar.
-    final roomNames = [..._roomNamePool]..shuffle(rng);
+    final w = world;
+    final roomNames = w == null
+        ? ([..._roomNamePool]..shuffle(rng))
+        : ([for (final r in w.rooms) (r.id, r.nameEs)]..shuffle(rng));
+    if (roomNames.length < k) {
+      throw StateError('Habitaciones insuficientes: ${roomNames.length} '
+          'para $k');
+    }
+    final furnitureByRoom = w == null
+        ? _furnitureByRoom
+        : {for (final r in w.rooms) r.id: r.furniture};
     final areas = [
       for (var a = 0; a < k; a++)
         Area(
@@ -303,7 +321,7 @@ class MapGenerator {
 
     var objSeq = 0;
     for (final area in areas) {
-      final allowed = _furnitureByRoom[area.id] ??
+      final allowed = furnitureByRoom[area.id] ??
           const [ObjectType.silla, ObjectType.planta];
       // ~1 mueble por cada 3 celdas de la habitación, entre 1 y 4.
       final count = (area.cells.length / 3).round().clamp(1, 4);
@@ -330,7 +348,10 @@ class MapGenerator {
     //    crimen siempre tiene una sola arma).
     final weaponCount = (2 + rng.nextInt(2)).clamp(0, k);
     final weaponAreas = List<int>.generate(k, (a) => a)..shuffle(rng);
-    final weaponsShuffled = [..._weaponPool]..shuffle(rng);
+    final weaponsShuffled = (w == null
+        ? [..._weaponPool]
+        : [for (final x in w.weapons) (x.id, x.nameEs, x.category)])
+      ..shuffle(rng);
     final weapons = [
       for (var i = 0; i < weaponCount; i++)
         WeaponDef(
@@ -343,7 +364,8 @@ class MapGenerator {
 
     final map = GameMap(
       id: id,
-      nameEs: _venueNames[rng.nextInt(_venueNames.length)],
+      nameEs:
+          w == null ? _venueNames[rng.nextInt(_venueNames.length)] : w.nameEs,
       size: size,
       areas: areas,
       objects: objects,
@@ -356,7 +378,10 @@ class MapGenerator {
     if (!_hasValidPermutation(map)) return null;
     var pairCapable = 0;
     for (final area in areas) {
-      final free = [for (final c in area.cells) if (map.isOccupiable(c)) c];
+      final free = [
+        for (final c in area.cells)
+          if (map.isOccupiable(c)) c
+      ];
       var found = false;
       for (var i = 0; i < free.length && !found; i++) {
         for (var j = i + 1; j < free.length && !found; j++) {

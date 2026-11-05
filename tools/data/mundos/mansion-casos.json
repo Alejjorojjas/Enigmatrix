@@ -1,0 +1,126 @@
+{
+  "mundo": "mansion",
+  "nota": "Plan de la campaña del Mundo 1. Semillas explícitas y reproducibles. El arma homicida va en 3 de los 4 casos Intermedio (casos 8 a 10): es la recomendación de la pregunta 19 (PENDIENTE) y se puede cambiar poniendo arma en false o true y regenerando.",
+  "casos": [
+    {
+      "id": "mansion-01",
+      "dificultad": "principiante",
+      "semilla": 21,
+      "arma": false,
+      "titulo": {
+        "es": "Cena de bienvenida"
+      },
+      "premisa": {
+        "es": "Los invitados llegan a la mansión para una cena de bienvenida. Antes del postre, una de las personas presentes es hallada sin vida y la casa queda en silencio."
+      }
+    },
+    {
+      "id": "mansion-02",
+      "dificultad": "principiante",
+      "semilla": 3,
+      "arma": false,
+      "titulo": {
+        "es": "El testamento sellado"
+      },
+      "premisa": {
+        "es": "Un sobre lacrado debe permanecer cerrado hasta el domingo. Esa noche, uno de los presentes es hallado sin vida y cada cual tiene algo que callar."
+      }
+    },
+    {
+      "id": "mansion-03",
+      "dificultad": "principiante",
+      "semilla": 17,
+      "arma": false,
+      "titulo": {
+        "es": "Tormenta en la colina"
+      },
+      "premisa": {
+        "es": "Una tormenta corta el camino y obliga a todos a pasar la noche en la mansión. Al amanecer, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "mansion-04",
+      "dificultad": "casual",
+      "semilla": 8,
+      "arma": false,
+      "titulo": {
+        "es": "La noche del piano"
+      },
+      "premisa": {
+        "es": "Tras la velada musical, los invitados se dispersan por la mansión para tomar el aire. Cuando se reúnen de nuevo, falta uno de ellos: lo han hallado sin vida."
+      }
+    },
+    {
+      "id": "mansion-05",
+      "dificultad": "casual",
+      "semilla": 10,
+      "arma": false,
+      "titulo": {
+        "es": "El retrato cambiado de pared"
+      },
+      "premisa": {
+        "es": "Un retrato muy antiguo ha cambiado de pared y nadie sabe quién lo movió. Esa misma noche, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "mansion-06",
+      "dificultad": "casual",
+      "semilla": 12,
+      "arma": false,
+      "titulo": {
+        "es": "Té de las cinco"
+      },
+      "premisa": {
+        "es": "El té de las cinco reúne a la familia y a sus amistades. Cuando suena el reloj de las seis, falta una persona: la encuentran sin vida."
+      }
+    },
+    {
+      "id": "mansion-07",
+      "dificultad": "intermedio",
+      "semilla": 11,
+      "arma": false,
+      "titulo": {
+        "es": "Baile de máscaras"
+      },
+      "premisa": {
+        "es": "Un baile de máscaras llena la mansión de disfraces y secretos. A medianoche, cuando todos se quitan el antifaz, una de las personas presentes yace sin vida."
+      }
+    },
+    {
+      "id": "mansion-08",
+      "dificultad": "intermedio",
+      "semilla": 29,
+      "arma": true,
+      "titulo": {
+        "es": "La llave desaparecida"
+      },
+      "premisa": {
+        "es": "Una llave antigua desaparece de su gancho justo antes de la cena. Mientras la buscan, uno de los presentes es hallado sin vida."
+      }
+    },
+    {
+      "id": "mansion-09",
+      "dificultad": "intermedio",
+      "semilla": 27,
+      "arma": true,
+      "titulo": {
+        "es": "El último invitado"
+      },
+      "premisa": {
+        "es": "Un invitado inesperado llega a la mansión poco antes de la medianoche. Al amanecer, una de las personas presentes es hallada sin vida."
+      }
+    },
+    {
+      "id": "mansion-10",
+      "dificultad": "intermedio",
+      "semilla": 30,
+      "arma": true,
+      "titulo": {
+        "es": "El reloj de las doce"
+      },
+      "premisa": {
+        "es": "Todos los relojes de la mansión se detienen a las doce y la casa entera contiene el aliento. Al volver a marcar la hora, alguien yace sin vida."
+      }
+    }
+  ]
+}

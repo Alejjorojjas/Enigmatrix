@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/case_repository.dart';
 import '../game/game_controller.dart';
-import 'enx_style.dart';
+import 'ui_kit.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
 
@@ -459,15 +459,13 @@ class _TutorialLoaderState extends ConsumerState<TutorialLoader> {
                 Text(
                   'No se pudo abrir el tutorial.',
                   textAlign: TextAlign.center,
-                  style: Enx.hand(18, color: Enx.ink),
+                  style: context.note(18, color: context.pal.text),
                 ),
                 const SizedBox(height: 16),
-                EnxButton(
+                AppButton(
                   label: 'Volver a los casos',
-                  color: Enx.gold,
-                  textColor: Enx.goldInk,
                   expand: false,
-                  onPressed: () => context.go('/casos'),
+                  onTap: () => context.go('/casos'),
                 ),
               ],
             ),

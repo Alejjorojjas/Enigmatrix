@@ -13,6 +13,8 @@
 ///   ]
 /// }
 /// ```
+/// - `dia`: SOLO en los retos (tipo "reto"), del 1 al 30; en la campaña no
+///   va. Es el número de día del reto diario.
 /// - `id`: estable para siempre; coincide con `caseId` del archivo y es la
 ///   clave del progreso del jugador ("done:<id>", "game:<id>"). NO se cambia.
 /// - `orden`: posición global de la lista (entero positivo). La app ordena
@@ -25,6 +27,14 @@ import 'dart:convert';
 
 /// Mundo de los 20 casos del banco de pruebas (antes de los mundos reales).
 const kBancoDePruebas = 'banco-de-pruebas';
+
+/// Mundo 1 de la V1, "La Mansión" (ronda 3.2). Es el id que usan el
+/// catálogo y `story.world` de sus casos. Los retos diarios también se
+/// ambientan en él.
+const kMundoMansion = 'mansion';
+
+/// Días del reto diario de la V1 (ADR-0014): del 1 al 30.
+const kDiasReto = 30;
 
 /// Nombre del archivo del catálogo dentro de assets/cases/.
 const kCatalogFileName = 'catalogo.json';
@@ -50,6 +60,11 @@ class CatalogEntry {
   final int orden;
   final String archivo;
 
+  /// Número de día del reto diario (1 a [kDiasReto]); null en la campaña.
+  /// La hora de cambio de día está pendiente (pregunta 7): solo se guarda
+  /// el número.
+  final int? dia;
+
   const CatalogEntry({
     required this.id,
     required this.mundo,
@@ -57,6 +72,7 @@ class CatalogEntry {
     required this.dificultad,
     required this.orden,
     required this.archivo,
+    this.dia,
   });
 
   Map<String, dynamic> toJson() => {
@@ -66,6 +82,7 @@ class CatalogEntry {
         'dificultad': dificultad,
         'orden': orden,
         'archivo': archivo,
+        if (dia != null) 'dia': dia,
       };
 
   /// Estricto: lanza [FormatException] si falta o es inválido un campo.
@@ -92,7 +109,13 @@ class CatalogEntry {
       throw FormatException('campo "archivo" debe ser un nombre sin ruta: '
           '$archivo');
     }
+    final dia = j['dia'];
+    if (dia != null && (dia is! int || dia < 1 || dia > kDiasReto)) {
+      throw FormatException('campo "dia" inválido: $dia '
+          '(entero de 1 a $kDiasReto)');
+    }
     return CatalogEntry(
+      dia: dia as int?,
       id: str('id'),
       mundo: str('mundo'),
       tipo: tipo,
@@ -123,6 +146,14 @@ class CaseCatalog {
     }
     return null;
   }
+
+  /// Entradas de un mundo y tipo (ambos opcionales), en orden del catálogo.
+  List<CatalogEntry> where({String? mundo, CaseKind? tipo}) => [
+        for (final e in entries)
+          if ((mundo == null || e.mundo == mundo) &&
+              (tipo == null || e.tipo == tipo))
+            e
+      ];
 
   /// Nombres de archivo listados, en orden del catálogo.
   List<String> get files => [for (final e in entries) e.archivo];
@@ -160,6 +191,18 @@ class CaseCatalog {
     dup('id', entries.map((e) => e.id));
     dup('archivo', entries.map((e) => e.archivo));
     dup('orden', entries.map((e) => '${e.orden}'));
+    dup('día de reto', [
+      for (final e in entries)
+        if (e.dia != null) '${e.dia}'
+    ]);
+    for (final e in entries) {
+      if (e.tipo == CaseKind.reto && e.dia == null) {
+        problems.add('el reto "${e.id}" no tiene "dia"');
+      }
+      if (e.tipo == CaseKind.campana && e.dia != null) {
+        problems.add('el caso de campaña "${e.id}" no debe tener "dia"');
+      }
+    }
     return problems;
   }
 
@@ -187,10 +230,9 @@ class CaseCatalog {
   static CatalogParseResult parse(String text) {
     final Object? decoded;
     try {
-      decoded = jsonDecode(
-          text.isNotEmpty && text.codeUnitAt(0) == 0xFEFF
-              ? text.substring(1)
-              : text);
+      decoded = jsonDecode(text.isNotEmpty && text.codeUnitAt(0) == 0xFEFF
+          ? text.substring(1)
+          : text);
     } on FormatException catch (e) {
       throw FormatException('catálogo no es JSON válido: ${e.message}');
     }

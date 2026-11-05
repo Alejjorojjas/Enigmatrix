@@ -16,5 +16,7 @@ export 'src/maps/test_maps.dart';
 export 'src/model.dart';
 export 'src/puzzle_case.dart';
 export 'src/render.dart';
+export 'src/story.dart';
 export 'src/uniqueness.dart';
 export 'src/validator.dart';
+export 'src/world.dart';

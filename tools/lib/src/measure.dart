@@ -6,6 +6,7 @@ library;
 import 'case_factory.dart';
 import 'difficulty_ranges.dart';
 import 'generator.dart';
+import 'world.dart';
 
 /// Resultado de generar UNA semilla.
 class MeasureRow {
@@ -46,12 +47,13 @@ List<MeasureRow> measureBatch({
   bool withWeapon = false,
   DifficultyRange? range,
   GenerationLimits limits = GenerationLimits.standard,
+  WorldData? world,
   void Function(MeasureRow row)? onRow,
 }) {
   final rows = <MeasureRow>[];
   for (final seed in seeds) {
     final factory = CaseFactory(profile,
-        withWeapon: withWeapon, range: range, limits: limits);
+        withWeapon: withWeapon, range: range, limits: limits, world: world);
     final sw = Stopwatch()..start();
     final r = factory.generate(seed);
     sw.stop();
@@ -78,7 +80,8 @@ List<MeasureRow> measureBatch({
 Map<String, int> totalRejections(Iterable<MeasureRow> rows) {
   final t = <String, int>{};
   for (final r in rows) {
-    r.rejections.forEach((k, v) => t.update(k, (x) => x + v, ifAbsent: () => v));
+    r.rejections
+        .forEach((k, v) => t.update(k, (x) => x + v, ifAbsent: () => v));
   }
   return t;
 }

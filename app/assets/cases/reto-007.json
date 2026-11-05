@@ -1,0 +1,502 @@
+{
+  "caseId": "reto-007",
+  "mapId": "mapa-intermedio-s108",
+  "map": {
+    "id": "mapa-intermedio-s108",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          13,
+          14,
+          15,
+          21,
+          22,
+          23,
+          24,
+          30,
+          31,
+          32,
+          39,
+          40,
+          41,
+          49
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          50,
+          51,
+          52,
+          58,
+          59,
+          60,
+          61,
+          68,
+          69,
+          70,
+          71,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          10,
+          11,
+          12,
+          20,
+          29,
+          38
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          47,
+          48,
+          56,
+          57,
+          64,
+          65,
+          66,
+          67,
+          73,
+          74,
+          75,
+          76,
+          77
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          9,
+          18,
+          19,
+          27,
+          28,
+          36,
+          37,
+          45,
+          46,
+          54,
+          55,
+          63,
+          72
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          7,
+          8,
+          16,
+          17,
+          25,
+          26,
+          33,
+          34,
+          35,
+          42,
+          43,
+          44,
+          53,
+          62
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "planta-1",
+        "type": "planta",
+        "cells": [
+          40
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          49
+        ]
+      },
+      {
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          23
+        ]
+      },
+      {
+        "id": "silla-4",
+        "type": "silla",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "alfombra-5",
+        "type": "alfombra",
+        "cells": [
+          68,
+          69
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          59,
+          60
+        ]
+      },
+      {
+        "id": "armario-7",
+        "type": "armario",
+        "cells": [
+          79
+        ]
+      },
+      {
+        "id": "sillon-8",
+        "type": "sillon",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "alfombra-9",
+        "type": "alfombra",
+        "cells": [
+          3,
+          12
+        ]
+      },
+      {
+        "id": "sillon-10",
+        "type": "sillon",
+        "cells": [
+          20
+        ]
+      },
+      {
+        "id": "sofa-11",
+        "type": "sofa",
+        "cells": [
+          5,
+          4
+        ]
+      },
+      {
+        "id": "planta-12",
+        "type": "planta",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "sillon-13",
+        "type": "sillon",
+        "cells": [
+          65
+        ]
+      },
+      {
+        "id": "alfombra-14",
+        "type": "alfombra",
+        "cells": [
+          75,
+          76
+        ]
+      },
+      {
+        "id": "piano-15",
+        "type": "piano",
+        "cells": [
+          74
+        ]
+      },
+      {
+        "id": "sofa-16",
+        "type": "sofa",
+        "cells": [
+          47,
+          48
+        ]
+      },
+      {
+        "id": "alfombra-17",
+        "type": "alfombra",
+        "cells": [
+          9,
+          18
+        ]
+      },
+      {
+        "id": "silla-18",
+        "type": "silla",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "planta-19",
+        "type": "planta",
+        "cells": [
+          55
+        ]
+      },
+      {
+        "id": "planta-20",
+        "type": "planta",
+        "cells": [
+          54
+        ]
+      },
+      {
+        "id": "barra-21",
+        "type": "barra",
+        "cells": [
+          35,
+          34
+        ]
+      },
+      {
+        "id": "mesa-22",
+        "type": "mesa",
+        "cells": [
+          25,
+          26
+        ]
+      },
+      {
+        "id": "barra-23",
+        "type": "barra",
+        "cells": [
+          17,
+          8
+        ]
+      },
+      {
+        "id": "silla-24",
+        "type": "silla",
+        "cells": [
+          43
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "biblioteca"
+      },
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "salon"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c9",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Beatriz",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Domingo",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Gaspar",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Heliodora",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Silvestre",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Ximena",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "only_one_on",
+      "subject": "c1",
+      "group": "sofa"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "estudio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c2",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "silla"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "barra"
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c6",
+      "b": "c8"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "sillon"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "biblioteca"
+        },
+        {
+          "type": "on_object",
+          "subject": "c8",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c9"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 9,
+      "c3": 19,
+      "c4": 33,
+      "c5": 44,
+      "c6": 52,
+      "c7": 56,
+      "c8": 68,
+      "c9": 75
+    },
+    "murderer": "c7",
+    "lethalWeapon": "copa"
+  },
+  "metrics": {
+    "deductionSteps": 11,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El gato inquieto"
+    },
+    "premise": {
+      "es": "El gato de la casa maúlla sin parar y no se deja acariciar. Más tarde, una de las personas presentes es hallada sin vida."
+    }
+  }
+}

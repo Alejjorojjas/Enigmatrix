@@ -1,0 +1,512 @@
+{
+  "caseId": "reto-018",
+  "mapId": "mapa-intermedio-s133",
+  "map": {
+    "id": "mapa-intermedio-s133",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          12,
+          13,
+          18,
+          19,
+          20,
+          21,
+          27,
+          28,
+          29,
+          30,
+          36,
+          37,
+          38,
+          39
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          14,
+          15,
+          16,
+          17,
+          25
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          22,
+          23,
+          31,
+          32,
+          40,
+          41,
+          48,
+          49,
+          50,
+          57,
+          58,
+          59,
+          67
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          24,
+          26,
+          33,
+          34,
+          35,
+          42,
+          43,
+          44,
+          52,
+          53,
+          62
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          10,
+          11
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          45,
+          46,
+          47,
+          54,
+          55,
+          56,
+          63,
+          64,
+          65,
+          66,
+          72,
+          73,
+          74,
+          75,
+          76
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          51,
+          60,
+          61,
+          68,
+          69,
+          70,
+          71,
+          77,
+          78,
+          79,
+          80
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "armario-1",
+        "type": "armario",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "alfombra-2",
+        "type": "alfombra",
+        "cells": [
+          18,
+          19
+        ]
+      },
+      {
+        "id": "silla-3",
+        "type": "silla",
+        "cells": [
+          37
+        ]
+      },
+      {
+        "id": "planta-4",
+        "type": "planta",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "armario-5",
+        "type": "armario",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "planta-6",
+        "type": "planta",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          8
+        ]
+      },
+      {
+        "id": "barra-8",
+        "type": "barra",
+        "cells": [
+          31,
+          22
+        ]
+      },
+      {
+        "id": "barra-9",
+        "type": "barra",
+        "cells": [
+          41,
+          32
+        ]
+      },
+      {
+        "id": "silla-10",
+        "type": "silla",
+        "cells": [
+          40
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "caja-12",
+        "type": "caja",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "mesa-13",
+        "type": "mesa",
+        "cells": [
+          34,
+          43
+        ]
+      },
+      {
+        "id": "caja-14",
+        "type": "caja",
+        "cells": [
+          62
+        ]
+      },
+      {
+        "id": "armario-15",
+        "type": "armario",
+        "cells": [
+          42
+        ]
+      },
+      {
+        "id": "mesa-16",
+        "type": "mesa",
+        "cells": [
+          2,
+          11
+        ]
+      },
+      {
+        "id": "mesa-17",
+        "type": "mesa",
+        "cells": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "planta-18",
+        "type": "planta",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "armario-19",
+        "type": "armario",
+        "cells": [
+          45
+        ]
+      },
+      {
+        "id": "sillon-20",
+        "type": "sillon",
+        "cells": [
+          56
+        ]
+      },
+      {
+        "id": "mesa-21",
+        "type": "mesa",
+        "cells": [
+          75,
+          74
+        ]
+      },
+      {
+        "id": "planta-22",
+        "type": "planta",
+        "cells": [
+          69
+        ]
+      },
+      {
+        "id": "sillon-23",
+        "type": "sillon",
+        "cells": [
+          60
+        ]
+      },
+      {
+        "id": "silla-24",
+        "type": "silla",
+        "cells": [
+          71
+        ]
+      },
+      {
+        "id": "alfombra-25",
+        "type": "alfombra",
+        "cells": [
+          61,
+          70
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "vestibulo"
+      },
+      {
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": false,
+  "victim": "c3",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Fermín",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Gaspar",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c7",
+      "name_es": "Rosario",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Teodora",
+      "female": true
+    },
+    {
+      "id": "c9",
+      "name_es": "Valeria",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "only_one_on",
+      "subject": "c1",
+      "group": "silla"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c2",
+      "group": "mesa"
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c3"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c7",
+      "group": "sillon"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c9",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "alfombra"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 8,
+      "c2": 10,
+      "c3": 23,
+      "c4": 27,
+      "c5": 38,
+      "c6": 49,
+      "c7": 60,
+      "c8": 66,
+      "c9": 79
+    },
+    "murderer": "c6"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 3,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El espejo partido"
+    },
+    "premise": {
+      "es": "Un espejo se parte en dos sin que nadie lo toque, según cuentan los presentes. Esa noche, una de las personas presentes es hallada sin vida."
+    }
+  }
+}

@@ -557,7 +557,7 @@ void main() {
       // La lista no incluye el tutorial y el Caso 1 sigue siendo el actual.
       expect(bank.any((b) => b.caseId == kTutorialCaseId), isFalse);
       expect(find.text('SIGUIENTE CASO'), findsOneWidget);
-      expect(find.text('✓ completado — puedes repetirlo'), findsOneWidget);
+      expect(find.text('Completado: puedes repetirlo'), findsOneWidget);
       expect(find.text('REPETIR'), findsOneWidget);
 
       final keys = await prefKeys();

@@ -21,6 +21,7 @@ import 'model.dart';
 import 'puzzle_case.dart';
 import 'uniqueness.dart';
 import 'validator.dart';
+import 'world.dart';
 
 class DifficultyProfile {
   final String label;
@@ -159,6 +160,11 @@ class Generator {
   /// Identificador del caso (por defecto derivado del mapa y la semilla).
   final String? caseIdOverride;
 
+  /// Elenco temático (opcional): nombres y género de los personajes, en
+  /// orden (c1, c2...). Deben ser al menos [GameMap.size]. Solo cambia los
+  /// nombres: el sorteo del caso es el mismo. Sin elenco se usa el genérico.
+  final List<CastMember>? cast;
+
   Generator(
     this.map,
     this.profile, {
@@ -167,8 +173,14 @@ class Generator {
     this.caseIdOverride,
     DifficultyRange? range,
     this.limits = GenerationLimits.standard,
+    this.cast,
   }) : range = range ?? rangeForProfile(profile.label) {
-    if (map.size > _namePool.length) {
+    if (cast != null) {
+      if (cast!.length < map.size) {
+        throw ArgumentError('El elenco tiene ${cast!.length} personajes; '
+            'el mapa pide ${map.size}');
+      }
+    } else if (map.size > _namePool.length) {
       throw ArgumentError('Mapa demasiado grande para el pool de nombres');
     }
     if (withWeapon && map.weapons.isEmpty) {
@@ -221,8 +233,8 @@ class Generator {
       for (var i = 0; i < n; i++)
         Character(
             id: 'c${i + 1}',
-            nameEs: _namePool[i].$1,
-            female: _namePool[i].$2),
+            nameEs: cast?[i].name ?? _namePool[i].$1,
+            female: cast?[i].female ?? _namePool[i].$2),
     ];
 
     // 1. Posiciones: una persona por fila y por columna, solo celdas
@@ -277,8 +289,8 @@ class Generator {
     //    permitido = más fuerte). La selección inicial prefiere sabor.
     final candsByChar = <String, List<ClueCandidate>>{
       for (final ch in characters)
-        ch.id: _candidatesFor(ch.id, characters, positions, victimId,
-            murdererId, occupants, rng)
+        ch.id: _candidatesFor(
+            ch.id, characters, positions, victimId, murdererId, occupants, rng)
     };
     for (final list in candsByChar.values) {
       if (list.isEmpty) {
@@ -340,8 +352,7 @@ class Generator {
           if ((domains[ch.id]?.length ?? 0) > 1 &&
               _stronger(candsByChar[ch.id]!, selection[ch.id]!) != null)
             ch.id
-      ]..sort(
-          (a, b) => domains[b]!.length.compareTo(domains[a]!.length));
+      ]..sort((a, b) => domains[b]!.length.compareTo(domains[a]!.length));
       if (fixable.isEmpty) {
         if (extras.length < profile.maxExtras && extrasPool.isNotEmpty) {
           extras.add(extrasPool.removeAt(rng.nextInt(extrasPool.length)));
@@ -364,7 +375,8 @@ class Generator {
     //    relleno? (momento "última casilla libre")
     if (selection[victimId]!.clue is! LastFreeCell) {
       final backup = selection[victimId]!;
-      selection[victimId] = ClueCandidate(LastFreeCell(victimId), null, 1 << 20, 0);
+      selection[victimId] =
+          ClueCandidate(LastFreeCell(victimId), null, 1 << 20, 0);
       if (DeductionEngine(build()).run().status != DeductionStatus.solved) {
         selection[victimId] = backup;
       }
@@ -380,9 +392,8 @@ class Generator {
       }
       final inArea = map.weaponsInArea(pairArea);
       final byCat = inArea.where((w) => w.category == lethal!.category).length;
-      extras.add(byCat == 1
-          ? WeaponCat(lethal!.category)
-          : WeaponExact(lethal!.id));
+      extras.add(
+          byCat == 1 ? WeaponCat(lethal!.category) : WeaponExact(lethal!.id));
       candidate = build();
     }
 
@@ -397,8 +408,7 @@ class Generator {
       reject('caso final no deducible');
       return null;
     }
-    final uniq =
-        UniquenessChecker.analyze(candidate, limits: limits.solver);
+    final uniq = UniquenessChecker.analyze(candidate, limits: limits.solver);
     if (uniq.capped) {
       reject(rejectSolverCap);
       return null;
@@ -583,8 +593,8 @@ class Generator {
       final otherPos = positions[other.id]!;
       final sameArea = map.sameArea(pos, otherPos);
       if (sameArea && !revealsPair(other.id)) {
-        cands.add(ClueCandidate(SameArea(chId, other.id), null,
-            map.area(areaId).cells.length, 3));
+        cands.add(ClueCandidate(
+            SameArea(chId, other.id), null, map.area(areaId).cells.length, 3));
         if (map.besideInArea(pos, otherPos)) {
           cands.add(ClueCandidate(BesideChar(chId, other.id), null, 5, 4));
         }
@@ -594,8 +604,8 @@ class Generator {
         }
       }
       if (!sameArea && profile.allowVague) {
-        cands.add(ClueCandidate(NotSameArea(chId, other.id), null,
-            occupiableCount - 2, 1));
+        cands.add(ClueCandidate(
+            NotSameArea(chId, other.id), null, occupiableCount - 2, 1));
       }
     }
 

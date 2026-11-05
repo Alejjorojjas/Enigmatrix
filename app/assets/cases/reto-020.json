@@ -1,0 +1,459 @@
+{
+  "caseId": "reto-020",
+  "mapId": "mapa-intermedio-s130-v5",
+  "map": {
+    "id": "mapa-intermedio-s130-v5",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          10,
+          11,
+          12,
+          13,
+          18,
+          19,
+          20,
+          21,
+          22,
+          27
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          28,
+          36,
+          37,
+          45,
+          46,
+          47,
+          54,
+          55,
+          56,
+          63,
+          64,
+          72,
+          73,
+          74
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          42,
+          43,
+          51,
+          52,
+          60,
+          61,
+          62,
+          68,
+          69,
+          70,
+          71,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          29,
+          30,
+          38,
+          39,
+          48,
+          49,
+          50,
+          57,
+          58,
+          59,
+          65,
+          66,
+          67,
+          75,
+          76
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          14,
+          15
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          16,
+          17,
+          23,
+          24,
+          25,
+          26,
+          31,
+          32,
+          33,
+          34,
+          35,
+          40,
+          41,
+          44,
+          53
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "caja-1",
+        "type": "caja",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "mesa-2",
+        "type": "mesa",
+        "cells": [
+          19,
+          20
+        ]
+      },
+      {
+        "id": "armario-3",
+        "type": "armario",
+        "cells": [
+          0
+        ]
+      },
+      {
+        "id": "armario-4",
+        "type": "armario",
+        "cells": [
+          11
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          55
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          73,
+          72
+        ]
+      },
+      {
+        "id": "alfombra-7",
+        "type": "alfombra",
+        "cells": [
+          63,
+          54
+        ]
+      },
+      {
+        "id": "planta-8",
+        "type": "planta",
+        "cells": [
+          74
+        ]
+      },
+      {
+        "id": "mesa-9",
+        "type": "mesa",
+        "cells": [
+          79,
+          80
+        ]
+      },
+      {
+        "id": "sofa-10",
+        "type": "sofa",
+        "cells": [
+          69,
+          70
+        ]
+      },
+      {
+        "id": "mesa-11",
+        "type": "mesa",
+        "cells": [
+          71,
+          62
+        ]
+      },
+      {
+        "id": "piano-12",
+        "type": "piano",
+        "cells": [
+          77
+        ]
+      },
+      {
+        "id": "planta-13",
+        "type": "planta",
+        "cells": [
+          39
+        ]
+      },
+      {
+        "id": "armario-14",
+        "type": "armario",
+        "cells": [
+          67
+        ]
+      },
+      {
+        "id": "alfombra-15",
+        "type": "alfombra",
+        "cells": [
+          38,
+          29
+        ]
+      },
+      {
+        "id": "sillon-16",
+        "type": "sillon",
+        "cells": [
+          66
+        ]
+      },
+      {
+        "id": "silla-17",
+        "type": "silla",
+        "cells": [
+          8
+        ]
+      },
+      {
+        "id": "sofa-18",
+        "type": "sofa",
+        "cells": [
+          6,
+          7
+        ]
+      },
+      {
+        "id": "sillon-19",
+        "type": "sillon",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "planta-20",
+        "type": "planta",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "sillon-21",
+        "type": "sillon",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "armario-22",
+        "type": "armario",
+        "cells": [
+          44
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras de podar",
+        "category": "cortante",
+        "area": "salon"
+      },
+      {
+        "id": "baston",
+        "name_es": "el bastón de plata",
+        "category": "contundente",
+        "area": "bodega"
+      },
+      {
+        "id": "veneno",
+        "name_es": "el frasco de veneno",
+        "category": "veneno",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c7",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Heliodora",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Leonor",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Octavio",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Rodrigo",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Valeria",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Zacarías",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "on_object",
+      "subject": "c1",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "galeria"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "sofa"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c3",
+      "area": "biblioteca"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "caja"
+    },
+    {
+      "type": "alone",
+      "subject": "c5"
+    },
+    {
+      "type": "in_area",
+      "subject": "c6",
+      "area": "dormitorio"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c7",
+      "group": "alfombra"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c8",
+      "group": "sillon"
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c9",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "armario"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 8,
+      "c2": 15,
+      "c3": 23,
+      "c4": 27,
+      "c5": 43,
+      "c6": 47,
+      "c7": 55,
+      "c8": 66,
+      "c9": 76
+    },
+    "murderer": "c6",
+    "lethalWeapon": "veneno"
+  },
+  "metrics": {
+    "deductionSteps": 10,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El paraguas negro"
+    },
+    "premise": {
+      "es": "Alguien deja un paraguas negro en la entrada y nadie lo reclama. Poco después, una de las personas presentes es hallada sin vida."
+    }
+  }
+}

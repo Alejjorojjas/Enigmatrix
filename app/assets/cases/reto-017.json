@@ -1,0 +1,452 @@
+{
+  "caseId": "reto-017",
+  "mapId": "mapa-casual-s115-v4",
+  "map": {
+    "id": "mapa-casual-s115-v4",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          7,
+          15,
+          21,
+          22,
+          23,
+          30,
+          31,
+          38,
+          39,
+          45,
+          46
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          25,
+          33,
+          40,
+          41,
+          42,
+          48,
+          49,
+          50,
+          51,
+          56,
+          57,
+          58,
+          59
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          0,
+          1,
+          2,
+          8,
+          9,
+          10,
+          16,
+          17,
+          18,
+          24,
+          26,
+          32
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          3,
+          4,
+          5,
+          6,
+          11,
+          12,
+          13,
+          14,
+          19,
+          20
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          44,
+          47,
+          52,
+          53,
+          54,
+          55,
+          60,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          27,
+          28,
+          29,
+          34,
+          35,
+          36,
+          37,
+          43
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "alfombra-1",
+        "type": "alfombra",
+        "cells": [
+          21,
+          22
+        ]
+      },
+      {
+        "id": "sillon-2",
+        "type": "sillon",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "sofa-3",
+        "type": "sofa",
+        "cells": [
+          31,
+          39
+        ]
+      },
+      {
+        "id": "alfombra-4",
+        "type": "alfombra",
+        "cells": [
+          7,
+          15
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "planta-7",
+        "type": "planta",
+        "cells": [
+          42
+        ]
+      },
+      {
+        "id": "alfombra-8",
+        "type": "alfombra",
+        "cells": [
+          51,
+          59
+        ]
+      },
+      {
+        "id": "mesa-9",
+        "type": "mesa",
+        "cells": [
+          18,
+          26
+        ]
+      },
+      {
+        "id": "planta-10",
+        "type": "planta",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "mesa-11",
+        "type": "mesa",
+        "cells": [
+          32,
+          24
+        ]
+      },
+      {
+        "id": "silla-12",
+        "type": "silla",
+        "cells": [
+          2
+        ]
+      },
+      {
+        "id": "planta-13",
+        "type": "planta",
+        "cells": [
+          20
+        ]
+      },
+      {
+        "id": "alfombra-14",
+        "type": "alfombra",
+        "cells": [
+          19,
+          11
+        ]
+      },
+      {
+        "id": "sillon-15",
+        "type": "sillon",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "alfombra-16",
+        "type": "alfombra",
+        "cells": [
+          53,
+          52
+        ]
+      },
+      {
+        "id": "planta-17",
+        "type": "planta",
+        "cells": [
+          47
+        ]
+      },
+      {
+        "id": "silla-18",
+        "type": "silla",
+        "cells": [
+          44
+        ]
+      },
+      {
+        "id": "planta-19",
+        "type": "planta",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "mesa-20",
+        "type": "mesa",
+        "cells": [
+          37,
+          36
+        ]
+      },
+      {
+        "id": "arbusto-21",
+        "type": "arbusto",
+        "cells": [
+          27
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "salon"
+      },
+      {
+        "id": "bufanda",
+        "name_es": "la bufanda de seda",
+        "category": "asfixia",
+        "area": "vestibulo"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c6",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Amparo",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Candela",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Domingo",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Heliodora",
+      "female": true
+    },
+    {
+      "id": "c5",
+      "name_es": "Leandro",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Máximo",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Ximena",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Zacarías",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "comedor"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "on_object",
+      "subject": "c4",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "sillon"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "alfombra"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c7",
+      "group": "alfombra"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "planta"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 3,
+      "c2": 8,
+      "c3": 23,
+      "c4": 25,
+      "c5": 38,
+      "c6": 44,
+      "c7": 53,
+      "c8": 58
+    },
+    "murderer": "c7"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Perfume de jazmín"
+    },
+    "premise": {
+      "es": "Un aroma de jazmín recorre la mansión y nadie sabe de dónde viene. Al anochecer, uno de los presentes es hallado sin vida."
+    }
+  }
+}

@@ -5,3 +5,4 @@ library enigmatrix_tools;
 
 export 'src/content_gate.dart';
 export 'src/tooling/content_files.dart';
+export 'src/tooling/world_files.dart';

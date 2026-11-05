@@ -1,0 +1,409 @@
+{
+  "caseId": "reto-024",
+  "mapId": "mapa-casual-s116",
+  "map": {
+    "id": "mapa-casual-s116",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          24,
+          32,
+          40,
+          41,
+          48,
+          49,
+          56,
+          57,
+          58,
+          59
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          11,
+          12,
+          13,
+          14,
+          15,
+          19,
+          21,
+          22,
+          23,
+          31
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          25,
+          27,
+          33,
+          34,
+          35,
+          42,
+          43,
+          50,
+          51
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          20,
+          28,
+          29,
+          30,
+          36,
+          37,
+          38,
+          39,
+          44,
+          45,
+          46,
+          47,
+          52,
+          53,
+          54,
+          55,
+          60,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          0,
+          1,
+          8,
+          9,
+          10,
+          16,
+          17,
+          18,
+          26
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "mesa-1",
+        "type": "mesa",
+        "cells": [
+          40,
+          41
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "mesa-3",
+        "type": "mesa",
+        "cells": [
+          48,
+          56
+        ]
+      },
+      {
+        "id": "sofa-4",
+        "type": "sofa",
+        "cells": [
+          15,
+          7
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
+        "cells": [
+          22
+        ]
+      },
+      {
+        "id": "planta-6",
+        "type": "planta",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "mesa-7",
+        "type": "mesa",
+        "cells": [
+          4,
+          3
+        ]
+      },
+      {
+        "id": "planta-8",
+        "type": "planta",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "cama-9",
+        "type": "cama",
+        "cells": [
+          25,
+          33
+        ]
+      },
+      {
+        "id": "planta-10",
+        "type": "planta",
+        "cells": [
+          34
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          44
+        ]
+      },
+      {
+        "id": "planta-12",
+        "type": "planta",
+        "cells": [
+          54
+        ]
+      },
+      {
+        "id": "silla-13",
+        "type": "silla",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "silla-14",
+        "type": "silla",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "armario-15",
+        "type": "armario",
+        "cells": [
+          1
+        ]
+      },
+      {
+        "id": "sillon-16",
+        "type": "sillon",
+        "cells": [
+          9
+        ]
+      },
+      {
+        "id": "sillon-17",
+        "type": "sillon",
+        "cells": [
+          16
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras de podar",
+        "category": "cortante",
+        "area": "salon"
+      },
+      {
+        "id": "veneno",
+        "name_es": "el frasco de veneno",
+        "category": "veneno",
+        "area": "dormitorio"
+      },
+      {
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
+        "area": "biblioteca"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c5",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Damián",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Gaspar",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Rosario",
+      "female": true
+    },
+    {
+      "id": "c7",
+      "name_es": "Sabina",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Valeria",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "mesa"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c2",
+      "group": "sillon"
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "planta"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "sofa"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c4",
+      "group": "silla"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "mesa"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c7",
+      "area": "dormitorio"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "planta"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 5,
+      "c2": 9,
+      "c3": 23,
+      "c4": 28,
+      "c5": 32,
+      "c6": 46,
+      "c7": 50,
+      "c8": 59
+    },
+    "murderer": "c8"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El tapiz torcido"
+    },
+    "premise": {
+      "es": "El tapiz más antiguo de la casa amanece torcido y nadie confiesa haberlo tocado. Al caer la tarde, alguien es hallado sin vida."
+    }
+  }
+}
