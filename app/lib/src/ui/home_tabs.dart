@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/case_repository.dart';
+import '../game/game_config.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'game_chrome.dart';
 import 'home_sheets.dart';
@@ -60,6 +61,7 @@ List<PuzzleCase> worldCases(WidgetRef ref) =>
 DailyChallenge? todaysChallengeOf(WidgetRef ref) => todaysChallenge(
   ref.watch(dailyChallengesProvider).valueOrNull ?? const [],
   DateTime.now(),
+  config: ref.watch(gameConfigProvider),
 );
 
 void _playToday(BuildContext context, DailyChallenge? today) {
@@ -161,7 +163,9 @@ class HomeTab extends ConsumerWidget {
                     ),
                     InfoChip(
                       icon: Icons.event_rounded,
-                      text: 'Día ${today.day} de $kChallengeDays',
+                      text:
+                          'Día ${today.day} de '
+                          '${ref.watch(gameConfigProvider).challengeDays}',
                     ),
                   ],
                 ),
@@ -257,11 +261,11 @@ class HomeTab extends ConsumerWidget {
 }
 
 /// Vidas simuladas, arriba a la derecha del Inicio.
-class _LivesChip extends StatelessWidget {
+class _LivesChip extends ConsumerWidget {
   const _LivesChip();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -272,7 +276,10 @@ class _LivesChip extends StatelessWidget {
           children: [
             Icon(Icons.favorite_rounded, color: p.danger, size: 22),
             const SizedBox(width: 4),
-            Text('$mockLives/$mockMaxLives', style: context.body(16)),
+            Text(
+              '$mockLives/${ref.watch(gameConfigProvider).maxLives}',
+              style: context.body(16),
+            ),
           ],
         ),
         const SizedBox(height: 2),
@@ -316,15 +323,16 @@ class WorldsTab extends ConsumerWidget {
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final playable = worldCases(ref);
     final solved = solvedIn(playable, prefs);
-    final open = kWorlds.where((w) => w.available).length;
+    final worlds = worldsFor(ref.watch(gameConfigProvider));
+    final open = worlds.where((w) => w.available).length;
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
         PageHeader(
           title: HomeTexts.worlds,
-          subtitle: '$open de ${kWorlds.length} disponibles',
+          subtitle: '$open de ${worlds.length} disponibles',
         ),
-        for (final (i, w) in kWorlds.indexed)
+        for (final (i, w) in worlds.indexed)
           Opacity(
             opacity: w.available ? 1 : 0.62,
             child: AppCard(
@@ -472,7 +480,8 @@ class ChallengeTab extends ConsumerWidget {
               const SizedBox(height: 6),
               if (today != null) ...[
                 Text(
-                  'Día ${today.day} de $kChallengeDays · '
+                  'Día ${today.day} de '
+                  '${ref.watch(gameConfigProvider).challengeDays} · '
                   '${difficultyName(today.puzzle.difficulty)} · '
                   '${today.puzzle.map.size}×${today.puzzle.map.size}',
                   style: context.body(15, color: p.text),

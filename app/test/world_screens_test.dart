@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:enigmatrix/src/app_version.dart';
 import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/app_settings.dart';
+import 'package:enigmatrix/src/game/dev_tools.dart';
 import 'package:enigmatrix/src/ui/bank_screen.dart';
 import 'package:enigmatrix/src/ui/case_list_screen.dart';
 import 'package:enigmatrix/src/ui/feedback_report.dart';
@@ -38,6 +39,7 @@ Future<GoRouter> _pumpApp(
   required Widget home,
   Map<String, Object> prefs = const {},
   String skin = 'ilustrada',
+  bool devTools = false,
 }) async {
   SharedPreferences.setMockInitialValues({'tutorial:v2:done': true, ...prefs});
   tester.view.physicalSize = const Size(360, 740);
@@ -62,6 +64,7 @@ Future<GoRouter> _pumpApp(
       key: UniqueKey(),
       overrides: [
         ...contentOverrides(_world, challenges: _retos, bank: _bank),
+        devToolsProvider.overrideWithValue(devTools),
         initialSettingsProvider.overrideWithValue(AppSettings(skinId: skin)),
       ],
       child: MaterialApp.router(
@@ -354,8 +357,15 @@ void main() {
   });
 
   group('Configuración: banco de pruebas y feedback', () {
-    Future<GoRouter> openSettings(WidgetTester tester) async {
-      final router = await _pumpApp(tester, home: const HomeShell());
+    Future<GoRouter> openSettings(
+      WidgetTester tester, {
+      bool devTools = true,
+    }) async {
+      final router = await _pumpApp(
+        tester,
+        home: const HomeShell(),
+        devTools: devTools,
+      );
       await _tab(tester, 'Perfil');
       await _tapScrolled(tester, find.text('Configuración'));
       return router;
@@ -384,6 +394,18 @@ void main() {
       await _settle(tester);
       expect(router.state.uri.path, '/play/caso-casual-s1');
     });
+
+    testWidgets(
+      'sin ENX_DEV no aparecen banco ni feedback, pero sí la versión',
+      (tester) async {
+        await openSettings(tester, devTools: false);
+        await tester.ensureVisible(find.text('Enigmatrix v$kAppVersion'));
+        expect(find.text('Enigmatrix v$kAppVersion'), findsOneWidget);
+        expect(find.text('Banco de pruebas (desarrollo)'), findsNothing);
+        expect(find.text('ABRIR BANCO DE PRUEBAS'), findsNothing);
+        expect(find.text('COPIAR FEEDBACK DE PLAYTEST'), findsNothing);
+      },
+    );
 
     testWidgets('copiar feedback avisa dentro de la hoja', (tester) async {
       await openSettings(tester);

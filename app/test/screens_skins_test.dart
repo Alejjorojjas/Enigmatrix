@@ -10,6 +10,7 @@ import 'dart:io';
 
 import 'package:enigmatrix/src/game/app_settings.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
+import 'package:enigmatrix/src/game/game_config.dart';
 import 'package:enigmatrix/src/game/saved_game.dart';
 import 'package:enigmatrix/src/ui/case_list_screen.dart';
 import 'package:enigmatrix/src/ui/game_chrome.dart';
@@ -264,6 +265,8 @@ final _scenarios = <_Scenario>[
     await t.pump(const Duration(milliseconds: 900));
     expect(find.text('CASO CERRADO'), findsOneWidget);
     expect(find.text('CONTINUAR'), findsOneWidget);
+    // El cuadro de feedback de playtest solo existe con ENX_DEV (H-66).
+    expect(find.text('FEEDBACK DE PLAYTEST'), findsNothing);
   }),
 ];
 
@@ -378,7 +381,11 @@ void main() {
     });
 
     test('solo Principiante, Casual e Intermedio se pueden abrir', () {
-      expect(kV1Difficulties, ['principiante', 'casual', 'intermedio']);
+      expect(const GameConfig().v1Difficulties, [
+        'principiante',
+        'casual',
+        'intermedio',
+      ]);
       expect(isV1Difficulty('experto'), isFalse);
       expect(isV1Difficulty('elite'), isFalse);
       expect(

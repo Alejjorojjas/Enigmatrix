@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/dev_tools.dart';
 import '../game/game_controller.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
@@ -90,7 +91,10 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
   }
 
   Future<void> _saveAnd(void Function() then) async {
-    await widget.prefs.setString('fb:${widget.pc.caseId}', _fb.text);
+    // Sin ENX_DEV no hay cuadro de feedback: no se toca lo ya guardado.
+    if (ref.read(devToolsProvider)) {
+      await widget.prefs.setString('fb:${widget.pc.caseId}', _fb.text);
+    }
     then();
   }
 
@@ -250,33 +254,35 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 ),
                 const SizedBox(height: 18),
 
-                // Feedback de la prueba de juego (se conserva de la Fase 1).
-                ChromeBox(
-                  color: p.surface,
-                  radius: 16,
-                  depth: 2.5,
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SectionLabel(VictoryTexts.feedback),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _fb,
-                        maxLines: 3,
-                        style: context.body(15, weight: FontWeight.w600),
-                        decoration: InputDecoration(
-                          hintText: VictoryTexts.feedbackHint,
-                          hintStyle: context.body(
-                            15,
-                            weight: FontWeight.w600,
-                            color: p.textDim,
+                // Feedback de la prueba de juego: solo con ENX_DEV (H-66).
+                if (ref.watch(devToolsProvider)) ...[
+                  ChromeBox(
+                    color: p.surface,
+                    radius: 16,
+                    depth: 2.5,
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SectionLabel(VictoryTexts.feedback),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: _fb,
+                          maxLines: 3,
+                          style: context.body(15, weight: FontWeight.w600),
+                          decoration: InputDecoration(
+                            hintText: VictoryTexts.feedbackHint,
+                            hintStyle: context.body(
+                              15,
+                              weight: FontWeight.w600,
+                              color: p.textDim,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
                 const SizedBox(height: 20),
 
                 AppButton(

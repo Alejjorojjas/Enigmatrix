@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../game/app_settings.dart';
+import '../game/dev_tools.dart';
 import '../game/game_controller.dart';
 import 'appearance_picker.dart';
 import 'game_chrome.dart';
@@ -278,21 +279,24 @@ class GameMenuSheet extends ConsumerWidget {
             ),
             const Divider(height: 24),
             const AppearancePicker(),
-            const SizedBox(height: 4),
-            SwitchListTile(
-              key: const ValueKey('menu-fps'),
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                MenuTexts.fps,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: p.textDim,
+            // Medidor de FPS: herramienta de pruebas, solo con ENX_DEV (H-66).
+            if (ref.watch(devToolsProvider)) ...[
+              const SizedBox(height: 4),
+              SwitchListTile(
+                key: const ValueKey('menu-fps'),
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  MenuTexts.fps,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: p.textDim,
+                  ),
                 ),
+                value: settings.fpsMeter,
+                onChanged: ref.read(settingsProvider.notifier).setFpsMeter,
               ),
-              value: settings.fpsMeter,
-              onChanged: ref.read(settingsProvider.notifier).setFpsMeter,
-            ),
+            ],
           ],
         ),
       ),

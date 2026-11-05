@@ -29,6 +29,7 @@ import '../board/scene_session.dart';
 import '../data/case_repository.dart';
 import '../game/app_settings.dart';
 import '../game/board_interaction.dart';
+import '../game/dev_tools.dart';
 import '../game/feedback_providers.dart';
 import '../game/game_controller.dart';
 import 'board_semantics.dart';
@@ -459,7 +460,9 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     if (fps != null) {
       final r = fps.stopRecording();
       if (r != null) {
-        if (ref.read(settingsProvider).fpsMeter) showFpsReport(context, r);
+        if (ref.read(devToolsProvider) && ref.read(settingsProvider).fpsMeter) {
+          showFpsReport(context, r);
+        }
       }
     }
     _summaryTimer?.cancel();
@@ -638,7 +641,10 @@ class _GameBodyState extends ConsumerState<_GameBody> {
             final secs = ref.watch(
               gameControllerProvider(pc).select((s) => s.elapsedSeconds),
             );
-            final fpsOn = ref.watch(settingsProvider.select((s) => s.fpsMeter));
+            // El medidor solo existe con ENX_DEV, aunque quede guardado.
+            final fpsOn =
+                ref.watch(devToolsProvider) &&
+                ref.watch(settingsProvider.select((s) => s.fpsMeter));
             if (fpsOn) _fps ??= FpsMonitor();
             return TimerPill(
               seconds: secs,

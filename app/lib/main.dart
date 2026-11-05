@@ -8,7 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'src/board/audio/audio_service.dart';
 import 'src/data/case_repository.dart';
 import 'src/game/app_settings.dart';
+import 'src/game/dev_tools.dart';
 import 'src/game/feedback_providers.dart';
+import 'src/game/game_config.dart';
 import 'src/game/game_controller.dart';
 import 'src/ui/bank_screen.dart';
 import 'src/ui/case_list_screen.dart';
@@ -22,6 +24,8 @@ Future<void> main() async {
   // Las opciones se leen antes del primer cuadro para que la piel y el modo
   // no parpadeen al arrancar.
   final settings = await AppSettings.load();
+  // Los valores de juego se leen del asset junto con las opciones (H-65).
+  final config = await GameConfig.load();
   // El audio carga los sonidos en segundo plano: hasta que termina, la
   // partida simplemente no suena.
   final audio = SoloudSoundService();
@@ -30,6 +34,7 @@ Future<void> main() async {
     ProviderScope(
       overrides: [
         initialSettingsProvider.overrideWithValue(settings),
+        gameConfigProvider.overrideWithValue(config),
         soundSinkProvider.overrideWithValue(audio),
       ],
       child: const EnigmatrixApp(),
@@ -37,7 +42,13 @@ Future<void> main() async {
   );
 }
 
-final _router = GoRouter(
+/// Rutas de la app. Las herramientas de desarrollo (`/banco`) solo existen
+/// con la bandera ENX_DEV (H-66): sin ella la ruta redirige a `/home`.
+GoRouter buildAppRouter({required bool Function() devTools}) => GoRouter(
+  redirect: (_, state) {
+    if (state.uri.path == '/banco' && !devTools()) return '/home';
+    return null;
+  },
   routes: [
     GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
     GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
@@ -71,6 +82,10 @@ class EnigmatrixApp extends ConsumerStatefulWidget {
 /// guarda al pasar a segundo plano (regla 10 del ADR-0012).
 class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
     with WidgetsBindingObserver {
+  late final GoRouter _router = buildAppRouter(
+    devTools: () => ref.read(devToolsProvider),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +95,7 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _router.dispose();
     super.dispose();
   }
 

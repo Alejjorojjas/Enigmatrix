@@ -419,7 +419,7 @@ void main() {
     testWidgets('el medidor de FPS está apagado y se enciende desde el menú', (
       tester,
     ) async {
-      final rig = await pumpGameScreen(tester, small);
+      final rig = await pumpGameScreen(tester, small, devTools: true);
       expect(find.byKey(const ValueKey('fps-en-vivo')), findsNothing);
       await openMenu(tester);
       await tester.ensureVisible(find.byKey(const ValueKey('menu-fps')));
@@ -436,6 +436,38 @@ void main() {
         tester.getRect(find.byKey(const ValueKey('fps-en-vivo'))).bottom,
         lessThanOrEqualTo(tester.getRect(gameFinder).top + 0.5),
       );
+    });
+
+    testWidgets('sin ENX_DEV el interruptor de FPS no aparece en el menú', (
+      tester,
+    ) async {
+      await pumpGameScreen(tester, small);
+      await openMenu(tester);
+      expect(find.byKey(const ValueKey('menu-fps')), findsNothing);
+    });
+
+    testWidgets('sin ENX_DEV el medidor no se muestra aunque esté guardado '
+        'como activo', (tester) async {
+      await pumpGameScreen(
+        tester,
+        small,
+        settings: const AppSettings(fpsMeter: true),
+      );
+      await settle(tester, 2);
+      expect(find.byKey(const ValueKey('fps-en-vivo')), findsNothing);
+    });
+
+    testWidgets('con ENX_DEV el medidor guardado como activo sí se muestra', (
+      tester,
+    ) async {
+      await pumpGameScreen(
+        tester,
+        small,
+        settings: const AppSettings(fpsMeter: true),
+        devTools: true,
+      );
+      await settle(tester, 2);
+      expect(find.byKey(const ValueKey('fps-en-vivo')), findsOneWidget);
     });
   });
 

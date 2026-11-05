@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/case_repository.dart';
+import '../game/game_config.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
 import 'tutorial_coach.dart';
@@ -105,7 +106,8 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
           ),
           data: (all) {
             // Solo los casos de la V1: Experto y Élite no se abren.
-            final list = playableCases(all);
+            final config = ref.watch(gameConfigProvider);
+            final list = playableCases(all, config: config);
             // Número de cada caso en la campaña (Nº 1 a Nº 10).
             final numberOf = {
               for (final (i, pc) in list.indexed) pc.caseId: i + 1,
@@ -145,7 +147,7 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
                         played: prefs?.getBool(tutorialPlayedKey) ?? false,
                       ),
                       for (final d in kAllDifficulties)
-                        if (isV1Difficulty(d))
+                        if (config.isV1Difficulty(d))
                           if (sections[d] case final cs?) ...[
                             _CaseFolderHeader(
                               index: ++folderNo,

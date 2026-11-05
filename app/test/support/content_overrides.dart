@@ -7,7 +7,7 @@ import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:enigmatrix/src/ui/v1_scope.dart' show kChallengeDays;
+import 'package:enigmatrix/src/game/game_config.dart';
 
 import 'game_ui.dart' show loadBankCase;
 
@@ -26,7 +26,7 @@ List<Override> contentOverrides(
 
 /// Los 30 retos reales (assets/cases/reto-001.json ... reto-030.json).
 List<DailyChallenge> loadAllChallenges() => [
-  for (var d = 1; d <= kChallengeDays; d++)
+  for (var d = 1; d <= const GameConfig().challengeDays; d++)
     DailyChallenge(
       day: d,
       puzzle: loadBankCase('reto-${d.toString().padLeft(3, '0')}'),

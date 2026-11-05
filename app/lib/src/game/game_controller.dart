@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/case_repository.dart' show kTutorialCaseId;
 import 'board_state.dart';
+import 'game_config.dart';
 import 'saved_game.dart';
 
 /// Estado del ciclo de vida de la app (lo publica main.dart). Al pasar a
@@ -145,11 +146,10 @@ enum ActionFeedback {
 final gameTickerEnabledProvider = Provider<bool>((ref) => true);
 
 class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
-  static const _undoLimit = 50; // doc 08: historial de 50 acciones
-
-  /// Cada cuántos segundos de juego se guarda el reloj aunque no haya
-  /// cambios en el tablero (por si el sistema cierra la app sin aviso).
-  static const _periodicSaveSeconds = 15;
+  /// Valores de juego (H-65): límite de deshacer (doc 08: 50), guardado
+  /// periódico del reloj y bloqueo tras Resolver fallido. Se leen una vez al
+  /// crear el controlador.
+  late GameConfig _config;
 
   final List<BoardState> _undo = [];
   final List<BoardState> _redo = [];
@@ -173,6 +173,7 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   @override
   GameState build(PuzzleCase arg) {
     _alive = true;
+    _config = ref.read(gameConfigProvider);
     ref.onDispose(() {
       _alive = false;
       _ticker?.cancel();
@@ -358,7 +359,7 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     if (state.loading || state.paused || state.solved || _held) return;
     final elapsed = state.elapsedSeconds + 1;
     state = state.copyWith(elapsedSeconds: elapsed);
-    if (elapsed % _periodicSaveSeconds == 0) _enqueueSave();
+    if (elapsed % _config.periodicSaveSeconds == 0) _enqueueSave();
   }
 
   /// Detiene el reloj, tapa el tablero y guarda.
@@ -513,7 +514,7 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
   void _pushUndo() {
     _undo.add(state.board);
-    if (_undo.length > _undoLimit) _undo.removeAt(0); // doc 08
+    if (_undo.length > _config.undoLimit) _undo.removeAt(0); // doc 08
     _redo.clear();
   }
 
@@ -622,7 +623,7 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
       locked: true,
     );
     _unlockTimer?.cancel();
-    _unlockTimer = Timer(const Duration(seconds: 3), () {
+    _unlockTimer = Timer(Duration(seconds: _config.wrongSolveLockSeconds), () {
       state = state.copyWith(
         locked: false,
         errorCells: const {},

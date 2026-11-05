@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/case_repository.dart';
+import '../game/game_config.dart';
 import 'logo.dart';
 import 'skin_theme.dart';
 import 'ui_kit.dart';
@@ -37,7 +38,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       ref
           .read(dailyChallengesProvider.future)
           .catchError((_) => <DailyChallenge>[]),
-      Future<void>.delayed(const Duration(milliseconds: 1700)),
+      Future<void>.delayed(
+        Duration(milliseconds: ref.read(gameConfigProvider).splashMinMillis),
+      ),
     ]);
     if (mounted) context.go('/home');
   }

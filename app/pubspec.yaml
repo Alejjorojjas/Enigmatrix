@@ -1,7 +1,7 @@
 name: enigmatrix
-description: Enigmatrix - juego de deduccion visual. Fase 1 (vertical slice, web local).
+description: Enigmatrix - juego de deduccion visual.
 publish_to: 'none'
-version: 0.5.0+5
+version: 0.6.0+6
 
 environment:
   sdk: ^3.11.1
@@ -35,6 +35,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/cases/
+    - assets/config/
     - assets/tutorial/
     - assets/sonidos/
 

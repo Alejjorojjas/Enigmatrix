@@ -9,6 +9,7 @@ import 'dart:ui' as ui;
 
 import 'package:enigmatrix/src/game/app_settings.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
+import 'package:enigmatrix/src/game/dev_tools.dart';
 import 'package:enigmatrix/src/game/game_controller.dart';
 import 'package:enigmatrix/src/ui/bank_screen.dart';
 import 'package:enigmatrix/src/ui/board_semantics.dart';
@@ -74,6 +75,7 @@ Future<GoRouter> _pumpShell(
   ThemeMode mode = ThemeMode.light,
   Size size = const Size(360, 740),
   double textScale = 1.0,
+  bool devTools = true,
 }) async {
   SharedPreferences.setMockInitialValues({'tutorial:v2:done': true});
   tester.view.physicalSize = size;
@@ -96,6 +98,7 @@ Future<GoRouter> _pumpShell(
       key: UniqueKey(),
       overrides: [
         ...contentOverrides(_world, challenges: loadAllChallenges()),
+        devToolsProvider.overrideWithValue(devTools),
         initialSettingsProvider.overrideWithValue(
           AppSettings(skinId: skin, themeMode: mode),
         ),

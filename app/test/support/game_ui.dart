@@ -11,6 +11,7 @@ import 'package:enigmatrix/src/board/feedback/feedback_plan.dart';
 import 'package:enigmatrix/src/board/scene/board_game.dart';
 import 'package:enigmatrix/src/data/case_repository.dart';
 import 'package:enigmatrix/src/game/app_settings.dart';
+import 'package:enigmatrix/src/game/dev_tools.dart';
 import 'package:enigmatrix/src/game/feedback_providers.dart';
 import 'package:enigmatrix/src/game/game_controller.dart';
 import 'package:enigmatrix/src/ui/game_screen.dart';
@@ -77,6 +78,7 @@ Future<GameRig> pumpGameScreen(
   RingerMode ringer = RingerMode.normal,
   Map<String, Object> prefs = const {},
   bool tutorial = false,
+  bool devTools = false,
   Future<List<PuzzleCase>> Function()? bank,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
@@ -90,6 +92,7 @@ Future<GameRig> pumpGameScreen(
   final container = ProviderContainer(
     overrides: [
       gameTickerEnabledProvider.overrideWithValue(false),
+      devToolsProvider.overrideWithValue(devTools),
       casesProvider.overrideWith((_) => (bank ?? () async => [pc])()),
       tutorialCaseProvider.overrideWith((_) async => pc),
       initialSettingsProvider.overrideWithValue(settings),
@@ -215,7 +218,9 @@ Future<void> loadAppFonts() async {
   };
   for (final e in files.entries) {
     final loader = FontLoader(e.key)
-      ..addFont(Future.value(File(e.value).readAsBytesSync().buffer.asByteData()));
+      ..addFont(
+        Future.value(File(e.value).readAsBytesSync().buffer.asByteData()),
+      );
     await loader.load();
   }
 }

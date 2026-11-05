@@ -3,8 +3,9 @@
 /// lleva la etiqueta DEMO.
 library;
 
+// Las vidas máximas ya no viven aquí: salen de GameConfig.maxLives (H-65).
+
 const mockLives = 4;
-const mockMaxLives = 5;
 const mockNextLife = '23:41';
 const mockStreak = 3;
 const mockBestStreak = 7;

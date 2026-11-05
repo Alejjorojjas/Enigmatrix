@@ -12,6 +12,7 @@ library;
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 
 import '../data/case_repository.dart' show DailyChallenge;
+import '../game/game_config.dart';
 
 /// Todas las dificultades, de menor a mayor.
 const kAllDifficulties = [
@@ -22,15 +23,21 @@ const kAllDifficulties = [
   'elite',
 ];
 
-/// Dificultades que ya se pueden jugar.
-const kV1Difficulties = ['principiante', 'casual', 'intermedio'];
-
-bool isV1Difficulty(String difficulty) => kV1Difficulties.contains(difficulty);
+/// Si una dificultad ya se puede jugar. Cuáles son las jugables lo dice la
+/// configuración ([GameConfig.v1Difficulties], H-65); sin configuración
+/// explícita valen los valores por defecto.
+bool isV1Difficulty(
+  String difficulty, {
+  GameConfig config = const GameConfig(),
+}) => config.isV1Difficulty(difficulty);
 
 /// Los casos que el jugador puede abrir hoy (sin Experto ni Élite).
-List<PuzzleCase> playableCases(List<PuzzleCase> all) => [
+List<PuzzleCase> playableCases(
+  List<PuzzleCase> all, {
+  GameConfig config = const GameConfig(),
+}) => [
   for (final c in all)
-    if (isV1Difficulty(c.difficulty)) c,
+    if (config.isV1Difficulty(c.difficulty)) c,
 ];
 
 /// Título que ve el jugador: el de la historia si existe, si no el nombre del
@@ -49,38 +56,45 @@ class WorldInfo {
   final bool available;
 }
 
-const kWorlds = [
-  WorldInfo('mansion', 'La Mansión', true),
-  WorldInfo('hotel', 'El Hotel', false),
-  WorldInfo('museo', 'El Museo', false),
-  WorldInfo('tren', 'El Tren', false),
-  WorldInfo('hospital', 'El Hospital', false),
+/// Nombres visibles de los mundos (son textos: se quedan en el código y
+/// pasarán a .arb en la etapa 4). La lista y la disponibilidad salen de la
+/// configuración.
+const kWorldNames = {
+  'mansion': 'La Mansión',
+  'hotel': 'El Hotel',
+  'museo': 'El Museo',
+  'tren': 'El Tren',
+  'hospital': 'El Hospital',
+};
+
+/// Los mundos en el orden de la configuración, con su nombre visible (si el
+/// id no tiene nombre conocido se muestra el propio id).
+List<WorldInfo> worldsFor(GameConfig config) => [
+  for (final w in config.worlds)
+    WorldInfo(w.id, kWorldNames[w.id] ?? w.id, w.available),
 ];
 
-/// Primer día del reto diario: el 01-11-2026 es el día 1.
-final DateTime kChallengeStart = DateTime(2026, 11, 1);
-
-/// Cuántos días tiene el ciclo de retos (después vuelve al día 1).
-const kChallengeDays = 30;
-
-/// Día del reto (1 a 30) que corresponde a una fecha local:
-/// `((días desde el 01-11-2026) mod 30) + 1`. Se cuentan días de calendario
-/// (no bloques de 24 horas) para que el cambio de hora no mueva el día. La
-/// hora oficial de cambio de día está pendiente (pregunta 7): hoy es la
-/// medianoche del teléfono y el reto sigue marcado DEMO.
-int challengeDayFor(DateTime now) {
+/// Día del reto (1 a [GameConfig.challengeDays]) que corresponde a una fecha
+/// local: `((días desde el inicio del reto) mod días del ciclo) + 1`. Con los
+/// valores por defecto el inicio es el 01-11-2026 y el ciclo de 30 días. Se
+/// cuentan días de calendario (no bloques de 24 horas) para que el cambio de
+/// hora no mueva el día. La hora oficial de cambio de día está pendiente
+/// (pregunta 7): hoy es la medianoche del teléfono y el reto sigue marcado
+/// DEMO.
+int challengeDayFor(DateTime now, {GameConfig config = const GameConfig()}) {
   final today = DateTime.utc(now.year, now.month, now.day);
-  final start = DateTime.utc(
-    kChallengeStart.year,
-    kChallengeStart.month,
-    kChallengeStart.day,
-  );
-  return today.difference(start).inDays % kChallengeDays + 1;
+  final first = config.challengeStart;
+  final start = DateTime.utc(first.year, first.month, first.day);
+  return today.difference(start).inDays % config.challengeDays + 1;
 }
 
 /// El reto del día entre los retos cargados, o null si ese día no está.
-DailyChallenge? todaysChallenge(List<DailyChallenge> all, DateTime now) {
-  final day = challengeDayFor(now);
+DailyChallenge? todaysChallenge(
+  List<DailyChallenge> all,
+  DateTime now, {
+  GameConfig config = const GameConfig(),
+}) {
+  final day = challengeDayFor(now, config: config);
   for (final c in all) {
     if (c.day == day) return c;
   }

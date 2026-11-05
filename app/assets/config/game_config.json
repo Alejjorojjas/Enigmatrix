@@ -1,0 +1,17 @@
+{
+  "undoLimit": 50,
+  "periodicSaveSeconds": 15,
+  "wrongSolveLockSeconds": 3,
+  "splashMinMillis": 1700,
+  "challengeStartDate": "2026-11-01",
+  "challengeDays": 30,
+  "maxLives": 5,
+  "v1Difficulties": ["principiante", "casual", "intermedio"],
+  "worlds": [
+    { "id": "mansion", "available": true },
+    { "id": "hotel", "available": false },
+    { "id": "museo", "available": false },
+    { "id": "tren", "available": false },
+    { "id": "hospital", "available": false }
+  ]
+}

@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_version.dart';
 import '../game/app_settings.dart';
+import '../game/dev_tools.dart';
 import 'appearance_picker.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'feedback_report.dart';
@@ -248,8 +249,11 @@ class _SettingsSheet extends ConsumerWidget {
           SheetTexts.accountBody,
           style: context.note(15, color: p.softText),
         ),
-        const Divider(height: 24),
-        const _DevSection(),
+        // Banco de pruebas y feedback de playtest: solo con ENX_DEV (H-66).
+        if (ref.watch(devToolsProvider)) ...[
+          const Divider(height: 24),
+          const _DevSection(),
+        ],
         const SizedBox(height: 10),
         Text(
           'Enigmatrix v$kAppVersion',
