@@ -1,0 +1,26 @@
+name: tablero_flame
+description: "Prueba de concepto técnica del tablero de Enigmatrix (etapa 2): escena de Flame, director de feedback, sonido y vibración. Prototipo aislado; no es la app."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: ^1.37.0
+  flutter_soloud: ^4.1.7
+  enigmatrix_engine:
+    path: ../../tools
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/cases/
+    - assets/sonidos/

@@ -23,4 +23,21 @@ Lo que dijo Alejandro: "Me gusta este estilo, no igual pero sí muy parecido, y 
 - Tonos **más oscuros y menos blancos**.
 - Opción de **modo oscuro y modo claro**.
 
+**Lo que no le gustó de la versión actual (05-11-2026):** marcó **muebles y tablero**, **personajes** y **botones y pantalla**. Los colores no los marcó. Al revisarla, el arquitecto encontró estos problemas concretos:
+- **Tablero y habitaciones:**
+  - el tablero se ve pequeño;
+  - los muebles se ven planos;
+  - los nombres de habitaciones se montan entre sí (por ejemplo "COMEDOR" y "VESTÍBULO").
+- **Personajes:** son círculos con una letra, sin cara.
+- **Pantalla:** tiene mucho texto de ayuda en letra pequeña, y las herramientas quedan abajo, así que hay que desplazarse.
+
+Criterios para aceptar las pieles nuevas:
+- **Tablero:** usa todo el ancho de la pantalla y los nombres de las habitaciones nunca se montan.
+- **Muebles:** se reconocen al instante.
+- **Personajes:** tienen retrato.
+- **Pantalla:**
+  - en un teléfono de 360×740 se ven sin desplazarse el tablero, las herramientas y la pista activa;
+  - sin párrafos de ayuda permanentes;
+  - letra de 13 px o más.
+
 **Lo que no se copia:** los dibujos, los retratos, los nombres ("Crime Files", "Temporadas", etc.), los íconos ni la distribución exacta de la pantalla. La paleta, las formas de los botones, el estilo de los muebles y los personajes de Enigmatrix son diseño propio.

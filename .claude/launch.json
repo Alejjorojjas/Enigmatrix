@@ -15,6 +15,21 @@
         "8123"
       ],
       "port": 8123
+    },
+    {
+      "name": "prototipo-web",
+      "runtimeExecutable": "dart",
+      "runtimeArgs": [
+        "pub",
+        "global",
+        "run",
+        "dhttpd",
+        "--path",
+        "D:\\OneDrive\\Documentos\\Repositorios GitHub\\Proyecto Enigmatrix\\Enigmatrix version final Claude\\prototipos\\tablero-flame\\build\\web",
+        "--port",
+        "8131"
+      ],
+      "port": 8131
     }
   ]
 }
