@@ -347,6 +347,65 @@ void main() {
       expect(rules.problemsOf(map), isEmpty);
     });
 
+    test('tope de 2 del mismo tipo por habitación (06-11-2026)', () {
+      expect(kMaxSameTypePerRoom, 2);
+      expect(maxPerRoomOf(ObjectType.silla), 2);
+      expect(maxPerRoomOf(ObjectType.cama), 1);
+      // Dos plantas en el salón: bien. Tres: problema.
+      expect(
+          rules.problemsOf(mapWith([
+            obj(ObjectType.planta, [12]),
+            obj(ObjectType.planta, [14]),
+          ])),
+          isEmpty);
+      final p = rules.problemsOf(mapWith([
+        obj(ObjectType.planta, [12]),
+        obj(ObjectType.planta, [14]),
+        obj(ObjectType.planta, [16]),
+      ]));
+      expect(p.join(' '), contains('3 × planta'));
+      expect(p.join(' '), contains('máximo 2 del mismo tipo'));
+    });
+
+    test(
+        'el tope es por tipo y por habitación: 2 plantas en cada habitación '
+        'están bien', () {
+      final map = mapWith([
+        obj(ObjectType.planta, [0]),
+        obj(ObjectType.planta, [2]),
+        obj(ObjectType.planta, [12]),
+        obj(ObjectType.planta, [14]),
+        obj(ObjectType.planta, [24]),
+        obj(ObjectType.planta, [26]),
+      ]);
+      expect(rules.problemsOf(map), isEmpty);
+    });
+
+    test(
+        'mesas: dos mesas en una habitación bien, tres no (7 mesas del '
+        'mansion-04)', () {
+      final tres = mapWith([
+        obj(ObjectType.mesa, [24, 25]),
+        obj(ObjectType.mesa, [26, 27]),
+        obj(ObjectType.mesa, [30, 31]),
+      ]);
+      expect(rules.problemsOf(tres).join(' '), contains('3 × mesa'));
+      final dos = mapWith([
+        obj(ObjectType.mesa, [24, 25]),
+        obj(ObjectType.mesa, [26, 27]),
+      ]);
+      expect(rules.problemsOf(dos), isEmpty);
+    });
+
+    test('los tipos únicos siguen en 1 (dos camas: mensaje de objeto único)',
+        () {
+      final p = rules.problemsOf(mapWith([
+        obj(ObjectType.cama, [0, 1]),
+        obj(ObjectType.cama, [6, 7]),
+      ]));
+      expect(p.join(' '), contains('objeto único por habitación'));
+    });
+
     test('cama en la cocina: fuera de su habitación', () {
       final map = mapWith([
         obj(ObjectType.cama, [24, 25])
@@ -623,6 +682,29 @@ void main() {
       }
     });
 
+    test(
+        'nunca más de 2 objetos del mismo tipo en una habitación, ni más '
+        'de 1 de los únicos (todos los tamaños, genérico y Mansión)', () {
+      for (final size in [6, 8, 9, 12, 16]) {
+        for (var seed = 1; seed <= 60; seed++) {
+          for (final w in [null, world]) {
+            final map = gen(size, seed, world: w);
+            final cuenta = <String, int>{};
+            for (final o in map.objects) {
+              cuenta.update(
+                  '${map.areaIdOf(o.cells.first)}|${o.type.name}', (v) => v + 1,
+                  ifAbsent: () => 1);
+            }
+            cuenta.forEach((k, n) {
+              final tipo = ObjectType.values.byName(k.split('|')[1]);
+              expect(n, lessThanOrEqualTo(maxPerRoomOf(tipo)),
+                  reason: '$k x$n (${size}x$size semilla $seed)');
+            });
+          }
+        }
+      }
+    });
+
     test('misma semilla, mismo mapa (determinismo con las reglas nuevas)', () {
       expect(jsonEncode(gen(9, 7).toJson()), jsonEncode(gen(9, 7).toJson()));
     });
@@ -836,6 +918,109 @@ void main() {
       writeCatalog('g', 'mansion', 'principiante');
       final r = runContentGate(casesDir: tmp);
       expect(r.allProblems, isEmpty);
+    });
+
+    test(
+        'un caso real con 3 plantas en una habitación falla (tope de 2 por '
+        'tipo)', () {
+      final world = loadWorldFile(File('data/mundos/mansion.json'));
+      final conPlantas = {
+        for (final r in world.rooms)
+          if (r.furniture.contains(ObjectType.planta)) r.id
+      };
+      // Busca un caso con una habitación que admita plantas, sin arbustos en
+      // el mapa y con al menos 3 celdas libres.
+      PuzzleCase? pc;
+      for (var seed = 1; seed <= 80 && pc == null; seed++) {
+        final c = buildPlanCase(
+                PlanCase(
+                    id: 'g',
+                    difficulty: 'principiante',
+                    seed: seed,
+                    weapon: false,
+                    title: const {'es': 'Prueba'},
+                    premise: const {'es': 'Una premisa corta.'}),
+                world)
+            .puzzle;
+        if (c == null) continue;
+        final sinArbusto =
+            !c.map.objects.any((o) => o.type == ObjectType.arbusto);
+        final hayHueco = c.map.areas.any((a) =>
+            conPlantas.contains(a.id) &&
+            a.cells.where((cell) => c.map.objectAt(cell) == null).length >= 3);
+        if (sinArbusto && hayHueco) pc = c;
+      }
+      expect(pc, isNotNull);
+      final area = pc!.map.areas.firstWhere((a) =>
+          conPlantas.contains(a.id) &&
+          a.cells.where((cell) => pc!.map.objectAt(cell) == null).length >= 3);
+      final libres = [
+        for (final cell in area.cells)
+          if (pc.map.objectAt(cell) == null) cell
+      ];
+      final existentes = pc.map.objects
+          .where((o) =>
+              o.type == ObjectType.planta &&
+              pc!.map.areaIdOf(o.cells.first) == area.id)
+          .length;
+      final j = pc.toJson();
+      final objetos = (j['map'] as Map<String, dynamic>)['objects'] as List;
+      for (var i = 0; i < 3 - existentes + 1 && i < libres.length; i++) {
+        objetos.add({
+          'id': 'planta-extra-$i',
+          'type': 'planta',
+          'cells': [libres[i]],
+        });
+      }
+      File('${tmp.path}/g.json').writeAsStringSync(jsonEncode(j));
+      writeCatalog('g', 'mansion', 'principiante');
+      final r = runContentGate(casesDir: tmp);
+      expect(r.passed, isFalse);
+      final texto = r.allProblems.join('\n');
+      expect(texto, contains('mapa: '));
+      expect(texto, contains('máximo 2 del mismo tipo'));
+    });
+
+    test(
+        'en el banco de pruebas el mismo exceso no se exige (exento por '
+        'defecto)', () {
+      // Tres sillas en una habitación del banco de pruebas.
+      final map = GameMap(
+        id: 'x',
+        nameEs: 'x',
+        size: 4,
+        areas: const [
+          Area(
+              id: 'salon', nameEs: 'el Salón', cells: [0, 1, 2, 3, 4, 5, 6, 7]),
+          Area(
+              id: 'cocina',
+              nameEs: 'la Cocina',
+              cells: [8, 9, 10, 11, 12, 13, 14, 15]),
+        ],
+        objects: [
+          obj(ObjectType.silla, [0]),
+          obj(ObjectType.silla, [1]),
+          obj(ObjectType.silla, [2]),
+        ],
+      );
+      final base = cabanaCase(cabanaPin, caseId: 'a');
+      final pc = PuzzleCase(
+        caseId: 'a',
+        map: map,
+        characters: base.characters,
+        victimId: base.victimId,
+        clues: const [],
+        hasWeapon: false,
+        difficulty: 'test',
+        solution: base.solution,
+      );
+      File('${tmp.path}/a.json').writeAsStringSync(jsonEncode(pc.toJson()));
+      writeCatalog('a', kBancoDePruebas);
+      final exento = runContentGate(casesDir: tmp);
+      expect(exento.allProblems.join('\n'), isNot(contains('mapa:')));
+      final estricto =
+          runContentGate(casesDir: tmp, mapRulesExemptMundos: const {});
+      expect(estricto.allProblems.join('\n'), contains('3 × silla'));
     });
 
     test('un caso real al que se le cuela una segunda cama falla', () {

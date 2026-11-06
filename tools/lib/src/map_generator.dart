@@ -217,7 +217,7 @@ class MapGenerator {
     for (final area in areas) {
       final allowed = furnitureByRoom[area.id] ??
           const [ObjectType.silla, ObjectType.planta];
-      final inRoom = <ObjectType>{};
+      final inRoom = <ObjectType, int>{}; // tipo -> cuántos ya en la habitación
       // ~1 mueble por cada 3 celdas de la habitación, entre 1 y 4.
       final count = (area.cells.length / 3).round().clamp(1, 4);
       for (var i = 0; i < count; i++) {
@@ -226,7 +226,7 @@ class MapGenerator {
         // tipo en vez de forzarlo a 1 celda.
         final candidates = [
           for (final t in allowed)
-            if (!(t.uniquePerRoom && inRoom.contains(t)) &&
+            if ((inRoom[t] ?? 0) < maxPerRoomOf(t) &&
                 (t.family == null || (familyChoice[t.family] ?? t) == t))
               t
         ];
@@ -241,7 +241,7 @@ class MapGenerator {
               id: '${type.name}-${++objSeq}', type: type, cells: cells));
           occupiedByObject.addAll(cells);
           if (blocking) registerBlocked(cells);
-          inRoom.add(type);
+          inRoom.update(type, (v) => v + 1, ifAbsent: () => 1);
           if (type.family != null) familyChoice[type.family!] = type;
           break;
         }

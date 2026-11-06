@@ -4,8 +4,9 @@
 /// 1. Familias: un mapa usa como mucho UN tipo por familia de objetos
 ///    parecidos ([ObjectType.family]): "silla" nunca convive con "sillón" ni
 ///    "sofá" en el mismo mapa.
-/// 2. Únicos por habitación: una habitación no repite un objeto único por
-///    naturaleza ([ObjectType.uniquePerRoom]: una cama, una TV...).
+/// 2. Tope por habitación: una habitación no repite un objeto único por
+///    naturaleza ([ObjectType.uniquePerRoom]: una cama, una TV...) y tiene
+///    como mucho [kMaxSameTypePerRoom] (2) del mismo tipo de los demás.
 /// 3. Habitación permitida: cada objeto vive solo en las habitaciones donde
 ///    tiene sentido ([kRoomFurniture]; un mundo puede restringirla más).
 ///
@@ -148,6 +149,16 @@ const kRoomFurniture = <String, List<ObjectType>>{
 /// Familia de un tipo, o null si no tiene parecidos.
 String? familyOf(ObjectType t) => t.family;
 
+/// Tope de objetos del MISMO tipo en una habitación para los tipos que sí
+/// pueden repetirse (silla, sillón, sofá, mesa, planta, arbusto, armario,
+/// caja). Decisión de Alejandro del 06-11-2026 (mansion-04 tenía 7 mesas,
+/// varias juntas en una misma habitación). Los tipos únicos por habitación
+/// ([ObjectType.uniquePerRoom]) siguen en 1.
+const int kMaxSameTypePerRoom = 2;
+
+/// Máximo de objetos de [t] que admite una habitación.
+int maxPerRoomOf(ObjectType t) => t.uniquePerRoom ? 1 : kMaxSameTypePerRoom;
+
 /// Reglas de coherencia aplicables a un mapa.
 class MapRules {
   /// Muebles permitidos por id de habitación. Una habitación que no figura
@@ -183,19 +194,19 @@ class MapRules {
       }
     }
 
-    // 2. Objetos únicos por naturaleza, una sola vez por habitación.
+    // 2. Tope por habitación: los únicos por naturaleza, 1; el resto de
+    //    tipos, como mucho [kMaxSameTypePerRoom] del mismo tipo.
     final seen = <String, int>{}; // "área|tipo" -> cuántos
     for (final o in map.objects) {
-      if (!o.type.uniquePerRoom) continue;
       final key = '${map.areaIdOf(o.cells.first)}|${o.type.name}';
       seen.update(key, (v) => v + 1, ifAbsent: () => 1);
     }
     for (final e in seen.entries) {
-      if (e.value > 1) {
-        final parts = e.key.split('|');
-        problems
-            .add('${e.value} × ${ObjectType.values.byName(parts[1]).nameEs} '
-                'en "${parts[0]}" (objeto único por habitación)');
+      final parts = e.key.split('|');
+      final type = ObjectType.values.byName(parts[1]);
+      if (e.value > maxPerRoomOf(type)) {
+        problems.add('${e.value} × ${type.nameEs} en "${parts[0]}" '
+            '(${type.uniquePerRoom ? 'objeto único por habitación' : 'máximo $kMaxSameTypePerRoom del mismo tipo por habitación'})');
       }
     }
 

@@ -55,7 +55,7 @@ Los probadores confundían "silla" con "sillón" y "sofá" (¿"al lado de una si
    | `electrodomesticos` | nevera, lavadora | cuerpos blancos con puerta |
 
    Sin familia (se pueden mezclar con todo): cama, alfombra, TV, piano, perchero, bañera, chimenea.
-2. **Objetos únicos por habitación** (`ObjectType.uniquePerRoom`): una habitación no repite cama, alfombra, TV, lavadora, piano, barra, perchero, bañera, nevera ni chimenea. Silla, sillón, sofá, mesa, planta, arbusto, armario y caja sí pueden repetirse dentro de una habitación (entre habitaciones, todo puede repetirse: esa repetición es la ambigüedad que necesitan las pistas).
+2. **Tope por habitación** (`ObjectType.uniquePerRoom` y `kMaxSameTypePerRoom` en `map_rules.dart`): una habitación no repite cama, alfombra, TV, lavadora, piano, barra, perchero, bañera, nevera ni chimenea (máximo 1). Silla, sillón, sofá, mesa, planta, arbusto, armario y caja pueden repetirse dentro de una habitación, **como máximo 2 del mismo tipo** (decisión de Alejandro del 06-11-2026: `mansion-04` tenía 7 mesas, varias juntas en una misma habitación). El generador no puede romper el tope (filtra los tipos que ya llegaron a él) y la puerta lo verifica. Entre habitaciones todo puede repetirse: esa repetición es la ambigüedad que necesitan las pistas.
 3. **Cada objeto en su habitación** (`kRoomFurniture`, ids de habitación). Un mundo (`tools/data/mundos/<id>.json`) puede usar solo un subconjunto de esta tabla (`WorldData.problems()` lo comprueba):
 
    | Habitación | Muebles permitidos |
@@ -300,6 +300,7 @@ El motor aplica siempre la técnica más simple que pode algo; cada aplicación 
 
 - **Coherencia visual del mapa**: un solo tipo por familia de objetos parecidos en cada mapa (asientos, superficies, plantas, almacenaje, electrodomésticos), objetos únicos por naturaleza una vez por habitación y cada objeto solo en habitaciones donde tiene sentido. Detalle y tablas en §1.3.1.
 - **Objetos nuevos**: perchero, bañera, nevera y chimenea (bloqueantes, 1 casilla).
+- **Tope de 2 del mismo tipo por habitación (06-11-2026)**: ver §1.3.1, regla 2. Los casos hechos antes de esta fecha se regeneran con `build-plan`.
 - **Consecuencia**: el generador ya no produce los mismos mapas con las mismas semillas; los casos publicados antes de esta fecha (Mundo 1 y reto) se regeneran con `build-plan`. El banco de pruebas (20 casos) y el tutorial no se regeneran y quedan exentos de la puerta de coherencia de mapa.
 
 ### Preguntas abiertas

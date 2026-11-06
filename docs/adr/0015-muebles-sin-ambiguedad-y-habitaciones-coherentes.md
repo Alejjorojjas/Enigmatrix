@@ -35,6 +35,7 @@ La prueba de juego n.º 1 se hizo con la 0.3.0+3 y amigos de Alejandro.
    - la alfombra lleva guarda y medallón, para no confundirse con una cama.
 6. **Rangos de dificultad:** no se tocan.
 7. **Puerta de contenido.** Exige estas reglas a todo el contenido publicado. Quedan exentos el banco de pruebas y el tutorial, que no se regeneraron.
+8. Como máximo 2 del mismo mueble por habitación (decisión del 06-11-2026).
 
 ## Alternativas consideradas
 

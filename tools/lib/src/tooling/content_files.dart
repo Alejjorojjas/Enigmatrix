@@ -201,7 +201,8 @@ ContentGateReport runContentGate({
     final mundo = mundoOfFile[e.key];
     if (mundo != null && mapRulesExemptMundos.contains(mundo)) continue;
     final extra = mapCoherenceProblems(e.value, rulesFor(mundo));
-    report.checks[e.key] = report.checks[e.key]!.withProblems(extra);
+    final previo = report.checks[e.key];
+    if (previo != null) report.checks[e.key] = previo.withProblems(extra);
   }
   if (mapRulesOnTutorial) {
     for (final e in tutorialCases.entries) {
