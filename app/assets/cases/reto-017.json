@@ -117,18 +117,17 @@
         ]
       },
       {
-        "id": "alfombra-3",
-        "type": "alfombra",
+        "id": "piano-3",
+        "type": "piano",
         "cells": [
-          19,
-          18
+          19
         ]
       },
       {
         "id": "planta-4",
         "type": "planta",
         "cells": [
-          35
+          34
         ]
       },
       {
@@ -184,16 +183,15 @@
         ]
       },
       {
-        "id": "alfombra-12",
-        "type": "alfombra",
+        "id": "armario-12",
+        "type": "armario",
         "cells": [
-          20,
-          21
+          20
         ]
       },
       {
-        "id": "planta-13",
-        "type": "planta",
+        "id": "silla-13",
+        "type": "silla",
         "cells": [
           53
         ]
@@ -202,8 +200,8 @@
         "id": "mesa-14",
         "type": "mesa",
         "cells": [
-          31,
-          30
+          23,
+          15
         ]
       },
       {
@@ -218,35 +216,37 @@
         "id": "planta-16",
         "type": "planta",
         "cells": [
-          23
+          30
         ]
       },
       {
-        "id": "planta-17",
-        "type": "planta",
-        "cells": [
-          42
-        ]
-      },
-      {
-        "id": "planta-18",
-        "type": "planta",
-        "cells": [
-          0
-        ]
-      },
-      {
-        "id": "silla-19",
+        "id": "silla-17",
         "type": "silla",
         "cells": [
           25
         ]
       },
       {
-        "id": "nevera-20",
+        "id": "nevera-18",
         "type": "nevera",
         "cells": [
+          24
+        ]
+      },
+      {
+        "id": "mesa-19",
+        "type": "mesa",
+        "cells": [
+          41,
           33
+        ]
+      },
+      {
+        "id": "mesa-20",
+        "type": "mesa",
+        "cells": [
+          8,
+          16
         ]
       }
     ],
@@ -267,7 +267,7 @@
   },
   "difficulty": "casual",
   "hasWeapon": false,
-  "victim": "c5",
+  "victim": "c8",
   "characters": [
     {
       "id": "c1",
@@ -312,29 +312,18 @@
   ],
   "clues": [
     {
-      "type": "compound",
-      "subject": "c1",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c1",
-          "area": "biblioteca"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c1",
-          "group": "planta"
-        }
-      ]
+      "type": "same_area",
+      "a": "c1",
+      "b": "c4"
     },
     {
       "type": "compound",
       "subject": "c2",
       "parts": [
         {
-          "type": "beside_object",
+          "type": "in_area",
           "subject": "c2",
-          "group": "alfombra"
+          "area": "biblioteca"
         },
         {
           "type": "beside_object",
@@ -344,30 +333,30 @@
       ]
     },
     {
-      "type": "compound",
+      "type": "beside_object",
       "subject": "c3",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c3",
-          "area": "sala-de-musica"
-        },
-        {
-          "type": "on_object",
-          "subject": "c3",
-          "group": "alfombra"
-        }
-      ]
-    },
-    {
-      "type": "only_one_on",
-      "subject": "c4",
       "group": "silla"
     },
     {
-      "type": "in_area",
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "armario"
+    },
+    {
+      "type": "compound",
       "subject": "c5",
-      "area": "sala-de-musica"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "planta"
+        }
+      ]
     },
     {
       "type": "compound",
@@ -376,12 +365,12 @@
         {
           "type": "in_area",
           "subject": "c6",
-          "area": "comedor"
+          "area": "cocina"
         },
         {
-          "type": "on_object",
+          "type": "beside_object",
           "subject": "c6",
-          "group": "alfombra"
+          "group": "mesa"
         }
       ]
     },
@@ -392,7 +381,7 @@
         {
           "type": "in_area",
           "subject": "c7",
-          "area": "invernadero"
+          "area": "comedor"
         },
         {
           "type": "beside_object",
@@ -402,38 +391,27 @@
       ]
     },
     {
-      "type": "compound",
+      "type": "not_in_area",
       "subject": "c8",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c8",
-          "area": "comedor"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c8",
-          "group": "mesa"
-        }
-      ]
+      "area": "invernadero"
     }
   ],
   "solution": {
     "positions": {
-      "c1": 6,
+      "c1": 7,
       "c2": 13,
-      "c3": 19,
-      "c4": 25,
-      "c5": 34,
-      "c6": 40,
-      "c7": 55,
-      "c8": 60
+      "c3": 17,
+      "c4": 28,
+      "c5": 35,
+      "c6": 42,
+      "c7": 48,
+      "c8": 62
     },
-    "murderer": "c3"
+    "murderer": "c7"
   },
   "metrics": {
-    "deductionSteps": 7,
-    "maxTier": 3,
+    "deductionSteps": 9,
+    "maxTier": 4,
     "clueCount": 8
   },
   "story": {

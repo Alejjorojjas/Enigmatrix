@@ -89,7 +89,7 @@
     {
       "id": "reto-008",
       "dificultad": "casual",
-      "semilla": 124,
+      "semilla": 120,
       "arma": false,
       "titulo": {
         "es": "Cena a oscuras"
@@ -125,7 +125,7 @@
     {
       "id": "reto-011",
       "dificultad": "intermedio",
-      "semilla": 166,
+      "semilla": 144,
       "arma": false,
       "titulo": {
         "es": "Junto al fuego"
@@ -137,7 +137,7 @@
     {
       "id": "reto-012",
       "dificultad": "intermedio",
-      "semilla": 127,
+      "semilla": 121,
       "arma": false,
       "titulo": {
         "es": "Un secreto en el desayuno"
@@ -233,7 +233,7 @@
     {
       "id": "reto-020",
       "dificultad": "intermedio",
-      "semilla": 135,
+      "semilla": 141,
       "arma": true,
       "titulo": {
         "es": "El paraguas negro"

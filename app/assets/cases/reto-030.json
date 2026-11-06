@@ -321,24 +321,23 @@
         ]
       },
       {
-        "id": "mesa-27",
-        "type": "mesa",
+        "id": "planta-27",
+        "type": "planta",
         "cells": [
-          23,
-          24
+          23
         ]
       }
     ],
     "weapons": [
       {
-        "id": "bufanda",
-        "name_es": "la bufanda de seda",
-        "category": "asfixia",
-        "area": "estudio"
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "salon"
       },
       {
-        "id": "baston",
-        "name_es": "el bastón de plata",
+        "id": "atizador",
+        "name_es": "el atizador de la chimenea",
         "category": "contundente",
         "area": "sala-de-musica"
       }
@@ -346,7 +345,7 @@
   },
   "difficulty": "intermedio",
   "hasWeapon": true,
-  "victim": "c2",
+  "victim": "c1",
   "characters": [
     {
       "id": "c1",
@@ -396,51 +395,51 @@
   ],
   "clues": [
     {
-      "type": "only_one_on",
-      "subject": "c1",
-      "group": "sillon"
-    },
-    {
       "type": "beside_object",
-      "subject": "c2",
-      "group": "armario"
+      "subject": "c1",
+      "group": "chimenea"
     },
     {
       "type": "compound",
-      "subject": "c3",
+      "subject": "c2",
       "parts": [
         {
           "type": "in_area",
-          "subject": "c3",
+          "subject": "c2",
           "area": "estudio"
         },
         {
           "type": "beside_object",
-          "subject": "c3",
-          "group": "mesa"
+          "subject": "c2",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "banera"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "bano"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "planta"
         }
       ]
     },
     {
       "type": "in_area",
-      "subject": "c4",
-      "area": "salon"
-    },
-    {
-      "type": "compound",
       "subject": "c5",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c5",
-          "area": "galeria"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c5",
-          "group": "sillon"
-        }
-      ]
+      "area": "salon"
     },
     {
       "type": "compound",
@@ -449,12 +448,12 @@
         {
           "type": "in_area",
           "subject": "c6",
-          "area": "bano"
+          "area": "estudio"
         },
         {
-          "type": "on_object",
+          "type": "beside_object",
           "subject": "c6",
-          "group": "alfombra"
+          "group": "armario"
         }
       ]
     },
@@ -468,27 +467,16 @@
           "area": "galeria"
         },
         {
-          "type": "on_object",
+          "type": "beside_object",
           "subject": "c7",
-          "group": "alfombra"
+          "group": "planta"
         }
       ]
     },
     {
-      "type": "compound",
+      "type": "beside_object",
       "subject": "c8",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c8",
-          "area": "bodega"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c8",
-          "group": "mesa"
-        }
-      ]
+      "group": "mesa"
     },
     {
       "type": "beside_object",
@@ -498,22 +486,22 @@
   ],
   "solution": {
     "positions": {
-      "c1": 2,
+      "c1": 8,
       "c2": 14,
-      "c3": 22,
-      "c4": 33,
-      "c5": 43,
-      "c6": 45,
-      "c7": 62,
+      "c3": 18,
+      "c4": 29,
+      "c5": 42,
+      "c6": 49,
+      "c7": 61,
       "c8": 66,
       "c9": 73
     },
-    "murderer": "c3",
-    "lethalWeapon": "bufanda"
+    "murderer": "c5",
+    "lethalWeapon": "pisapapeles"
   },
   "metrics": {
-    "deductionSteps": 12,
-    "maxTier": 4,
+    "deductionSteps": 6,
+    "maxTier": 3,
     "clueCount": 9
   },
   "story": {

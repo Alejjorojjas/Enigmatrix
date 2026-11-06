@@ -26,12 +26,12 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 - **APK entregables**: `D:\OneDrive\Documentos\Repositorios GitHub\Proyecto Enigmatrix\APKs\`. Cada versión se copia ahí con su nombre para que no la pise la siguiente compilación.
 - **Compilar Android**: requiere `JAVA_HOME="C:/Program Files/Java/jdk-17"` (el JDK por defecto del PC es 11): `cd app && JAVA_HOME="C:/Program Files/Java/jdk-17" flutter build apk --release --split-per-abi --dart-define=ENX_DEV=true`. Compila en la carpeta principal, no en un worktree: solo allí está la firma. Sin `ENX_DEV=true` no aparecen el banco de pruebas, el feedback ni el medidor de FPS (para la tienda se compila sin la bandera).
 - **Pruebas**:
-  - motor: `cd tools && dart test` (335 pasan);
+  - motor: `cd tools && dart test` (342 pasan);
   - app: `cd app && flutter analyze && flutter test` (627 pasan).
 
 ## Estado al 05-11-2026 (noche)
 
-- **Versión actual:** 0.7.1+8 (la 0.7.0+7 más un baño en la Mansión, con bañera en 15 de los 40 casos). Sobre la 0.6.0+6 (textos en `.arb`, valores de juego en configuración y herramientas de desarrollo tras `ENX_DEV`) trae lo que se decidió con la prueba de juego n.º 1:
+- **Versión actual:** 0.7.2+9 (la 0.7.0+7 más un baño en la Mansión y un máximo de 2 del mismo mueble por habitación). Sobre la 0.6.0+6 (textos en `.arb`, valores de juego en configuración y herramientas de desarrollo tras `ENX_DEV`) trae lo que se decidió con la prueba de juego n.º 1:
   - muebles sin ambigüedad y habitaciones coherentes (ADR-0015);
   - objetos nuevos: perchero, bañera, nevera y chimenea;
   - Mundo 1 y los 30 retos regenerados.
@@ -40,9 +40,8 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 
 ## Qué sigue, en orden
 
-1. **Que Alejandro pruebe la 0.7.1+8** y TalkBack en su teléfono.
-2. **Decisiones pequeñas de contenido:**
-   - si se pone un tope a mesas y sillas repetidas por habitación (mansion-04 tiene 7 mesas).
+1. **Que Alejandro pruebe la 0.7.2+9** y TalkBack en su teléfono.
+2. **Decisiones de contenido:** ya resueltas (baño y tope de 2 por habitación).
 3. **Planear las etapas 5 (Firebase) y 6 (Google Play)** con Alejandro. Preguntas abiertas: 6, 7, 8, 12, 16, 17, 18 y 23 (ver la sección 5 de la auditoría en `production/revisiones/2026-11-04-auditoria-proyecto.md`).
 4. **Restos menores:**
    - de H-66: la versión con `package_info_plus`, el vocabulario "Caso Nº"/"Expediente", una pantalla de error con Reintentar y lints más estrictos;

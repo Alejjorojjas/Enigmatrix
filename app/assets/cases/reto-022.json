@@ -263,26 +263,25 @@
         ]
       },
       {
-        "id": "alfombra-22",
-        "type": "alfombra",
+        "id": "piano-22",
+        "type": "piano",
         "cells": [
-          3,
-          4
+          3
         ]
       }
     ],
     "weapons": [
       {
-        "id": "baston",
-        "name_es": "el bastón de plata",
-        "category": "contundente",
-        "area": "salon"
+        "id": "tijeras",
+        "name_es": "las tijeras de podar",
+        "category": "cortante",
+        "area": "comedor"
       },
       {
-        "id": "veneno",
-        "name_es": "el frasco de veneno",
-        "category": "veneno",
-        "area": "invernadero"
+        "id": "atizador",
+        "name_es": "el atizador de la chimenea",
+        "category": "contundente",
+        "area": "salon"
       }
     ]
   },
@@ -339,12 +338,12 @@
         {
           "type": "in_area",
           "subject": "c1",
-          "area": "bano"
+          "area": "sala-de-musica"
         },
         {
-          "type": "on_object",
+          "type": "beside_object",
           "subject": "c1",
-          "group": "alfombra"
+          "group": "planta"
         }
       ]
     },
@@ -355,39 +354,40 @@
         {
           "type": "in_area",
           "subject": "c2",
-          "area": "sala-de-musica"
+          "area": "bano"
         },
         {
           "type": "beside_object",
           "subject": "c2",
-          "group": "planta"
+          "group": "alfombra"
         }
       ]
-    },
-    {
-      "type": "beside_object",
-      "subject": "c3",
-      "group": "chimenea"
-    },
-    {
-      "type": "victim_filler",
-      "subject": "c4"
     },
     {
       "type": "compound",
-      "subject": "c5",
+      "subject": "c3",
       "parts": [
         {
-          "type": "on_object",
-          "subject": "c5",
-          "group": "alfombra"
+          "type": "in_area",
+          "subject": "c3",
+          "area": "comedor"
         },
         {
           "type": "beside_object",
-          "subject": "c5",
+          "subject": "c3",
           "group": "planta"
         }
       ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c4",
+      "area": "invernadero"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "planta"
     },
     {
       "type": "compound",
@@ -396,12 +396,12 @@
         {
           "type": "in_area",
           "subject": "c6",
-          "area": "galeria"
+          "area": "comedor"
         },
         {
-          "type": "beside_object",
+          "type": "on_object",
           "subject": "c6",
-          "group": "planta"
+          "group": "alfombra"
         }
       ]
     },
@@ -412,12 +412,12 @@
         {
           "type": "in_area",
           "subject": "c7",
-          "area": "invernadero"
+          "area": "galeria"
         },
         {
           "type": "beside_object",
           "subject": "c7",
-          "group": "mesa"
+          "group": "planta"
         }
       ]
     },
@@ -428,28 +428,28 @@
         {
           "type": "in_area",
           "subject": "c8",
-          "area": "galeria"
+          "area": "invernadero"
         },
         {
-          "type": "on_object",
+          "type": "beside_object",
           "subject": "c8",
-          "group": "alfombra"
+          "group": "mesa"
         }
       ]
     }
   ],
   "solution": {
     "positions": {
-      "c1": 6,
-      "c2": 9,
-      "c3": 23,
+      "c1": 0,
+      "c2": 15,
+      "c3": 18,
       "c4": 28,
-      "c5": 35,
-      "c6": 40,
-      "c7": 53,
-      "c8": 58
+      "c5": 38,
+      "c6": 43,
+      "c7": 49,
+      "c8": 61
     },
-    "murderer": "c7"
+    "murderer": "c8"
   },
   "metrics": {
     "deductionSteps": 7,

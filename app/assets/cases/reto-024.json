@@ -117,15 +117,16 @@
         ]
       },
       {
-        "id": "chimenea-3",
-        "type": "chimenea",
+        "id": "mesa-3",
+        "type": "mesa",
         "cells": [
-          48
+          48,
+          49
         ]
       },
       {
-        "id": "silla-4",
-        "type": "silla",
+        "id": "planta-4",
+        "type": "planta",
         "cells": [
           12
         ]
@@ -134,116 +135,116 @@
         "id": "piano-5",
         "type": "piano",
         "cells": [
-          11
+          2
         ]
       },
       {
-        "id": "alfombra-6",
+        "id": "sillon-6",
+        "type": "sillon",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "alfombra-7",
         "type": "alfombra",
         "cells": [
-          21,
-          13
+          13,
+          21
         ]
       },
       {
-        "id": "planta-7",
-        "type": "planta",
+        "id": "alfombra-8",
+        "type": "alfombra",
         "cells": [
-          31
+          35,
+          43
         ]
       },
       {
-        "id": "banera-8",
+        "id": "banera-9",
         "type": "banera",
         "cells": [
-          27
-        ]
-      },
-      {
-        "id": "alfombra-9",
-        "type": "alfombra",
-        "cells": [
-          34,
-          42
+          33
         ]
       },
       {
         "id": "planta-10",
         "type": "planta",
         "cells": [
-          43
+          34
         ]
       },
       {
-        "id": "perchero-11",
-        "type": "perchero",
+        "id": "armario-11",
+        "type": "armario",
         "cells": [
-          60
+          44
         ]
       },
       {
         "id": "planta-12",
         "type": "planta",
         "cells": [
-          39
+          30
         ]
       },
       {
         "id": "planta-13",
         "type": "planta",
         "cells": [
-          28
+          61
         ]
       },
       {
-        "id": "armario-14",
-        "type": "armario",
+        "id": "perchero-14",
+        "type": "perchero",
         "cells": [
-          37
+          36
         ]
       },
       {
-        "id": "mesa-15",
+        "id": "planta-15",
+        "type": "planta",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "mesa-16",
         "type": "mesa",
+        "cells": [
+          18,
+          17
+        ]
+      },
+      {
+        "id": "alfombra-17",
+        "type": "alfombra",
         "cells": [
           0,
           8
-        ]
-      },
-      {
-        "id": "alfombra-16",
-        "type": "alfombra",
-        "cells": [
-          10,
-          18
-        ]
-      },
-      {
-        "id": "planta-17",
-        "type": "planta",
-        "cells": [
-          1
         ]
       }
     ],
     "weapons": [
       {
-        "id": "veneno",
-        "name_es": "el frasco de veneno",
-        "category": "veneno",
-        "area": "comedor"
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "salon"
       },
       {
-        "id": "baston",
-        "name_es": "el bastón de plata",
-        "category": "contundente",
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
         "area": "sala-de-musica"
       }
     ]
   },
   "difficulty": "casual",
   "hasWeapon": false,
-  "victim": "c8",
+  "victim": "c2",
   "characters": [
     {
       "id": "c1",
@@ -288,14 +289,24 @@
   ],
   "clues": [
     {
-      "type": "in_area",
+      "type": "compound",
       "subject": "c1",
-      "area": "sala-de-musica"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "comedor"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
     },
     {
-      "type": "beside_object",
-      "subject": "c2",
-      "group": "piano"
+      "type": "victim_filler",
+      "subject": "c2"
     },
     {
       "type": "compound",
@@ -304,7 +315,7 @@
         {
           "type": "in_area",
           "subject": "c3",
-          "area": "comedor"
+          "area": "sala-de-musica"
         },
         {
           "type": "on_object",
@@ -314,68 +325,79 @@
       ]
     },
     {
-      "type": "in_area",
-      "subject": "c4",
-      "area": "dormitorio"
+      "type": "alone_with",
+      "a": "c4",
+      "b": "c3"
     },
     {
       "type": "compound",
       "subject": "c5",
       "parts": [
         {
-          "type": "in_area",
-          "subject": "c5",
-          "area": "bano"
-        },
-        {
-          "type": "beside_object",
+          "type": "on_object",
           "subject": "c5",
           "group": "alfombra"
-        }
-      ]
-    },
-    {
-      "type": "beside_object",
-      "subject": "c6",
-      "group": "chimenea"
-    },
-    {
-      "type": "compound",
-      "subject": "c7",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c7",
-          "area": "bano"
         },
         {
           "type": "beside_object",
-          "subject": "c7",
+          "subject": "c5",
           "group": "planta"
         }
       ]
     },
     {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "planta"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
       "type": "beside_object",
+      "subject": "c7",
+      "group": "armario"
+    },
+    {
+      "type": "compound",
       "subject": "c8",
-      "group": "perchero"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "planta"
+        }
+      ]
     }
   ],
   "solution": {
     "positions": {
-      "c1": 7,
-      "c2": 12,
-      "c3": 18,
-      "c4": 30,
-      "c5": 33,
+      "c1": 1,
+      "c2": 10,
+      "c3": 21,
+      "c4": 31,
+      "c5": 35,
       "c6": 40,
-      "c7": 51,
-      "c8": 61
+      "c7": 52,
+      "c8": 62
     },
-    "murderer": "c4"
+    "murderer": "c1"
   },
   "metrics": {
-    "deductionSteps": 7,
+    "deductionSteps": 8,
     "maxTier": 3,
     "clueCount": 8
   },

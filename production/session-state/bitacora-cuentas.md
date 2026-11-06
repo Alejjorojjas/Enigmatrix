@@ -11,6 +11,17 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 06-11-2026 · cuenta secundaria · máximo 2 del mismo mueble por habitación (0.7.2+9)
+
+- **Qué se hizo:**
+  - **Decisión de Alejandro:** como máximo 2 muebles del mismo tipo por habitación (antes, mansion-04 tenía 7 mesas). Quedó en el ADR-0015, punto 8, y en la spec 16, §1.3.1.
+  - **Motor (`puzzle-engineer`):** `kMaxSameTypePerRoom = 2` en `tools/lib/src/map_rules.dart`. El generador nunca lo supera y la puerta de contenido lo rechaza. También ajustó `tools/test/qa_mapa_independiente_test.dart` para que funcione con el interruptor de regeneración.
+  - **Contenido (`contenido-puzzles`):** regeneró los 40 casos y cambió 12 semillas. Se mantiene la curva (4, 6, 7 | 6, 7, 8 | 9, 10, 11, 14), el arma en 08, 09 y 10, y las 16 premisas que nombran algo siguen encajando. Hay bañera en 13 de los 40 casos.
+  - **Verificación del arquitecto:** conteo propio con un máximo de 2 del mismo tipo por habitación y 0 problemas. Revisó mansion-08 en web a 360×740.
+- **Commits:** `3f19bc5` (motor) y el de cierre.
+- **Pruebas:** tools 342 y app 627, todas pasan; analyze limpio.
+- **APK:** `APKs/enigmatrix-0.7.2+9-arm64.apk` (y `-armeabi-v7a`), con `ENX_DEV=true`.
+
 ## 05-11-2026 · cuenta secundaria · baño en la Mansión (0.7.1+8)
 
 - **Qué se hizo:**
@@ -48,7 +59,7 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - **APK:** `APKs/enigmatrix-0.7.0+7-arm64.apk` (y `-armeabi-v7a`), con `ENX_DEV=true` y compilado en la carpeta principal.
 - **Pendiente o dudas para la otra cuenta:**
   - **Bañera:** resuelto en la 0.7.1+8 (entrada de arriba).
-  - **Repetición de muebles:** mesas y sillas pueden repetirse mucho; mansion-04 tiene 7 mesas. Falta preguntar a Alejandro si quiere un tope por habitación.
+  - **Repetición de muebles:** resuelto en la 0.7.2+9 (tope de 2 por habitación).
   - **Élite:** con las reglas nuevas el generador no saca casos 16×16. Ya estaba fuera de la V1.
   - **Interruptor sin uso:** `tools/test/support/regeneracion_pendiente.dart` ya está en `false` y se puede limpiar.
   - **Banco de pruebas y tutorial:** no se regeneraron y están exentos de la puerta de contenido.

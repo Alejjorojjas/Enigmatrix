@@ -19,7 +19,7 @@
 // regenerados.
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 
-const bool kMundo1PendienteDeRegenerar = true;
+const bool kMundo1PendienteDeRegenerar = false;
 
 /// Mundos exentos de las reglas de mapa en la puerta sobre los assets.
 Set<String> get mundosExentosDeReglasDeMapa => {

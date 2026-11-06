@@ -2,4 +2,4 @@
 /// (lo comprueba test/app_version_test.dart).
 library;
 
-const kAppVersion = '0.7.1+8';
+const kAppVersion = '0.7.2+9';

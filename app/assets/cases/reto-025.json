@@ -312,10 +312,11 @@
         ]
       },
       {
-        "id": "armario-25",
-        "type": "armario",
+        "id": "alfombra-25",
+        "type": "alfombra",
         "cells": [
-          45
+          45,
+          46
         ]
       }
     ],
@@ -324,25 +325,19 @@
         "id": "bufanda",
         "name_es": "la bufanda de seda",
         "category": "asfixia",
-        "area": "dormitorio"
-      },
-      {
-        "id": "tijeras",
-        "name_es": "las tijeras de podar",
-        "category": "cortante",
-        "area": "invernadero"
-      },
-      {
-        "id": "veneno",
-        "name_es": "el frasco de veneno",
-        "category": "veneno",
         "area": "galeria"
+      },
+      {
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
+        "area": "bano"
       }
     ]
   },
   "difficulty": "intermedio",
   "hasWeapon": false,
-  "victim": "c1",
+  "victim": "c4",
   "characters": [
     {
       "id": "c1",
@@ -392,9 +387,20 @@
   ],
   "clues": [
     {
-      "type": "beside_object",
+      "type": "compound",
       "subject": "c1",
-      "group": "planta"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "sala-de-musica"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
     },
     {
       "type": "compound",
@@ -413,88 +419,34 @@
       ]
     },
     {
-      "type": "compound",
+      "type": "only_one_on",
       "subject": "c3",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c3",
-          "area": "dormitorio"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c3",
-          "group": "alfombra"
-        }
-      ]
+      "group": "alfombra"
     },
     {
-      "type": "compound",
+      "type": "beside_object",
       "subject": "c4",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c4",
-          "area": "galeria"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c4",
-          "group": "planta"
-        }
-      ]
+      "group": "armario"
     },
     {
-      "type": "alone",
-      "subject": "c5"
+      "type": "alone_with",
+      "a": "c5",
+      "b": "c2"
     },
     {
-      "type": "compound",
+      "type": "beside_object",
       "subject": "c6",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c6",
-          "area": "estudio"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c6",
-          "group": "armario"
-        }
-      ]
+      "group": "banera"
     },
     {
-      "type": "compound",
-      "subject": "c7",
-      "parts": [
-        {
-          "type": "beside_object",
-          "subject": "c7",
-          "group": "sofa"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c7",
-          "group": "chimenea"
-        }
-      ]
+      "type": "alone_with",
+      "a": "c7",
+      "b": "c6"
     },
     {
-      "type": "compound",
+      "type": "only_one_on",
       "subject": "c8",
-      "parts": [
-        {
-          "type": "in_area",
-          "subject": "c8",
-          "area": "salon"
-        },
-        {
-          "type": "beside_object",
-          "subject": "c8",
-          "group": "sofa"
-        }
-      ]
+      "group": "sofa"
     },
     {
       "type": "compound",
@@ -515,20 +467,20 @@
   ],
   "solution": {
     "positions": {
-      "c1": 7,
+      "c1": 0,
       "c2": 11,
-      "c3": 23,
-      "c4": 30,
-      "c5": 36,
-      "c6": 46,
-      "c7": 60,
-      "c8": 67,
-      "c9": 80
+      "c3": 22,
+      "c4": 32,
+      "c5": 37,
+      "c6": 53,
+      "c7": 61,
+      "c8": 66,
+      "c9": 78
     },
-    "murderer": "c2"
+    "murderer": "c3"
   },
   "metrics": {
-    "deductionSteps": 7,
+    "deductionSteps": 12,
     "maxTier": 4,
     "clueCount": 9
   },

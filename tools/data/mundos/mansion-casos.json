@@ -17,7 +17,7 @@
     {
       "id": "mansion-02",
       "dificultad": "principiante",
-      "semilla": 13,
+      "semilla": 6,
       "arma": false,
       "titulo": {
         "es": "El testamento sellado"
@@ -41,7 +41,7 @@
     {
       "id": "mansion-04",
       "dificultad": "casual",
-      "semilla": 8,
+      "semilla": 6,
       "arma": false,
       "titulo": {
         "es": "La noche del piano"
@@ -53,7 +53,7 @@
     {
       "id": "mansion-05",
       "dificultad": "casual",
-      "semilla": 21,
+      "semilla": 8,
       "arma": false,
       "titulo": {
         "es": "El retrato cambiado de pared"
@@ -65,7 +65,7 @@
     {
       "id": "mansion-06",
       "dificultad": "casual",
-      "semilla": 38,
+      "semilla": 4,
       "arma": false,
       "titulo": {
         "es": "Té de las cinco"
@@ -77,7 +77,7 @@
     {
       "id": "mansion-07",
       "dificultad": "intermedio",
-      "semilla": 3,
+      "semilla": 40,
       "arma": false,
       "titulo": {
         "es": "Baile de máscaras"
@@ -89,7 +89,7 @@
     {
       "id": "mansion-08",
       "dificultad": "intermedio",
-      "semilla": 1,
+      "semilla": 12,
       "arma": true,
       "titulo": {
         "es": "La llave desaparecida"
@@ -101,7 +101,7 @@
     {
       "id": "mansion-09",
       "dificultad": "intermedio",
-      "semilla": 6,
+      "semilla": 4,
       "arma": true,
       "titulo": {
         "es": "El último invitado"
@@ -113,7 +113,7 @@
     {
       "id": "mansion-10",
       "dificultad": "intermedio",
-      "semilla": 57,
+      "semilla": 16,
       "arma": true,
       "titulo": {
         "es": "El reloj de las doce"
