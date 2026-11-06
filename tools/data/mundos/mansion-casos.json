@@ -5,7 +5,7 @@
     {
       "id": "mansion-01",
       "dificultad": "principiante",
-      "semilla": 50,
+      "semilla": 74,
       "arma": false,
       "titulo": {
         "es": "Cena de bienvenida"
@@ -17,7 +17,7 @@
     {
       "id": "mansion-02",
       "dificultad": "principiante",
-      "semilla": 9,
+      "semilla": 13,
       "arma": false,
       "titulo": {
         "es": "El testamento sellado"
@@ -29,7 +29,7 @@
     {
       "id": "mansion-03",
       "dificultad": "principiante",
-      "semilla": 67,
+      "semilla": 46,
       "arma": false,
       "titulo": {
         "es": "Tormenta en la colina"
@@ -41,7 +41,7 @@
     {
       "id": "mansion-04",
       "dificultad": "casual",
-      "semilla": 4,
+      "semilla": 8,
       "arma": false,
       "titulo": {
         "es": "La noche del piano"
@@ -53,7 +53,7 @@
     {
       "id": "mansion-05",
       "dificultad": "casual",
-      "semilla": 15,
+      "semilla": 21,
       "arma": false,
       "titulo": {
         "es": "El retrato cambiado de pared"
@@ -65,7 +65,7 @@
     {
       "id": "mansion-06",
       "dificultad": "casual",
-      "semilla": 12,
+      "semilla": 38,
       "arma": false,
       "titulo": {
         "es": "Té de las cinco"
@@ -77,7 +77,7 @@
     {
       "id": "mansion-07",
       "dificultad": "intermedio",
-      "semilla": 11,
+      "semilla": 3,
       "arma": false,
       "titulo": {
         "es": "Baile de máscaras"
@@ -89,7 +89,7 @@
     {
       "id": "mansion-08",
       "dificultad": "intermedio",
-      "semilla": 8,
+      "semilla": 1,
       "arma": true,
       "titulo": {
         "es": "La llave desaparecida"
@@ -101,7 +101,7 @@
     {
       "id": "mansion-09",
       "dificultad": "intermedio",
-      "semilla": 12,
+      "semilla": 6,
       "arma": true,
       "titulo": {
         "es": "El último invitado"
@@ -113,7 +113,7 @@
     {
       "id": "mansion-10",
       "dificultad": "intermedio",
-      "semilla": 33,
+      "semilla": 57,
       "arma": true,
       "titulo": {
         "es": "El reloj de las doce"

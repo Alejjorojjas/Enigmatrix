@@ -4,7 +4,7 @@
 
 ## Estado hoy (05-11-2026, noche)
 
-- **Versión actual: `0.7.0+7`**, con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.7.0+7-arm64.apk`, compilado con `ENX_DEV=true`. Sobre la 0.6.0+6 trae lo que se decidió con la prueba de juego n.º 1 (ADR-0015):
+- **Versión actual: `0.7.1+8`** (0.7.0+7 más el baño en la Mansión), con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.7.1+8-arm64.apk`, compilado con `ENX_DEV=true`. Sobre la 0.6.0+6 trae lo que se decidió con la prueba de juego n.º 1 (ADR-0015):
   - muebles sin ambigüedad (un tipo por familia en cada mapa);
   - habitaciones coherentes;
   - perchero, bañera, nevera y chimenea;
@@ -25,8 +25,8 @@
   - ADR-0014: V1 hasta Intermedio, Mundo 1 con 10 casos y 30 días de reto, solo Android, sin arrastrar retratos, el arma como quedó (pregunta 19) y tipografías incluidas.
 - **Preguntas abiertas:** 6 (premium), 7 (hora del reto), 8 (víctima), 12 (ayudas y puntos), 16 (edad), 17 (identidad legal), 18 (qué ve la tienda) y 23 (mundos bloqueados; hoy se muestran como "Próximamente"). Antes de publicar también falta decidir el servidor (etapa 5) y los trámites de tienda (etapa 6).
 - **Próximos pasos:**
-  1. Alejandro prueba la 0.7.0+7 y TalkBack.
-  2. Decidir si el Mundo 1 lleva baño (para la bañera) y si se pone un tope a mesas y sillas repetidas por habitación.
+  1. Alejandro prueba la 0.7.1+8 y TalkBack.
+  2. Decidir si se pone un tope a mesas y sillas repetidas por habitación.
   3. Planear las etapas 5 (Firebase) y 6 (tiendas) y responder las preguntas abiertas de publicación.
 
 ### Preguntas abiertas (sin decidir; ninguna se resuelve en los documentos)

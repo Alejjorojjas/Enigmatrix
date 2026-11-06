@@ -11,6 +11,20 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 05-11-2026 · cuenta secundaria · baño en la Mansión (0.7.1+8)
+
+- **Qué se hizo:**
+  - **Decisión de Alejandro:** agregar un baño a la Mansión para que aparezca la bañera.
+  - **Mundo:** `tools/data/mundos/mansion.json` lleva "el Baño" (bañera, planta, alfombra).
+  - **Casos:** `contenido-puzzles` regeneró los 40 casos y cambió 15 semillas para conservar la curva (4, 6, 7 | 6, 7, 8 | 9, 10, 11, 13), el arma en 08, 09 y 10, y que las premisas encajen.
+  - **Cobertura:** 20 casos tienen baño y 15 tienen bañera (37,5 %).
+  - **Tests:** se actualizaron 2 aserciones de `tools/test/map_rules_test.dart`, por la tabla del Mundo 1 con `bano`.
+  - **Revisión:** el arquitecto miró mansion-01 en web a 360×740 y su conteo propio dio 0 problemas.
+- **Archivos tocados:** `tools/data/mundos/` (los 3 archivos), los 40 JSON de `app/assets/cases/`, `tools/test/map_rules_test.dart`, el informe `production/revisiones/2026-11-05-contenido-mundo1-reglas-mapa.md` y la versión.
+- **Pruebas:** tools 335 y app 627, todas pasan; analyze limpio.
+- **APK:** `APKs/enigmatrix-0.7.1+8-arm64.apk` (y `-armeabi-v7a`), con `ENX_DEV=true`.
+- **Ojo:** algunas pruebas de `tools/test/qa_mapa_independiente_test.dart` dependen del contenido de mansion-01, 03 y 04. Si se cambian esas semillas, pueden fallar.
+
 ## 05-11-2026 · cuenta secundaria · resultados de la prueba de juego n.º 1 → 0.7.0+7
 
 - **Lo que trajo Alejandro de sus probadores:**
@@ -33,7 +47,7 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - **Pruebas:** tools 335 y app 627, todas pasan; analyze limpio en las dos carpetas.
 - **APK:** `APKs/enigmatrix-0.7.0+7-arm64.apk` (y `-armeabi-v7a`), con `ENX_DEV=true` y compilado en la carpeta principal.
 - **Pendiente o dudas para la otra cuenta:**
-  - **Bañera:** la Mansión no tiene baño, así que no aparece. Agregar un baño al Mundo 1 lo decide Alejandro.
+  - **Bañera:** resuelto en la 0.7.1+8 (entrada de arriba).
   - **Repetición de muebles:** mesas y sillas pueden repetirse mucho; mansion-04 tiene 7 mesas. Falta preguntar a Alejandro si quiere un tope por habitación.
   - **Élite:** con las reglas nuevas el generador no saca casos 16×16. Ya estaba fuera de la V1.
   - **Interruptor sin uso:** `tools/test/support/regeneracion_pendiente.dart` ya está en `false` y se puede limpiar.

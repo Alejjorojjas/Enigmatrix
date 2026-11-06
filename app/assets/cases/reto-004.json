@@ -1,347 +1,331 @@
 {
   "caseId": "reto-004",
-  "mapId": "mapa-intermedio-s110",
+  "mapId": "mapa-intermedio-s110-v2",
   "map": {
-    "id": "mapa-intermedio-s110",
+    "id": "mapa-intermedio-s110-v2",
     "name_es": "La Mansión",
     "size": 9,
     "areas": [
       {
-        "id": "estudio",
-        "name_es": "el Estudio",
-        "cells": [
-          36,
-          37,
-          45,
-          46,
-          54,
-          55,
-          56,
-          57,
-          63,
-          64,
-          65,
-          66,
-          72,
-          73,
-          74
-        ]
-      },
-      {
-        "id": "biblioteca",
-        "name_es": "la Biblioteca",
-        "cells": [
-          8,
-          17,
-          26,
-          34,
-          35,
-          42,
-          43,
-          44,
-          51,
-          52,
-          53,
-          61,
-          62,
-          71
-        ]
-      },
-      {
-        "id": "sala-de-musica",
-        "name_es": "la Sala de Música",
-        "cells": [
-          18,
-          27,
-          28,
-          29,
-          38,
-          39,
-          47,
-          48
-        ]
-      },
-      {
-        "id": "comedor",
-        "name_es": "el Comedor",
-        "cells": [
-          22,
-          23,
-          24,
-          31,
-          32,
-          33,
-          40,
-          41,
-          49,
-          58,
-          67,
-          75,
-          76
-        ]
-      },
-      {
-        "id": "invernadero",
-        "name_es": "el Invernadero",
-        "cells": [
-          50,
-          59,
-          60,
-          68,
-          69,
-          70,
-          77,
-          78,
-          79,
-          80
-        ]
-      },
-      {
         "id": "vestibulo",
         "name_es": "el Vestíbulo",
         "cells": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          12,
-          13,
-          14,
-          15,
-          16,
-          25
+          21,
+          22,
+          30,
+          31,
+          32,
+          39,
+          40,
+          41,
+          42,
+          49,
+          50,
+          51,
+          59,
+          60
         ]
       },
       {
         "id": "bodega",
         "name_es": "la Bodega",
         "cells": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          14,
+          15,
+          16,
+          17,
+          23,
+          24,
+          25,
+          33,
+          34
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          26,
+          35,
+          43,
+          44,
+          52,
+          53,
+          61,
+          62,
+          68,
+          69,
+          70,
+          71,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          38,
+          47,
+          48,
+          55,
+          56,
+          57,
+          58,
+          65,
+          66,
+          67,
+          75,
+          76,
+          77,
+          78
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          27,
+          36,
+          37,
+          45,
+          46,
+          54,
+          63,
+          64,
+          72,
+          73,
+          74
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
           0,
+          1,
+          2,
+          3,
           9,
           10,
           11,
+          12,
+          13,
+          18,
           19,
           20,
-          21,
-          30
+          28,
+          29
         ]
       }
     ],
     "objects": [
       {
-        "id": "mesa-1",
-        "type": "mesa",
+        "id": "alfombra-1",
+        "type": "alfombra",
         "cells": [
-          74,
-          73
+          50,
+          41
         ]
       },
       {
-        "id": "silla-2",
-        "type": "silla",
+        "id": "planta-2",
+        "type": "planta",
         "cells": [
-          37
+          21
         ]
       },
       {
         "id": "silla-3",
         "type": "silla",
         "cells": [
-          66
+          59
         ]
       },
       {
-        "id": "planta-4",
-        "type": "planta",
-        "cells": [
-          65
-        ]
-      },
-      {
-        "id": "armario-5",
-        "type": "armario",
-        "cells": [
-          17
-        ]
-      },
-      {
-        "id": "armario-6",
-        "type": "armario",
-        "cells": [
-          62
-        ]
-      },
-      {
-        "id": "alfombra-7",
-        "type": "alfombra",
-        "cells": [
-          53,
-          44
-        ]
-      },
-      {
-        "id": "silla-8",
+        "id": "silla-4",
         "type": "silla",
         "cells": [
-          42
+          32
+        ]
+      },
+      {
+        "id": "caja-5",
+        "type": "caja",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "caja-6",
+        "type": "caja",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "mesa-7",
+        "type": "mesa",
+        "cells": [
+          6,
+          15
+        ]
+      },
+      {
+        "id": "mesa-8",
+        "type": "mesa",
+        "cells": [
+          14,
+          23
         ]
       },
       {
         "id": "piano-9",
         "type": "piano",
         "cells": [
-          38
+          70
         ]
       },
       {
-        "id": "alfombra-10",
-        "type": "alfombra",
-        "cells": [
-          48,
-          39
-        ]
-      },
-      {
-        "id": "planta-11",
+        "id": "planta-10",
         "type": "planta",
         "cells": [
-          27
+          61
+        ]
+      },
+      {
+        "id": "chimenea-11",
+        "type": "chimenea",
+        "cells": [
+          80
         ]
       },
       {
         "id": "alfombra-12",
         "type": "alfombra",
         "cells": [
-          33,
-          24
+          52,
+          53
         ]
       },
       {
-        "id": "mesa-13",
-        "type": "mesa",
-        "cells": [
-          41,
-          32
-        ]
-      },
-      {
-        "id": "silla-14",
+        "id": "silla-13",
         "type": "silla",
         "cells": [
-          40
+          75
+        ]
+      },
+      {
+        "id": "planta-14",
+        "type": "planta",
+        "cells": [
+          38
         ]
       },
       {
         "id": "mesa-15",
         "type": "mesa",
         "cells": [
-          76,
-          67
+          65,
+          66
         ]
       },
       {
         "id": "mesa-16",
         "type": "mesa",
         "cells": [
-          50,
-          59
+          58,
+          57
         ]
       },
       {
         "id": "planta-17",
         "type": "planta",
         "cells": [
-          78
+          64
         ]
       },
       {
-        "id": "mesa-18",
-        "type": "mesa",
-        "cells": [
-          69,
-          60
-        ]
-      },
-      {
-        "id": "silla-19",
+        "id": "silla-18",
         "type": "silla",
         "cells": [
-          25
+          27
         ]
       },
       {
-        "id": "perchero-20",
-        "type": "perchero",
+        "id": "alfombra-19",
+        "type": "alfombra",
         "cells": [
-          5
+          45,
+          46
+        ]
+      },
+      {
+        "id": "silla-20",
+        "type": "silla",
+        "cells": [
+          73
         ]
       },
       {
         "id": "silla-21",
         "type": "silla",
         "cells": [
+          18
+        ]
+      },
+      {
+        "id": "planta-22",
+        "type": "planta",
+        "cells": [
           2
         ]
       },
       {
-        "id": "alfombra-22",
+        "id": "alfombra-23",
         "type": "alfombra",
         "cells": [
-          4,
-          13
+          13,
+          12
         ]
       },
       {
-        "id": "mesa-23",
-        "type": "mesa",
+        "id": "piano-24",
+        "type": "piano",
         "cells": [
-          21,
-          20
-        ]
-      },
-      {
-        "id": "mesa-24",
-        "type": "mesa",
-        "cells": [
-          9,
-          0
-        ]
-      },
-      {
-        "id": "armario-25",
-        "type": "armario",
-        "cells": [
-          10
+          19
         ]
       }
     ],
     "weapons": [
       {
-        "id": "atizador",
-        "name_es": "el atizador de la chimenea",
-        "category": "contundente",
-        "area": "sala-de-musica"
-      },
-      {
         "id": "abrecartas",
         "name_es": "el abrecartas",
         "category": "cortante",
-        "area": "estudio"
+        "area": "vestibulo"
       },
       {
         "id": "tijeras",
         "name_es": "las tijeras de podar",
         "category": "cortante",
-        "area": "biblioteca"
+        "area": "invernadero"
+      },
+      {
+        "id": "atizador",
+        "name_es": "el atizador de la chimenea",
+        "category": "contundente",
+        "area": "salon"
       }
     ]
   },
   "difficulty": "intermedio",
   "hasWeapon": false,
-  "victim": "c4",
+  "victim": "c6",
   "characters": [
     {
       "id": "c1",
@@ -391,44 +375,66 @@
   ],
   "clues": [
     {
-      "type": "beside_object",
-      "subject": "c1",
-      "group": "perchero"
-    },
-    {
-      "type": "only_one_on",
-      "subject": "c2",
-      "group": "alfombra"
-    },
-    {
       "type": "compound",
-      "subject": "c3",
+      "subject": "c1",
       "parts": [
         {
           "type": "in_area",
-          "subject": "c3",
-          "area": "biblioteca"
+          "subject": "c1",
+          "area": "sala-de-musica"
         },
         {
           "type": "beside_object",
-          "subject": "c3",
-          "group": "armario"
+          "subject": "c1",
+          "group": "alfombra"
         }
       ]
     },
     {
-      "type": "beside_object",
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c3",
+      "area": "salon"
+    },
+    {
+      "type": "compound",
       "subject": "c4",
-      "group": "planta"
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "comedor"
+        },
+        {
+          "type": "on_object",
+          "subject": "c4",
+          "group": "silla"
+        }
+      ]
     },
     {
       "type": "compound",
       "subject": "c5",
       "parts": [
         {
-          "type": "beside_object",
+          "type": "in_area",
           "subject": "c5",
-          "group": "silla"
+          "area": "comedor"
         },
         {
           "type": "beside_object",
@@ -440,21 +446,21 @@
     {
       "type": "beside_object",
       "subject": "c6",
-      "group": "piano"
+      "group": "alfombra"
     },
     {
       "type": "compound",
       "subject": "c7",
       "parts": [
         {
-          "type": "in_area",
+          "type": "on_object",
           "subject": "c7",
-          "area": "estudio"
+          "group": "silla"
         },
         {
           "type": "beside_object",
           "subject": "c7",
-          "group": "silla"
+          "group": "alfombra"
         }
       ]
     },
@@ -465,12 +471,12 @@
         {
           "type": "in_area",
           "subject": "c8",
-          "area": "invernadero"
+          "area": "salon"
         },
         {
           "type": "beside_object",
           "subject": "c8",
-          "group": "mesa"
+          "group": "piano"
         }
       ]
     },
@@ -481,32 +487,32 @@
         {
           "type": "in_area",
           "subject": "c9",
-          "area": "estudio"
+          "area": "comedor"
         },
         {
           "type": "beside_object",
           "subject": "c9",
-          "group": "mesa"
+          "group": "silla"
         }
       ]
     }
   ],
   "solution": {
     "positions": {
-      "c1": 6,
-      "c2": 13,
+      "c1": 3,
+      "c2": 16,
       "c3": 26,
-      "c4": 28,
-      "c5": 43,
-      "c6": 47,
-      "c7": 57,
-      "c8": 68,
-      "c9": 72
+      "c4": 27,
+      "c5": 37,
+      "c6": 49,
+      "c7": 59,
+      "c8": 69,
+      "c9": 74
     },
-    "murderer": "c6"
+    "murderer": "c7"
   },
   "metrics": {
-    "deductionSteps": 5,
+    "deductionSteps": 7,
     "maxTier": 3,
     "clueCount": 9
   },

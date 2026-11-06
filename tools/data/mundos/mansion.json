@@ -61,7 +61,9 @@
     {"id": "vestibulo", "name_es": "el Vestíbulo",
      "furniture": ["planta", "alfombra", "armario", "silla", "sillon", "perchero"]},
     {"id": "sala-de-musica", "name_es": "la Sala de Música",
-     "furniture": ["piano", "sillon", "silla", "alfombra", "planta"]}
+     "furniture": ["piano", "sillon", "silla", "alfombra", "planta"]},
+    {"id": "bano", "name_es": "el Baño",
+     "furniture": ["banera", "planta", "alfombra"]}
   ],
   "weapons": [
     {"id": "candelabro", "name_es": "el candelabro", "category": "contundente"},

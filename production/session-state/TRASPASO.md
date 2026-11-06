@@ -31,7 +31,7 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 
 ## Estado al 05-11-2026 (noche)
 
-- **Versión actual:** 0.7.0+7. Sobre la 0.6.0+6 (textos en `.arb`, valores de juego en configuración y herramientas de desarrollo tras `ENX_DEV`) trae lo que se decidió con la prueba de juego n.º 1:
+- **Versión actual:** 0.7.1+8 (la 0.7.0+7 más un baño en la Mansión, con bañera en 15 de los 40 casos). Sobre la 0.6.0+6 (textos en `.arb`, valores de juego en configuración y herramientas de desarrollo tras `ENX_DEV`) trae lo que se decidió con la prueba de juego n.º 1:
   - muebles sin ambigüedad y habitaciones coherentes (ADR-0015);
   - objetos nuevos: perchero, bañera, nevera y chimenea;
   - Mundo 1 y los 30 retos regenerados.
@@ -40,9 +40,8 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 
 ## Qué sigue, en orden
 
-1. **Que Alejandro pruebe la 0.7.0+7** y TalkBack en su teléfono.
+1. **Que Alejandro pruebe la 0.7.1+8** y TalkBack en su teléfono.
 2. **Decisiones pequeñas de contenido:**
-   - si el Mundo 1 lleva un baño (hoy la bañera nunca aparece);
    - si se pone un tope a mesas y sillas repetidas por habitación (mansion-04 tiene 7 mesas).
 3. **Planear las etapas 5 (Firebase) y 6 (Google Play)** con Alejandro. Preguntas abiertas: 6, 7, 8, 12, 16, 17, 18 y 23 (ver la sección 5 de la auditoría en `production/revisiones/2026-11-04-auditoria-proyecto.md`).
 4. **Restos menores:**

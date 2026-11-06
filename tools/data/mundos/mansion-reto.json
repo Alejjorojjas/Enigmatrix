@@ -89,7 +89,7 @@
     {
       "id": "reto-008",
       "dificultad": "casual",
-      "semilla": 138,
+      "semilla": 124,
       "arma": false,
       "titulo": {
         "es": "Cena a oscuras"
@@ -161,7 +161,7 @@
     {
       "id": "reto-014",
       "dificultad": "intermedio",
-      "semilla": 161,
+      "semilla": 119,
       "arma": true,
       "titulo": {
         "es": "El sombrero olvidado"
@@ -185,7 +185,7 @@
     {
       "id": "reto-016",
       "dificultad": "casual",
-      "semilla": 141,
+      "semilla": 151,
       "arma": false,
       "titulo": {
         "es": "Tarde de poesía"
@@ -233,7 +233,7 @@
     {
       "id": "reto-020",
       "dificultad": "intermedio",
-      "semilla": 155,
+      "semilla": 135,
       "arma": true,
       "titulo": {
         "es": "El paraguas negro"
@@ -341,7 +341,7 @@
     {
       "id": "reto-029",
       "dificultad": "casual",
-      "semilla": 149,
+      "semilla": 174,
       "arma": false,
       "titulo": {
         "es": "El invitado madrugador"

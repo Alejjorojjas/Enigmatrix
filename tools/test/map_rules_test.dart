@@ -469,6 +469,7 @@ void main() {
           'perchero'
         },
         'sala-de-musica': {'piano', 'sillon', 'silla', 'alfombra', 'planta'},
+        'bano': {'banera', 'planta', 'alfombra'},
       };
       expect({for (final r in world.rooms) r.id}, pactada.keys.toSet());
       for (final r in world.rooms) {
@@ -586,7 +587,9 @@ void main() {
       }
     });
 
-    test('perchero, nevera y chimenea aparecen en La Mansión (300 mapas)', () {
+    test(
+        'perchero, nevera, chimenea y bañera aparecen en La Mansión (300 mapas)',
+        () {
       final vistos = <ObjectType>{};
       for (var seed = 1; seed <= 300; seed++) {
         for (final o in gen([6, 8, 9][seed % 3], seed, world: world).objects) {
@@ -600,8 +603,8 @@ void main() {
             ObjectType.nevera,
             ObjectType.chimenea,
           ]));
-      // La Mansión no tiene baño: no hay bañeras (recomendación en el informe).
-      expect(vistos, isNot(contains(ObjectType.banera)));
+      // La Mansión tiene baño (05-11-2026): la bañera aparece.
+      expect(vistos, contains(ObjectType.banera));
     });
 
     test('los objetos nuevos ocupan 1 casilla y bloquean', () {
