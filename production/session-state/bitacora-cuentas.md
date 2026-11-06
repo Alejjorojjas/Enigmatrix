@@ -11,22 +11,33 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
-## 05-11-2026 · cuenta secundaria · resultados de la prueba de juego n.º 1 (EN CURSO)
+## 05-11-2026 · cuenta secundaria · resultados de la prueba de juego n.º 1 → 0.7.0+7
 
 - **Lo que trajo Alejandro de sus probadores:**
   - **Dificultad:** "está bien por ahora". Los rangos de `tools/lib/src/difficulty_ranges.dart` se mantienen.
-  - **Confusión de muebles:** "silla" se confunde con el sillón y el sofá, porque casi todos los casos los mezclan (8 de 10 del Mundo 1, 27 de 30 retos y 18 de 21 casos de prueba).
-  - **Coherencia de las habitaciones:** les extrañó ver dos camas en una habitación o una cama en una cocina.
-- **Decisión de Alejandro:**
-  - un solo tipo por familia de muebles parecidos en cada mapa, revisando todas las familias, no solo los asientos;
-  - objetos nuevos coherentes con cada habitación (perchero y similares);
-  - coherencia por habitación.
-- **Plan:**
-  1. `puzzle-engineer`: reglas en el generador, objetos nuevos, puerta de contenido y spec 16.
-  2. `frontend`: dibujos de los objetos nuevos en las dos pieles.
-  3. `contenido-puzzles`: regenerar el Mundo 1 y los 30 retos con la misma dificultad.
-  4. QA, revisión visual, 0.7.0+7, APK, commit y push.
-- Si esta entrada sigue "EN CURSO", la sesión se cortó: revisa `git status` y `git diff` en la rama `claude/traspaso-ronda-4-3b-2b34df`.
+  - **Muebles:** confundían "silla" con el sillón y el sofá.
+  - **Habitaciones:** les extrañaron dos camas en una misma habitación y "una cama en una cocina".
+- **Decisión de Alejandro (ADR-0015):**
+  - un solo tipo por familia de muebles parecidos en cada mapa (asientos, superficies, plantas, almacenaje, electrodomésticos);
+  - objetos únicos por habitación;
+  - cada mueble solo en las habitaciones donde tiene sentido;
+  - objetos nuevos: perchero, bañera, nevera y chimenea.
+- **Qué se hizo:**
+  - **Motor (`puzzle-engineer`):** `tools/lib/src/map_rules.dart`, generador, puerta de contenido y spec 16, sección 1.3.1.
+  - **Dibujos (`frontend`):** los 4 objetos nuevos en las dos pieles. Además, la silla quedó de madera sin cojín, la barra con tapa de piedra y la alfombra con guarda.
+  - **Contenido (`contenido-puzzles`):** regeneró los 10 casos del Mundo 1 y los 30 retos. Cambió semillas en 6 casos y 3 retos para conservar la curva (4, 6, 8 | 6, 7, 8 | 9, 10, 12, 14) y para que cada premisa encaje con su mapa. Informe en `production/revisiones/2026-11-05-contenido-mundo1-reglas-mapa.md`.
+  - **QA independiente:** APROBADO, con el test propio `tools/test/qa_mapa_independiente_test.dart`.
+  - **Revisión visual del arquitecto:** lámina de los 18 muebles (2 pieles × 2 modos) y el caso mansion-04 en web a 360×740, en Papel claro e Ilustrada oscura.
+  - **Versión:** 0.7.0+7.
+- **Commits:** `c84e55f` (motor), `7c9f7d6` (contenido, dibujos y versión) y el de cierre.
+- **Pruebas:** tools 335 y app 627, todas pasan; analyze limpio en las dos carpetas.
+- **APK:** `APKs/enigmatrix-0.7.0+7-arm64.apk` (y `-armeabi-v7a`), con `ENX_DEV=true` y compilado en la carpeta principal.
+- **Pendiente o dudas para la otra cuenta:**
+  - **Bañera:** la Mansión no tiene baño, así que no aparece. Agregar un baño al Mundo 1 lo decide Alejandro.
+  - **Repetición de muebles:** mesas y sillas pueden repetirse mucho; mansion-04 tiene 7 mesas. Falta preguntar a Alejandro si quiere un tope por habitación.
+  - **Élite:** con las reglas nuevas el generador no saca casos 16×16. Ya estaba fuera de la V1.
+  - **Interruptor sin uso:** `tools/test/support/regeneracion_pendiente.dart` ya está en `false` y se puede limpiar.
+  - **Banco de pruebas y tutorial:** no se regeneraron y están exentos de la puerta de contenido.
 
 ## 05-11-2026 · cuenta secundaria · medición de FPS
 

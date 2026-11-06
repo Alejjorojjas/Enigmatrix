@@ -4,13 +4,14 @@
 
 ## Estado hoy (05-11-2026, noche)
 
-- **Versión actual: `0.6.0+6`** (ronda 4.3b), con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.6.0+6-arm64.apk`, compilado con `ENX_DEV=true`. Además de lo de la 0.5.0+5 (dos pieles, Mundo 1 y reto DEMO, tipografías incluidas y accesibilidad básica), trae:
-  - textos centralizados en `app/lib/l10n/app_es.arb` (H-63);
-  - valores de juego en `app/assets/config/game_config.json` (H-65);
-  - banco de pruebas, feedback y medidor de FPS solo con `--dart-define=ENX_DEV=true` (H-66).
+- **Versión actual: `0.7.0+7`**, con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.7.0+7-arm64.apk`, compilado con `ENX_DEV=true`. Sobre la 0.6.0+6 trae lo que se decidió con la prueba de juego n.º 1 (ADR-0015):
+  - muebles sin ambigüedad (un tipo por familia en cada mapa);
+  - habitaciones coherentes;
+  - perchero, bañera, nevera y chimenea;
+  - el Mundo 1 y los 30 retos regenerados.
 
-  Pruebas: tools 279 y app 625, todas pasan; analyze limpio. Detalle en [bitacora-cuentas.md](bitacora-cuentas.md).
-- **Prueba de juego n.º 1:** con la versión **0.3.0+3 congelada** (ADR-0014), con 3 a 5 personas y la guía en [guia-prueba-1.md](../prueba-de-juego/guia-prueba-1.md). La hace Alejandro; todavía no hay resultados.
+  Pruebas: tools 335 y app 627, todas pasan. FPS: 60 estables en el Galaxy A52 de Alejandro (medido con la 0.6.0+6). Detalle en [bitacora-cuentas.md](bitacora-cuentas.md).
+- **Prueba de juego n.º 1: HECHA** con la 0.3.0+3. Resultados: la dificultad está bien por ahora (los rangos se mantienen); hubo confusión silla/sillón/sofá y extrañeza con las habitaciones, ya resuelto en la 0.7.0+7 (ADR-0015).
 - **Hecho del plan** ([production/planes/2026-11-05-etapas-3-y-4.md](../planes/2026-11-05-etapas-3-y-4.md)): rondas 3.1, 3.2, 4.1, 4.2, 4.3a y 4.3b.
 - **Pendiente técnico:**
   - Probar TalkBack real. (FPS medidos el 05-11-2026: 60 fps estables en el Galaxy A52 de Alejandro.)
@@ -20,11 +21,12 @@
 - **Protección:** repositorio privado `https://github.com/Alejjorojjas/Enigmatrix`. Los commits van solo con la autoría de Alejandro. Siguen sin autorizar: sacar el proyecto de OneDrive, versionar `app/pubspec.lock` y cambiar la firma.
 - **Decisiones del 05-11-2026:**
   - ADR-0013: dos pieles por código en la V1.
+  - ADR-0015: muebles sin ambigüedad y habitaciones coherentes (tras la prueba de juego).
   - ADR-0014: V1 hasta Intermedio, Mundo 1 con 10 casos y 30 días de reto, solo Android, sin arrastrar retratos, el arma como quedó (pregunta 19) y tipografías incluidas.
 - **Preguntas abiertas:** 6 (premium), 7 (hora del reto), 8 (víctima), 12 (ayudas y puntos), 16 (edad), 17 (identidad legal), 18 (qué ve la tienda) y 23 (mundos bloqueados; hoy se muestran como "Próximamente"). Antes de publicar también falta decidir el servidor (etapa 5) y los trámites de tienda (etapa 6).
 - **Próximos pasos:**
-  1. Alejandro hace la prueba de juego con la 0.3.0+3 y trae los resultados.
-  2. Con los resultados de la prueba: recalibrar los rangos de dificultad y, si hace falta, regenerar casos.
+  1. Alejandro prueba la 0.7.0+7 y TalkBack.
+  2. Decidir si el Mundo 1 lleva baño (para la bañera) y si se pone un tope a mesas y sillas repetidas por habitación.
   3. Planear las etapas 5 (Firebase) y 6 (tiendas) y responder las preguntas abiertas de publicación.
 
 ### Preguntas abiertas (sin decidir; ninguna se resuelve en los documentos)
