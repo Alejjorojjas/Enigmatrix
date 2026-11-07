@@ -5,7 +5,7 @@
 > ACTUALIZACIÓN INTERNA 04-11-2026 (auditoría 04-11-2026, hallazgos H-06, H-07, H-08 y H-09). Este borrador NO está listo para publicar y esta nota se borra al publicar, igual que la nota interna de abajo. Lo que sigue pendiente:
 >
 > - **Nombre del responsable y correo de privacidad: SIGUEN SIN COMPLETARSE.** Dependen de la decisión 17 (identidad legal), que todavía no ha tomado Alejandro (**PENDIENTE DE DECISIÓN**, auditoría 04-11-2026, pregunta 17). No se rellenan los corchetes hasta entonces.
-> - **Edad mínima:** el texto dice "mayores de 12 años". **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 16, H-09): `docs/15-legal.md` dice a la vez "mayores de 12" y "no dirigido a menores de 13". Alejandro decide una sola edad y este texto se alinea después.
+> - **Edad mínima:** el texto dice "mayores de 12 años". **DECIDIDO 06-11-2026** (pregunta 16, H-09): 13 años o más. El texto ya está alineado.
 > - **Tipografías:** las secciones "Qué datos recolectamos" y "Conexión a internet" dicen que no se recolecta nada y que la descarga de tipografías "no envía datos personales". La app sí descarga las tipografías de Google Fonts (`google_fonts`) la primera vez que se abre, y con esa conexión la dirección IP del dispositivo llega a Google; según lo investigado, un tribunal alemán (2022) la trató como dato personal (H-07). Hay que revisar esas dos frases, o empaquetar las tipografías dentro de la app para que no haya descarga; ese cambio de código no está hecho.
 > - **Enlace dentro de la app:** hoy la app no tiene ningún botón que abra esta política (H-06), y Apple exige uno.
 > - **Solo está en español.** Falta la versión en inglés (`docs/07-arquitectura.md` la prevé).
@@ -46,7 +46,7 @@ primera vez que se abre. Esa conexión no envía datos personales.
 
 ## Menores de edad
 
-Enigmatrix está dirigida a mayores de 12 años y no recolecta datos de
+Enigmatrix está dirigida a personas de 13 años o más y no recolecta datos de
 ningún usuario, incluidos menores.
 
 ## Cambios a esta política

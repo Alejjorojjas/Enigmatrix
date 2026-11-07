@@ -20,7 +20,7 @@ Este documento aterriza Enigmatrix en pantallas concretas de interfaz para que d
 > ACTUALIZACIÓN 04-11-2026 (H-31): **la navegación de abajo quedó SUPERADA** y se conserva como historial. Lo que hace la app hoy (`app/lib/src/ui/home_shell.dart` y las rutas de `app/lib/main.dart`):
 >
 > - **Barra inferior de 5 pestañas, solo íconos, sin texto:** Inicio, Mundos, Reto, Ranking y Perfil. La activa se enmarca. Decisión consciente del 12-07-2026 (referencia: la barra de Duolingo, versión papel).
-> - **Mundos** muestra los 5 mundos; solo La Mansión está desbloqueada y los otros cuatro se ven con candado. Contradice el "solo mundos desbloqueados visibles" de la pantalla 14 de este documento; **PENDIENTE DE DECISIÓN (pregunta 23, nueva):** si se muestran los mundos bloqueados o solo los desbloqueados.
+> - **Mundos** muestra los 5 mundos; solo La Mansión está desbloqueada y los otros cuatro se ven con candado. Contradecía el "solo mundos desbloqueados visibles" de la pantalla 14 de este documento; **DECIDIDO 06-11-2026 (pregunta 23):** se muestran los mundos bloqueados con candado. ~~Antes: PENDIENTE DE DECISIÓN.~~
 > - **Perfil** da acceso a Tienda, Premium, Cómo jugar y Configuración. Tienda, Premium y Configuración son hojas modales que suben desde abajo (no pantallas), y "Cómo jugar" es un diálogo de 5 páginas. No hay menú lateral.
 > - **No hay barra superior persistente.** Las vidas simuladas aparecen solo en Inicio.
 > - **Rutas:** carga (`/`), `/home` (las 5 pestañas), `/casos` (lista de casos), `/play/:id` (partida, con `?tutorial=1` para el tutorial jugable). Atrás en la partida y "Continuar" en la victoria vuelven a `/` y pasan otra vez por la pantalla de carga.
@@ -231,9 +231,11 @@ Muestra:
 - lista o carrusel de mundos
 - nombre del mundo
 - miniatura del mundo
-- solo mundos desbloqueados visibles
+- ~~solo mundos desbloqueados visibles~~ (SUPERADO 06-11-2026: se ven también los bloqueados, con candado)
 
-> ACTUALIZACIÓN 04-11-2026 (H-31): la app de hoy muestra los 5 mundos, con los 4 bloqueados atenuados y con candado. **PENDIENTE DE DECISIÓN (pregunta 23, nueva):** si se muestran los mundos bloqueados (versión de la app de hoy) o solo los desbloqueados (versión de este documento). Alejandro todavía no ha decidido.
+> ACTUALIZACIÓN 06-11-2026: **DECIDIDO** (auditoría, pregunta 23): los mundos bloqueados **se muestran con candado**. Es lo que ya hace la app de hoy (5 mundos, los 4 bloqueados atenuados y con candado); la función y la línea "solo mundos desbloqueados visibles" de esta pantalla quedan superadas.
+>
+> ACTUALIZACIÓN 04-11-2026 (H-31): la app de hoy muestra los 5 mundos, con los 4 bloqueados atenuados y con candado. ~~PENDIENTE DE DECISIÓN (pregunta 23, nueva)~~ (decidida el 06-11-2026, ver arriba).
 
 ### 15. Detalle de mundo
 Funcion:
@@ -385,7 +387,7 @@ No muestra:
 >
 > (SUPERADO 04-11-2026) Versión anterior, conservada como historial: Antes pendiente (auditoría 04-11-2026, pregunta 5, H-26): qué pasa al quedar con 0 vidas.
 >
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 6, H-26): vidas de Premium: ilimitadas (`docs/01-mvp-v1.md`) o tope de 5 con recarga instantánea (`docs/08-balance.md`).
+> **DECIDIDO 06-11-2026** (auditoría, pregunta 6, H-26): vidas de Premium ilimitadas. ~~(SUPERADO) Versión con tope de 5 y recarga instantánea de `docs/08-balance.md`.~~
 
 Funcion:
 - explicar estado de vidas
@@ -494,7 +496,7 @@ Muestra:
 
 > ACTUALIZACIÓN 04-11-2026: hoy es una pestaña simulada (DEMO) con racha de mentira y un botón que abre un caso elegido por la fecha del teléfono, de cualquier dificultad y repetible.
 >
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 7, H-27): hora en que cambia el reto diario ("día local" en el doc 03 contra hora del servidor en el doc 08).
+> **DECIDIDO 06-11-2026** (auditoría, pregunta 7, H-27): el reto diario cambia a la medianoche local de cada jugador, mismo caso para todos los de esa fecha (ver `docs/03-reglas-del-juego.md`, "Reto diario").
 
 Funcion:
 - centro de informacion del reto del dia
@@ -677,7 +679,7 @@ No muestra aun:
 
 > ACTUALIZACIÓN 04-11-2026: hoy es una hoja modal DEMO desde Perfil.
 >
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 6, H-26): vidas de Premium (ilimitadas o tope de 5 con recarga instantánea).
+> **DECIDIDO 06-11-2026** (auditoría, pregunta 6, H-26): vidas de Premium ilimitadas. ~~(SUPERADO) Tope de 5 con recarga instantánea.~~
 
 Funcion:
 - vender planes premium

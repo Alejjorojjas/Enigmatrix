@@ -42,7 +42,7 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 
 1. **Que Alejandro pruebe la 0.7.2+9** y TalkBack en su teléfono.
 2. **Decisiones de contenido:** ya resueltas (baño y tope de 2 por habitación).
-3. **Planear las etapas 5 (Firebase) y 6 (Google Play)** con Alejandro. Preguntas abiertas: 6, 7, 8, 12, 16, 17, 18 y 23 (ver la sección 5 de la auditoría en `production/revisiones/2026-11-04-auditoria-proyecto.md`).
+3. **Etapas 5 (Firebase) y 6 (Google Play):** el plan está en `production/planes/2026-11-06-etapas-5-y-6.md`. El 06-11-2026 se decidieron las preguntas 6, 7, 8, 16, 17, 18 y 23. Falta que Alejandro responda la sección 4 del plan (partida sin conexión, iPhone, orden, puntos y ayudas). La 19 (arma) ya estaba decidida en el ADR-0014. Después viene el ADR-0016 y la 5A.
 4. **Restos menores:**
    - de H-66: la versión con `package_info_plus`, el vocabulario "Caso Nº"/"Expediente", una pantalla de error con Reintentar y lints más estrictos;
    - quitar el interruptor `tools/test/support/regeneracion_pendiente.dart`.

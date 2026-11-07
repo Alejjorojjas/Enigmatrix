@@ -110,7 +110,7 @@ El jugador puede ver varias tarjetas al mismo tiempo.
 > ACTUALIZACIÓN 04-11-2026 (H-31): **la navegación de abajo quedó SUPERADA** y se conserva como historial. Lo que hace la app hoy (`app/lib/src/ui/home_shell.dart` y las rutas de `app/lib/main.dart`):
 >
 > - **Barra inferior de 5 pestañas, solo íconos, sin texto:** Inicio, Mundos, Reto, Ranking y Perfil. La pestaña activa se enmarca. Es una decisión consciente del 12-07-2026 (referencia: la barra de Duolingo, versión papel).
-> - **Mundos:** muestra los 5 mundos. Solo La Mansión está desbloqueada (botón "Entrar", que abre la lista de casos en `/casos`); los otros cuatro se ven bloqueados con un candado. Esto contradice el "solo mundos desbloqueados visibles" de `docs/06-pantallas-ui.md`. **PENDIENTE DE DECISIÓN (pregunta 23, nueva):** si se muestran los mundos bloqueados o solo los desbloqueados. Alejandro todavía no ha decidido cuál de las dos versiones quiere.
+> - **Mundos:** muestra los 5 mundos. Solo La Mansión está desbloqueada (botón "Entrar", que abre la lista de casos en `/casos`); los otros cuatro se ven bloqueados con un candado. Esto contradice el "solo mundos desbloqueados visibles" de `docs/06-pantallas-ui.md`. **DECIDIDO 06-11-2026 (pregunta 23):** los mundos bloqueados se muestran con candado; lo que hace la app de hoy es lo correcto y el "solo mundos desbloqueados visibles" del doc 06 queda SUPERADO. ~~Antes: PENDIENTE DE DECISIÓN.~~
 > - **Perfil** contiene el nombre editable, estadísticas (casi todas simuladas) y la entrada a **Tienda**, **Premium**, **Cómo jugar** y **Configuración**. Tienda, Premium y Configuración son hojas que suben desde abajo, no pantallas; "Cómo jugar" abre el diálogo de 5 páginas. No hay menú lateral.
 > - **No hay barra superior persistente.** Las vidas simuladas se ven solo en Inicio. El nombre se ve en Perfil; la bandera es un dato fijo simulado.
 > - **Flujo de pantallas completas:** carga (`/`) → `/home` → `/casos` (lista de casos del mundo) → `/play/:id` (partida). El botón Atrás de la partida y el botón "Continuar" de la victoria llevan a `/`, es decir, pasan otra vez por la pantalla de carga (unos 1,7 s) antes de volver a Inicio.
@@ -435,7 +435,7 @@ No muestra competencia global del mundo.
 
 ## Reto diario
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 7, H-27): hora en que cambia el reto diario: `docs/03-reglas-del-juego.md` dice "día local" y `docs/08-balance.md` dice hora del servidor. No se decide aquí.
+> **DECIDIDO 06-11-2026** (auditoría, pregunta 7, H-27): el reto diario cambia a la medianoche local de cada jugador, mismo caso para todos los de esa fecha (ver `docs/03-reglas-del-juego.md`, sección "Reto diario"). ~~(SUPERADO) Antes: "día local" del doc 03 contra hora del servidor del doc 08.~~
 >
 > Hoy el Reto es una simulación DEMO: la pestaña "Reto" muestra una racha de mentira y un botón "Comenzar intento oficial" que abre un caso elegido por la fecha del teléfono (cualquier dificultad, repetible). No hay advertencia de intento oficial, ranking ni cierre a medianoche reales.
 

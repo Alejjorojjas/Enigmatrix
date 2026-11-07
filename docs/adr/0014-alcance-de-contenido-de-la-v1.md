@@ -34,3 +34,8 @@
 
 - **Pregunta 19 (arma homicida), decidida por Alejandro:** se mantiene como quedó en la ronda 3.2. El arma aparece en 3 de los 4 casos Intermedio del Mundo 1 (mansion-08 a mansion-10) y en 9 de los 30 retos, los últimos de cada semana.
 - **Tipografías:** Alejandro autorizó descargar Baloo 2, Quicksand y Patrick Hand (licencia OFL) desde el repositorio oficial de Google Fonts para incluirlas dentro de la app (H-07).
+
+## Nota 06-11-2026
+
+- **Cuentas de tienda:** Alejandro ya tiene pagadas la cuenta de desarrollador de Google Play y la de Apple (`production/planes/2026-11-06-etapas-5-y-6.md`, sección 1). Esto **no cambia el alcance** de esta decisión. Android sigue siendo lo único decidido para la V1; si el iPhone entra al lanzamiento sigue siendo la pregunta 22 y está pendiente de Alejandro.
+- La versión web queda para la V2 (decisión del mismo día).

@@ -11,6 +11,21 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 06-11-2026 · cuenta secundaria · decisiones y plan de las etapas 5 y 6
+
+- **Qué se hizo:**
+  - **Decisiones de Alejandro:**
+    - ya tiene pagadas las cuentas de Google Play y de Apple, y la versión web queda para la V2;
+    - 17: publica como persona natural;
+    - 7: el reto cambia a la medianoche local de cada jugador (no a la de Colombia, como recomendaba la auditoría);
+    - 6, 8, 16, 18 y 23: acepta las recomendaciones (premium con vidas ilimitadas, víctima como ficha con †, 13 años o más, versión de revisión sin pantallas simuladas, mundos bloqueados con candado).
+  - **Plan:** `production/planes/2026-11-06-etapas-5-y-6.md`, con ADR-0016 (validación en el servidor) por escribir, 5A, 5B, la etapa 6 en paralelo y las preguntas abiertas: partida sin conexión, iPhone, orden, puntos y ayudas.
+  - **Pregunta 19 (arma):** estaba decidida el 05-11-2026 (ADR-0014) y se quitó de las pendientes. La política de privacidad dice ahora 13 años o más.
+  - **Documentos:** `revisor-docs` aplicó las decisiones en el roadmap, los docs 03, 06, 08, 13, 15 y 20, el ADR-0014 y el README, y el arquitecto lo revisó.
+- **Archivos tocados:** el plan nuevo, esos documentos y `production/session-state/`.
+- **Pruebas:** sin cambios de código.
+- **Pendiente o dudas para la otra cuenta:** las respuestas a la sección 4 del plan y la fecha de creación de la cuenta de Google Play (de ella depende la regla de los 12 probadores).
+
 ## 06-11-2026 · cuenta secundaria · máximo 2 del mismo mueble por habitación (0.7.2+9)
 
 - **Qué se hizo:**

@@ -13,6 +13,7 @@
   Pruebas: tools 342 y app 627, todas pasan. FPS: 60 estables en el Galaxy A52 de Alejandro (medido con la 0.6.0+6). Detalle en [bitacora-cuentas.md](bitacora-cuentas.md).
 - **Prueba de juego n.º 1: HECHA** con la 0.3.0+3. Resultados: la dificultad está bien por ahora (los rangos se mantienen); hubo confusión silla/sillón/sofá y extrañeza con las habitaciones, ya resuelto en la 0.7.0+7 (ADR-0015).
 - **Hecho del plan** ([production/planes/2026-11-05-etapas-3-y-4.md](../planes/2026-11-05-etapas-3-y-4.md)): rondas 3.1, 3.2, 4.1, 4.2, 4.3a y 4.3b.
+- **Etapas 5 y 6 (06-11-2026):** plan en [production/planes/2026-11-06-etapas-5-y-6.md](../planes/2026-11-06-etapas-5-y-6.md). Alejandro ya tiene las cuentas de Google Play y de Apple, publica como persona natural y el reto cambia a la medianoche local. Esperan su respuesta las preguntas de la sección 4 del plan.
 - **Pendiente técnico:**
   - Probar TalkBack real. (FPS medidos el 05-11-2026: 60 fps estables en el Galaxy A52 de Alejandro.)
   - El texto de la partida tiene un tope de 1,3.
@@ -33,7 +34,7 @@
 Cada número es el de la [sección 5 de la auditoría](../revisiones/2026-11-04-auditoria-proyecto.md#5-decisiones-que-necesito-de-ti).
 
 - **Después de las pruebas:** 12 (ayudas y puntuación), 13 (si Experto y Élite entran al lanzamiento).
-- **Cuando quiera:** 6 (vidas de premium), 7 (hora del reto diario), 8 (representación de la víctima), 14 (contenido de lanzamiento), 15 (inglés y formato de las pistas), 16 (edad mínima), 17 (identidad legal), 18 (qué se ve en el build de tiendas), 19 (uso del arma), 22 (solo si el iPhone entra al lanzamiento).
+- **Cuando quiera:** 22 (solo si el iPhone entra al lanzamiento) y la sección 4 del plan de las etapas 5 y 6. Las 6, 7, 8, 16, 17, 18 y 23 se decidieron el 06-11-2026 y la 19 el 05-11-2026.
 - **PENDIENTE DE DECISIÓN (pregunta 23, nueva):** si se muestran los mundos bloqueados. Hoy la app muestra los 5 mundos, 4 con candado, y el doc 06 dice que solo se muestran los desbloqueados.
 - **Pendiente sin número:** referencias visuales para la prueba de concepto. El 04-11-2026 se le mostraron Lumino City, Paper Trail, Hidden Folks, The Case of the Golden Idol y Monument Valley, y **ninguna le gustó**. Él va a conseguir sus propias referencias. La dirección de arte de la prueba de concepto espera a esas referencias.
 

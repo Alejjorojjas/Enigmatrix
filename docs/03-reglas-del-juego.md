@@ -448,7 +448,9 @@ Un mapa queda `sin resolver` cuando pierde su intento oficial.
 
 ## Reto diario
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 7, H-27): hora en que cambia el reto diario. Este documento dice "dentro del día local"; `docs/08-balance.md` dice hora del servidor (cierre semanal domingo 23:59 UTC). Recomendación de la auditoría: medianoche de Colombia, igual para todos. Falta que Alejandro decida.
+> **DECIDIDO 06-11-2026** (auditoría, pregunta 7, H-27): el reto diario cambia a la **medianoche local de cada jugador** (el día N se habilita a las 00:00 de su hora) y es el mismo caso para todos los que juegan esa fecha. "Dentro del día local" de las reglas de abajo queda confirmado, con estas precisiones: el servidor calcula la fecha con su propia hora y con la zona horaria guardada en la cuenta; esa zona solo se puede cambiar cada cierto tiempo (por ejemplo cada 7 días, valor en Remote Config); el servidor no entrega un reto con fecha posterior a la del huso más adelantado (UTC+14); el ranking del día se agrupa por fecha y la racha se cuenta por fecha local con la zona guardada. Detalle: `production/planes/2026-11-06-etapas-5-y-6.md`, sección 1. El cierre semanal de `docs/08-balance.md` (domingo 23:59 UTC) queda sin definir para este caso.
+>
+> ~~(SUPERADO 06-11-2026) Versión anterior: PENDIENTE DE DECISIÓN. Este documento dice "dentro del día local"; `docs/08-balance.md` dice hora del servidor (cierre semanal domingo 23:59 UTC). Recomendación de la auditoría: medianoche de Colombia, igual para todos.~~
 >
 > Hoy el Reto es una simulación DEMO: elige el caso por la fecha del teléfono (cualquier dificultad) y se puede repetir sin límite; "un intento" y "mismo caso para todos" no se cumplen.
 

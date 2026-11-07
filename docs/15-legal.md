@@ -5,6 +5,8 @@
 > ACTUALIZACIÓN 04-11-2026 (auditoría 04-11-2026, hallazgos H-36, H-35, H-09, H-07 y H-08): **este documento describe la intención para el lanzamiento con cuentas, anuncios y compras (Fase 2 en adelante), no lo que hace la app hoy.** Lo que existe de verdad hoy (comprobado en el código el 04-11-2026): la app funciona sin cuentas ni registro; guarda el progreso solo en el teléfono (`shared_preferences`); no tiene anuncios, no tiene compras reales y no abre enlaces externos; no tiene botón que abra la política de privacidad; y descarga las tipografías de Google Fonts la primera vez que se abre, por lo que declara el permiso INTERNET. Con datos fijos: Tienda, Premium, Ranking, Configuración y los puntos de la semana del Reto llevan DEMO; vidas, racha y estadísticas del perfil se simulan sin etiqueta (H-62) (`app/lib/src/ui/home_shell.dart`). Todo lo demás (cuentas, consentimiento, anuncios, compras, eliminación de cuenta, moderación) aún no existe. Este documento no reemplaza la revisión de un abogado.
 >
 > Temas abiertos que se marcan más abajo y que decide Alejandro: edad mínima (pregunta 16), cómo se representa a la víctima (pregunta 8), identidad legal del responsable (pregunta 17) y qué se ve en el build de tiendas (pregunta 18).
+>
+> ACTUALIZACIÓN 06-11-2026: Alejandro decidió las cuatro (ver `docs/17-roadmap.md`, "Decisiones de Alejandro del 06-11-2026"): edad mínima **13 años o más** (16); la víctima es una **ficha normal marcada con †, sin cuerpo ni sangre** (8); publica como **persona natural** (17); y la versión que revisa la tienda va **sin tienda, premium ni ranking simulados y sin ajustes que no hacen nada** (18). Siguen sin completarse el nombre, el correo y la dirección del responsable. Las marcas de abajo se conservan tachadas.
 
 ## Objetivo de este documento
 Definir los requisitos legales y de cumplimiento que Enigmatrix debe cubrir para lanzar V1.
@@ -34,13 +36,15 @@ Cubre:
 ## Audiencia objetivo y edad
 
 ### Audiencia oficial
-- Enigmatrix es para mayores de 12 anos
-- la categoria PEGI sugerida es 12
+- Enigmatrix es para ~~mayores de 12 anos~~ personas de 13 anos o mas (DECIDIDO 06-11-2026)
+- ~~la categoria PEGI sugerida es 12~~ (las categorias sugeridas de abajo quedan como estimacion SUPERADA: la clasificacion final la da el cuestionario de cada tienda)
 - la categoria ESRB sugerida es Teen
 - la categoria Google Play sugerida es Teen
-- la categoria App Store sugerida es 12 o superior
+- ~~la categoria App Store sugerida es 12 o superior~~ (Apple no ofrece "12 o superior"; ver la nota de abajo)
 
-> ACTUALIZACIÓN 04-11-2026: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 16, H-09): edad mínima. Versiones en conflicto:
+> ACTUALIZACIÓN 06-11-2026: **DECIDIDO** (auditoría, pregunta 16, H-09): edad mínima de **13 años o más**. Queda la versión B ("no dirigido a menores de 13"), que es coherente con la sección "COPPA y politica con menores". La clasificación final la calcula el cuestionario de cada tienda. Los documentos 13 y 20 se alinearon el mismo día; falta alinear `docs/legal/politica-privacidad.md` (que aún dice "mayores de 12") y los textos de la sección "Anuncios" de abajo.
+>
+> ACTUALIZACIÓN 04-11-2026: ~~PENDIENTE DE DECISIÓN~~ (decidida el 06-11-2026) (auditoría 04-11-2026, pregunta 16, H-09): edad mínima. Versiones en conflicto:
 > - **Versión A, "mayores de 12":** líneas de arriba, la categoría App Store de arriba, la sección de anuncios ("la app es para mayores de 12"), `docs/20-checklist-tiendas.md` ("12+", "Everyone 10+/Teen"), `docs/13-narrativa.md` y la política de privacidad (`docs/legal/politica-privacidad.md`).
 > - **Versión B, "no dirigido a menores de 13":** la sección "COPPA y politica con menores" de abajo.
 > - Problemas que encontró la auditoría, a confirmar con un abogado y en la documentación vigente de cada tienda: "mayores de 12" incluye a los de 12 años, que quedan fuera de la regla de 13; según lo investigado, Apple ya no ofrece la categoría "12 o superior" (usa 4+, 9+, 13+, 16+ y 18+); y en Google Play un usuario de 12 años cae en el grupo "de 9 a 12", lo que podría activar las reglas de apps para niños (Familias y COPPA). La clasificación final la calcula cada tienda con su cuestionario.
@@ -48,15 +52,17 @@ Cubre:
 
 ### Justificacion
 - el juego es de misterio detectivesco con violencia ficticia implicita
-- no hay sangre, no hay representacion grafica de victimas (ver la nota de abajo, pregunta 8)
+- no hay sangre, ~~no hay representacion grafica de victimas~~ la victima es una ficha normal marcada con †, sin cuerpo, sin sangre y sin escena del crimen (DECIDIDO 06-11-2026, pregunta 8)
 - no hay lenguaje vulgar, no hay contenido sexual
 
-> ACTUALIZACIÓN 04-11-2026: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 8, H-35): la frase "no hay representacion grafica de victimas" no coincide con el juego. Hoy el jugador ubica a la víctima en el tablero como a cualquier otro personaje: su ficha es un círculo de color con una † y su tarjeta lleva la cinta "LA VÍCTIMA" (`app/lib/src/ui/board_view.dart`, `app/lib/src/ui/game_screen.dart`). No se muestra cuerpo, sangre ni escena del crimen. La redacción definitiva la decide Alejandro y debe ser la misma en los documentos 13, 15 y 20, porque esta frase sustenta la clasificación de edad y el cuestionario IARC. Ver `docs/13-narrativa.md`.
+> ACTUALIZACIÓN 06-11-2026: **DECIDIDO** (auditoría, pregunta 8, H-35): la víctima es una ficha normal marcada con †, sin cuerpo ni sangre. Es lo que hace el juego hoy. Esta es la redacción que sustenta el cuestionario IARC y debe ser idéntica en los documentos 13, 15 y 20. La frase vieja "no hay representacion grafica de victimas" queda superada.
+>
+> ACTUALIZACIÓN 04-11-2026: ~~PENDIENTE DE DECISIÓN~~ (decidida el 06-11-2026) (auditoría 04-11-2026, pregunta 8, H-35): la frase "no hay representacion grafica de victimas" no coincide con el juego. Hoy el jugador ubica a la víctima en el tablero como a cualquier otro personaje: su ficha es un círculo de color con una † y su tarjeta lleva la cinta "LA VÍCTIMA" (`app/lib/src/ui/board_view.dart`, `app/lib/src/ui/game_screen.dart`). No se muestra cuerpo, sangre ni escena del crimen. La redacción definitiva la decide Alejandro y debe ser la misma en los documentos 13, 15 y 20, porque esta frase sustenta la clasificación de edad y el cuestionario IARC. Ver `docs/13-narrativa.md`.
 - las armas son objetos cotidianos, no armas reales
 
 ### Etiquetas de dificultad
 - la etiqueta mas accesible se llama `Principiante`
-- nunca se usa la palabra `Infantil` ni equivalentes que sugieran audiencia menor de 12 anos
+- nunca se usa la palabra `Infantil` ni equivalentes que sugieran audiencia menor de ~~12~~ 13 anos (ajustado 06-11-2026)
 - esta clarificacion figura en la pagina del store y en la documentacion publica
 
 ## COPPA y politica con menores
@@ -188,7 +194,9 @@ Cubre:
 - pais de residencia o constitucion
 - responsable de proteccion de datos cuando aplique segun GDPR
 
-> ACTUALIZACIÓN 04-11-2026: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 17, H-08): identidad legal. La decisión "persona natural" de abajo (julio de 2026) se tomó antes de la auditoría y está en revisión: la auditoría advierte que, con compras o suscripciones, el desarrollador se considera comerciante y sus datos de contacto (para una persona natural, su domicilio) se pueden publicar en las fichas de tienda de la Unión Europea. Alternativas que plantea la auditoría: persona natural con apartado postal u oficina alquilada, o constituir una SAS. Alejandro decide antes de crear las cuentas de desarrollador, y debe confirmarse con un abogado. Nombre, correo y dirección del responsable siguen sin completarse.
+> ACTUALIZACIÓN 06-11-2026: **DECIDIDO** (auditoría, pregunta 17, H-08): Alejandro publica como **persona natural**, lo que confirma la decisión de julio de 2026. Consecuencias (plan `production/planes/2026-11-06-etapas-5-y-6.md`, sección 1): con compras dentro de la app, Google Play y Apple tratan la cuenta como comerciante, y en la Unión Europea pueden mostrar en la ficha un nombre, una dirección y un teléfono o correo de contacto. Conviene usar un apartado postal o una oficina virtual en vez de la dirección de la casa, y confirmar en Play Console que la acepten. Los ingresos van a su nombre: se recomienda preguntar a un contador cómo declararlos (renta y, si aplica, IVA por servicios digitales); no bloquea el desarrollo. Siguen pendientes el correo y la dirección de contacto, y la revisión del abogado.
+>
+> ACTUALIZACIÓN 04-11-2026: ~~PENDIENTE DE DECISIÓN~~ (decidida el 06-11-2026) (auditoría 04-11-2026, pregunta 17, H-08): identidad legal. La decisión "persona natural" de abajo (julio de 2026) se tomó antes de la auditoría y estaba en revisión: la auditoría advierte que, con compras o suscripciones, el desarrollador se considera comerciante y sus datos de contacto (para una persona natural, su domicilio) se pueden publicar en las fichas de tienda de la Unión Europea. Alternativas que plantea la auditoría: persona natural con apartado postal u oficina alquilada, o constituir una SAS. Alejandro decide antes de crear las cuentas de desarrollador, y debe confirmarse con un abogado. Nombre, correo y dirección del responsable siguen sin completarse.
 
 ### Decisiones tomadas para V1
 - figura juridica: persona natural, el creador firma la app a su nombre
@@ -263,7 +271,7 @@ Cubre:
 
 ## Compras dentro de la app
 
-> ACTUALIZACIÓN 04-11-2026 (H-36): hoy no hay compras reales. La Tienda y Premium de la app son hojas simuladas con la etiqueta "DEMO", con precios fijos en dólares; sus botones solo muestran un aviso de "función simulada". La app no incluye ninguna librería de compras (`app/pubspec.yaml`). **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 18): qué se ve en el build de tiendas. No declarar "con compras" ni "sin compras" en las consolas hasta decidirlo.
+> ACTUALIZACIÓN 04-11-2026 (H-36): hoy no hay compras reales. La Tienda y Premium de la app son hojas simuladas con la etiqueta "DEMO", con precios fijos en dólares; sus botones solo muestran un aviso de "función simulada". La app no incluye ninguna librería de compras (`app/pubspec.yaml`). **DECIDIDO 06-11-2026** (auditoría, pregunta 18): la versión que revisa la tienda va sin tienda, premium ni ranking simulados y sin ajustes que no hacen nada, compilada sin `ENX_DEV`, mientras no exista la etapa 5B. Hasta que haya compras reales (etapa 5B), esa versión se declara **sin compras**; con compras reales hay que volver a declararlo. ~~Antes: PENDIENTE DE DECISIÓN, no declarar "con compras" ni "sin compras".~~
 
 ### Reglas
 - todas las compras se realizan a traves de Google Play o App Store
@@ -286,7 +294,7 @@ Cubre:
 - el proveedor de anuncios cumple con las regulaciones de privacidad aplicables
 - los anuncios respetan el consentimiento del usuario
 - los anuncios no son personalizados si el usuario no consintio
-- los anuncios para menores estan deshabilitados ya que la app es para mayores de 12 (**PENDIENTE DE DECISIÓN**, auditoría 04-11-2026, pregunta 16: ver la edad mínima más arriba)
+- los anuncios para menores estan deshabilitados ya que la app es para ~~mayores de 12~~ personas de 13 anos o mas (DECIDIDO 06-11-2026, pregunta 16)
 
 ### Tipos de anuncios prohibidos
 - anuncios enganosos
@@ -421,7 +429,8 @@ Cubre:
 
 ## Pendientes a confirmar con abogado
 > Nota 04-11-2026: esta lista sigue sin tocar desde julio de 2026. Se añaden las dos preguntas abiertas de la auditoría: la edad mínima (pregunta 16, H-09) y la identidad legal (pregunta 17, H-08), además de cómo se describe a la víctima ante el cuestionario de clasificación (pregunta 8, H-35).
-- forma juridica del responsable: persona natural o sociedad
+> Nota 06-11-2026: las preguntas 8, 16 y 17 quedaron decididas (víctima como ficha con †, edad 13+, persona natural); ver la ACTUALIZACIÓN 06-11-2026 al inicio.
+- ~~forma juridica del responsable: persona natural o sociedad~~ (DECIDIDO 06-11-2026: persona natural)
 - correo y direccion oficiales para politicas
 - ley aplicable y tribunal competente para los terminos: recomendado Colombia como base
 - versiones traducidas oficiales de politicas: como minimo espanol e ingles

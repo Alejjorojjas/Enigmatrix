@@ -1,12 +1,18 @@
 # Enigmatrix - Balance numerico
 
-> ACTUALIZACIÓN 04-11-2026: **documento EN REVISIÓN.** Los números de abajo siguen siendo propuestas y no se cambió ninguno. Cuatro temas estaban en conflicto o sin definir; el 04-11-2026 Alejandro decidió el de 0 vidas (pregunta 5) y siguen pendientes los otros tres (preguntas 6, 7 y 13), que no se resuelven aquí porque los decide Alejandro (auditoría 04-11-2026, sección 5, en `production/revisiones/2026-11-04-auditoria-proyecto.md`):
+> ACTUALIZACIÓN 06-11-2026: Alejandro decidió las preguntas 6 (premium con vidas ilimitadas) y 7 (el reto diario cambia a la medianoche local de cada jugador); ver las dos marcas DECIDIDO 06-11-2026 más abajo. Siguen pendientes la 12 y la 13.
+>
+> ACTUALIZACIÓN 04-11-2026: **documento EN REVISIÓN.** Los números de abajo siguen siendo propuestas y no se cambió ninguno. Cuatro temas estaban en conflicto o sin definir; el 04-11-2026 Alejandro decidió el de 0 vidas (pregunta 5) y quedaban pendientes los otros tres (preguntas 6, 7 y 13; las 6 y 7 se decidieron el 06-11-2026), que no se resuelven aquí porque los decide Alejandro (auditoría 04-11-2026, sección 5, en `production/revisiones/2026-11-04-auditoria-proyecto.md`):
 >
 > - **DECIDIDO 04-11-2026** (auditoría, pregunta 5, H-26; ver ADR-0012): con 0 vidas no se puede pulsar Resolver ni empezar casos nuevos. La partida queda guardada para seguir cuando se recupere una vida o se vea un anuncio.
 > - ~~Versión anterior~~ (SUPERADO 04-11-2026): ~~este documento no definía qué pasa al quedar con 0 vidas; solo decía que un error de Resolver cuesta 1 vida y que el cronómetro oficial no se detiene. No decía si se podía seguir jugando, si se bloqueaba solo Resolver o si se esperaba la recarga.~~
 > - Regla relacionada, **DECIDIDO 04-11-2026** (auditoría, pregunta 10; ver ADR-0012): la partida se guarda siempre; al salir, el reloj se pausa y el tablero se oculta durante la pausa. Vale mientras no haya ranking real y se revisa antes de la etapa 5. Esto supera lo de "el cronómetro oficial no se detiene" de este documento.
-> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 6, H-26): vidas de Premium. En la sección "Vidas extra" dice "premium elimina el limite de 5" (versión A: vidas ilimitadas, y así también lo dice `docs/01-mvp-v1.md`). En "Beneficios premium" dice "sin limite de 5 vidas activas" y a la vez "recarga de vidas instantanea hasta el cap" (versión B: un tope que sigue existiendo, con recarga instantánea). Las dos versiones no pueden ser ciertas a la vez.
-> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 7, H-27): hora en que cambia el reto diario. Aquí la semana cierra "en hora del servidor", recomendado domingo 23:59 UTC; `docs/03-reglas-del-juego.md` dice "dentro del día local". Además, la distribución semanal ("Casual x2, Intermedio x3, Experto x1, Elite x1, sin Principiante") no se puede cumplir hoy: la app trae solo 20 casos (8 Principiante, 7 Casual y 5 Intermedio, ninguno Experto ni Élite) y la pantalla de Reto del juego elige el caso según los días transcurridos desde el 01-01-2026 (con la hora local del teléfono) sin mirar la dificultad (hoy es una simulación DEMO).
+> - **DECIDIDO 06-11-2026** (auditoría, pregunta 6, H-26; plan `production/planes/2026-11-06-etapas-5-y-6.md`): premium da **vidas ilimitadas**. Vale la versión A ("premium elimina el limite de 5", igual que `docs/01-mvp-v1.md`). La versión B de "Beneficios premium" ("recarga de vidas instantanea hasta el cap") queda SUPERADA: con vidas ilimitadas no hay tope que recargar.
+>   - ~~(SUPERADO 06-11-2026) Versión anterior: PENDIENTE DE DECISIÓN entre vidas ilimitadas (versión A) y tope de 5 con recarga instantánea (versión B).~~
+> - **DECIDIDO 06-11-2026** (auditoría, pregunta 7, H-27): el reto diario cambia a la **medianoche local de cada jugador** y es el mismo caso para todos los que juegan esa fecha. El servidor calcula la fecha con su propia hora y con la zona horaria guardada en la cuenta (solo se puede cambiar cada cierto tiempo, por ejemplo cada 7 días, valor en Remote Config) y no entrega retos con fecha posterior a la del huso más adelantado (UTC+14). La racha también se cuenta por fecha local con la zona guardada. Esto reemplaza la recomendación de la auditoría (medianoche de Colombia). Detalle: sección 1 del plan de las etapas 5 y 6.
+>   - ~~(SUPERADO 06-11-2026) Versión anterior: PENDIENTE DE DECISIÓN; aquí la semana cierra "en hora del servidor", recomendado domingo 23:59 UTC, y `docs/03-reglas-del-juego.md` decía "dentro del día local".~~
+>   - **Sigue sin definir:** el cierre del ranking **semanal** (sección "Balance del ranking semanal", domingo 23:59 UTC) no se tocó, porque la decisión del 06-11-2026 habla del reto diario. Con fechas locales hay que decidir si la semana cierra en UTC o según la fecha local de cada jugador. Pregunta nueva para el arquitecto y Alejandro (etapa 5B).
+> - Distribución del reto (sigue en revisión, no depende de la hora): la distribución semanal ("Casual x2, Intermedio x3, Experto x1, Elite x1, sin Principiante") no se puede cumplir hoy: la app trae solo 20 casos (8 Principiante, 7 Casual y 5 Intermedio, ninguno Experto ni Élite) y la pantalla de Reto del juego elige el caso según los días transcurridos desde el 01-01-2026 (con la hora local del teléfono) sin mirar la dificultad (hoy es una simulación DEMO).
 > - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 13, H-39): si Experto (12×12) y Élite (16×16) entran al lanzamiento. El generador define esos tamaños pero nunca se han generado casos de ese tamaño. Mientras no se decida, todo lo que aquí dependa de ellos (bases, pisos, tiempos objetivo y la distribución del reto) queda sin comprobar.
 >
 > Otros dos puntos en revisión que no cambian ningún número:
@@ -164,6 +170,7 @@ Sin Principiante. Se ajusta con datos.
 ### Cierre
 - la semana cierra en hora del servidor en un dia y hora declarados
 - recomendado: domingo a las 23:59 UTC
+- > ACTUALIZACIÓN 06-11-2026: el reto diario ahora cambia a la medianoche local de cada jugador (pregunta 7, DECIDIDA). Cómo cierra la semana con fechas locales queda sin definir; no se cambia esta propuesta por cuenta propia.
 - el snapshot del top semanal se guarda al cerrar
 - la nueva semana arranca con el contador en cero
 
@@ -195,6 +202,7 @@ Sin Principiante. Se ajusta con datos.
 - el sobrante va a reserva extra
 - las extra se consumen automaticamente para mantener la barra activa
 - premium elimina el limite de 5
+- > DECIDIDO 06-11-2026 (pregunta 6): premium da vidas ilimitadas.
 
 ## Balance de anuncios
 
@@ -229,8 +237,8 @@ Sin Principiante. Se ajusta con datos.
 
 ### Beneficios premium
 - sin anuncios
-- sin limite de 5 vidas activas
-- recarga de vidas instantanea hasta el cap
+- sin limite de 5 vidas activas (DECIDIDO 06-11-2026, pregunta 6: vidas ilimitadas)
+- ~~recarga de vidas instantanea hasta el cap~~ (SUPERADO 06-11-2026: con vidas ilimitadas no hay tope que recargar)
 - los limites por hora del recompensado dejan de aplicar
 - no entrega ventajas de ranking ni multiplicadores de puntos
 

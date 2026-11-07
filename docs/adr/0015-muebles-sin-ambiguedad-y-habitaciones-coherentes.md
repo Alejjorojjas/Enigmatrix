@@ -45,6 +45,6 @@ La prueba de juego n.º 1 se hizo con la 0.3.0+3 y amigos de Alejandro.
 ## Consecuencias
 
 - **Casos regenerados.** Se regeneraron los 10 casos del Mundo 1 y los 30 retos. En 6 casos de la campaña y 3 retos se cambió la semilla para conservar la curva de pasos y para que cada premisa encaje con su mapa. El detalle está en `production/revisiones/2026-11-05-contenido-mundo1-reglas-mapa.md`.
-- **Bañera.** La Mansión no tiene baño, así que la bañera no aparece en el Mundo 1.
+- **Bañera.** ~~La Mansión no tiene baño, así que la bañera no aparece en el Mundo 1.~~ ACTUALIZACIÓN 05-11-2026: se agregó "el Baño" a la Mansión (0.7.1+8). En la 0.7.2+9 hay bañera en 13 de los 40 casos.
 - **Élite.** Con las reglas nuevas, el generador no saca casos Élite (16×16) en la medición. Ya estaba fuera de la V1 (ADR-0014) y necesita trabajo de motor para la V2.
 - **Especificación.** La spec 16 (sección 1.3.1) recoge las reglas. Es la versión 0.7.0+7.

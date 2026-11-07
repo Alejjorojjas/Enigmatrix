@@ -64,6 +64,23 @@ Decididas en chat el 04-11-2026. Detalle de las reglas: [ADR-0012](adr/0012-regl
   - **11.** El tutorial es un caso propio pequeño (4×4 o 5×5) que no cuenta como Caso 1. Enseña también la X, las notas, la papelera y un Resolver fallido. Es obligatorio la primera vez, con un botón Saltar visible.
   - **20.** Al tocar una casilla sin sospechoso elegido aparece el aviso "Elige primero a un sospechoso". Hay un modo alternativo de tocar dos veces (elegir y tocar el destino) además de mantener oprimido o arrastrar. Se diseña en la prueba de concepto.
 - **Siguen pendientes:** 6, 7, 8, 12, 13, 14, 15, 16, 17, 18, 19 y 22 (solo el iPhone), más la pregunta 23 nueva (ver la tabla de pendientes).
+  - ACTUALIZACIÓN 06-11-2026: de esa lista se decidieron la 6, 7, 8, 16, 17, 18 y 23 (ver la sección siguiente).
+
+## Decisiones de Alejandro del 06-11-2026
+
+Decididas en chat el 06-11-2026. Detalle y consecuencias: [plan de las etapas 5 y 6](../production/planes/2026-11-06-etapas-5-y-6.md), sección 1. Estado diario: `production/session-state/active.md`.
+
+- **Cuentas de tienda:** ya tiene pagadas la cuenta de desarrollador de Google Play y la de Apple. Que existan **no** cambia el alcance: Android sigue siendo lo único decidido (ADR-0014) y si el iPhone entra al lanzamiento sigue pendiente (pregunta 22).
+- **Versión web:** queda para la V2.
+- **Reglas y trámites decididos** (preguntas de la sección 5 de la auditoría):
+  - **6.** Premium da **vidas ilimitadas**.
+  - **7.** El reto diario cambia a la **medianoche local de cada jugador**. Es el mismo caso para todos los que juegan esa fecha. El servidor calcula la fecha con su propia hora y con la zona horaria guardada en la cuenta; esa zona solo se puede cambiar cada cierto tiempo (por ejemplo, cada 7 días, valor en Remote Config); y no entrega un reto con fecha posterior a la del huso más adelantado (UTC+14). La racha también se cuenta por fecha local con la zona guardada. Reemplaza la recomendación de la auditoría (medianoche de Colombia para todos).
+  - **8.** La víctima es una **ficha normal marcada con †, sin cuerpo ni sangre**. Se corrigen los docs 13, 15 y 20.
+  - **16.** Edad mínima de **13 años o más**. La clasificación final la da el cuestionario de cada tienda.
+  - **17.** Publica como **persona natural**. Con compras, las tiendas la tratan como comerciante y en la UE pueden mostrar sus datos de contacto: conviene un apartado postal u oficina virtual y preguntar a un contador por los ingresos. No bloquea el desarrollo.
+  - **18.** La versión que revisa la tienda va **sin la tienda, el premium ni el ranking simulados, y sin ajustes que no hacen nada**.
+  - **23.** Los mundos bloqueados **se muestran con candado**. Se corrige el doc 06.
+- **Siguen pendientes:** 12, 13, 14, 15, 22 (solo el iPhone), más las preguntas abiertas de la sección 4 del plan nuevo: partida sin conexión, si el iPhone entra al lanzamiento, el orden (prueba cerrada ya o después) y puntos y ayudas (la 12).
 
 ## Plan por etapas 0 a 6 (aprobado por Alejandro el 04-11-2026)
 
@@ -140,6 +157,7 @@ Los tiempos y costos son **estimaciones sin verificar**, tomadas de la auditorí
   - **5B:** ranking, reto diario real, vidas y compras.
   - Antes de empezar se escribe un ADR (un registro corto de una decisión técnica, con opciones y motivo) sobre cómo validar en el servidor (H-41).
 - **Termina cuando:** la validación en el servidor funciona.
+- **Plan detallado (06-11-2026):** [production/planes/2026-11-06-etapas-5-y-6.md](../production/planes/2026-11-06-etapas-5-y-6.md), sección 2. Incluye las decisiones de vidas de premium y de la hora del reto diario (medianoche local de cada jugador). Sigue abierta la pregunta de la partida sin conexión.
 - **¿Toca código?** Sí.
 - **Tiempo y costo:** sin estimar.
 - Aquí caducan las excepciones de la Fase 1 (solución local y datos simulados).
@@ -149,7 +167,8 @@ Los tiempos y costos son **estimaciones sin verificar**, tomadas de la auditorí
 - **Qué incluye:** trámites legales; en Google Play, la prueba cerrada con probadores; iPhone solo si Alejandro decide que entra al lanzamiento.
 - **Termina cuando:** publicación.
 - **¿Toca código?** Poco.
-- **Tiempo y costo:** cuentas de unos 25 USD únicos en Google Play y unos 99 USD al año en Apple (conocimiento general, a confirmar).
+- **Tiempo y costo:** cuentas de unos 25 USD únicos en Google Play y unos 99 USD al año en Apple (conocimiento general, a confirmar). ACTUALIZACIÓN 06-11-2026: Alejandro ya tiene pagadas las dos cuentas.
+- **Plan detallado (06-11-2026):** [production/planes/2026-11-06-etapas-5-y-6.md](../production/planes/2026-11-06-etapas-5-y-6.md), sección 3. Se puede empezar en paralelo con la etapa 5. La versión para revisión va sin tienda, premium ni ranking simulados (pregunta 18, decidida). Edad mínima 13+ y publicación como persona natural, decididas.
 
 ### Cómo encajan las etapas (trabajo en paralelo)
 
@@ -163,8 +182,8 @@ Las etapas 1, 2 y 3 pueden avanzar al mismo tiempo con tres condiciones:
 
 **Trámites que conviene empezar ya**, porque no dependen del código:
 
-- decidir si se publica como persona natural o como empresa (pregunta 17);
-- crear la cuenta de desarrollador de Google Play;
+- ~~decidir si se publica como persona natural o como empresa (pregunta 17);~~ (DECIDIDO 06-11-2026: persona natural)
+- ~~crear la cuenta de desarrollador de Google Play;~~ (HECHO: Alejandro ya la tiene pagada, 06-11-2026)
 - publicar la política de privacidad.
 
 Los 14 días de la prueba cerrada de Google Play no se pueden acelerar. Por eso la auditoría propone lanzarla con una versión estable de la Fase 1, sin la tienda ni el ranking simulado, apenas termine la etapa 1. Las reglas de Google cambian: hay que confirmarlas en Play Console antes de planificar (H-24).
@@ -175,18 +194,20 @@ Solo quedan las preguntas abiertas. Las decididas el 04-11-2026 (5, 9, 10, 11, 2
 
 | Pregunta | Tema | Qué parte del plan toca |
 |---|---|---|
-| 6 | Vidas de premium | Etapa 5B (vidas) |
-| 7 | Hora del reto diario | Etapa 3 (30 días de reto) y etapa 5B |
-| 8 | Representación de la víctima | Documentos y etapa 4 |
+| ~~6~~ | ~~Vidas de premium~~ **DECIDIDA 06-11-2026:** premium con vidas ilimitadas | Etapa 5B (vidas) |
+| ~~7~~ | ~~Hora del reto diario~~ **DECIDIDA 06-11-2026:** medianoche local de cada jugador, mismo caso para todos en la misma fecha | Etapa 3 (30 días de reto) y etapa 5B |
+| ~~8~~ | ~~Representación de la víctima~~ **DECIDIDA 06-11-2026:** ficha normal con †, sin cuerpo ni sangre | Documentos y etapa 4 |
 | 12 | Ayudas y puntuación | Etapa 3 |
 | 13 | Si Experto y Élite entran al lanzamiento | Etapa 3 (prueba de generación) |
 | 14 | Contenido de lanzamiento | Etapa 3 |
 | 15 | Inglés y formato de las pistas | Antes de la etapa 3 |
-| 16, 17 | Edad mínima; identidad legal | Etapa 6 (y trámites que conviene empezar ya) |
-| 18 | Qué se ve en el build de tiendas | Etapa 6 |
-| 19 | Uso del arma | Etapa 3 |
-| 22 | Solo si el iPhone entra al lanzamiento (el Mac ya está confirmado) | Etapa 6 |
-| 23 (nueva) | **PENDIENTE DE DECISIÓN:** si se muestran los mundos bloqueados (hoy la app muestra los 5 mundos, 4 con candado; el doc 06 dice que solo los desbloqueados) | Etapa 4 y doc 06 |
+| ~~16~~, ~~17~~ | ~~Edad mínima; identidad legal~~ **DECIDIDAS 06-11-2026:** 13 años o más; persona natural | Etapa 6 |
+| ~~18~~ | ~~Qué se ve en el build de tiendas~~ **DECIDIDA 06-11-2026:** sin tienda, premium ni ranking simulados y sin ajustes que no hacen nada | Etapa 6 |
+| ~~19~~ | ~~Uso del arma~~ **DECIDIDA 05-11-2026** (ADR-0014): se mantiene en mansion-08 a 10 y en 9 de los 30 retos | Etapa 3 |
+| 22 | Solo si el iPhone entra al lanzamiento (el Mac ya está confirmado, y desde el 06-11-2026 también la cuenta de Apple pagada) | Etapa 6 |
+| ~~23 (nueva)~~ | ~~Si se muestran los mundos bloqueados~~ **DECIDIDA 06-11-2026:** se muestran con candado (doc 06 corregido) | Etapa 4 y doc 06 |
+
+> ACTUALIZACIÓN 06-11-2026: se tacharon las preguntas 6, 7, 8, 16, 17, 18 y 23, decididas ese día (ver "Decisiones de Alejandro del 06-11-2026"). La 19 ya estaba decidida el 05-11-2026 en el [ADR-0014](adr/0014-alcance-de-contenido-de-la-v1.md); el arquitecto la quitó de las pendientes y del plan del 06-11-2026.
 
 ~~Versión anterior de esta tabla (SUPERADA 04-11-2026): incluía además las preguntas 5, 9, 10, 11, 20 y 21 como pendientes, y la 22 como "iPhone y Mac".~~
 
@@ -283,7 +304,7 @@ Criterio de salida: build cerrada en Google Play (testing interno) con amigos/fa
 
 > ACTUALIZACIÓN 04-11-2026: ningún entregable de esta fase está hecho (no existe servidor). Lo que tocaba a esta fase se reparte así: la campaña del Mundo 1 pasa a la etapa 3 (como contenido, sin servidor); la parte de servidor (cuentas, validación, casos sin la solución dentro, ranking, reto diario real) pasa a la etapa 5 (5A y 5B). Hay versiones simuladas del perfil, el reto diario y el ranking (excepción del 12-07-2026).
 >
-> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 7): "ventana por hora de servidor" en el reto diario contradice a otro documento que dice "día local". No se resuelve aquí.
+> - **DECIDIDO 06-11-2026** (auditoría, pregunta 7): el reto diario cambia a la medianoche local de cada jugador, con la fecha calculada por el servidor según la zona guardada en la cuenta. ~~(SUPERADO) PENDIENTE DE DECISIÓN: "ventana por hora de servidor" contradecía a otro documento que decía "día local".~~
 > - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14): con cuánto contenido se lanza (el roadmap pone el Mundo 1 con ~10 mapas en esta fase; el plan por etapas incluye el Mundo 1 con 10 casos y 30 días de reto diario en la etapa 3).
 > - El criterio de salida (testing interno con amigos y familia) **no cubre** los trámites de las tiendas: en Google Play, una cuenta personal nueva necesita, según lo investigado, 12 probadores durante 14 días (H-24). Pasa a la etapa 6.
 
@@ -305,7 +326,7 @@ Criterio de salida: economía completa funcionando en testing cerrado; ninguna c
 >
 > - **DECIDIDO 04-11-2026** (auditoría, pregunta 5; ver ADR-0012): con 0 vidas no se puede pulsar Resolver ni empezar casos nuevos. La partida queda guardada para seguir cuando se recupere una vida o se vea un anuncio.
 >   - (SUPERADO 04-11-2026) Versión anterior: qué pasa al quedar con 0 vidas no estaba definido.
-> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 6): premium con vidas ilimitadas o con tope de 5 y recarga instantánea; los documentos dicen las dos cosas.
+> - **DECIDIDO 06-11-2026** (auditoría, pregunta 6): premium con vidas ilimitadas. ~~(SUPERADO) PENDIENTE DE DECISIÓN: ilimitadas o tope de 5 con recarga instantánea.~~
 
 ### FASE 4 — Contenido y lanzamiento
 
@@ -324,7 +345,7 @@ Criterio de salida: economía completa funcionando en testing cerrado; ninguna c
 > - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 15): si hay inglés desde el lanzamiento y cómo se guardan las pistas (hoy el motor las escribe directamente en español).
 > - **DECIDIDO 04-11-2026** (auditoría, pregunta 20; ver ADR-0012): al tocar una casilla sin sospechoso elegido aparece el aviso "Elige primero a un sospechoso". Hay un modo alternativo de tocar dos veces (elegir y tocar el destino) además de mantener oprimido o arrastrar. Se diseña en la prueba de concepto.
 >   - (SUPERADO 04-11-2026) Versión anterior: la alternativa al arrastre estaba sin decidir (hoy confirmar una ficha exige mantener oprimido o arrastrar).
-> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, preguntas 16 y 17): edad mínima (hay documentos con 12+ y otros con 13) e identidad legal (persona natural o empresa).
+> - **DECIDIDO 06-11-2026** (auditoría, preguntas 16 y 17): edad mínima de 13 años o más y publicación como persona natural. ~~(SUPERADO) PENDIENTE DE DECISIÓN: 12+ contra 13, y persona natural contra empresa.~~
 
 ## Fuera de roadmap (post-lanzamiento)
 

@@ -245,7 +245,7 @@ La dificultad puede subir dentro de un mismo mundo.
   - sin limite de vidas
 - No da ventajas directas de ranking
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 6, H-26): vidas de Premium. Versión A (este documento): sin límite de vidas. Versión B (`docs/08-balance.md`, sección "Beneficios premium"): sigue habiendo un tope de 5 con recarga instantánea. Recomendación de la auditoría: vidas ilimitadas (en la práctica es lo mismo y es más fácil de explicar). Falta que Alejandro decida.
+> **DECIDIDO 06-11-2026** (auditoría, pregunta 6, H-26): premium da vidas ilimitadas (versión A de este documento). ~~(SUPERADO) Versión B de `docs/08-balance.md`: tope de 5 con recarga instantánea.~~
 
 ### Reto diario
 - Disponible tras completar tutorial
@@ -261,7 +261,7 @@ La dificultad puede subir dentro de un mismo mundo.
   - se advierte que se registrara el intento oficial
   - al confirmar, queda consumido el intento oficial del dia
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 7, H-27): hora en que cambia el reto diario. `docs/03-reglas-del-juego.md` dice "dentro del día local" y `docs/08-balance.md` dice hora del servidor (domingo 23:59 UTC para el cierre semanal). Recomendación de la auditoría: medianoche de Colombia, igual para todos.
+> **DECIDIDO 06-11-2026** (auditoría, pregunta 7, H-27): el reto diario cambia a la medianoche local de cada jugador, con el mismo caso para todos los que juegan esa fecha (detalle en `docs/03-reglas-del-juego.md`, sección "Reto diario"). ~~(SUPERADO) Recomendación de la auditoría: medianoche de Colombia, igual para todos.~~ El cierre semanal (domingo 23:59 UTC, doc 08) queda sin definir.
 >
 > Hoy la pantalla de Reto es una simulación: elige el caso según los días transcurridos desde el 01-01-2026 con la hora del teléfono, sin mirar la dificultad, y se puede repetir sin límite. "Un solo intento" y "mismo caso para todos" **no se cumplen** en el prototipo.
 
