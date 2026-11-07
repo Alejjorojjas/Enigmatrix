@@ -96,6 +96,9 @@ class BoardInteraction {
       case ActionFeedback.incompleteBoard:
       case ActionFeedback.wrongSolution:
       case ActionFeedback.solvedOk:
+      case ActionFeedback.pendingValidation:
+      case ActionFeedback.rateLimited:
+      case ActionFeedback.validationFailed:
         break; // no salen de colocar
     }
   }
@@ -170,6 +173,23 @@ class BoardInteraction {
   /// casillas que no cuadran.
   ActionFeedback solve({bool revealCells = false}) {
     final fb = controller.solve(revealCells: revealCells);
+    announceSolve(fb);
+    return fb;
+  }
+
+  /// Resolver con el servidor (campaña y reto en modo servidor). Espera la
+  /// respuesta; sin conexión devuelve [ActionFeedback.pendingValidation] y la
+  /// pantalla avisa que el caso queda "por validar".
+  Future<ActionFeedback> solveOnline() async {
+    final fb = await controller.solveOnline();
+    announceSolve(fb);
+    return fb;
+  }
+
+  /// Cuenta al director qué pasó al resolver: faltan personajes, no cuadra o
+  /// se resolvió. También lo usa la pantalla cuando la respuesta del servidor
+  /// llega más tarde (el envío estaba "por validar").
+  void announceSolve(ActionFeedback fb) {
     final s = read();
     switch (fb) {
       case ActionFeedback.incompleteBoard:
@@ -187,7 +207,6 @@ class BoardInteraction {
       default:
         break;
     }
-    return fb;
   }
 
   /// Datos de la secuencia de revelar, a partir de una partida resuelta.

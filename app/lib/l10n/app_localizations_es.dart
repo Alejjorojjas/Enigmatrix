@@ -1192,4 +1192,57 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tutorialEndLookBoard => 'Seguir mirando el tablero';
+
+  @override
+  String get validationChecking => 'Comprobando tu solución…';
+
+  @override
+  String get validationPending =>
+      'Sin conexión. Lo validamos en cuanto tengas señal.';
+
+  @override
+  String get validationPendingTag => 'Por validar';
+
+  @override
+  String get validationPendingSheetInfo =>
+      'Enviaste tu solución sin conexión. La validamos en cuanto tengas señal.';
+
+  @override
+  String get validationPendingOpen => 'Ver el caso';
+
+  @override
+  String get validationRateLimited => 'Demasiados intentos. Espera un momento.';
+
+  @override
+  String get validationRejected =>
+      'No pudimos validar este caso. Inténtalo de nuevo.';
+
+  @override
+  String validationLateSolved(String title) {
+    return 'Validamos tu solución: «$title» quedó resuelto.';
+  }
+
+  @override
+  String validationLateWrong(String title, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n casillas no cuadran',
+      one: '1 casilla no cuadra',
+    );
+    return 'Tu solución de «$title» no era correcta: $_temp0.';
+  }
+
+  @override
+  String get validationStalledTitle => 'No pudimos validar tu solución.';
+
+  @override
+  String get validationStalledBody =>
+      'Hubo un problema al validar tu solución. Puedes reintentar o cancelar el envío y seguir con el tablero.';
+
+  @override
+  String get validationRetry => 'Reintentar';
+
+  @override
+  String get validationCancelSubmit => 'Cancelar envío';
 }

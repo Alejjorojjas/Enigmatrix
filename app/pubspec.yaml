@@ -1,7 +1,7 @@
 name: enigmatrix
 description: Enigmatrix - juego de deduccion visual.
 publish_to: 'none'
-version: 0.7.2+9
+version: 0.8.0+10
 
 environment:
   sdk: ^3.11.1
@@ -19,6 +19,9 @@ dependencies:
   flutter_soloud: ^4.1.7
   enigmatrix_engine:
     path: ../tools
+  firebase_core: ^5.1.0
+  firebase_auth: ^7.0.1
+  cloud_functions: ^7.0.1
 
 dev_dependencies:
   flutter_test:

@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
+import '../backend/validation_providers.dart';
 import '../data/case_repository.dart';
 import '../game/game_config.dart';
 import 'case_list_screen.dart' show prefsProvider;
@@ -46,11 +47,13 @@ void _playToday(BuildContext context, DailyChallenge? today) {
 String challengeStateText(
   AppLocalizations l10n,
   PuzzleCase pc,
-  SharedPreferences? prefs,
-) {
+  SharedPreferences? prefs, {
+  bool pendingValidation = false,
+}) {
   if (prefs?.getString('done:${pc.caseId}') != null) {
     return l10n.homeStateDone;
   }
+  if (pendingValidation) return l10n.validationPendingTag;
   if (prefs?.getString('game:${pc.caseId}') != null) {
     return l10n.homeStateOpen;
   }
@@ -66,6 +69,8 @@ class HomeTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
+    // Una respuesta tardía del servidor cambia lo resuelto: se relee.
+    ref.watch(pendingCaseIdsProvider);
     final playable = worldCases(ref);
     final solved = solvedIn(playable, prefs);
     final hour = DateTime.now().hour;
@@ -299,6 +304,8 @@ class WorldsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
+    // Una respuesta tardía del servidor cambia lo resuelto: se relee.
+    ref.watch(pendingCaseIdsProvider);
     final playable = worldCases(ref);
     final solved = solvedIn(playable, prefs);
     final worlds = worldsFor(ref.watch(gameConfigProvider), context.l10n);
@@ -479,7 +486,14 @@ class ChallengeTab extends ConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  challengeStateText(context.l10n, today.puzzle, prefs),
+                  challengeStateText(
+                    context.l10n,
+                    today.puzzle,
+                    prefs,
+                    pendingValidation: ref
+                        .watch(pendingCaseIdsProvider)
+                        .contains(today.puzzle.caseId),
+                  ),
                   style: context.note(18, color: p.text),
                 ),
               ] else

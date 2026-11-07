@@ -5,12 +5,17 @@
 library;
 
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
 import 'package:flutter/widgets.dart' show AppLifecycleState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../backend/backend_config.dart' show isServerCaseId;
+import '../backend/validation_client.dart';
+import '../backend/validation_providers.dart';
+import '../backend/validation_service.dart';
 import '../data/case_repository.dart' show kTutorialCaseId;
 import 'board_state.dart';
 import 'game_config.dart';
@@ -63,6 +68,17 @@ class GameState {
   /// reloj detenido hasta que el jugador toque Continuar.
   final bool paused;
 
+  /// Esperando la respuesta del servidor a Resolver (modo servidor).
+  final bool submitting;
+
+  /// Resolver se envió sin conexión: el tablero queda "por validar" y se
+  /// valida en cuanto haya señal (ADR-0016).
+  final bool pendingValidation;
+
+  /// El envío "por validar" se detuvo tras errores seguidos del servidor: el
+  /// jugador elige Reintentar o Cancelar envío.
+  final bool validationStalled;
+
   const GameState({
     required this.pc,
     required this.board,
@@ -83,6 +99,9 @@ class GameState {
     this.wrongCount = 0,
     this.loading = false,
     this.paused = false,
+    this.submitting = false,
+    this.pendingValidation = false,
+    this.validationStalled = false,
   });
 
   GameState copyWith({
@@ -104,6 +123,9 @@ class GameState {
     int? wrongCount,
     bool? loading,
     bool? paused,
+    bool? submitting,
+    bool? pendingValidation,
+    bool? validationStalled,
   }) => GameState(
     pc: pc,
     board: board ?? this.board,
@@ -124,6 +146,9 @@ class GameState {
     wrongCount: wrongCount ?? this.wrongCount,
     loading: loading ?? this.loading,
     paused: paused ?? this.paused,
+    submitting: submitting ?? this.submitting,
+    pendingValidation: pendingValidation ?? this.pendingValidation,
+    validationStalled: validationStalled ?? this.validationStalled,
   );
 }
 
@@ -139,7 +164,15 @@ enum ActionFeedback {
   incompleteBoard, // falta confirmar personajes
   wrongSolution,
   solvedOk,
+
+  // Solo en modo servidor:
+  pendingValidation, // sin conexión: queda "por validar"
+  rateLimited, // el servidor pidió esperar un momento
+  validationFailed, // el servidor no aceptó el envío
 }
+
+/// Tope del tiempo que se informa al servidor (24 h, backend/validation.ts).
+const _kMaxClientElapsedMs = 24 * 60 * 60 * 1000;
 
 /// En producción el reloj corre solo (1 tick por segundo). Los tests lo
 /// apagan para llamar a [GameController.tick] a mano y ser deterministas.
@@ -159,6 +192,11 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   SharedPreferences? _prefs;
   bool _alive = true;
 
+  /// Servicio de validación del servidor. Null en el modo `none`: entonces
+  /// todo se valida en el teléfono, como siempre.
+  ValidationService? _validation;
+  bool _serverCase = false;
+
   /// true cuando hay algo que vale la pena guardar: el jugador cambió algo
   /// o se restauró una partida. Abrir un caso y salir sin tocar nada no
   /// deja partida guardada.
@@ -174,6 +212,18 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   GameState build(PuzzleCase arg) {
     _alive = true;
     _config = ref.read(gameConfigProvider);
+    // El tutorial y el banco `caso-*` validan siempre en el teléfono.
+    _validation = ref.read(validationServiceProvider);
+    _serverCase = _validation != null && isServerCaseId(arg.caseId);
+    final server = _serverCase ? _validation : null;
+    if (server != null) {
+      server.activeCases.add(arg.caseId);
+      final sub = server.events.listen(_onValidationEvent);
+      ref.onDispose(() {
+        sub.cancel();
+        server.activeCases.remove(arg.caseId);
+      });
+    }
     ref.onDispose(() {
       _alive = false;
       _ticker?.cancel();
@@ -229,6 +279,18 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     if (!_alive) return;
     _prefs = prefs;
 
+    // Modo servidor: ¿hay un envío esperando respuesta? Si no, se avisa del
+    // inicio (sin bloquear la partida: si falla, la partida sigue).
+    var pending = false;
+    var stalled = false;
+    final server = _serverCase ? _validation : null;
+    if (server != null) {
+      await server.ready;
+      if (!_alive) return;
+      pending = server.isPending(arg.caseId);
+      stalled = pending && server.isStalled(arg.caseId);
+    }
+
     SavedGame? saved;
     if (prefs != null) {
       try {
@@ -252,9 +314,26 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         autoX: saved.autoX,
         mapMode: saved.mapMode,
         loading: false,
+        pendingValidation: pending,
+        validationStalled: stalled,
       );
     } else {
-      state = state.copyWith(loading: false);
+      state = state.copyWith(
+        loading: false,
+        pendingValidation: pending,
+        validationStalled: stalled,
+      );
+    }
+    // Aviso de inicio al servidor, sin frenar la partida. Una partida guardada
+    // que ya tiene tiempo y no tiene registro de cómo empezó se da por
+    // empezada sin conexión: no entra al ranking.
+    if (server != null && !pending) {
+      unawaited(
+        server.ensureStarted(
+          arg.caseId,
+          alreadyPlayed: (saved?.elapsed ?? 0) > 0,
+        ),
+      );
     }
     // Si la app ya está en segundo plano al terminar la carga, queda en
     // pausa y el reloj no arranca.
@@ -328,12 +407,18 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     _ticker?.cancel();
     _ticker = null;
     if (!ref.read(gameTickerEnabledProvider)) return;
-    if (state.loading || state.paused || state.solved || _held) return;
+    if (state.loading || state.paused || state.solved || _held || _waiting) {
+      return;
+    }
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => tick());
   }
 
   /// true mientras un diálogo detiene el reloj sin mostrar la pausa.
   bool _held = false;
+
+  /// El reloj se detiene mientras se espera al servidor o el tablero está
+  /// "por validar".
+  bool get _waiting => state.submitting || state.pendingValidation;
 
   /// Detiene el reloj SIN tapar el tablero (p. ej. diálogo de salida).
   void holdClock() {
@@ -356,7 +441,9 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   /// Un segundo de juego. No avanza si la partida está en pausa, cargando
   /// o resuelta.
   void tick() {
-    if (state.loading || state.paused || state.solved || _held) return;
+    if (state.loading || state.paused || state.solved || _held || _waiting) {
+      return;
+    }
     final elapsed = state.elapsedSeconds + 1;
     state = state.copyWith(elapsedSeconds: elapsed);
     if (elapsed % _config.periodicSaveSeconds == 0) _enqueueSave();
@@ -407,7 +494,11 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   // ---- colocación ----------------------------------------------------------
 
   bool get _editable =>
-      !state.locked && !state.solved && !state.paused && !state.loading;
+      !state.locked &&
+      !state.solved &&
+      !state.paused &&
+      !state.loading &&
+      !_waiting;
 
   /// Actúa sobre una casilla con la herramienta activa (ADR-0013).
   /// [confirm] viene del gesto: toque corto = candidato, mantener oprimido =
@@ -579,10 +670,22 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
   // ---- resolver (doc 03 + regla 9 del ADR-0012) -------------------------------
 
-  /// Comprueba el tablero. Si es incorrecto cuenta las casillas que no
-  /// cuadran ([GameState.wrongCount]) y solo señala cuáles
+  /// true si Resolver se valida en el servidor (campaña y reto en modo
+  /// servidor). El tutorial y el banco `caso-*` validan siempre aquí.
+  bool get usesServer => _serverCase;
+
+  /// Comprueba el tablero en el teléfono. Si es incorrecto cuenta las casillas
+  /// que no cuadran ([GameState.wrongCount]) y solo señala cuáles
   /// ([GameState.errorCells]) cuando [revealCells] es true (tutorial).
+  ///
+  /// Con el modo `none` es el camino de siempre. En modo servidor los casos
+  /// de campaña y de reto usan [solveOnline].
   ActionFeedback solve({bool revealCells = false}) {
+    // Un caso de servidor nunca se valida en el teléfono: usa solveOnline.
+    if (_serverCase) {
+      assert(false, 'solve() es solo para casos locales; usa solveOnline()');
+      return ActionFeedback.ok;
+    }
     if (!_editable) return ActionFeedback.ok;
     final positions = state.board.confirmedPositions(
       state.pc.characters.map((c) => c.id),
@@ -591,36 +694,54 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
     final v = Validator.validate(state.pc, positions);
     if (v.valid) {
-      _stopTicker();
-      state = state.copyWith(
-        solved: true,
-        murdererId: v.murdererId,
-        lethalWeaponId: v.lethalWeaponId,
-        errorCells: const {},
-        wrongCount: 0,
-        selectedChar: () => null,
-        toolMode: ToolMode.notes,
-      );
-      // Resuelto: la partida guardada ya no hace falta.
-      _touched = false;
-      final prefs = _prefs;
-      if (prefs != null) {
-        _enqueue(() => SavedGame.clear(prefs, arg.caseId));
-      }
+      _applySolved(v.murdererId, v.lethalWeaponId);
       return ActionFeedback.solvedOk;
     }
 
     // Casillas incorrectas: en Fase 1 se compara contra la solución local
-    // (en Fase 2 esto lo responde el servidor).
+    // (en el modo servidor lo responde el servidor).
     final wrong = <int>{
       for (final e in positions.entries)
         if (state.pc.solution.positions[e.key] != e.value) e.value,
     };
+    _registerWrong(wrong.length, revealCells ? wrong : const {});
+    return ActionFeedback.wrongSolution;
+  }
+
+  /// Marca el caso como resuelto con el asesino y el arma dados.
+  void _applySolved(String? murdererId, String? lethalWeaponId) {
+    _stopTicker();
+    state = state.copyWith(
+      solved: true,
+      murdererId: murdererId,
+      lethalWeaponId: lethalWeaponId,
+      errorCells: const {},
+      wrongCount: 0,
+      selectedChar: () => null,
+      toolMode: ToolMode.notes,
+      submitting: false,
+      pendingValidation: false,
+      validationStalled: false,
+    );
+    // Resuelto: la partida guardada ya no hace falta.
+    _touched = false;
+    final prefs = _prefs;
+    if (prefs != null) {
+      _enqueue(() => SavedGame.clear(prefs, arg.caseId));
+    }
+  }
+
+  /// Un Resolver fallido: suma el error, bloquea unos segundos y deja el
+  /// conteo de casillas que no cuadran.
+  void _registerWrong(int wrongCount, Set<int> errorCells) {
     state = state.copyWith(
       errorCount: state.errorCount + 1,
-      errorCells: revealCells ? wrong : const {},
-      wrongCount: wrong.length,
+      errorCells: errorCells,
+      wrongCount: wrongCount,
       locked: true,
+      submitting: false,
+      pendingValidation: false,
+      validationStalled: false,
     );
     _unlockTimer?.cancel();
     _unlockTimer = Timer(Duration(seconds: _config.wrongSolveLockSeconds), () {
@@ -630,7 +751,120 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         wrongCount: 0,
       );
     });
-    return ActionFeedback.wrongSolution;
+    // Por si el reloj estaba detenido esperando al servidor.
+    if (_ticker == null) _startTicker();
+  }
+
+  // ---- resolver con el servidor (ADR-0016) -------------------------------------
+
+  /// Envía el tablero al servidor. Sin conexión no se pierde nada: el envío
+  /// queda en la cola y el caso "por validar" ([ActionFeedback.pendingValidation]).
+  /// Si el caso no se valida en el servidor, es igual que [solve].
+  Future<ActionFeedback> solveOnline() async {
+    final server = _serverCase ? _validation : null;
+    if (server == null) return solve();
+    if (!_editable) return ActionFeedback.ok;
+    final positions = state.board.confirmedPositions(
+      state.pc.characters.map((c) => c.id),
+    );
+    if (positions == null) return ActionFeedback.incompleteBoard;
+
+    _stopTicker();
+    state = state.copyWith(submitting: true);
+    // Solo se lee cómo empezó la partida: nunca se llama a startCase aquí.
+    final startedOnline = await server.startedOnlineForSubmit(arg.caseId);
+    if (!_alive) return ActionFeedback.ok;
+    final outcome = await server.submit(
+      PendingSubmission(
+        caseId: arg.caseId,
+        submissionId: server.newSubmissionId(),
+        positions: positions,
+        clientElapsedMs: math.min(
+          state.elapsedSeconds * 1000,
+          _kMaxClientElapsedMs,
+        ),
+        startedOnline: startedOnline,
+        elapsedSeconds: state.elapsedSeconds,
+        errorCount: state.errorCount,
+        createdAt: server.now(),
+      ),
+    );
+    if (!_alive) return ActionFeedback.ok;
+
+    switch (outcome) {
+      case OutcomeSolved(:final response):
+        _applySolved(response.murdererId, response.lethalWeaponId);
+        return ActionFeedback.solvedOk;
+      case OutcomeWrong(:final response):
+        _registerWrong(response.wrongCount, const {});
+        return ActionFeedback.wrongSolution;
+      case OutcomeQueued():
+        // El reloj sigue detenido hasta que llegue la respuesta.
+        state = state.copyWith(submitting: false, pendingValidation: true);
+        _enqueueSave();
+        return ActionFeedback.pendingValidation;
+      case OutcomeRateLimited():
+        state = state.copyWith(submitting: false);
+        _startTicker();
+        return ActionFeedback.rateLimited;
+      case OutcomeRejected():
+        state = state.copyWith(submitting: false);
+        _startTicker();
+        return ActionFeedback.validationFailed;
+      case OutcomeStalled():
+        // Errores seguidos del servidor: el tablero queda esperando la
+        // decisión del jugador (Reintentar o Cancelar envío).
+        state = state.copyWith(
+          submitting: false,
+          pendingValidation: true,
+          validationStalled: true,
+        );
+        _enqueueSave();
+        return ActionFeedback.pendingValidation;
+    }
+  }
+
+  /// Reintentar un envío detenido. La respuesta llega por el servicio.
+  void retryValidation() {
+    final server = _validation;
+    if (server == null ||
+        !state.pendingValidation ||
+        !state.validationStalled) {
+      return;
+    }
+    state = state.copyWith(validationStalled: false);
+    unawaited(server.retryStalled(arg.caseId));
+  }
+
+  /// Cancelar el envío detenido: sale de la cola y el tablero se desbloquea.
+  Future<void> cancelValidation() async {
+    final server = _validation;
+    if (server == null || !state.pendingValidation) return;
+    await server.cancel(arg.caseId);
+    if (!_alive) return;
+    state = state.copyWith(pendingValidation: false, validationStalled: false);
+    _startTicker();
+  }
+
+  /// Respuesta del servidor a un envío que estaba en la cola.
+  void _onValidationEvent(ValidationEvent e) {
+    if (!_alive || e.caseId != arg.caseId || !state.pendingValidation) return;
+    switch (e.kind) {
+      case ValidationEventKind.solved:
+        final r = e.response;
+        if (r is SubmitSolved) _applySolved(r.murdererId, r.lethalWeaponId);
+      case ValidationEventKind.wrong:
+        final r = e.response;
+        if (r is SubmitWrong) _registerWrong(r.wrongCount, const {});
+      case ValidationEventKind.rejected:
+        state = state.copyWith(
+          pendingValidation: false,
+          validationStalled: false,
+        );
+        _startTicker();
+      case ValidationEventKind.stalled:
+        state = state.copyWith(validationStalled: true);
+    }
   }
 }
 

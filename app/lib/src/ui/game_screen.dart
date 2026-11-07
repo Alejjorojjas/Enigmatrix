@@ -252,8 +252,49 @@ class _GameBodyState extends ConsumerState<_GameBody> {
         s.toolMode == ToolMode.notes || s.toolMode == ToolMode.place;
     sc.solved = s.solved;
     sc.errorCells = s.errorCells;
-    sc.interactive = !s.paused && !s.loading && !s.solved && !s.locked;
+    sc.interactive =
+        !s.paused &&
+        !s.loading &&
+        !s.solved &&
+        !s.locked &&
+        !s.submitting &&
+        !s.pendingValidation;
     if (prev == null || prev.mapMode != s.mapMode) _game.setMapMode(s.mapMode);
+    _syncValidation(prev, s);
+  }
+
+  /// Modo servidor: avisos mientras se espera la respuesta y reacción a la
+  /// respuesta que llega tarde (el envío estaba "por validar").
+  void _syncValidation(GameState? prev, GameState s) {
+    final wasPending = prev?.pendingValidation ?? false;
+    final wasSubmitting = prev?.submitting ?? false;
+    final wasStalled = prev?.validationStalled ?? false;
+    if (s.validationStalled && !wasStalled) {
+      // El servidor falló varias veces seguidas: el jugador decide.
+      _showToast(context.l10n.validationStalledTitle, persistent: true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_askStalled());
+      });
+    } else if (wasStalled && !s.validationStalled && s.pendingValidation) {
+      _showToast(context.l10n.validationPending, persistent: true);
+    } else if (s.pendingValidation && !wasPending) {
+      _showToast(context.l10n.validationPending, persistent: true);
+    } else if (s.submitting && !wasSubmitting) {
+      _showToast(context.l10n.validationChecking, persistent: true);
+    } else if ((wasPending && !s.pendingValidation) ||
+        (wasSubmitting && !s.submitting && !s.pendingValidation)) {
+      _clearToast();
+    }
+    // La respuesta llegó cuando el jugador seguía en la partida.
+    if (wasPending && !s.pendingValidation) {
+      if (s.solved) {
+        _interaction.announceSolve(ActionFeedback.solvedOk);
+        _fallbackTimer?.cancel();
+        _fallbackTimer = Timer(const Duration(seconds: 9), _onRevealFinished);
+      } else if (s.wrongCount > 0) {
+        _interaction.announceSolve(ActionFeedback.wrongSolution);
+      }
+    }
   }
 
   @override
@@ -271,13 +312,22 @@ class _GameBodyState extends ConsumerState<_GameBody> {
 
   // ---- avisos ---------------------------------------------------------------------
 
-  void _showToast(String text, {Duration? duration}) {
+  void _showToast(String text, {Duration? duration, bool persistent = false}) {
     _toast.value = text;
     _live.value = text;
     _toastTimer?.cancel();
+    _toastTimer = null;
+    // El aviso de "por validar" no se apaga solo: dura hasta la respuesta.
+    if (persistent) return;
     _toastTimer = Timer(duration ?? const Duration(milliseconds: 1900), () {
       _toast.value = null;
     });
+  }
+
+  void _clearToast() {
+    _toastTimer?.cancel();
+    _toastTimer = null;
+    _toast.value = null;
   }
 
   /// Toque en el tablero: durante el bloqueo de 3 s que sigue a un Resolver
@@ -406,11 +456,87 @@ class _GameBodyState extends ConsumerState<_GameBody> {
         return;
       }
     }
+    if (!tutorial && ref.read(gameControllerProvider(pc).notifier).usesServer) {
+      unawaited(_resolveOnline());
+      return;
+    }
     final fb = _interaction.solve(revealCells: tutorial);
+    _afterResolve(fb);
+  }
+
+  void _afterResolve(ActionFeedback fb) {
     if (fb == ActionFeedback.solvedOk) {
       // Si por algo la secuencia del tablero no termina, el resumen sale igual.
       _fallbackTimer?.cancel();
       _fallbackTimer = Timer(const Duration(seconds: 9), _onRevealFinished);
+    }
+  }
+
+  bool _stalledDialogOpen = false;
+
+  /// Envío detenido por errores del servidor: Reintentar o Cancelar envío.
+  /// Si se cierra el diálogo sin elegir, Resolver lo vuelve a abrir.
+  Future<void> _askStalled() async {
+    if (_stalledDialogOpen || !mounted) return;
+    _stalledDialogOpen = true;
+    final retry = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(ctx.l10n.validationStalledTitle),
+        content: Text(ctx.l10n.validationStalledBody),
+        actions: [
+          TextButton(
+            key: const ValueKey('envio-cancelar'),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(ctx.l10n.validationCancelSubmit),
+          ),
+          FilledButton(
+            key: const ValueKey('envio-reintentar'),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(ctx.l10n.validationRetry),
+          ),
+        ],
+      ),
+    );
+    _stalledDialogOpen = false;
+    if (!mounted || retry == null) return;
+    final controller = ref.read(gameControllerProvider(pc).notifier);
+    if (retry) {
+      controller.retryValidation();
+    } else {
+      await controller.cancelValidation();
+      if (mounted) _clearToast();
+    }
+  }
+
+  /// Resolver con el servidor: espera la respuesta. Sin conexión el caso queda
+  /// "por validar" (el aviso lo pone [_syncValidation]).
+  Future<void> _resolveOnline() async {
+    final state = ref.read(gameControllerProvider(pc));
+    if (state.validationStalled) {
+      unawaited(_askStalled());
+      return;
+    }
+    if (state.pendingValidation) {
+      _showToast(context.l10n.validationPending, persistent: true);
+      return;
+    }
+    final fb = await _interaction.solveOnline();
+    if (!mounted) return;
+    switch (fb) {
+      case ActionFeedback.rateLimited:
+        _showToast(
+          context.l10n.validationRateLimited,
+          duration: const Duration(milliseconds: 3500),
+        );
+      case ActionFeedback.validationFailed:
+        _showToast(
+          context.l10n.validationRejected,
+          duration: const Duration(milliseconds: 3500),
+        );
+      default:
+        _afterResolve(fb);
     }
   }
 

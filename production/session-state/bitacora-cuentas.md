@@ -11,6 +11,39 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 07-11-2026 · cuenta secundaria · etapa 5A.2: la app se conecta al servidor (0.8.0+10)
+
+- **Qué se hizo:**
+  - **Bandera `ENX_BACKEND`** (decisión del arquitecto, reversible):
+    - `none` es el valor por defecto: la app valida en el teléfono, sin Firebase ni red. Así los APK de Alejandro siguen funcionando mientras no exista el proyecto real.
+    - `emulator` es para pruebas. En release se convierte en `none`, así que para probar en web hay que compilar con `--profile`.
+    - `firebase` queda para la ronda de corte 5A.3.
+  - **App (`frontend`):** `app/lib/src/backend/` con Auth anónimo, cliente de las funciones y cola "por validar" guardada, con `submissionId` y reintentos. Además:
+    - mensajes "Sin conexión…", "Demasiados intentos…" y envío detenido con Reintentar o Cancelar;
+    - marca "Por validar" en la lista de casos.
+    - El tutorial y el banco `caso-*` siguen validando en el teléfono. Paquetes nuevos: firebase_core, firebase_auth y cloud_functions.
+  - **QA independiente:** RECHAZÓ la primera versión por 2 bugs al salir de la partida mientras se valida. Se corrigieron y sus 8 pruebas pasan.
+  - **Seguridad:** sin hallazgos críticos. Se corrigieron en la ronda:
+    - `submit` ya no se bloquea;
+    - los errores del servidor tienen tope de reintentos;
+    - el modo `emulator` no funciona en release;
+    - `solve()` local no se puede usar con casos del servidor;
+    - una partida empezada antes del servidor no entra al ranking.
+
+    Lo demás quedó como condición de entrada de la 5A.3 en el diseño: App Check en la app, privacidad y Seguridad de datos, y el permiso INTERNET.
+  - **Verificación del arquitecto en web contra el emulador:**
+    - mansion-01 se resolvió y el servidor la guardó resuelta y rankeada (22 s del servidor y 21 s del teléfono);
+    - mansion-03 se resolvió sin red: quedó "por validar" y el reintento a los 60 s la validó;
+    - mansion-07, abierta desde Inicio, registró startedAt.
+
+    Encontré y se corrigieron dos cosas: la sesión no se esperaba antes de `startCase`, y reintentar `startCase` justo antes de Resolver daba un tiempo oficial casi cero.
+  - **Limitación conocida (solo web):** al recargar directamente en `#/play/<id>`, el aviso de inicio puede no salir. En Android siempre se entra por Inicio.
+- **Pruebas:** app 707 (antes 627) y backend 95, todas pasan; analyze limpio. Las corrió el arquitecto.
+- **Versión:** 0.8.0+10.
+- **Pendiente o dudas para la otra cuenta:**
+  - la 5A.3 (proyecto real de Firebase de Alejandro y las condiciones del diseño);
+  - el aviso `params.ENFORCE_APP_CHECK.value() invoked during function deployment` del emulador, que es inofensivo pero conviene revisarlo.
+
 ## 07-11-2026 · cuenta secundaria · etapa 5A.1: servidor en el emulador
 
 - **Qué se hizo:**

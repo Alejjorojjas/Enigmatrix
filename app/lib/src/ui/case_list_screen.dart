@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
+import '../backend/validation_providers.dart';
 import '../data/case_repository.dart';
 import '../game/game_config.dart';
 import 'game_chrome.dart';
@@ -70,6 +71,9 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
   Widget build(BuildContext context) {
     final cases = ref.watch(campaignProvider(kMundoMansion));
     final prefs = ref.watch(prefsProvider).valueOrNull;
+    // Casos con la solución enviada sin conexión ("por validar"). Cuando la
+    // respuesta llega, este conjunto cambia y la lista se vuelve a leer.
+    final pending = ref.watch(pendingCaseIdsProvider);
     final p = context.pal;
 
     return Scaffold(
@@ -144,6 +148,7 @@ class _CaseListScreenState extends ConsumerState<CaseListScreen> {
                               cases: cs,
                               done: done,
                               inProgress: inProgress,
+                              pending: pending,
                               currentId: currentId,
                               numberOf: numberOf,
                             ),
@@ -438,6 +443,7 @@ class _EvidenceBoard extends StatelessWidget {
     required this.cases,
     required this.done,
     required this.inProgress,
+    required this.pending,
     required this.currentId,
     required this.numberOf,
   });
@@ -446,6 +452,7 @@ class _EvidenceBoard extends StatelessWidget {
   final List<PuzzleCase> cases;
   final Map<String, Map<String, dynamic>> done;
   final Map<String, SavedGameInfo> inProgress;
+  final Set<String> pending;
   final String? currentId;
 
   @override
@@ -482,6 +489,9 @@ class _EvidenceBoard extends StatelessWidget {
                       tilt: (i.isEven ? -1 : 1) * 0.045,
                       doneInfo: done[pc.caseId],
                       savedGame: inProgress[pc.caseId],
+                      pendingValidation:
+                          !done.containsKey(pc.caseId) &&
+                          pending.contains(pc.caseId),
                       isCurrent: pc.caseId == currentId,
                     ),
                   ),
@@ -560,6 +570,7 @@ class _CaseFile extends ConsumerStatefulWidget {
     required this.tilt,
     required this.doneInfo,
     this.savedGame,
+    this.pendingValidation = false,
     required this.isCurrent,
   });
 
@@ -568,6 +579,9 @@ class _CaseFile extends ConsumerStatefulWidget {
   final double tilt;
   final Map<String, dynamic>? doneInfo;
   final SavedGameInfo? savedGame;
+
+  /// La solución se envió sin conexión y espera la señal para validarse.
+  final bool pendingValidation;
   final bool isCurrent;
 
   @override
@@ -620,6 +634,12 @@ class _CaseFileState extends ConsumerState<_CaseFile>
         ? p.accent
         : p.surfaceAlt;
     final fg = isDone || widget.isCurrent ? p.onColor(fill) : p.textDim;
+    final pendingTag = widget.pendingValidation
+        ? _Tag(
+            text: context.l10n.validationPendingTag,
+            strong: widget.isCurrent,
+          )
+        : null;
     final title = caseTitle(widget.pc);
 
     final tile = SizedBox(
@@ -646,6 +666,8 @@ class _CaseFileState extends ConsumerState<_CaseFile>
                   child: Icon(
                     isDone
                         ? Icons.check_rounded
+                        : widget.pendingValidation
+                        ? Icons.hourglass_top_rounded
                         : widget.isCurrent
                         ? Icons.search_rounded
                         : Icons.folder_rounded,
@@ -689,7 +711,10 @@ class _CaseFileState extends ConsumerState<_CaseFile>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.savedGame != null) ...[
+              if (pendingTag != null) ...[
+                pendingTag,
+                const SizedBox(height: 6),
+              ] else if (widget.savedGame != null) ...[
                 _Tag(
                   text: context.l10n.caseListInProgressTag(
                     formatElapsed(widget.savedGame!.elapsed),
@@ -716,14 +741,16 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               offset: Offset(0, -3 * math.sin(_bounce!.value * math.pi)),
               child: child,
             ),
-            child: _Tag(
-              text: widget.savedGame != null
-                  ? context.l10n.caseListInProgressTagStrong(
-                      formatElapsed(widget.savedGame!.elapsed),
-                    )
-                  : context.l10n.caseListNextCase,
-              strong: true,
-            ),
+            child:
+                pendingTag ??
+                _Tag(
+                  text: widget.savedGame != null
+                      ? context.l10n.caseListInProgressTagStrong(
+                          formatElapsed(widget.savedGame!.elapsed),
+                        )
+                      : context.l10n.caseListNextCase,
+                  strong: true,
+                ),
           ),
           const SizedBox(height: 6),
           tilted,
@@ -794,7 +821,24 @@ class _CaseFileState extends ConsumerState<_CaseFile>
                 style: ctx.body(15, color: p.good),
               ),
             ),
-          if (done == null && widget.savedGame != null)
+          if (done == null && widget.pendingValidation)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.hourglass_top_rounded, size: 20, color: p.accent),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      ctx.l10n.validationPendingSheetInfo,
+                      style: ctx.body(15, color: p.accent),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else if (done == null && widget.savedGame != null)
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Text(
@@ -809,6 +853,8 @@ class _CaseFileState extends ConsumerState<_CaseFile>
           AppButton(
             label: done != null
                 ? context.l10n.caseListReopen
+                : widget.pendingValidation
+                ? context.l10n.validationPendingOpen
                 : widget.savedGame != null
                 ? context.l10n.caseListKeepPlaying
                 : context.l10n.caseListInvestigate,

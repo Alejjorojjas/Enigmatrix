@@ -1699,5 +1699,70 @@
   "tutorialEndLookBoard": "Seguir mirando el tablero",
   "@tutorialEndLookBoard": {
     "description": "Botón para cerrar el cierre del tutorial y seguir mirando el tablero."
+  },
+  "validationChecking": "Comprobando tu solución…",
+  "@validationChecking": {
+    "description": "Aviso mientras la partida espera la respuesta del servidor a Resolver."
+  },
+  "validationPending": "Sin conexión. Lo validamos en cuanto tengas señal.",
+  "@validationPending": {
+    "description": "Aviso de la partida cuando Resolver se envió sin conexión y el tablero queda por validar."
+  },
+  "validationPendingTag": "Por validar",
+  "@validationPendingTag": {
+    "description": "Marca en la lista de casos (y en el estado del reto) de un caso con la solución enviada sin conexión."
+  },
+  "validationPendingSheetInfo": "Enviaste tu solución sin conexión. La validamos en cuanto tengas señal.",
+  "@validationPendingSheetInfo": {
+    "description": "Texto en la ficha de un caso cuyo envío espera señal."
+  },
+  "validationPendingOpen": "Ver el caso",
+  "@validationPendingOpen": {
+    "description": "Botón de la ficha de un caso por validar."
+  },
+  "validationRateLimited": "Demasiados intentos. Espera un momento.",
+  "@validationRateLimited": {
+    "description": "Aviso cuando el servidor limita los envíos de Resolver por minuto."
+  },
+  "validationRejected": "No pudimos validar este caso. Inténtalo de nuevo.",
+  "@validationRejected": {
+    "description": "Aviso cuando el servidor no acepta el envío de Resolver."
+  },
+  "validationLateSolved": "Validamos tu solución: «{title}» quedó resuelto.",
+  "@validationLateSolved": {
+    "description": "Aviso discreto cuando llega, con el jugador fuera de la partida, la respuesta de que el caso quedó resuelto.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "validationLateWrong": "Tu solución de «{title}» no era correcta: {n, plural, =1{1 casilla no cuadra} other{{n} casillas no cuadran}}.",
+  "@validationLateWrong": {
+    "description": "Aviso discreto cuando llega, con el jugador fuera de la partida, la respuesta de que la solución no era correcta.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "validationStalledTitle": "No pudimos validar tu solución.",
+  "@validationStalledTitle": {
+    "description": "Título y aviso cuando el envío de Resolver se detuvo tras errores seguidos del servidor."
+  },
+  "validationStalledBody": "Hubo un problema al validar tu solución. Puedes reintentar o cancelar el envío y seguir con el tablero.",
+  "@validationStalledBody": {
+    "description": "Explicación del diálogo de un envío detenido."
+  },
+  "validationRetry": "Reintentar",
+  "@validationRetry": {
+    "description": "Botón que vuelve a enviar un envío detenido."
+  },
+  "validationCancelSubmit": "Cancelar envío",
+  "@validationCancelSubmit": {
+    "description": "Botón que quita de la cola un envío detenido y desbloquea el tablero."
   }
 }

@@ -1883,6 +1883,84 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Seguir mirando el tablero'**
   String get tutorialEndLookBoard;
+
+  /// Aviso mientras la partida espera la respuesta del servidor a Resolver.
+  ///
+  /// In es, this message translates to:
+  /// **'Comprobando tu solución…'**
+  String get validationChecking;
+
+  /// Aviso de la partida cuando Resolver se envió sin conexión y el tablero queda por validar.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión. Lo validamos en cuanto tengas señal.'**
+  String get validationPending;
+
+  /// Marca en la lista de casos (y en el estado del reto) de un caso con la solución enviada sin conexión.
+  ///
+  /// In es, this message translates to:
+  /// **'Por validar'**
+  String get validationPendingTag;
+
+  /// Texto en la ficha de un caso cuyo envío espera señal.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviaste tu solución sin conexión. La validamos en cuanto tengas señal.'**
+  String get validationPendingSheetInfo;
+
+  /// Botón de la ficha de un caso por validar.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver el caso'**
+  String get validationPendingOpen;
+
+  /// Aviso cuando el servidor limita los envíos de Resolver por minuto.
+  ///
+  /// In es, this message translates to:
+  /// **'Demasiados intentos. Espera un momento.'**
+  String get validationRateLimited;
+
+  /// Aviso cuando el servidor no acepta el envío de Resolver.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos validar este caso. Inténtalo de nuevo.'**
+  String get validationRejected;
+
+  /// Aviso discreto cuando llega, con el jugador fuera de la partida, la respuesta de que el caso quedó resuelto.
+  ///
+  /// In es, this message translates to:
+  /// **'Validamos tu solución: «{title}» quedó resuelto.'**
+  String validationLateSolved(String title);
+
+  /// Aviso discreto cuando llega, con el jugador fuera de la partida, la respuesta de que la solución no era correcta.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu solución de «{title}» no era correcta: {n, plural, =1{1 casilla no cuadra} other{{n} casillas no cuadran}}.'**
+  String validationLateWrong(String title, int n);
+
+  /// Título y aviso cuando el envío de Resolver se detuvo tras errores seguidos del servidor.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos validar tu solución.'**
+  String get validationStalledTitle;
+
+  /// Explicación del diálogo de un envío detenido.
+  ///
+  /// In es, this message translates to:
+  /// **'Hubo un problema al validar tu solución. Puedes reintentar o cancelar el envío y seguir con el tablero.'**
+  String get validationStalledBody;
+
+  /// Botón que vuelve a enviar un envío detenido.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get validationRetry;
+
+  /// Botón que quita de la cola un envío detenido y desbloquea el tablero.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar envío'**
+  String get validationCancelSubmit;
 }
 
 class _AppLocalizationsDelegate

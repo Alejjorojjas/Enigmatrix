@@ -6,6 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'l10n/l10n.dart';
+import 'src/backend/backend_config.dart';
+import 'src/backend/firebase_validation_client.dart';
+import 'src/backend/validation_client.dart' show SubmitWrong, ValidationClient;
+import 'src/backend/validation_providers.dart';
+import 'src/backend/validation_service.dart';
 import 'src/board/audio/audio_service.dart';
 import 'src/data/case_repository.dart';
 import 'src/game/app_settings.dart';
@@ -19,6 +24,7 @@ import 'src/ui/game_screen.dart';
 import 'src/ui/home_shell.dart';
 import 'src/ui/skin_theme.dart';
 import 'src/ui/splash_screen.dart';
+import 'src/ui/v1_scope.dart' show caseTitle;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +33,12 @@ Future<void> main() async {
   final settings = await AppSettings.load();
   // Los valores de juego se leen del asset junto con las opciones (H-65).
   final config = await GameConfig.load();
+  // Servidor (ADR-0016): con el modo `none`, por defecto, no se toca Firebase
+  // ni la red y la app valida en el teléfono como siempre.
+  final ValidationClient? validationClient = await bootstrapBackend(
+    parseBackendMode(kEnxBackendRaw),
+    timeout: Duration(seconds: config.serverTimeoutSeconds),
+  );
   // El audio carga los sonidos en segundo plano: hasta que termina, la
   // partida simplemente no suena.
   final audio = SoloudSoundService();
@@ -36,6 +48,7 @@ Future<void> main() async {
       overrides: [
         initialSettingsProvider.overrideWithValue(settings),
         gameConfigProvider.overrideWithValue(config),
+        validationClientProvider.overrideWithValue(validationClient),
         soundSinkProvider.overrideWithValue(audio),
       ],
       child: const EnigmatrixApp(),
@@ -86,16 +99,27 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
   late final GoRouter _router = buildAppRouter(
     devTools: () => ref.read(devToolsProvider),
   );
+  final GlobalKey<ScaffoldMessengerState> _messenger =
+      GlobalKey<ScaffoldMessengerState>();
+  StreamSubscription<ValidationEvent>? _validationSub;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // Modo servidor: inicia la sesión anónima y reintenta lo que quedó "por
+    // validar". Con el modo `none` no hay servicio y esto no hace nada.
+    final service = ref.read(validationServiceProvider);
+    if (service != null) {
+      _validationSub = service.events.listen(_onValidationEvent);
+      unawaited(service.start());
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _validationSub?.cancel();
     _router.dispose();
     super.dispose();
   }
@@ -103,6 +127,31 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     ref.read(appLifecycleProvider.notifier).state = state;
+    if (state == AppLifecycleState.resumed) {
+      ref.read(validationServiceProvider)?.onResumed();
+    }
+  }
+
+  /// Respuesta del servidor a un envío "por validar" cuando el jugador ya no
+  /// está en esa partida: el progreso ya se actualizó y basta un aviso
+  /// discreto. Si la partida está abierta, su pantalla muestra el resultado.
+  void _onValidationEvent(ValidationEvent e) {
+    final service = ref.read(validationServiceProvider);
+    if (service == null || service.activeCases.contains(e.caseId)) return;
+    final l10n = lookupAppLocalizations(kAppLocale);
+    final pc = ref.read(caseByIdProvider(e.caseId));
+    final title = pc == null ? e.caseId : caseTitle(pc);
+    final response = e.response;
+    final text = switch (e.kind) {
+      ValidationEventKind.solved => l10n.validationLateSolved(title),
+      ValidationEventKind.wrong => l10n.validationLateWrong(
+        title,
+        response is SubmitWrong ? response.wrongCount : 0,
+      ),
+      ValidationEventKind.rejected => l10n.validationRejected,
+      ValidationEventKind.stalled => l10n.validationStalledTitle,
+    };
+    _messenger.currentState?.showSnackBar(SnackBar(content: Text(text)));
   }
 
   @override
@@ -124,6 +173,7 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: _router,
+      scaffoldMessengerKey: _messenger,
       themeMode: mode,
       theme: SkinUi.theme(skinId, Brightness.light),
       darkTheme: SkinUi.theme(skinId, Brightness.dark),

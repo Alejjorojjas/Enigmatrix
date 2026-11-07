@@ -92,3 +92,37 @@ La auditoría la hizo el agente `seguridad` y no encontró nada crítico. Ningú
 - **Borrado.** Al eliminar la cuenta, borrar también `users/{uid}` (doc 15).
 - **Regla del reloj del ranking.** Pendiente de Alejandro: la pausa al salir (ADR-0012, decisión 10) frente al tiempo del servidor.
 - **Dependencias.** Revisar `npm audit` antes de desplegar: hoy hay 6 vulnerabilidades moderadas, transitivas de `firebase-admin`.
+
+## Ronda 5A.2: la app se conecta (07-11-2026)
+
+**Decisión del arquitecto (reversible).** Todavía no existe el proyecto real de Firebase. Si la app dependiera hoy del servidor, el APK de Alejandro dejaría de validar. Por eso el servidor queda detrás de una bandera de compilación:
+
+| `--dart-define=ENX_BACKEND=` | Qué hace |
+|---|---|
+| `none` (por defecto) | Igual que hoy: valida en el teléfono con la solución local (excepción de la Fase 1). No arranca Firebase ni usa la red. |
+| `emulator` | Valida con el emulador. El host se pasa con `ENX_EMULATOR_HOST` (por defecto `localhost` en web y `10.0.2.2` en el emulador de Android). Usa el proyecto `demo-enigmatrix` con `FirebaseOptions` escritas a mano, sin `google-services.json`. |
+| `firebase` | Proyecto real. Se activa en la ronda de corte, cuando Alejandro cree el proyecto. |
+
+**Ronda de corte (5A.3, después).** Con el proyecto real se hacen cuatro cosas: el valor por defecto pasa a `firebase`, los JSON de `mansion-*` y `reto-*` dejan de llevar `solution`, `tools/` publica en dos partes y caduca la excepción del principio 2.
+
+**Qué hace la app en modo servidor:**
+- **Sesión.** Al arrancar inicia una sesión anónima con Firebase Auth. Sin red, sigue y lo reintenta más tarde.
+- **Casos.** Siguen incluidos en la app, así que se juega sin conexión desde el primer día.
+- **Inicio de partida.** Llama a `startCase` al empezar un caso de la campaña o del reto si hay red. Si no hay red, no pasa nada, pero esa partida no entra al ranking (ADR-0016, punto 5).
+- **Resolver.** Llama a `submitSolution` con un `submissionId` nuevo por envío.
+  - Si no hay red, el envío queda en una cola guardada en `shared_preferences` y el caso queda "por validar". La cola se reintenta al volver a la app, al recuperar la red y cada cierto tiempo, siempre con el mismo `submissionId`.
+  - Si la respuesta es `wrong`, se muestra cuántas casillas no cuadran, como hoy, con el bloqueo.
+  - Si la respuesta es `solved`, va a la victoria con el asesino y el arma que manda el servidor.
+- **Casos locales.** El tutorial y el banco `caso-*` validan siempre en el teléfono.
+
+### Condiciones de entrada de la ronda de corte 5A.3
+
+Vienen de la revisión de seguridad del cliente, 07-11-2026:
+
+- **App Check en la app.** Agregar `firebase_app_check`, con Play Integrity para la tienda y el proveedor de depuración para los APK de prueba. Sin él, el servidor real rechaza todo, porque exige App Check fuera del emulador.
+- **Privacidad.** Con Auth anónimo hay un id de usuario y la IP llega a Google. Antes del primer build con `firebase` hay que actualizar la política de privacidad, los docs 15 y 20 y el formulario de Seguridad de datos de Play. Al borrar la cuenta también se limpian `pending:submissions`, `started:*`, `done:*` y `game:*`.
+- **Permisos.** Revisar el manifiesto fusionado del APK, porque los paquetes de Firebase pueden sumar el permiso INTERNET aunque el modo sea `none`. Si lo suman, corregir los docs 15 y 20.
+- **Quitar `solution` de los assets.** Hoy `PuzzleCase.fromJson` exige la solución (`tools/lib/src/puzzle_case.dart`). Hace falta un tipo de caso sin solución para el cliente, o que la solución sea opcional.
+- **Banco de pruebas.** Decidir si el banco `caso-*` sale del release.
+- **Progreso de la Fase 1.** El `done:` local de la Fase 1 no se migra al servidor: son datos sin verificar.
+- **Ranking.** Usar siempre `serverElapsedMs` y `errors` del servidor, nunca los de la cola local.

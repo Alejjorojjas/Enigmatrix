@@ -81,6 +81,7 @@ Future<GameRig> pumpGameScreen(
   bool tutorial = false,
   bool devTools = false,
   Future<List<PuzzleCase>> Function()? bank,
+  List<Override> extraOverrides = const [],
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   tester.view.physicalSize = size;
@@ -100,6 +101,7 @@ Future<GameRig> pumpGameScreen(
       soundSinkProvider.overrideWithValue(sound),
       hapticSinkProvider.overrideWithValue(haptics),
       ringerProbeProvider.overrideWithValue(FakeRinger(ringer)),
+      ...extraOverrides,
     ],
   );
   addTearDown(container.dispose);

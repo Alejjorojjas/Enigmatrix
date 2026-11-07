@@ -6,6 +6,9 @@
   "challengeStartDate": "2026-11-01",
   "challengeDays": 30,
   "maxLives": 5,
+  "serverTimeoutSeconds": 15,
+  "pendingRetrySeconds": 60,
+  "serverErrorRetryLimit": 3,
   "v1Difficulties": ["principiante", "casual", "intermedio"],
   "worlds": [
     { "id": "mansion", "available": true },

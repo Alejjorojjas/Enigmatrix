@@ -46,6 +46,9 @@ class GameConfig {
     this.challengeStartDate = '2026-11-01',
     this.challengeDays = 30,
     this.maxLives = 5,
+    this.serverTimeoutSeconds = 15,
+    this.pendingRetrySeconds = 60,
+    this.serverErrorRetryLimit = 3,
     this.v1Difficulties = const ['principiante', 'casual', 'intermedio'],
     this.worlds = const [
       WorldConfig('mansion', available: true),
@@ -77,6 +80,16 @@ class GameConfig {
 
   /// Vidas máximas (hoy solo se muestran como DEMO).
   final int maxLives;
+
+  /// Tiempo máximo de cada llamada al servidor, en segundos (etapa 5A.2).
+  final int serverTimeoutSeconds;
+
+  /// Cada cuántos segundos se reintenta la cola de envíos "por validar".
+  final int pendingRetrySeconds;
+
+  /// Cuántos errores seguidos del servidor se reintentan antes de detener el
+  /// envío y preguntar al jugador (no cuenta la falta de señal).
+  final int serverErrorRetryLimit;
 
   /// Dificultades jugables en la V1 (ADR-0014).
   final List<String> v1Difficulties;
@@ -115,6 +128,18 @@ class GameConfig {
       ),
       challengeDays: _positiveInt(json['challengeDays'], d.challengeDays),
       maxLives: _positiveInt(json['maxLives'], d.maxLives),
+      serverTimeoutSeconds: _positiveInt(
+        json['serverTimeoutSeconds'],
+        d.serverTimeoutSeconds,
+      ),
+      pendingRetrySeconds: _positiveInt(
+        json['pendingRetrySeconds'],
+        d.pendingRetrySeconds,
+      ),
+      serverErrorRetryLimit: _positiveInt(
+        json['serverErrorRetryLimit'],
+        d.serverErrorRetryLimit,
+      ),
       v1Difficulties: _stringList(json['v1Difficulties'], d.v1Difficulties),
       worlds: _worlds(json['worlds'], d.worlds),
     );
@@ -151,6 +176,9 @@ class GameConfig {
       other.challengeStartDate == challengeStartDate &&
       other.challengeDays == challengeDays &&
       other.maxLives == maxLives &&
+      other.serverTimeoutSeconds == serverTimeoutSeconds &&
+      other.pendingRetrySeconds == pendingRetrySeconds &&
+      other.serverErrorRetryLimit == serverErrorRetryLimit &&
       listEquals(other.v1Difficulties, v1Difficulties) &&
       listEquals(other.worlds, worlds);
 
@@ -163,6 +191,9 @@ class GameConfig {
     challengeStartDate,
     challengeDays,
     maxLives,
+    serverTimeoutSeconds,
+    pendingRetrySeconds,
+    serverErrorRetryLimit,
     Object.hashAll(v1Difficulties),
     Object.hashAll(worlds),
   );
