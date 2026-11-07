@@ -40,6 +40,9 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
   - **Limitación conocida (solo web):** al recargar directamente en `#/play/<id>`, el aviso de inicio puede no salir. En Android siempre se entra por Inicio.
 - **Pruebas:** app 707 (antes 627) y backend 95, todas pasan; analyze limpio. Las corrió el arquitecto.
 - **Versión:** 0.8.0+10.
+- **APK:** `APKs/enigmatrix-0.8.0+10-arm64.apk` (y `-armeabi-v7a`), con `ENX_DEV=true` y el modo `none`. Firma igual (SHA-256 659f…84df).
+  - Para compilar con Firebase hubo que subir Kotlin a 2.4.0 (firebase-auth 25 lo exige), pasar `jvmTarget` a `compilerOptions` y poner `kotlin.incremental=false`. Kotlin 2.4 falla en Windows con el proyecto en D: y el pub-cache en C:.
+  - **Permisos confirmados (hallazgo M1 de seguridad):** el APK ya pide `INTERNET`, `ACCESS_NETWORK_STATE`, `WAKE_LOCK`, `READ_GSERVICES` y `c2dm.RECEIVE`. Los suman las librerías de Firebase aunque el modo `none` no use la red. Los docs 15 y 20 (y la política de privacidad) dicen "sin INTERNET" y hay que corregirlos en la 5A.3, junto con el formulario de Seguridad de datos.
 - **Pendiente o dudas para la otra cuenta:**
   - la 5A.3 (proyecto real de Firebase de Alejandro y las condiciones del diseño);
   - el aviso `params.ENFORCE_APP_CHECK.value() invoked during function deployment` del emulador, que es inofensivo pero conviene revisarlo.
