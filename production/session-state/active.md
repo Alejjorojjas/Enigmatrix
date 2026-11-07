@@ -13,7 +13,7 @@
   Pruebas: tools 342 y app 627, todas pasan. FPS: 60 estables en el Galaxy A52 de Alejandro (medido con la 0.6.0+6). Detalle en [bitacora-cuentas.md](bitacora-cuentas.md).
 - **Prueba de juego n.º 1: HECHA** con la 0.3.0+3. Resultados: la dificultad está bien por ahora (los rangos se mantienen); hubo confusión silla/sillón/sofá y extrañeza con las habitaciones, ya resuelto en la 0.7.0+7 (ADR-0015).
 - **Hecho del plan** ([production/planes/2026-11-05-etapas-3-y-4.md](../planes/2026-11-05-etapas-3-y-4.md)): rondas 3.1, 3.2, 4.1, 4.2, 4.3a y 4.3b.
-- **Etapas 5 y 6 (06-11-2026):** plan en [production/planes/2026-11-06-etapas-5-y-6.md](../planes/2026-11-06-etapas-5-y-6.md). Alejandro ya tiene las cuentas de Google Play y de Apple, publica como persona natural y el reto cambia a la medianoche local. Esperan su respuesta las preguntas de la sección 4 del plan.
+- **Etapas 5 y 6 (06-11-2026):** plan en [production/planes/2026-11-06-etapas-5-y-6.md](../planes/2026-11-06-etapas-5-y-6.md). Alejandro ya tiene las cuentas de Google Play y de Apple, publica como persona natural y el reto cambia a la medianoche local. ADR-0016 aceptado (07-11-2026). **5A.1 hecha:** servidor en el emulador (`backend/`, 95 pruebas, auditoría de seguridad sin críticos). Lo siguiente: la 5A.2 (conectar la app). Esperan respuesta de Alejandro: si el iPhone entra al lanzamiento y la fecha de su cuenta de Google Play.
 - **Pendiente técnico:**
   - Probar TalkBack real. (FPS medidos el 05-11-2026: 60 fps estables en el Galaxy A52 de Alejandro.)
   - El texto de la partida tiene un tope de 1,3.

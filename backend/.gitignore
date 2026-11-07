@@ -1,0 +1,12 @@
+node_modules/
+lib/
+.firebase/
+*.log
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+# Variables de entorno. functions/.env.local SÍ se versiona (valores del emulador) y por eso
+# NO debe llevar nunca secretos, llaves ni datos reales.
+.env
+.env.*
+!.env.local

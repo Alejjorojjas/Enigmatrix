@@ -33,7 +33,7 @@ App móvil de puzzles de deducción visual. El jugador resuelve casos de misteri
 | Navegación | go_router |
 | Tablero | Escena de Flame en `app/lib/src/board/`, con dos pieles (Ilustrada y Papel) en modo claro y oscuro, director de feedback, sonido y vibración (ADR-0013, desde la 0.3.0+3). El arte de la V1 está hecho por código |
 | Cache local | shared_preferences (progreso y preferencias; solo cache, nunca fuente de verdad) |
-| Backend | Firebase: Auth, Firestore, Cloud Functions, FCM, Remote Config. **Planificado para la etapa 5; hoy no existe backend** |
+| Backend | Firebase: Auth, Firestore, Cloud Functions, FCM, Remote Config. **En construcción (etapa 5A, desde 07-11-2026):** `backend/` corre solo en el emulador (proyecto `demo-enigmatrix`, Java 21); la app aún no se conecta |
 | i18n | intl + archivos .arb (ES por defecto, EN secundario). **Planificado para la etapa 4; hoy los textos están fijos en español** |
 
 ## Principios técnicos innegociables
@@ -108,7 +108,7 @@ production/   Estado de sesión y seguimiento
 | `puzzle-engineer` | Sonnet · high | Motor lógico del puzzle: solver, generador, spec 16 |
 | `contenido-puzzles` | Sonnet · medium | Generar y curar casos por mundo, nombres y textos temáticos, calibración |
 | `frontend` | Sonnet · high | Flutter: pantallas, tablero, gestos, navegación, i18n |
-| `backend` | Sonnet · medium | Firebase: Cloud Functions, Firestore, Auth, rankings. **Inactivo hasta la etapa 5** |
+| `backend` | Sonnet · medium | Firebase: Cloud Functions, Firestore, Auth, rankings. **Activo desde la 5A (07-11-2026)** |
 | `qa` | Sonnet · medium | Tests nuevos, verificación independiente, criterios de aceptación |
 | `seguridad` | Sonnet · high | Privacidad, tiendas y firma, y auditoría antes de cada build que salga a probadores. Las tareas de servidor (Firestore, compras, anti-trampa) están inactivas hasta la etapa 5 |
 | `revisor-docs` | Sonnet · medium | Consistencia de docs, borradores de ADR, mantener active.md y roadmap |

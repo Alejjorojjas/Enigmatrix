@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// Reglas de Enigmatrix (etapa 5A.1). Por defecto todo está denegado;
+// solo se abre lo que aparece aquí. Las escrituras las hacen las Cloud Functions
+// y el script de publicación con Admin, que no pasan por estas reglas.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Caso público (sin solución): lo lee cualquier usuario con sesión, también anónima.
+    match /cases/{caseId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // Soluciones: nadie desde el cliente, ni leer ni escribir.
+    match /caseSolutions/{caseId} {
+      allow read, write: if false;
+    }
+
+    // Usuario y progreso: el dueño lee; solo las funciones escriben.
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+
+      match /progress/{caseId} {
+        allow read: if signedIn() && request.auth.uid == uid;
+        allow write: if false;
+      }
+    }
+
+    // Valores del servidor: solo Admin.
+    match /config/{doc} {
+      allow read, write: if false;
+    }
+  }
+}

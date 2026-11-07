@@ -11,6 +11,28 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 07-11-2026 · cuenta secundaria · etapa 5A.1: servidor en el emulador
+
+- **Qué se hizo:**
+  - **Diseño:** el arquitecto escribió `production/planes/2026-11-07-etapa-5a-diseno.md`, con los datos en Firestore, las funciones `startCase` y `submitSolution`, la publicación de casos y las pruebas.
+  - **Backend (`backend`, Sonnet, activo desde hoy):**
+    - `backend/` con Firebase solo en el emulador (`demo-enigmatrix`);
+    - reglas de Firestore: `caseSolutions` y `config` cerradas para el cliente;
+    - Cloud Functions en TypeScript (Node 22, `southamerica-east1`);
+    - script `scripts/publish-cases.ts`, que publica los 40 casos separados en parte pública y solución.
+  - **Seguridad (`seguridad`):** auditoría sin hallazgos críticos; ningún camino lleva la solución al cliente. Se corrigieron en la misma ronda:
+    - `ranked` lo decide el servidor (`rankable`, `suspicious`);
+    - `submissionId` evita contar dos veces un error;
+    - App Check forzado fuera del emulador;
+    - topes, ids, `version` y `predeploy`.
+  - **Para la 5B y el primer despliegue:** lo que no se corrigió quedó anotado en el diseño (puerta del reto por fecha, vidas, tope diario de errores, consola de Firebase, borrado de cuenta, `npm audit`).
+- **Entorno:** el CLI de Firebase 15.10 exige **Java 21** para los emuladores: `C:/Program Files/Java/jdk-21.0.10.7-hotspot`. Android sigue con el JDK 17.
+- **Pruebas:** backend 95 (37 unitarias y 58 en el emulador), todas pasan; las corrió el arquitecto con `npm test` en `backend/`. La app y `tools/` no cambiaron.
+- **Pendiente o dudas para la otra cuenta:**
+  - la 5A.2: la app con Auth anónimo, caché de casos sin solución, cola "por validar" con `submissionId`, y `tools/` publicando en dos partes;
+  - que Alejandro cree el proyecto real de Firebase y active Blaze (todavía no hace falta);
+  - la regla del reloj del ranking.
+
 ## 07-11-2026 · cuenta secundaria · ADR-0016 (validación en el servidor y partida sin conexión)
 
 - **Qué se hizo:**
