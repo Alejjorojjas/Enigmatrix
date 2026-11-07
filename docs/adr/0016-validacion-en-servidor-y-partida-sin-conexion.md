@@ -1,6 +1,6 @@
 # ADR-0016: Validación en el servidor y partida sin conexión
 
-- **Estado**: Propuesto. El punto 1 lo decidió Alejandro el 07-11-2026; el resto espera su aceptación.
+- **Estado**: Aceptado (07-11-2026). Alejandro decidió el punto 1 y aceptó el resto tal como está.
 - **Fecha**: 07-11-2026
 - **Decisores**: usuario (Alejandro) / arquitecto
 
@@ -28,7 +28,7 @@
 4. **Descarga anticipada.**
    - La primera vez que hay conexión, la app descarga los 10 casos del Mundo 1 sin solución.
    - El reto del día se descarga al abrir la app con conexión.
-5. **Tiempo oficial y ranking** (propuesta del arquitecto, la confirma Alejandro):
+5. **Tiempo oficial y ranking:**
    - Una partida cuenta para el ranking solo si se empezó con conexión, porque el servidor anota la hora de inicio.
    - Las partidas jugadas sin conexión de principio a fin cuentan para el progreso y la campaña, pero no para el ranking de tiempo.
    - El **reto diario** exige conexión para empezar, porque fija la fecha local y la hora de inicio (pregunta 7). Si la señal se cae a mitad de la partida, se puede terminar y Resolver espera.
