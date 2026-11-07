@@ -11,6 +11,23 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 07-11-2026 · cuenta secundaria · ADR-0016 (validación en el servidor y partida sin conexión)
+
+- **Qué se hizo:**
+  - **Decisión de Alejandro:** la opción A. Sin conexión se juega y Resolver espera a que vuelva la señal.
+  - **ADR:** el arquitecto escribió `docs/adr/0016-validacion-en-servidor-y-partida-sin-conexion.md` en estado Propuesto. Dice:
+    - la solución solo vive en el servidor y la valida una Cloud Function;
+    - el Mundo 1 se descarga por adelantado, sin solución;
+    - una partida cuenta para el ranking solo si se empezó con conexión, y el reto diario exige conexión para empezar;
+    - la vida se descuenta cuando el servidor valida;
+    - App Check y un límite de intentos.
+  - **Al día:** el plan, el roadmap y el README.
+- **Pruebas:** sin cambios de código.
+- **Pendiente o dudas para la otra cuenta:**
+  - que Alejandro acepte los puntos 2 a 7 del ADR-0016;
+  - si el iPhone entra al lanzamiento;
+  - la fecha de creación de la cuenta de Google Play.
+
 ## 06-11-2026 · cuenta secundaria · decisiones y plan de las etapas 5 y 6
 
 - **Qué se hizo:**

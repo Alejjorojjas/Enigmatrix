@@ -80,7 +80,8 @@ Decididas en chat el 06-11-2026. Detalle y consecuencias: [plan de las etapas 5 
   - **17.** Publica como **persona natural**. Con compras, las tiendas la tratan como comerciante y en la UE pueden mostrar sus datos de contacto: conviene un apartado postal u oficina virtual y preguntar a un contador por los ingresos. No bloquea el desarrollo.
   - **18.** La versión que revisa la tienda va **sin la tienda, el premium ni el ranking simulados, y sin ajustes que no hacen nada**.
   - **23.** Los mundos bloqueados **se muestran con candado**. Se corrige el doc 06.
-- **Siguen pendientes:** 12, 13, 14, 15, 22 (solo el iPhone), más las preguntas abiertas de la sección 4 del plan nuevo: partida sin conexión, si el iPhone entra al lanzamiento, el orden (prueba cerrada ya o después) y puntos y ayudas (la 12).
+- **Partida sin conexión (07-11-2026):** se juega sin señal y Resolver espera a que vuelva la conexión. Detalle en el [ADR-0016](adr/0016-validacion-en-servidor-y-partida-sin-conexion.md) (Propuesto).
+- **Siguen pendientes:** 12, 13, 14, 15, 22 (solo el iPhone), más las preguntas abiertas de la sección 4 del plan nuevo: si el iPhone entra al lanzamiento, el orden (prueba cerrada ya o después) y puntos y ayudas (la 12).
 
 ## Plan por etapas 0 a 6 (aprobado por Alejandro el 04-11-2026)
 
@@ -157,7 +158,7 @@ Los tiempos y costos son **estimaciones sin verificar**, tomadas de la auditorí
   - **5B:** ranking, reto diario real, vidas y compras.
   - Antes de empezar se escribe un ADR (un registro corto de una decisión técnica, con opciones y motivo) sobre cómo validar en el servidor (H-41).
 - **Termina cuando:** la validación en el servidor funciona.
-- **Plan detallado (06-11-2026):** [production/planes/2026-11-06-etapas-5-y-6.md](../production/planes/2026-11-06-etapas-5-y-6.md), sección 2. Incluye las decisiones de vidas de premium y de la hora del reto diario (medianoche local de cada jugador). Sigue abierta la pregunta de la partida sin conexión.
+- **Plan detallado (06-11-2026):** [production/planes/2026-11-06-etapas-5-y-6.md](../production/planes/2026-11-06-etapas-5-y-6.md), sección 2. Incluye las decisiones de vidas de premium y de la hora del reto diario (medianoche local de cada jugador). La partida sin conexión se decidió el 07-11-2026: ver el [ADR-0016](adr/0016-validacion-en-servidor-y-partida-sin-conexion.md).
 - **¿Toca código?** Sí.
 - **Tiempo y costo:** sin estimar.
 - Aquí caducan las excepciones de la Fase 1 (solución local y datos simulados).
