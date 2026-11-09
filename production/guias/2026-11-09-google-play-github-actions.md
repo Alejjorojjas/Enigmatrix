@@ -16,6 +16,8 @@ Se puede lanzar a mano desde GitHub: pestaña **Actions**, workflow "Android a G
 
 **El número de versión:** el `versionCode` es 10000 más el número de ejecución del workflow, así que siempre crece. El nombre visible, por ejemplo 0.8.0, sale de `app/pubspec.yaml`.
 
+**La cuenta es del amigo.** La app se publica en la cuenta de desarrollador del amigo de Alejandro, donde Alejandro es colaborador (09-11-2026). Si a Alejandro le falta un permiso, por ejemplo para crear la app o invitar usuarios en el paso 4, se lo pide al dueño o le pide que lo haga él.
+
 ## Lo que tienes que hacer tú, en orden
 
 Claude no puede hacer estos pasos: tocan tu llave de firma, tus cuentas y tus pagos.

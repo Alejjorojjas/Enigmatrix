@@ -21,6 +21,7 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
   - **ADR-0017** y la guía `production/guias/2026-11-09-google-play-github-actions.md`. La guía tiene los pasos de Alejandro: secretos de la llave, crear la app, primera subida manual, cuenta de servicio y variables.
 - **El arquitecto no leyó ni tocó la llave ni `key.properties`.** Los secretos los carga Alejandro.
 - **Pruebas:** sin cambios de código; `dart analyze` del motor está limpio.
+- **Decisión de Alejandro:** se publica en la cuenta de Google Play de un amigo, donde Alejandro es colaborador. Ya publicaron otras apps juntos y "está todo cuadrado". A futuro piensan separarse y se usará la transferencia de apps. Quedó anotado en el ADR-0017.
 - **Pendiente:**
   - Alejandro hace los pasos 1 a 5 de la guía. El primer run fallará en "AAB firmado" hasta que existan los secretos; las pruebas sí corren.
   - Antes de la prueba cerrada: ocultar las pantallas simuladas (pregunta 18), privacidad y ficha.

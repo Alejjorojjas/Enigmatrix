@@ -25,6 +25,14 @@ Hasta hoy los APK se compilaban a mano en su PC, en la carpeta principal, que es
 5. **Subida con permisos mínimos.** La hace una cuenta de servicio de Google Cloud con permiso solo para las pistas de prueba, no para producción. La acción usada es `r0adkll/upload-google-play@v1`.
 6. **Primera subida a mano.** La primera versión de la app se sube a mano en Play Console, porque la API de Google no puede crear la primera. Hasta tener la cuenta de servicio, la subida automática queda apagada con la variable `PLAY_UPLOAD`.
 
+### Cuenta de publicación (09-11-2026)
+
+Enigmatrix se publica en la cuenta de desarrollador de Google Play de un amigo de Alejandro. Alejandro es colaborador en esa cuenta y con ese amigo ya publicaron otras apps; según Alejandro, "está todo cuadrado" entre ellos.
+
+En la ficha aparece el nombre de desarrollador de esa cuenta y los ingresos van a su perfil de pagos. A futuro piensan separar las cuentas: entonces se usará la transferencia de apps de Google Play, que conserva la app, sus usuarios y la llave de firma.
+
+Esto ajusta la pregunta 17 ("persona natural") mientras dure el arreglo. Los permisos de administración de la cuenta, como invitar a la cuenta de servicio, los puede necesitar el dueño.
+
 ## Alternativas consideradas
 
 - **fastlane supply.** Hace lo mismo con más configuración (Ruby, Fastfile). Se reconsidera si se necesita subir la ficha y las capturas desde el repositorio.
