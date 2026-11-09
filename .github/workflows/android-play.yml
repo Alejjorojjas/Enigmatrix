@@ -24,11 +24,21 @@ on:
       - "**/*.md"
       - "backend/**"
       - "prototipos/**"
+  # Cada pull request hacia main corre las pruebas y compila el AAB, pero NO
+  # sube nada a Google Play: solo se sube lo que Alejandro ya aprobó y llegó a main.
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "production/**"
+      - "**/*.md"
+      - "backend/**"
+      - "prototipos/**"
   workflow_dispatch: {}
 
 concurrency:
-  group: android-play
-  cancel-in-progress: false
+  group: android-play-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -151,7 +161,7 @@ jobs:
   google-play:
     name: Subir a Google Play
     needs: aab
-    if: vars.PLAY_UPLOAD == 'true'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.PLAY_UPLOAD == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

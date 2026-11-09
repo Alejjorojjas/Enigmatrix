@@ -48,6 +48,14 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
    - de H-66: la versión con `package_info_plus`, el vocabulario "Caso Nº"/"Expediente", una pantalla de error con Reintentar y lints más estrictos;
    - quitar el interruptor `tools/test/support/regeneracion_pendiente.dart`.
 
+## OBLIGATORIO: ramas y PR (desde 09-11-2026)
+
+Desde la primera subida a Google Play, **nada va directo a `main`**. Cada push a `main` sube la app a Play por GitHub Actions (ADR-0017).
+- El trabajo va en una rama, con un pull request hacia `main`.
+- Alejandro revisa y aprueba el PR, y solo entonces se fusiona.
+- Los PR corren las pruebas y compilan el AAB, pero no suben nada.
+- Nunca hagas `merge`, `--ff-only` ni push a `main` por tu cuenta.
+
 ## OBLIGATORIO: la bitácora compartida
 
 Todo lo que hagas lo anotas en `production/session-state/bitacora-cuentas.md`: fecha, qué hiciste, archivos que tocaste, commit y resultado de las pruebas. Así la otra cuenta, al volver, puede revisar y corregir sin conflictos. Al terminar, deja todo con commit y push, y el árbol de trabajo limpio.
