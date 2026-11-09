@@ -51,6 +51,19 @@ jobs:
           channel: stable
           cache: true
 
+      # Las pruebas de la app miden texto con Roboto, que viene en el caché del
+      # SDK (bin/cache/artifacts/material_fonts). En un runner nuevo puede no
+      # estar descargado: sin él se mide con la letra de relleno y fallan.
+      - name: Fuentes Material del SDK
+        run: |
+          SDK="$(dirname "$(dirname "$(command -v flutter)")")"
+          FONTS="$SDK/bin/cache/artifacts/material_fonts"
+          if [ ! -f "$FONTS/roboto-regular.ttf" ]; then
+            flutter precache --universal
+          fi
+          ls "$FONTS" | head -20
+          test -f "$FONTS/roboto-regular.ttf"
+
       - name: Motor (tools)
         working-directory: tools
         run: |
