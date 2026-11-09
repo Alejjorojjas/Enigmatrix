@@ -200,10 +200,10 @@ Future<bool> loadRoboto() async {
   final dir = _materialFontsDir();
   if (dir == null) return false;
   final files = [
-    '$dir/roboto-regular.ttf',
-    '$dir/roboto-medium.ttf',
-    '$dir/roboto-bold.ttf',
-    '$dir/roboto-black.ttf',
+    '$dir/Roboto-Regular.ttf',
+    '$dir/Roboto-Medium.ttf',
+    '$dir/Roboto-Bold.ttf',
+    '$dir/Roboto-Black.ttf',
   ];
   if (!files.every((f) => File(f).existsSync())) return false;
   final loader = FontLoader('Roboto');
@@ -229,7 +229,7 @@ String? _materialFontsDir() {
   candidates.add('C:/Flutter/flutter');
   for (final root in candidates) {
     final dir = '$root/bin/cache/artifacts/material_fonts';
-    if (File('$dir/roboto-regular.ttf').existsSync()) return dir;
+    if (File('$dir/Roboto-Regular.ttf').existsSync()) return dir;
   }
   return null;
 }

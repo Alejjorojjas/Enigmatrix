@@ -58,11 +58,11 @@ jobs:
         run: |
           SDK="$(dirname "$(dirname "$(command -v flutter)")")"
           FONTS="$SDK/bin/cache/artifacts/material_fonts"
-          if [ ! -f "$FONTS/roboto-regular.ttf" ]; then
+          if [ ! -f "$FONTS/Roboto-Regular.ttf" ]; then
             flutter precache --universal
           fi
           ls "$FONTS" | head -20
-          test -f "$FONTS/roboto-regular.ttf"
+          test -f "$FONTS/Roboto-Regular.ttf"
 
       - name: Motor (tools)
         working-directory: tools
