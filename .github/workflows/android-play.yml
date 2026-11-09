@@ -1,0 +1,158 @@
+# Enigmatrix: pruebas, AAB firmado y subida a Google Play (ADR-0017).
+#
+# Cada push a main que toque código:
+#   1. corre las pruebas del motor (tools) y de la app;
+#   2. compila el .aab de tienda (sin ENX_DEV, servidor apagado: ENX_BACKEND=none);
+#   3. lo guarda como artefacto del run (sirve para la primera subida manual);
+#   4. si la variable del repositorio PLAY_UPLOAD vale "true", lo sube a la pista
+#      que diga PLAY_TRACK (por defecto "internal": prueba interna, sin revisión),
+#      con el estado PLAY_RELEASE_STATUS (por defecto "draft").
+#
+# Secretos necesarios (Settings > Secrets and variables > Actions), ver
+# production/guias/2026-11-09-google-play-github-actions.md:
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS,
+#   ANDROID_KEY_PASSWORD, PLAY_SERVICE_ACCOUNT_JSON.
+
+name: Android a Google Play
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "production/**"
+      - "**/*.md"
+      - "backend/**"
+      - "prototipos/**"
+  workflow_dispatch: {}
+
+concurrency:
+  group: android-play
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: "3.41.4"
+  PACKAGE_NAME: com.enigmatrix.app
+
+jobs:
+  pruebas:
+    name: Pruebas (motor y app)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Motor (tools)
+        working-directory: tools
+        run: |
+          dart pub get
+          dart analyze
+          dart test
+
+      - name: App
+        working-directory: app
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
+
+  aab:
+    name: AAB firmado
+    needs: pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Llave de subida (desde los secretos)
+        working-directory: app/android
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then
+            echo "::error::Faltan los secretos de la llave de subida. Sin ellos el AAB saldría firmado con la llave de depuración y Google Play lo rechaza."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > app/upload-keystore.jks
+          {
+            echo "storeFile=upload-keystore.jks"
+            echo "storePassword=$KEYSTORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > key.properties
+
+      - name: Compilar AAB
+        working-directory: app
+        run: |
+          flutter pub get
+          # versionCode = 10000 + número de run: siempre crece y queda por encima
+          # de los APK compilados a mano (split-per-abi llega a ~3010). El nombre sale de pubspec.yaml.
+          flutter build appbundle --release \
+            --build-number=$((10000 + ${{ github.run_number }})) \
+            --dart-define=ENX_BACKEND=none
+
+      - name: Borrar la llave del runner
+        if: always()
+        working-directory: app/android
+        run: rm -f key.properties app/upload-keystore.jks
+
+      - name: Comprobar la firma del AAB
+        working-directory: app
+        run: |
+          OUT=$(keytool -printcert -jarfile build/app/outputs/bundle/release/app-release.aab)
+          echo "$OUT" | grep -E "SHA256|Owner"
+          if echo "$OUT" | grep -q "CN=Android Debug"; then
+            echo "::error::El AAB quedó firmado con la llave de depuración."
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enigmatrix-aab-${{ github.run_number }}
+          path: app/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 14
+
+  google-play:
+    name: Subir a Google Play
+    needs: aab
+    if: vars.PLAY_UPLOAD == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: enigmatrix-aab-${{ github.run_number }}
+
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: ${{ env.PACKAGE_NAME }}
+          releaseFiles: app-release.aab
+          track: ${{ vars.PLAY_TRACK || 'internal' }}
+          # Mientras la app nunca se haya publicado en ninguna pista, Google solo
+          # acepta borradores ("draft"). Después del primer lanzamiento manual se
+          # cambia la variable PLAY_RELEASE_STATUS a "completed".
+          status: ${{ vars.PLAY_RELEASE_STATUS || 'draft' }}

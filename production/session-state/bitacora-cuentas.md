@@ -11,6 +11,20 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 09-11-2026 · cuenta secundaria · Google Play con GitHub Actions (ADR-0017)
+
+- **Pedido de Alejandro:** que cada push a `main` se suba solo a Google Play. Después irán App Store y las demás tiendas.
+- **Qué se hizo:**
+  - **Workflow `.github/workflows/android-play.yml`.** Corre las pruebas de tools y de la app, compila el `.aab` firmado (sin `ENX_DEV` y con `ENX_BACKEND=none`) y lo guarda como artefacto. Con `PLAY_UPLOAD=true` lo sube a la prueba interna.
+    - `versionCode` = 10000 + número de run.
+    - Si faltan los secretos de la llave, falla. También falla si el `.aab` sale firmado con la llave de depuración.
+  - **ADR-0017** y la guía `production/guias/2026-11-09-google-play-github-actions.md`. La guía tiene los pasos de Alejandro: secretos de la llave, crear la app, primera subida manual, cuenta de servicio y variables.
+- **El arquitecto no leyó ni tocó la llave ni `key.properties`.** Los secretos los carga Alejandro.
+- **Pruebas:** sin cambios de código; `dart analyze` del motor está limpio.
+- **Pendiente:**
+  - Alejandro hace los pasos 1 a 5 de la guía. El primer run fallará en "AAB firmado" hasta que existan los secretos; las pruebas sí corren.
+  - Antes de la prueba cerrada: ocultar las pantallas simuladas (pregunta 18), privacidad y ficha.
+
 ## 07-11-2026 · cuenta secundaria · etapa 5A.2: la app se conecta al servidor (0.8.0+10)
 
 - **Qué se hizo:**
