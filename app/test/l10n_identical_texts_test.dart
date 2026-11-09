@@ -122,7 +122,7 @@ void main() {
       expect(l.tutorialCoachProgress(3, 18), 'TUTORIAL · 3/18');
     });
     test('versión', () {
-      expect(l.settingsVersion(kAppVersion), 'Enigmatrix v$kAppVersion');
+      expect(l.settingsVersion(kAppVersion), 'Murdoku Diario v$kAppVersion');
     });
     test('premium con precio', () {
       expect(l.premiumMonthly(r'$4.99'), r'Mensual · $4.99');

@@ -35,7 +35,7 @@ permissions:
 
 env:
   FLUTTER_VERSION: "3.41.4"
-  PACKAGE_NAME: com.enigmatrix.app
+  PACKAGE_NAME: com.murdokudiario.app
 
 jobs:
   pruebas:

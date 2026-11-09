@@ -385,8 +385,8 @@ void main() {
       await tester.ensureVisible(find.text('Banco de pruebas (desarrollo)'));
       expect(find.text('Banco de pruebas (desarrollo)'), findsOneWidget);
       expect(find.text('COPIAR FEEDBACK DE PLAYTEST'), findsOneWidget);
-      await tester.ensureVisible(find.text('Enigmatrix v$kAppVersion'));
-      expect(find.text('Enigmatrix v$kAppVersion'), findsOneWidget);
+      await tester.ensureVisible(find.text('Murdoku Diario v$kAppVersion'));
+      expect(find.text('Murdoku Diario v$kAppVersion'), findsOneWidget);
     });
 
     testWidgets('abrir el banco muestra los casos de prueba y se pueden '
@@ -406,8 +406,8 @@ void main() {
       'sin ENX_DEV no aparecen banco ni feedback, pero sí la versión',
       (tester) async {
         await openSettings(tester, devTools: false);
-        await tester.ensureVisible(find.text('Enigmatrix v$kAppVersion'));
-        expect(find.text('Enigmatrix v$kAppVersion'), findsOneWidget);
+        await tester.ensureVisible(find.text('Murdoku Diario v$kAppVersion'));
+        expect(find.text('Murdoku Diario v$kAppVersion'), findsOneWidget);
         expect(find.text('Banco de pruebas (desarrollo)'), findsNothing);
         expect(find.text('ABRIR BANCO DE PRUEBAS'), findsNothing);
         expect(find.text('COPIAR FEEDBACK DE PLAYTEST'), findsNothing);

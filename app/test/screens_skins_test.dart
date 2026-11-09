@@ -164,7 +164,7 @@ Future<void> _shell(WidgetTester t, String skin, ThemeMode mode, Size size) =>
 final _scenarios = <_Scenario>[
   _Scenario('pantalla de carga', (t, skin, mode, size) async {
     await _pump(t, const SplashScreen(), skin: skin, mode: mode, size: size);
-    expect(find.text('Enigmatrix'), findsOneWidget);
+    expect(find.text('Murdoku Diario'), findsOneWidget);
     // El splash pasa solo al inicio tras unos segundos.
     await t.pump(const Duration(seconds: 3));
     await t.pump(const Duration(milliseconds: 500));

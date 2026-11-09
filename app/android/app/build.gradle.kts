@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.enigmatrix.app"
+        applicationId = "com.murdokudiario.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

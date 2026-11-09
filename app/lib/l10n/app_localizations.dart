@@ -919,7 +919,7 @@ abstract class AppLocalizations {
   /// Nombre del juego (título de la app y de la pantalla de carga).
   ///
   /// In es, this message translates to:
-  /// **'Enigmatrix'**
+  /// **'Murdoku Diario'**
   String get appTitle;
 
   /// Nombre de la piel Ilustrada.
@@ -1183,7 +1183,7 @@ abstract class AppLocalizations {
   /// Versión de la app al pie de la configuración.
   ///
   /// In es, this message translates to:
-  /// **'Enigmatrix v{version}'**
+  /// **'Murdoku Diario v{version}'**
   String settingsVersion(String version);
 
   /// Título de la primera página (bienvenida) del diálogo de cómo jugar.

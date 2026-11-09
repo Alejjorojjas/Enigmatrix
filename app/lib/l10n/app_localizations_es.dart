@@ -431,7 +431,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get worldHospital => 'El Hospital';
 
   @override
-  String get appTitle => 'Enigmatrix';
+  String get appTitle => 'Murdoku Diario';
 
   @override
   String get skinIllustrated => 'Ilustrada';
@@ -635,7 +635,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String settingsVersion(String version) {
-    return 'Enigmatrix v$version';
+    return 'Murdoku Diario v$version';
   }
 
   @override

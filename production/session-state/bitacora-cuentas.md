@@ -21,6 +21,9 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
   - **ADR-0017** y la guía `production/guias/2026-11-09-google-play-github-actions.md`. La guía tiene los pasos de Alejandro: secretos de la llave, crear la app, primera subida manual, cuenta de servicio y variables.
 - **El arquitecto no leyó ni tocó la llave ni `key.properties`.** Los secretos los carga Alejandro.
 - **Pruebas:** sin cambios de código; `dart analyze` del motor está limpio.
+- **Nombre (decisión de Alejandro):** la app se llama **"Murdoku Diario"** en la tienda, debajo del ícono, en la carga y en Configuración. El paquete pasa a `com.murdokudiario.app`, y ese cambio es permanente desde la primera subida. Se le avisó que "Murdoku" es una marca de libros (Manuel Garand) y que ya hay una app con ese nombre en la App Store; dijo que no hay problema.
+  - Se cambiaron `appTitle` y `settingsVersion` en el `.arb`, la etiqueta de Android, el `applicationId`, `CFBundleDisplayName`, la web, el workflow y las pruebas.
+  - La versión pasa a 0.8.1+11. App: 707 pruebas pasan; analyze limpio.
 - **Decisión de Alejandro:** se publica en la cuenta de Google Play de un amigo, donde Alejandro es colaborador. Ya publicaron otras apps juntos y "está todo cuadrado". A futuro piensan separarse y se usará la transferencia de apps. Quedó anotado en el ADR-0017.
 - **Pendiente:**
   - Alejandro hace los pasos 1 a 5 de la guía. El primer run fallará en "AAB firmado" hasta que existan los secretos; las pruebas sí corren.

@@ -33,6 +33,18 @@ En la ficha aparece el nombre de desarrollador de esa cuenta y los ingresos van 
 
 Esto ajusta la pregunta 17 ("persona natural") mientras dure el arreglo. Los permisos de administración de la cuenta, como invitar a la cuenta de servicio, los puede necesitar el dueño.
 
+### Nombre de la app (09-11-2026)
+
+Alejandro decidió que la app se publique como **"Murdoku Diario"**. Antes del primer envío a Google Play pasan a llevar ese nombre:
+- la tienda;
+- el texto debajo del ícono;
+- la pantalla de carga;
+- Configuración.
+
+El identificador del paquete pasa a ser **`com.murdokudiario.app`** y es permanente. Enigmatrix sigue siendo el nombre interno del proyecto, del repositorio y del código.
+
+Se le avisó que "Murdoku" es el nombre de una serie de libros de Manuel Garand y de una app que ya existe en la App Store. Alejandro dijo que no hay problema con usarlo.
+
 ## Alternativas consideradas
 
 - **fastlane supply.** Hace lo mismo con más configuración (Ruby, Fastfile). Se reconsidera si se necesita subir la ficha y las capturas desde el repositorio.

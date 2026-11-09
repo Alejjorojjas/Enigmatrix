@@ -3,7 +3,7 @@
          dentro de la app (assets/fonts) y no se baja nada. El permiso vuelve en
          la etapa 5, cuando entre Firebase (Auth, Firestore, Functions, FCM). -->
     <application
-        android:label="Enigmatrix"
+        android:label="Murdoku Diario"
         android:allowBackup="false"
         android:usesCleartextTraffic="false"
         android:name="${applicationName}"

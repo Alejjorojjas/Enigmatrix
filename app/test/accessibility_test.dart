@@ -367,7 +367,7 @@ void main() {
             mode: mode,
             textScale: 1.3,
           );
-          expect(find.text('Enigmatrix'), findsOneWidget);
+          expect(find.text('Murdoku Diario'), findsOneWidget);
           expect(tester.takeException(), isNull);
           await tester.pump(const Duration(seconds: 3));
           await tester.pump(const Duration(milliseconds: 500));

@@ -548,7 +548,7 @@
   "@worldHospital": {
     "description": "Nombre del mundo El Hospital (próximamente)."
   },
-  "appTitle": "Enigmatrix",
+  "appTitle": "Murdoku Diario",
   "@appTitle": {
     "description": "Nombre del juego (título de la app y de la pantalla de carga)."
   },
@@ -820,7 +820,7 @@
       }
     }
   },
-  "settingsVersion": "Enigmatrix v{version}",
+  "settingsVersion": "Murdoku Diario v{version}",
   "@settingsVersion": {
     "description": "Versión de la app al pie de la configuración.",
     "placeholders": {
