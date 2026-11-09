@@ -197,8 +197,8 @@ int firstFreeCell(PuzzleCase pc) => [
 /// que la real. Para medir la interfaz de verdad se carga Roboto, que viene
 /// con el SDK de Flutter. Si no se encuentra, sigue la letra de cuadrados.
 Future<bool> loadRoboto() async {
-  final root = Platform.environment['FLUTTER_ROOT'] ?? 'C:/Flutter/flutter';
-  final dir = '$root/bin/cache/artifacts/material_fonts';
+  final dir = _materialFontsDir();
+  if (dir == null) return false;
   final files = [
     '$dir/roboto-regular.ttf',
     '$dir/roboto-medium.ttf',
@@ -212,6 +212,26 @@ Future<bool> loadRoboto() async {
   }
   await loader.load();
   return true;
+}
+
+/// Busca la carpeta de fuentes Material del SDK. Prueba FLUTTER_ROOT y, si no
+/// está (pasa en GitHub Actions/Linux), sube desde el ejecutable de las pruebas
+/// (`<sdk>/bin/cache/artifacts/engine/<plataforma>/flutter_tester`).
+String? _materialFontsDir() {
+  final candidates = <String>[
+    if (Platform.environment['FLUTTER_ROOT'] case final root?) root,
+  ];
+  var d = File(Platform.resolvedExecutable).parent;
+  for (var i = 0; i < 8; i++) {
+    candidates.add(d.path);
+    d = d.parent;
+  }
+  candidates.add('C:/Flutter/flutter');
+  for (final root in candidates) {
+    final dir = '$root/bin/cache/artifacts/material_fonts';
+    if (File('$dir/roboto-regular.ttf').existsSync()) return dir;
+  }
+  return null;
 }
 
 /// Carga las tipografías empaquetadas de la interfaz (Baloo 2, Quicksand y
