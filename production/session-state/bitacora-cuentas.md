@@ -11,6 +11,36 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 09-11-2026 · cuenta secundaria · App Store por TestFlight (rama `claude/ios-app-store`)
+
+- **Pedido de Alejandro:** "ayúdame a subirla a app store", después de que la prueba interna de Google Play ya funcionó.
+- **Primera versión en Google Play:** 10007 (0.8.1) está publicada en la prueba interna, con la lista de probadores "Equipo Murdoku". Alejandro ya la está probando. Hallazgos de Play Console:
+  - falta la declaración de comerciante en la cuenta del amigo;
+  - para producción hace falta la prueba cerrada.
+- **Respuestas de Alejandro:**
+  - la cuenta de Apple es la del amigo y él tiene las credenciales;
+  - tiene iPhone;
+  - se compila iOS cada vez que un PR llega a `main`.
+- **Qué se hizo:**
+  - **Workflow `.github/workflows/ios-testflight.yml`:** corre en macOS en cada push a `main` y a mano, no en los PR. Lo apaga la variable `IOS_UPLOAD`.
+  - **Firma manual con secretos:** `IOS_DIST_CERT_P12_BASE64`, `IOS_DIST_CERT_PASSWORD`, `IOS_PROVISION_PROFILE_BASE64`, `APPSTORE_API_KEY_ID`, `APPSTORE_API_ISSUER_ID` y `APPSTORE_API_PRIVATE_KEY`.
+  - **Subida:** sube a TestFlight con `altool`.
+  - **Proyecto iOS:**
+    - el identificador pasa a `com.murdokudiario.app`;
+    - el mínimo pasa a iOS 15;
+    - se agregaron el `Podfile` y los `#include?` de Pods en los xcconfig;
+    - `CFBundleName` es "Murdoku Diario".
+  - **Documentos:**
+    - la sección App Store del ADR-0017;
+    - una nota en el ADR-0014: entra el iPhone y queda resuelta la pregunta 22;
+    - CLAUDE.md y el roadmap;
+    - la guía `production/guias/2026-11-09-app-store-github-actions.md`.
+- **Pruebas:** el proyecto iOS nunca se ha compilado; la primera prueba real es el primer run en macOS. No cambió el código Dart.
+- **Pendiente:**
+  - Alejandro hace los pasos 1 a 8 de la guía;
+  - si el primer run falla, se corrige con la captura;
+  - antes de la revisión pública de Apple quedan los riesgos anotados en el ADR-0017.
+
 ## 09-11-2026 · cuenta secundaria · Google Play con GitHub Actions (ADR-0017)
 
 - **Pedido de Alejandro:** que cada push a `main` se suba solo a Google Play. Después irán App Store y las demás tiendas.

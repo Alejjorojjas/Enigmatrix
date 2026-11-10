@@ -58,3 +58,31 @@ Se le avisó que "Murdoku" es el nombre de una serie de libros de Manuel Garand 
 - **Dos firmas distintas.** El APK que se instala desde Play lo firma Google, con otra llave. No se puede instalar encima de un APK compilado a mano: hay que desinstalar antes.
 - **App Store** irá en un workflow aparte, con un runner de macOS, cuando se decida si el iPhone entra (pregunta 22).
 - **Guía paso a paso para Alejandro:** `production/guias/2026-11-09-google-play-github-actions.md`.
+
+## App Store (09-11-2026)
+
+Alejandro pidió lo mismo para iPhone. La cuenta de Apple también es la del amigo: Alejandro entra con las credenciales de esa cuenta y escribe él las contraseñas y los códigos.
+
+1. **Workflow aparte**, `.github/workflows/ios-testflight.yml`, en una máquina `macos-15` de GitHub. No hace falta un Mac propio.
+2. **Cuándo corre:** cuando un PR aprobado llega a `main` y toca código, o a mano. No corre en los PR. En un repositorio privado los minutos de Mac cuentan 10 veces: los 2.000 minutos gratis dan unas 8 a 10 compilaciones de iOS al mes. Las pruebas ya las corre el workflow de Android.
+3. **Interruptor:** queda apagado hasta que la variable `IOS_UPLOAD` valga `true`.
+4. **Firma manual sin Mac:**
+   - la llave privada y el pedido de certificado se generan con OpenSSL en el PC de Alejandro;
+   - el certificado Apple Distribution (`.p12`) y el perfil de App Store van en secretos de GitHub;
+   - el runner los carga en un llavero temporal y los borra al terminar;
+   - la firma manual se agrega solo a `Release.xcconfig`, que usa el target de la app, no los Pods.
+5. **Subida:** con `xcrun altool` y una llave de API de App Store Connect con rol App Manager. Esa llave sirve para todas las apps de la cuenta del amigo, y él debe saberlo.
+6. **Destino:** TestFlight. Enviar la app a revisión para la App Store pública es un paso manual de Alejandro.
+7. **Números:** `CFBundleVersion` = 10000 + el número de run de ese workflow. El número de versión sale de `pubspec.yaml`.
+8. **Proyecto iOS:**
+   - `PRODUCT_BUNDLE_IDENTIFIER` pasa a `com.murdokudiario.app`;
+   - el mínimo es iOS 15, el que pide Firebase 5;
+   - hay un `Podfile` en el repositorio;
+   - `CFBundleName` es "Murdoku Diario".
+
+**Riesgos conocidos para la revisión de Apple** (antes de enviarla a la tienda pública, no para TestFlight):
+- la tienda y el premium simulados (DEMO) pueden hacer que Apple rechace la app (guías 2.1 y 3.1.1);
+- falta la URL de la política de privacidad;
+- falta la etiqueta de privacidad (equivalente a la sección Seguridad de los datos de Play).
+
+**Guía paso a paso:** `production/guias/2026-11-09-app-store-github-actions.md`.
