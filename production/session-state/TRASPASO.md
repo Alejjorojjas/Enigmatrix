@@ -1,4 +1,4 @@
-# TRASPASO entre cuentas de Claude Code (05-11-2026)
+# TRASPASO entre cuentas de Claude Code (actualizado 10-11-2026)
 
 Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo completo antes de hacer nada.
 
@@ -7,7 +7,7 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 - **El usuario** es Alejandro (Diego Alejandro Rojas Corredor). Llámalo Alejandro. No programa: explícale todo en español claro.
 - **Idioma**: todo lo que él vea va en español, incluidas las descripciones de los comandos. El código y los nombres técnicos van en inglés.
 - **Fechas**: en formato dd-mm-yyyy.
-- **Commits**: solo cuando él lo autorice (ya autorizó hacerlos al cerrar cada tarea verificada), con su autoría (Alejjorojjas). **Sin "Co-Authored-By" ni ninguna mención a Claude.** Después del commit, haz push a `https://github.com/Alejjorojjas/Enigmatrix`, rama main, que es privado.
+- **Commits**: solo cuando él lo autorice (ya autorizó hacerlos al cerrar cada tarea verificada), con su autoría (Alejjorojjas). **Sin "Co-Authored-By" ni ninguna mención a Claude.** El repositorio es `https://github.com/Alejjorojjas/Enigmatrix` (privado). **Desde el 09-11-2026 no se hace push a main:** ver "OBLIGATORIO: ramas y PR".
 - **Llave de firma**: nunca leas, copies ni muestres `app/android/key.properties` ni los `.jks`.
 - **Agentes BBVA**: no toques `C:/Users/alejo/.claude/agents/`, que son de su trabajo en BBVA.
 - **Forma de trabajo**: la sesión principal es el arquitecto, decide y verifica, y delega en los agentes de `.claude/agents/` con modelos económicos (Sonnet, o Haiku para lo mecánico). Lo que entrega un agente no se acepta sin correr las pruebas uno mismo.
@@ -28,6 +28,58 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 - **Pruebas**:
   - motor: `cd tools && dart test` (342 pasan);
   - app: `cd app && flutter analyze && flutter test` (627 pasan).
+
+## ESTADO AL 10-11-2026 (lo primero que hay que leer)
+
+**Versión:** 0.8.1+11. La app se llama **"Murdoku Diario"** y el paquete es `com.murdokudiario.app` en Android y en iOS. Se publica en las cuentas de Google Play y de Apple de un amigo de Alejandro (ADR-0017).
+
+**Google Play.** La primera versión, 10007 (0.8.1), está publicada en la **prueba interna**, con la lista de probadores "Equipo Murdoku". Alejandro ya la está probando en su teléfono.
+- La subida automática **sigue apagada**: falta el paso 5 de `production/guias/2026-11-09-google-play-github-actions.md`.
+  - Crear la cuenta de servicio en Google Cloud y activar la Google Play Android Developer API.
+  - Que el amigo (administrador) invite a esa cuenta en Play Console con permiso de pistas de prueba.
+  - Crear el secreto `PLAY_SERVICE_ACCOUNT_JSON`.
+  - Crear las variables `PLAY_UPLOAD=true`, `PLAY_TRACK=internal` y `PLAY_RELEASE_STATUS=completed`.
+- Hallazgos de Play Console:
+  - falta la declaración de comerciante en la cuenta del amigo;
+  - para producción hace falta una prueba cerrada.
+
+**App Store (TestFlight).** El PR n.º 1 (`claude/ios-app-store`) ya está fusionado en `main`. Trae:
+- el workflow `.github/workflows/ios-testflight.yml` (macOS, solo en push a `main` o a mano, apagado hasta `IOS_UPLOAD=true`);
+- el identificador iOS `com.murdokudiario.app`, el mínimo en iOS 15 y el `Podfile`;
+- la guía `production/guias/2026-11-09-app-store-github-actions.md`, con 8 pasos.
+
+Por dónde va Alejandro con la guía de Apple:
+- **Paso 1 (registrar el App ID en developer.apple.com):** le di las instrucciones. No confirmó explícitamente que lo terminó: pregúntale.
+- **Paso 2 (crear la app en App Store Connect):** se lo di y está **en curso**. Es la cuenta del amigo y Alejandro tiene las credenciales; las contraseñas y los códigos los escribe él.
+- **Pasos 3 a 8:** faltan. Son el certificado con OpenSSL desde PowerShell, el perfil, la llave de API, los 6 secretos más `IOS_UPLOAD`, el primer run a mano y TestFlight en su iPhone.
+- **No hace falta Mac.** El amigo creía que sí; se le explicó que el Mac lo pone GitHub y que el certificado se hace con OpenSSL en Windows.
+- **El proyecto iOS nunca se ha compilado.** Es probable que el primer run falle: se corrige con la captura que mande Alejandro.
+
+**Lo que quiere Alejandro:** que todo quede enlazado. Cada cambio va en una rama y un PR; cuando él aprueba el PR y llega a `main`, se sube solo a la prueba interna de Android y a TestFlight. Después de los pasos de Apple y de la cuenta de servicio de Play, hay que hacer una prueba completa con un cambio pequeño.
+
+**Riesgos antes de la revisión pública de Apple o de producción en Play:**
+- la tienda y el premium simulados (DEMO), pregunta 18;
+- falta la URL de la política de privacidad;
+- falta el formulario de seguridad o privacidad de datos;
+- falta la ficha;
+- hay que corregir los docs 15 y 20 por el permiso INTERNET.
+
+**Otros pendientes:**
+- pasar las acciones de GitHub a versiones nuevas (setup-java v5, Node 24);
+- la 5A.3 (proyecto real de Firebase);
+- probar TalkBack.
+
+## OBLIGATORIO: nombres de rama (desde 09-11-2026)
+
+Las ramas **no** se llaman `claude/...`. La convención la eligió Alejandro:
+- `feature/…`: algo nuevo o mejor en el juego;
+- `fix/…`: corrige un error;
+- `release/…`: publicación y tiendas;
+- `docs/…`: solo documentos.
+
+Si la app crea el worktree con una rama `claude/...`, crea una rama con el nombre correcto antes del primer commit.
+
+No hay `gh` instalado. Se hace push de la rama y se le pasa a Alejandro el enlace `https://github.com/Alejjorojjas/Enigmatrix/pull/new/<rama>`; él crea el PR, espera el verde y lo fusiona.
 
 ## Estado al 05-11-2026 (noche)
 

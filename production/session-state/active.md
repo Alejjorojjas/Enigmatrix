@@ -2,6 +2,14 @@
 
 > Archivo de checkpoint. Toda sesión de trabajo lo lee al empezar y lo actualiza al cerrar un hito. Se mantiene corto a propósito: el historial completo está en [historial.md](historial.md).
 
+## Estado al 10-11-2026 (lo más reciente)
+
+- **Versión 0.8.1+11, "Murdoku Diario"** (`com.murdokudiario.app`).
+- **Google Play:** la versión 10007 está en la prueba interna y Alejandro la está probando. La subida automática espera la cuenta de servicio (paso 5 de la guía de Play).
+- **App Store:** el workflow de TestFlight está en `main` (PR n.º 1). Alejandro va en el paso 2 de `production/guias/2026-11-09-app-store-github-actions.md`.
+- **Reglas:** ramas `feature/`, `fix/`, `release/` y `docs/`, y PR que aprueba Alejandro.
+- **Detalle:** en [TRASPASO.md](TRASPASO.md), sección "ESTADO AL 10-11-2026".
+
 ## Estado hoy (05-11-2026, noche)
 
 - **Versión actual: `0.8.0+10`** (0.7.2+9 más la conexión al servidor tras `ENX_BACKEND`; antes: (0.7.0+7 más el baño en la Mansión y un máximo de 2 del mismo mueble por habitación), con el APK en `Proyecto Enigmatrix/APKs/enigmatrix-0.7.2+9-arm64.apk`, compilado con `ENX_DEV=true`. Sobre la 0.6.0+6 trae lo que se decidió con la prueba de juego n.º 1 (ADR-0015):

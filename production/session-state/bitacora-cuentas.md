@@ -11,6 +11,21 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 10-11-2026 · cuenta secundaria · traspaso (rama `docs/traspaso-app-store`)
+
+- **Qué se hizo:**
+  - **PR n.º 1 fusionado por Alejandro:** `claude/ios-app-store` (TestFlight, identificador iOS, iOS 15 y guía).
+  - **Ramas:** Alejandro pidió que no se llamen `claude/...`. Eligió `feature/`, `fix/`, `release/` y `docs/`, y quedó en TRASPASO y en la memoria.
+  - **Mac:** se le explicó a Alejandro (y a su amigo) que no hace falta un Mac propio, porque lo pone GitHub y el certificado se hace con OpenSSL en Windows.
+  - **Guía de Apple:** se le dieron los pasos 1 y 2. El 2 (crear la app en App Store Connect) quedó en curso.
+  - **Plan acordado:** todo enlazado. Cada PR aprobado sube a la prueba interna de Play y a TestFlight, cuando estén los pasos de Apple y la cuenta de servicio de Play.
+- **Archivos tocados:** `TRASPASO.md` (sección "ESTADO AL 10-11-2026" y nombres de rama), `active.md` y esta bitácora.
+- **Pruebas:** sin cambios de código.
+- **Pendiente para la próxima sesión:**
+  - confirmar los pasos 1 y 2 de Apple y seguir con el 3 (certificado);
+  - después, el paso 5 de la guía de Play (cuenta de servicio);
+  - por último, una prueba completa con un PR pequeño.
+
 ## 09-11-2026 · cuenta secundaria · App Store por TestFlight (rama `claude/ios-app-store`)
 
 - **Pedido de Alejandro:** "ayúdame a subirla a app store", después de que la prueba interna de Google Play ya funcionó.
