@@ -205,7 +205,7 @@ Solo quedan las preguntas abiertas. Las decididas el 04-11-2026 (5, 9, 10, 11, 2
 | ~~16~~, ~~17~~ | ~~Edad mínima; identidad legal~~ **DECIDIDAS 06-11-2026:** 13 años o más; persona natural | Etapa 6 |
 | ~~18~~ | ~~Qué se ve en el build de tiendas~~ **DECIDIDA 06-11-2026:** sin tienda, premium ni ranking simulados y sin ajustes que no hacen nada | Etapa 6 |
 | ~~19~~ | ~~Uso del arma~~ **DECIDIDA 05-11-2026** (ADR-0014): se mantiene en mansion-08 a 10 y en 9 de los 30 retos | Etapa 3 |
-| 22 | Solo si el iPhone entra al lanzamiento (el Mac ya está confirmado, y desde el 06-11-2026 también la cuenta de Apple pagada) | Etapa 6 |
+| 22 | **RESUELTA 09-11-2026:** Alejandro pidió subir la app a la App Store, así que el iPhone entra (primero por TestFlight, ADR-0017). Texto anterior: solo si el iPhone entra al lanzamiento (el Mac ya está confirmado, y desde el 06-11-2026 también la cuenta de Apple pagada) | Etapa 6 |
 | ~~23 (nueva)~~ | ~~Si se muestran los mundos bloqueados~~ **DECIDIDA 06-11-2026:** se muestran con candado (doc 06 corregido) | Etapa 4 y doc 06 |
 
 > ACTUALIZACIÓN 06-11-2026: se tacharon las preguntas 6, 7, 8, 16, 17, 18 y 23, decididas ese día (ver "Decisiones de Alejandro del 06-11-2026"). La 19 ya estaba decidida el 05-11-2026 en el [ADR-0014](adr/0014-alcance-de-contenido-de-la-v1.md); el arquitecto la quitó de las pendientes y del plan del 06-11-2026.

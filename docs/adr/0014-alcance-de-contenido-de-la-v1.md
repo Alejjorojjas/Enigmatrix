@@ -39,3 +39,7 @@
 
 - **Cuentas de tienda:** Alejandro ya tiene pagadas la cuenta de desarrollador de Google Play y la de Apple (`production/planes/2026-11-06-etapas-5-y-6.md`, sección 1). Esto **no cambia el alcance** de esta decisión. Android sigue siendo lo único decidido para la V1; si el iPhone entra al lanzamiento sigue siendo la pregunta 22 y está pendiente de Alejandro.
 - La versión web queda para la V2 (decisión del mismo día).
+
+## Actualización 09-11-2026: entra el iPhone
+
+Alejandro pidió subir la app también a la App Store. Con eso la V1 deja de ser solo Android y queda resuelta la pregunta 22. El contenido no cambia (dificultades, Mundo 1, 30 días de reto). La publicación va primero por TestFlight, en la cuenta de Apple del mismo amigo de la cuenta de Google Play (ADR-0017, sección App Store).

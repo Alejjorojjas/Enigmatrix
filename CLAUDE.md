@@ -22,7 +22,7 @@ App móvil de puzzles de deducción visual. El jugador resuelve casos de misteri
 - Explica las decisiones técnicas en lenguaje claro antes de implementarlas.
 - Las decisiones de producto/diseño las toma el usuario: presenta opciones con recomendación, no decidas por él en silencio.
 - **Dirección visual (ADR-0013, 05-11-2026).** Hay dos pieles que el jugador elige en Configuración: "Ilustrada" (cualidades de `docs/referencias-visuales/`, con diseño propio) y "Papel". Las dos tienen modo claro y oscuro, que sigue al teléfono. La V1 lleva arte hecho por código y el arte de ilustrador o IA se revisa en la V2. Nunca se calcan dibujos, nombres ni pantallas de las referencias de terceros.
-- **Alcance de la V1 (ADR-0014).** Solo Android; dificultades Principiante, Casual e Intermedio; Mundo 1 "La Mansión" con 10 casos y 30 días de reto diario.
+- **Alcance de la V1 (ADR-0014).** Android, y desde el 09-11-2026 también iPhone (Alejandro pidió subirla a la App Store; primero por TestFlight); dificultades Principiante, Casual e Intermedio; Mundo 1 "La Mansión" con 10 casos y 30 días de reto diario.
 
 ## Stack (ver ADRs en docs/adr/; estado real al 04-11-2026)
 
