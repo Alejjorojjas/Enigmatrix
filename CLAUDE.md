@@ -1,5 +1,8 @@
 # Enigmatrix
 
+> **COPIA DE REVISIÓN CON CLAUDE CODE GAME STUDIOS v1.3.0 (rama `docs/revision-ccgs`).** Aquí están instalados los agentes y comandos del estudio solo para revisar el juego. No se programa aquí: los hallazgos se escriben en `production/revisiones/` y vuelven al proyecto por un PR. Las instrucciones del estudio están en @.claude/docs/CCGS-CLAUDE.md, pero mandan las reglas de este archivo (español, control de gasto, ramas y PR, sin coautoría). El motor es Flutter/Dart: no es Godot, Unity ni Unreal.
+
+
 > **SESIÓN NUEVA U OTRA CUENTA:** antes de hacer nada, lee `production/session-state/TRASPASO.md`. Anota todo lo que hagas en `production/session-state/bitacora-cuentas.md`.
 
 App móvil de puzzles de deducción visual. **Nombre público: "Murdoku Diario"** (paquete `com.murdokudiario.app`, decisión de Alejandro del 09-11-2026); "Enigmatrix" es el nombre interno del proyecto, del repositorio y del código. El jugador resuelve casos de misterio colocando sospechosos sobre un mapa con habitaciones, guiándose por pistas lógicas. Compite por tiempo y puntos en rankings. Android e iPhone.
