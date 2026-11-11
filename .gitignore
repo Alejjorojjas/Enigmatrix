@@ -10,7 +10,8 @@ app/ios/.symlinks/
 tools/.dart_tool/
 tools/build/
 tools/out/
-pubspec.lock
+# pubspec.lock SÍ se versiona (11-11-2026): GitHub compila y publica solo, y cada compilación
+# debe usar exactamente las mismas versiones de librerías.
 
 # Firebase / Node
 backend/node_modules/

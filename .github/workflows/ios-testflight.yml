@@ -11,6 +11,8 @@
 # production/guias/2026-11-09-app-store-github-actions.md:
 #   IOS_DIST_CERT_P12_BASE64, IOS_DIST_CERT_PASSWORD, IOS_PROVISION_PROFILE_BASE64,
 #   APPSTORE_API_KEY_ID, APPSTORE_API_ISSUER_ID, APPSTORE_API_PRIVATE_KEY.
+#
+# Primero corren las pruebas en Linux (barato); solo si pasan se usa la máquina Mac.
 
 name: iOS a TestFlight
 
@@ -38,8 +40,48 @@ env:
   BUNDLE_ID: com.murdokudiario.app
 
 jobs:
+  pruebas:
+    name: Pruebas (motor y app)
+    # Antes de compilar para iPhone se corren las mismas pruebas que en Android:
+    # nada llega a TestFlight si alguna falla (11-11-2026).
+    if: vars.IOS_UPLOAD == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2 (fijada por SHA)
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Fuentes Material del SDK
+        run: |
+          SDK="$(dirname "$(dirname "$(command -v flutter)")")"
+          FONTS="$SDK/bin/cache/artifacts/material_fonts"
+          if [ ! -f "$FONTS/Roboto-Regular.ttf" ]; then
+            flutter precache --universal
+          fi
+          test -f "$FONTS/Roboto-Regular.ttf"
+
+      - name: Motor (tools)
+        working-directory: tools
+        run: |
+          dart pub get --enforce-lockfile
+          dart analyze
+          dart test
+
+      - name: App
+        working-directory: app
+        run: |
+          flutter pub get --enforce-lockfile
+          flutter analyze
+          flutter test
+
   testflight:
     name: IPA firmado y TestFlight
+    needs: pruebas
     if: vars.IOS_UPLOAD == 'true'
     runs-on: macos-15
     timeout-minutes: 60
@@ -67,7 +109,7 @@ jobs:
             exit 1
           fi
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2 (fijada por SHA)
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
@@ -146,7 +188,7 @@ jobs:
       - name: Compilar IPA
         working-directory: app
         run: |
-          flutter pub get
+          flutter pub get --enforce-lockfile
           # CFBundleVersion = 10000 + número de run de este workflow (siempre crece).
           # El número de versión (0.8.1) sale de pubspec.yaml.
           flutter build ipa --release \

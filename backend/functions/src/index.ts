@@ -43,6 +43,15 @@ function requireUid(request: CallableRequest): string {
 function toHttpsError(e: unknown): HttpsError {
   if (e instanceof HttpsError) return e;
   if (e instanceof InputError) return new HttpsError(e.code, e.message);
+  // Muchas transacciones a la vez sobre el mismo documento (envíos en ráfaga
+  // del mismo jugador): Firestore las aborta tras sus reintentos. No es un
+  // fallo interno; el cliente reintenta con el mismo submissionId y no se
+  // cuenta dos veces (11-11-2026).
+  const code = (e as { code?: unknown } | null)?.code;
+  if (code === 10 || code === "aborted" || code === "ABORTED") {
+    console.warn("Transacción abortada por contención", e);
+    return new HttpsError("aborted", "Hay muchos envíos a la vez; intenta de nuevo.");
+  }
   console.error("Error inesperado", e);
   return new HttpsError("internal", "Error interno.");
 }

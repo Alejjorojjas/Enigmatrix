@@ -153,6 +153,7 @@ class _SettingsSheet extends ConsumerWidget {
     final p = context.pal;
     final settings = ref.watch(settingsProvider);
     final notifier = ref.read(settingsProvider.notifier);
+    final showSim = ref.watch(showSimulatedProvider);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,24 +168,27 @@ class _SettingsSheet extends ConsumerWidget {
           value: settings.soundOn,
           onChanged: notifier.setSound,
         ),
-        SwitchRow(
-          icon: Icons.music_note_rounded,
-          label: context.l10n.sheetMusic,
-          value: false,
-          onChanged: null,
-        ),
+        // Música y Notificaciones no hacen nada aún: solo con simulados.
+        if (showSim)
+          SwitchRow(
+            icon: Icons.music_note_rounded,
+            label: context.l10n.sheetMusic,
+            value: false,
+            onChanged: null,
+          ),
         SwitchRow(
           icon: Icons.vibration_rounded,
           label: context.l10n.sheetHaptics,
           value: settings.hapticsOn,
           onChanged: notifier.setHaptics,
         ),
-        SwitchRow(
-          icon: Icons.notifications_rounded,
-          label: context.l10n.sheetNotifications,
-          value: false,
-          onChanged: null,
-        ),
+        if (showSim)
+          SwitchRow(
+            icon: Icons.notifications_rounded,
+            label: context.l10n.sheetNotifications,
+            value: false,
+            onChanged: null,
+          ),
         SwitchRow(
           icon: Icons.slow_motion_video_rounded,
           label: context.l10n.sheetReduceMotion,
@@ -213,20 +217,23 @@ class _SettingsSheet extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 14),
-        Row(
-          children: [
-            Flexible(
-              child: Text(context.l10n.sheetAccount, style: context.body(16)),
-            ),
-            const SizedBox(width: 8),
-            const DemoBadge(),
-          ],
-        ),
-        Text(
-          context.l10n.sheetAccountBody,
-          style: context.note(15, color: p.softText),
-        ),
+        // La cuenta es simulada hasta la etapa 5.
+        if (showSim) ...[
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Flexible(
+                child: Text(context.l10n.sheetAccount, style: context.body(16)),
+              ),
+              const SizedBox(width: 8),
+              const DemoBadge(),
+            ],
+          ),
+          Text(
+            context.l10n.sheetAccountBody,
+            style: context.note(15, color: p.softText),
+          ),
+        ],
         // Banco de pruebas y feedback de playtest: solo con ENX_DEV (H-66).
         if (ref.watch(devToolsProvider)) ...[
           const Divider(height: 24),

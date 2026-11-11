@@ -261,7 +261,7 @@ describe("submitSolution", () => {
     expect(prog.attempts).toBe(6);
   });
 
-  it("20 envíos fallidos en paralelo: exactamente 6 wrong, el resto resource-exhausted, attempts == 6", async () => {
+  it("20 envíos fallidos en paralelo: exactamente 6 wrong, el resto bloqueados (resource-exhausted o aborted), attempts == 6", async () => {
     const c = loadCase("reto-002");
     const u = await signInAnonymously();
     const board = boardWithWrong(c.solution, 2);
@@ -271,7 +271,11 @@ describe("submitSolution", () => {
       ),
     );
     const wrongs = rs.filter((r) => r.result?.result === "wrong");
-    const blocked = rs.filter((r) => r.errorStatus === "RESOURCE_EXHAUSTED");
+    // Con 20 transacciones a la vez el emulador puede abortar algunas por
+    // contención: deben llegar como "aborted" (reintentable), nunca como
+    // "internal". Lo que importa es que no pasen más de 6 intentos.
+    const blocked = rs.filter((r) => r.errorStatus === "RESOURCE_EXHAUSTED" || r.errorStatus === "ABORTED");
+    expect(rs.filter((r) => r.errorStatus === "INTERNAL")).toHaveLength(0);
     expect(wrongs).toHaveLength(6);
     expect(blocked).toHaveLength(14);
     const prog = (await db.doc(`users/${u.uid}/progress/reto-002`).get()).data()!;

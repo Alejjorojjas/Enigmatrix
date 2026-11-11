@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/l10n.dart';
 import '../backend/validation_providers.dart';
 import '../data/case_repository.dart';
+import '../game/dev_tools.dart' show showSimulatedProvider;
 import '../game/game_config.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'game_chrome.dart';
@@ -80,6 +81,8 @@ class HomeTab extends ConsumerWidget {
         ? context.l10n.homeGreetingAfternoon
         : context.l10n.homeGreetingEvening;
     final today = todaysChallengeOf(ref);
+    // Vidas, racha y Tienda son simulados (pregunta 18).
+    final showSim = ref.watch(showSimulatedProvider);
 
     return ListView(
       padding: const EdgeInsets.all(18),
@@ -97,7 +100,7 @@ class HomeTab extends ConsumerWidget {
                 ],
               ),
             ),
-            const _LivesChip(),
+            if (showSim) const _LivesChip(),
           ],
         ),
         const SizedBox(height: 18),
@@ -115,16 +118,16 @@ class HomeTab extends ConsumerWidget {
                       icon: Icons.local_fire_department_rounded,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  const DemoBadge(),
+                  if (showSim) ...[const SizedBox(width: 8), const DemoBadge()],
                 ],
               ),
               const SizedBox(height: 8),
               Text(context.l10n.homeChallengeTitle, style: context.display(20)),
-              Text(
-                context.l10n.homeStreakLine(mockStreak),
-                style: context.note(15, color: p.softText),
-              ),
+              if (showSim)
+                Text(
+                  context.l10n.homeStreakLine(mockStreak),
+                  style: context.note(15, color: p.softText),
+                ),
               if (today != null) ...[
                 const SizedBox(height: 10),
                 Wrap(
@@ -192,52 +195,53 @@ class HomeTab extends ConsumerWidget {
             ],
           ),
         ),
-        AppCard(
-          child: Row(
-            children: [
-              IconTile(
-                icon: Icons.storefront_rounded,
-                color: p.world(2),
-                size: 48,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Wrap: con el texto del sistema grande la etiqueta DEMO
-                    // baja a otra línea en vez de desbordar.
-                    Wrap(
-                      spacing: 8,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Text(
-                          context.l10n.homeShop,
-                          style: context.body(
-                            14,
-                            weight: FontWeight.w800,
-                            spacing: 1.4,
-                          ),
-                        ),
-                        const DemoBadge(),
-                      ],
-                    ),
-                    Text(
-                      context.l10n.homeShopSub,
-                      style: context.note(15, color: p.softText),
-                    ),
-                  ],
+        if (showSim)
+          AppCard(
+            child: Row(
+              children: [
+                IconTile(
+                  icon: Icons.storefront_rounded,
+                  color: p.world(2),
+                  size: 48,
                 ),
-              ),
-              const SizedBox(width: 8),
-              AppButton(
-                label: context.l10n.homeSee,
-                expand: false,
-                onTap: () => openShopSheet(context),
-              ),
-            ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Wrap: con el texto del sistema grande la etiqueta DEMO
+                      // baja a otra línea en vez de desbordar.
+                      Wrap(
+                        spacing: 8,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Text(
+                            context.l10n.homeShop,
+                            style: context.body(
+                              14,
+                              weight: FontWeight.w800,
+                              spacing: 1.4,
+                            ),
+                          ),
+                          const DemoBadge(),
+                        ],
+                      ),
+                      Text(
+                        context.l10n.homeShopSub,
+                        style: context.note(15, color: p.softText),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                AppButton(
+                  label: context.l10n.homeSee,
+                  expand: false,
+                  onTap: () => openShopSheet(context),
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }
@@ -394,6 +398,7 @@ class ChallengeTab extends ConsumerWidget {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final today = todaysChallengeOf(ref);
+    final showSim = ref.watch(showSimulatedProvider);
     final days = [
       (context.l10n.challengeWeekdayMon, true),
       (context.l10n.challengeWeekdayTue, true),
@@ -407,67 +412,68 @@ class ChallengeTab extends ConsumerWidget {
       padding: const EdgeInsets.all(18),
       children: [
         PageHeader(title: context.l10n.homeChallengeTab),
-        AppCard(
-          accent: p.danger,
-          child: Column(
-            children: [
-              Icon(
-                Icons.local_fire_department_rounded,
-                size: 52,
-                color: p.danger,
-              ),
-              Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 8,
-                children: [
-                  Text(
-                    context.l10n.challengeStreakTitle(mockStreak),
-                    style: context.display(26),
-                  ),
-                  const DemoBadge(),
-                ],
-              ),
-              Text(
-                context.l10n.challengeBestStreak(
-                  mockBestStreak,
-                  mockProtectors,
+        if (showSim)
+          AppCard(
+            accent: p.danger,
+            child: Column(
+              children: [
+                Icon(
+                  Icons.local_fire_department_rounded,
+                  size: 52,
+                  color: p.danger,
                 ),
-                textAlign: TextAlign.center,
-                style: context.note(16, color: p.softText),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (final (d, done) in days)
-                    Container(
-                      width: 34,
-                      height: 34,
-                      margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                      decoration: BoxDecoration(
-                        color: done ? p.danger : p.surfaceAlt,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: p.line, width: 1.5),
-                      ),
-                      child: Center(
-                        child: done
-                            ? Icon(
-                                Icons.check,
-                                size: 18,
-                                color: p.onColor(p.danger),
-                              )
-                            : Text(
-                                d,
-                                style: context.body(13, color: p.textDim),
-                              ),
-                      ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 8,
+                  children: [
+                    Text(
+                      context.l10n.challengeStreakTitle(mockStreak),
+                      style: context.display(26),
                     ),
-                ],
-              ),
-            ],
+                    const DemoBadge(),
+                  ],
+                ),
+                Text(
+                  context.l10n.challengeBestStreak(
+                    mockBestStreak,
+                    mockProtectors,
+                  ),
+                  textAlign: TextAlign.center,
+                  style: context.note(16, color: p.softText),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (final (d, done) in days)
+                      Container(
+                        width: 34,
+                        height: 34,
+                        margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                        decoration: BoxDecoration(
+                          color: done ? p.danger : p.surfaceAlt,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: p.line, width: 1.5),
+                        ),
+                        child: Center(
+                          child: done
+                              ? Icon(
+                                  Icons.check,
+                                  size: 18,
+                                  color: p.onColor(p.danger),
+                                )
+                              : Text(
+                                  d,
+                                  style: context.body(13, color: p.textDim),
+                                ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
         AppCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -514,25 +520,26 @@ class ChallengeTab extends ConsumerWidget {
             ],
           ),
         ),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Flexible(child: SectionLabel(context.l10n.homeWeekPoints)),
-                  const SizedBox(width: 8),
-                  const DemoBadge(),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(
-                context.l10n.pointsShort(mockWeeklyPoints),
-                style: context.display(24),
-              ),
-            ],
+        if (showSim)
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(child: SectionLabel(context.l10n.homeWeekPoints)),
+                    const SizedBox(width: 8),
+                    const DemoBadge(),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  context.l10n.pointsShort(mockWeeklyPoints),
+                  style: context.display(24),
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }
@@ -615,6 +622,7 @@ class ProfileTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
+    final showSim = ref.watch(showSimulatedProvider);
     // Casos cerrados: los del Mundo 1 y los retos (el banco de pruebas no
     // cuenta).
     final solved = solvedIn([
@@ -674,18 +682,20 @@ class ProfileTab extends ConsumerWidget {
                   ),
                 ],
               ),
-              Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 8,
-                children: [
-                  Text(
-                    context.l10n.profileSince,
-                    style: context.note(16, color: p.softText),
-                  ),
-                  const DemoBadge(),
-                ],
-              ),
+              // "Detective desde…" es simulado.
+              if (showSim)
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 8,
+                  children: [
+                    Text(
+                      context.l10n.profileSince,
+                      style: context.note(16, color: p.softText),
+                    ),
+                    const DemoBadge(),
+                  ],
+                ),
             ],
           ),
         ),
@@ -700,59 +710,65 @@ class ProfileTab extends ConsumerWidget {
                 color: p.good,
               ),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: StatTile(
-                value: '$mockStreak',
-                label: context.l10n.profileStreakLabel,
-                icon: Icons.local_fire_department_rounded,
-                color: p.danger,
-                demo: true,
+            if (showSim) ...[
+              const SizedBox(width: 10),
+              Expanded(
+                child: StatTile(
+                  value: '$mockStreak',
+                  label: context.l10n.profileStreakLabel,
+                  icon: Icons.local_fire_department_rounded,
+                  color: p.danger,
+                  demo: true,
+                ),
               ),
-            ),
+            ],
           ],
         ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: StatTile(
-                value: '$mockBestStreak',
-                label: context.l10n.profileBestStreakLabel,
-                icon: Icons.military_tech_rounded,
-                color: p.medal(0),
-                demo: true,
+        if (showSim) ...[
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: StatTile(
+                  value: '$mockBestStreak',
+                  label: context.l10n.profileBestStreakLabel,
+                  icon: Icons.military_tech_rounded,
+                  color: p.medal(0),
+                  demo: true,
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: StatTile(
-                value: '$mockWeeklyPoints',
-                label: context.l10n.profileWeekPointsLabel,
-                icon: Icons.stars_rounded,
-                color: p.accent,
-                demo: true,
+              const SizedBox(width: 10),
+              Expanded(
+                child: StatTile(
+                  value: '$mockWeeklyPoints',
+                  label: context.l10n.profileWeekPointsLabel,
+                  icon: Icons.stars_rounded,
+                  color: p.accent,
+                  demo: true,
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
         const SizedBox(height: 16),
         AppCard(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           child: Column(
             children: [
-              _MenuRow(
-                icon: Icons.storefront_rounded,
-                label: context.l10n.profileMenuShop,
-                demo: true,
-                onTap: () => openShopSheet(context),
-              ),
-              _MenuRow(
-                icon: Icons.workspace_premium_rounded,
-                label: context.l10n.profileMenuPremium,
-                demo: true,
-                onTap: () => openPremiumSheet(context),
-              ),
+              if (showSim) ...[
+                _MenuRow(
+                  icon: Icons.storefront_rounded,
+                  label: context.l10n.profileMenuShop,
+                  demo: true,
+                  onTap: () => openShopSheet(context),
+                ),
+                _MenuRow(
+                  icon: Icons.workspace_premium_rounded,
+                  label: context.l10n.profileMenuPremium,
+                  demo: true,
+                  onTap: () => openPremiumSheet(context),
+                ),
+              ],
               _MenuRow(
                 icon: Icons.help_outline_rounded,
                 label: context.l10n.profileMenuHowToPlay,

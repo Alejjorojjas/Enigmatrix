@@ -66,6 +66,8 @@ Future<GoRouter> _pumpApp(
       overrides: [
         ...contentOverrides(_world, challenges: _retos, bank: _bank),
         devToolsProvider.overrideWithValue(devTools),
+        // Versión de pruebas internas: con lo simulado a la vista.
+        showSimulatedProvider.overrideWithValue(true),
         initialSettingsProvider.overrideWithValue(AppSettings(skinId: skin)),
       ],
       child: MaterialApp.router(

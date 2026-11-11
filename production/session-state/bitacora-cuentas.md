@@ -11,6 +11,15 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 11-11-2026 · cuenta principal · correcciones tras la revisión (misma rama)
+
+- **Pantallas simuladas (pregunta 18).** `kShowSimulated` y `showSimulatedProvider` en `dev_tools.dart`. Sin ENX_DEV, que es la versión de tienda, se ocultan vidas, racha, puntos, la pestaña Ranking, Tienda, Premium, las estadísticas simuladas y los ajustes "Próximamente". La hizo el agente frontend (Sonnet, esfuerzo medio). El arquitecto la revisó en web a 360×740.
+- **Política de privacidad** reescrita para la 0.8.1 (sin datos y con permisos de red reales). Faltan el responsable, el correo, la URL pública y el botón en la app.
+- **pubspec.lock versionado** (app, tools y prototipo). Los workflows usan --enforce-lockfile, y las acciones de terceros (r0adkll y subosito) quedaron fijadas por SHA.
+- **iOS** corre las pruebas en Linux antes de usar el Mac (needs: pruebas).
+- **Servidor.** Las transacciones abortadas por contención ahora devuelven "aborted" en vez de "internal". Ajustada la prueba de 20 envíos en paralelo; en el emulador pasa con el tope de 90 s.
+- **Pruebas:** app 715, servidor 95 (corridas dos veces), analyze limpio.
+
 ## 11-11-2026 · cuenta principal · revisión del trabajo de la otra cuenta (rama `fix/creditos-seguridad-y-documentos`)
 
 - **Revisión:** el arquitecto corrió todo y pasa: motor 342, app 707, servidor 95 y la puerta de contenido con 61 casos. Los commits no llevan coautoría y no hay secretos en el repositorio ni en su historial. Los dos flujos de GitHub suben a las tiendas solo desde `main`.

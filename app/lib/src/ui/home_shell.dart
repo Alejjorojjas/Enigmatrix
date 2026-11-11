@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
+import '../game/dev_tools.dart' show showSimulatedProvider;
 import 'case_list_screen.dart' show prefsProvider;
 import 'game_chrome.dart';
 import 'home_tabs.dart';
@@ -54,13 +55,16 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   Widget build(BuildContext context) {
     final prefs = ref.watch(prefsProvider).valueOrNull;
     if (prefs != null) _maybeShowTutorial(prefs);
+    // Ranking es simulado: solo existe con kShowSimulated (pregunta 18).
+    final showRanking = ref.watch(showSimulatedProvider);
     final tabs = [
       const HomeTab(),
       const WorldsTab(),
       const ChallengeTab(),
-      const RankingTab(),
+      if (showRanking) const RankingTab(),
       const ProfileTab(),
     ];
+    if (_tab >= tabs.length) _tab = tabs.length - 1;
     return Scaffold(
       body: ScreenBackground(
         child: SafeArea(
@@ -69,6 +73,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         ),
       ),
       bottomNavigationBar: _NavBar(
+        showRanking: showRanking,
         current: _tab,
         onTap: (i) => setState(() => _tab = i),
       ),
@@ -78,8 +83,13 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
 /// Barra inferior: ícono y rótulo; la pestaña activa va enmarcada.
 class _NavBar extends StatelessWidget {
-  const _NavBar({required this.current, required this.onTap});
+  const _NavBar({
+    required this.current,
+    required this.onTap,
+    required this.showRanking,
+  });
 
+  final bool showRanking;
   final int current;
   final ValueChanged<int> onTap;
 
@@ -90,7 +100,8 @@ class _NavBar extends StatelessWidget {
       (Icons.home_rounded, context.l10n.navHome, p.danger),
       (Icons.map_rounded, context.l10n.navWorlds, p.good),
       (Icons.today_rounded, context.l10n.navChallenge, p.accent),
-      (Icons.emoji_events_rounded, context.l10n.navRanking, p.medal(0)),
+      if (showRanking)
+        (Icons.emoji_events_rounded, context.l10n.navRanking, p.medal(0)),
       (Icons.person_rounded, context.l10n.navProfile, p.world(0)),
     ];
     return ColoredBox(
