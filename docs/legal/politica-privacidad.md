@@ -1,5 +1,7 @@
 # Política de Privacidad — Enigmatrix
 
+> PENDIENTE ANTES DE PUBLICAR (11-11-2026): este texto está desactualizado. La app ya no descarga tipografías de Google (van dentro de la app) y sí declara permisos de red por las librerías de Firebase, aunque hoy no envía datos. Hay que reescribir "Qué datos recolectamos" y "Conexión a internet", poner el nombre "Murdoku Diario" y completar responsable y correo.
+
 Última actualización: 12 de julio de 2026
 
 > ACTUALIZACIÓN INTERNA 04-11-2026 (auditoría 04-11-2026, hallazgos H-06, H-07, H-08 y H-09). Este borrador NO está listo para publicar y esta nota se borra al publicar, igual que la nota interna de abajo. Lo que sigue pendiente:

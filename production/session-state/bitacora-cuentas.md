@@ -11,6 +11,33 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 11-11-2026 · cuenta principal · revisión del trabajo de la otra cuenta (rama `fix/creditos-seguridad-y-documentos`)
+
+- **Revisión:** el arquitecto corrió todo y pasa: motor 342, app 707, servidor 95 y la puerta de contenido con 61 casos. Los commits no llevan coautoría y no hay secretos en el repositorio ni en su historial. Los dos flujos de GitHub suben a las tiendas solo desde `main`.
+- **Aclaraciones de Alejandro (anotadas en el ADR-0017):**
+  - el orden de publicar pronto fue decisión suya;
+  - el nombre "Murdoku Diario" lo eligió él y ya averiguó que no hay problema;
+  - el iPhone se adelanta a propósito.
+- **Control de gasto** (pedido de Alejandro: los créditos se acaban rápido):
+  - la sección "Orquestación y control de gasto" de `CLAUDE.md` tiene las reglas: sesión principal en Sonnet para lo normal, sin ultracode, máximo 2 agentes a la vez, nunca Opus ni esfuerzo alto en agentes sin su permiso;
+  - los agentes bajaron de esfuerzo (`puzzle-engineer` y `frontend` de high a medium; `contenido-puzzles` y `revisor-docs` a low) y todos tienen tope de turnos.
+- **Agente de seguridad:** ya existía. Se reescribió como auditor de vulnerabilidades (app, servidor, flujos de GitHub, dependencias y privacidad), de solo lectura, y quedó **DORMIDO**: bloqueado con `Agent(seguridad)` en `.claude/settings.json`. Se activa cuando Alejandro diga "activa el agente de seguridad".
+- **Documentos corregidos:**
+  - permisos de red reales en los docs 15, 18 y 20 y en el ADR-0009;
+  - aviso en la política de privacidad;
+  - cifras y planes de `TRASPASO.md`;
+  - nombre público y regla de ramas en `CLAUDE.md`;
+  - estado del agente `backend`.
+- **Servidor:** el tiempo máximo de las pruebas del emulador pasó de 30 a 90 s, porque la prueba de 20 envíos en paralelo falló una vez con la máquina cargada.
+- **Incluye** el commit pendiente de la rama `docs/traspaso-app-store`.
+- **Pruebas:** sin cambios en el código de la app ni del motor.
+- **No se hizo (pendiente de decidir):**
+  - versionar `pubspec.lock`;
+  - fijar por SHA las acciones de terceros;
+  - que el flujo de iOS espere a las pruebas;
+  - ocultar las pantallas simuladas en la versión de tienda (pregunta 18);
+  - reescribir la política de privacidad.
+
 ## 10-11-2026 · cuenta secundaria · traspaso (rama `docs/traspaso-app-store`)
 
 - **Qué se hizo:**

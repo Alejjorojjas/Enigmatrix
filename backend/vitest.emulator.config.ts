@@ -6,7 +6,7 @@ export default defineConfig({
   test: {
     include: ["test/rules/**/*.test.ts", "test/integration/**/*.test.ts"],
     fileParallelism: false,
-    testTimeout: 30000,
+    testTimeout: 90000,
     hookTimeout: 120000,
   },
 });

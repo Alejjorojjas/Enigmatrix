@@ -12,6 +12,7 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 - **Agentes BBVA**: no toques `C:/Users/alejo/.claude/agents/`, que son de su trabajo en BBVA.
 - **Forma de trabajo**: la sesión principal es el arquitecto, decide y verifica, y delega en los agentes de `.claude/agents/` con modelos económicos (Sonnet, o Haiku para lo mecánico). Lo que entrega un agente no se acepta sin correr las pruebas uno mismo.
 - **Decisiones**: las de producto y de dinero las toma Alejandro. Preséntale opciones con tu recomendación.
+- **Gasto**: los créditos de Alejandro se acaban rápido. Sigue al pie de la letra la sección "Orquestación y control de gasto" de `CLAUDE.md` (Sonnet o Haiku para los agentes, máximo 2 a la vez, sin ultracode).
 - **Límite de uso**: el plan tiene límite de 5 horas. Usa pocos agentes a la vez. Si un agente se corta, retómalo desde lo que dejó hecho, revisando git status y git diff.
 
 ## Dónde está todo
@@ -19,7 +20,7 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 - **Proyecto (abre Claude Code AQUÍ)**: `D:\OneDrive\Documentos\Repositorios GitHub\Proyecto Enigmatrix\Enigmatrix version final Claude`
 - **Reglas**: `CLAUDE.md`, en la raíz.
 - **Estado detallado**: `production/session-state/active.md`.
-- **Plan técnico**: `production/planes/2026-11-05-etapas-3-y-4.md`.
+- **Planes**: `production/planes/` (el vigente es `2026-11-06-etapas-5-y-6.md`; el diseño del servidor, `2026-11-07-etapa-5a-diseno.md`).
 - **Decisiones**: `docs/adr/` (0011 plan por etapas, 0012 reglas, 0013 dirección visual, 0014 alcance de la V1).
 - **Auditoría e investigación gráfica**: `production/revisiones/`.
 - **Índice de documentos**: `docs/README.md`.
@@ -27,7 +28,8 @@ Si eres una sesión de Claude Code que retoma Enigmatrix, lee este archivo compl
 - **Compilar Android**: requiere `JAVA_HOME="C:/Program Files/Java/jdk-17"` (el JDK por defecto del PC es 11): `cd app && JAVA_HOME="C:/Program Files/Java/jdk-17" flutter build apk --release --split-per-abi --dart-define=ENX_DEV=true`. Compila en la carpeta principal, no en un worktree: solo allí está la firma. Sin `ENX_DEV=true` no aparecen el banco de pruebas, el feedback ni el medidor de FPS (para la tienda se compila sin la bandera).
 - **Pruebas**:
   - motor: `cd tools && dart test` (342 pasan);
-  - app: `cd app && flutter analyze && flutter test` (627 pasan).
+  - servidor: `cd backend && npm test` (95 pasan; necesita Java 21 y `npm install` la primera vez);
+  - app: `cd app && flutter analyze && flutter test` (707 pasan).
 
 ## ESTADO AL 10-11-2026 (lo primero que hay que leer)
 

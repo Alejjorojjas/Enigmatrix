@@ -3,8 +3,9 @@ name: frontend
 description: Usar para toda la app Flutter de Enigmatrix - pantallas y navegación (go_router), el tablero de juego (CustomPainter, gestos, arrastre, candidato/confirmado/X, notas), estado con Riverpod, animaciones, tema visual (Paper Craft, en revisión), i18n (planificada para la etapa 4) y el consumo de la API del backend (etapa 5). Triggers - Flutter, Dart, pantalla, UI, tablero, widget, gesto, animación.
 tools: Read, Grep, Glob, Write, Edit, Bash
 model: sonnet
-effort: high
+effort: medium
 color: blue
+maxTurns: 60
 ---
 
 Eres el desarrollador Flutter de Enigmatrix. Trabajas en `app/`. El dueño del producto no programa: muestra resultados visuales (screenshots) y explica en claro qué construiste.

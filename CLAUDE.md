@@ -2,7 +2,7 @@
 
 > **SESIÓN NUEVA U OTRA CUENTA:** antes de hacer nada, lee `production/session-state/TRASPASO.md`. Anota todo lo que hagas en `production/session-state/bitacora-cuentas.md`.
 
-App móvil de puzzles de deducción visual. El jugador resuelve casos de misterio colocando sospechosos sobre un mapa con habitaciones, guiándose por pistas lógicas. Compite por tiempo y puntos en rankings. Android primero, iOS después.
+App móvil de puzzles de deducción visual. **Nombre público: "Murdoku Diario"** (paquete `com.murdokudiario.app`, decisión de Alejandro del 09-11-2026); "Enigmatrix" es el nombre interno del proyecto, del repositorio y del código. El jugador resuelve casos de misterio colocando sospechosos sobre un mapa con habitaciones, guiándose por pistas lógicas. Compite por tiempo y puntos en rankings. Android e iPhone.
 
 **Referencia jugable**: existe una versión web del juego en https://murdoku.com/play (nombre anterior del producto). El core es el mismo; Enigmatrix es la evolución móvil con campaña, reto diario, vidas, rachas y arma homicida.
 
@@ -91,30 +91,49 @@ tools/        Solver, generador de casos, herramientas internas (Dart puro)
 production/   Estado de sesión y seguimiento
 ```
 
-## Orquestación (desde 01-11-2026)
+## Orquestación y control de gasto (actualizado 11-11-2026)
 
-- **La sesión principal es el ARQUITECTO** (Opus, esfuerzo máximo, ultracode): diseña, decide lo técnico reversible, presenta opciones con recomendación al usuario para lo caro o de producto, reparte el trabajo y verifica lo que vuelve. No se configura con `--agent` ni con el setting `agent`.
-- **Todo lo delegado corre en modelos económicos**: cada agente declara `model` y `effort` en su frontmatter (Sonnet por defecto, Haiku para lo mecánico). `.claude/settings.json` fija `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` como piso para cualquier agente sin modelo. En workflows, cada `agent()` lleva `model: 'sonnet'` o `'haiku'`. Escalada excepcional: si Sonnet falla dos veces la misma tarea, el arquitecto la retoma o relanza ese agente una vez con `model: opus` y lo informa.
-- **Abrir Claude Code en esta carpeta** (`Enigmatrix version final Claude`), nunca en la carpeta padre: los agentes del proyecto solo se cargan subiendo desde la carpeta de trabajo. Las carpetas hermanas (`Enigmatrix`, `Enigmatrix - claude`, `Claude-Code-Game-Studios`) son archivo de solo lectura.
+Alejandro paga por uso y los créditos se le acaban rápido. **Gastar poco es una regla del proyecto, no una preferencia.**
+
+- **La sesión principal es el ARQUITECTO**: diseña, decide lo técnico reversible, le presenta a Alejandro opciones con recomendación, reparte el trabajo y verifica lo que vuelve. No se configura con `--agent` ni con el setting `agent`.
+- **Modelo de la sesión principal.** Para el trabajo normal (seguir un plan, revisar, corregir, publicar) basta con **Sonnet**. El modelo más caro (Opus o Fable) se reserva para decisiones de arquitectura difíciles o cuando Alejandro lo pida. El modo ultracode (workflows de muchos agentes) queda **apagado**, salvo que Alejandro lo pida para una tarea concreta.
+- **Todo lo delegado corre en modelos económicos.**
+  - Cada agente declara `model`, `effort` y `maxTurns` en su frontmatter: Sonnet con esfuerzo medio o bajo, y Haiku para lo mecánico.
+  - `.claude/settings.json` fija `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` como piso.
+  - **Nunca** se lanza un agente con `model: opus` ni `fable`, ni con esfuerzo `high` o superior, sin permiso expreso de Alejandro.
+- **Reglas para gastar poco:**
+  1. Lo pequeño lo hace el arquitecto directamente, sin agente: un archivo, un texto, una corrección de pocas líneas.
+  2. Como máximo **2 agentes a la vez**, y solo si no tocan los mismos archivos.
+  3. Lo mecánico va a `ejecutor-pruebas` (Haiku): correr pruebas, compilar, contar, buscar.
+  4. El encargo es corto y preciso: objetivo, archivos a leer (pocos y con ruta), qué NO tocar, criterio de aceptación y formato de respuesta breve. Nada de "lee todo el proyecto".
+  5. Una sola verificación independiente (`qa`) por ronda, y solo cuando la ronda toca la lógica del juego, el servidor o la publicación. Para documentos o cambios visuales pequeños basta la revisión del arquitecto.
+  6. Si un agente falla dos veces la misma tarea, el arquitecto la retoma; no se relanza en un modelo más caro.
+  7. Si un agente se corta por el límite de uso, se retoma desde lo que dejó hecho (`git status`, `git diff`), sin rehacer.
+  8. No se relee lo que ya se sabe: el estado está en `production/session-state/active.md` y `TRASPASO.md`.
+- **Abrir Claude Code en esta carpeta** (`Enigmatrix version final Claude`), nunca en la carpeta padre: los agentes del proyecto solo se cargan desde aquí.
 - **Los agentes globales de BBVA están ocultos en este proyecto** (`permissions.deny` en `.claude/settings.json`).
-- **Cómo se delega**: un encargo = una tarea, con objetivo, archivos a leer, qué NO tocar, criterios de aceptación y evidencia esperada. Solo en paralelo trabajos que no editen los mismos archivos.
-- **Qué NO se delega**: decisiones de producto y de dirección gráfica (del usuario); aceptar ADR o cambiar pillars, balance o semántica de pistas; cerrar hallazgos críticos de seguridad; claves, cuentas de tiendas y compras; commits, publicación y acciones irreversibles; el resumen final al usuario.
-- **Verificación antes de dar algo por bueno**: el resumen de un agente es una afirmación, no una prueba. El arquitecto lee el diff, hace correr los comandos (`ejecutor-pruebas`) y compara números, exige captura en cambios visuales y que `qa` (que no implementó) valide el core.
+- **Qué NO se delega**: decisiones de producto y de dirección gráfica (de Alejandro); aceptar ADR o cambiar pillars, balance o semántica de pistas; cerrar hallazgos críticos de seguridad; claves, cuentas de tiendas y compras; commits, publicación y acciones irreversibles; el resumen final a Alejandro.
+- **Verificación antes de dar algo por bueno**: el resumen de un agente es una afirmación, no una prueba. El arquitecto lee el diff, corre o hace correr los comandos y compara números, y exige captura en los cambios visuales.
 
 ## Agentes (.claude/agents/)
 
-| Agente | Modelo | Cuándo usarlo |
+| Agente | Modelo · esfuerzo · tope de turnos | Cuándo usarlo |
 |---|---|---|
-| `puzzle-engineer` | Sonnet · high | Motor lógico del puzzle: solver, generador, spec 16 |
-| `contenido-puzzles` | Sonnet · medium | Generar y curar casos por mundo, nombres y textos temáticos, calibración |
-| `frontend` | Sonnet · high | Flutter: pantallas, tablero, gestos, navegación, i18n |
-| `backend` | Sonnet · medium | Firebase: Cloud Functions, Firestore, Auth, rankings. **Activo desde la 5A (07-11-2026)** |
-| `qa` | Sonnet · medium | Tests nuevos, verificación independiente, criterios de aceptación |
-| `seguridad` | Sonnet · high | Privacidad, tiendas y firma, y auditoría antes de cada build que salga a probadores. Las tareas de servidor (Firestore, compras, anti-trampa) están inactivas hasta la etapa 5 |
-| `revisor-docs` | Sonnet · medium | Consistencia de docs, borradores de ADR, mantener active.md y roadmap |
-| `ejecutor-pruebas` | Haiku · low | Correr tests, analyze, compilar y greps; devuelve solo números |
+| `puzzle-engineer` | Sonnet · medium · 60 | Motor lógico del puzzle: solver, generador, spec 16 |
+| `frontend` | Sonnet · medium · 60 | Flutter: pantallas, tablero, gestos, navegación, textos |
+| `backend` | Sonnet · medium · 60 | Firebase: Cloud Functions, Firestore, Auth |
+| `qa` | Sonnet · medium · 40 | Verificación independiente de lógica, servidor o publicación |
+| `contenido-puzzles` | Sonnet · low · 40 | Generar y curar casos, títulos y premisas |
+| `revisor-docs` | Sonnet · low · 30 | Consistencia de documentos, borradores de ADR |
+| `ejecutor-pruebas` | Haiku · low · 20 | Correr pruebas, analyze, compilar y búsquedas; devuelve solo números |
+| `seguridad` | Sonnet · medium · 50 | **DORMIDO.** Auditoría de vulnerabilidades. Está bloqueado en `settings.json` y se activa solo cuando Alejandro diga "activa el agente de seguridad" |
 
-Pendientes de crear cuando se decida la nueva dirección gráfica: un agente de arte técnico y animación (game feel) y uno de audio.
+## Ramas, PR y publicación automática (regla de Alejandro, 09-11-2026)
+
+- **Nada va directo a `main`.** Todo cambio va en una rama (`feature/`, `fix/`, `release/` o `docs/`, nunca `claude/`) y un pull request.
+- **En el PR** solo corren las pruebas y se compila el paquete de Android. No se sube nada a ninguna tienda.
+- **Cuando Alejandro aprueba el PR y llega a `main`**, y solo entonces, se sube solo a la prueba interna de Google Play y a TestFlight (ADR-0017). Los cambios que solo tocan documentos no disparan nada.
+- No hay `gh`: se hace push de la rama y se le pasa a Alejandro el enlace `https://github.com/Alejjorojjas/Enigmatrix/pull/new/<rama>`.
 
 ## Flujo de trabajo de sesión
 
