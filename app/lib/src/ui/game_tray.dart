@@ -330,9 +330,10 @@ class _PortraitChipState extends State<_PortraitChip>
                             widget.skin,
                             TokenStyle(
                               charIndex: widget.index,
-                              initial: widget.name.isEmpty
-                                  ? '?'
-                                  : widget.name.characters.first.toUpperCase(),
+                              initial: tokenInitial(
+                                widget.name,
+                                victim: widget.victim,
+                              ),
                               victim: widget.victim,
                               female: widget.female,
                             ),

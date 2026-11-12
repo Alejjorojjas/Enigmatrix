@@ -1249,7 +1249,7 @@ abstract class AppLocalizations {
   /// Línea 2 de la tercera página (las pistas) del diálogo de cómo jugar.
   ///
   /// In es, this message translates to:
-  /// **'\"Junto a\" significa en una casilla vecina (arriba, abajo, izquierda o derecha) de la misma habitación.'**
+  /// **'\"Junto a\" un mueble es estar en una casilla VECINA (arriba, abajo, izquierda o derecha, nunca en diagonal) de ese mueble y en la misma habitación. Encima del mismo mueble no cuenta, pero sí una casilla vecina con alfombra, cama u otro mueble donde se puede estar. Ejemplo: si una alfombra queda al lado de una silla y la pista dice \"José estaba junto a la silla\", José puede estar sobre esa alfombra.'**
   String get tutorialDialogCluesLine2;
 
   /// Línea 3 de la tercera página (las pistas) del diálogo de cómo jugar.
@@ -1699,13 +1699,13 @@ abstract class AppLocalizations {
   /// Paso 4 del tutorial: confirmar a la víctima (herramienta Confirmar ya activa).
   ///
   /// In es, this message translates to:
-  /// **'{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, toca esa casilla.'**
+  /// **'{area}: la única casilla vecina a una cama, sin ser la cama, es {cell}. Con {victim} elegida, toca esa casilla.'**
   String tutorialCoachStep3Place(String area, String cell, String victim);
 
   /// Paso 4 del tutorial: confirmar a la víctima (falta elegir la herramienta).
   ///
   /// In es, this message translates to:
-  /// **'{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, pulsa CONFIRMAR y toca esa casilla.'**
+  /// **'{area}: la única casilla vecina a una cama, sin ser la cama, es {cell}. Con {victim} elegida, pulsa CONFIRMAR y toca esa casilla.'**
   String tutorialCoachStep3Tool(String area, String cell, String victim);
 
   /// Paso 5 del tutorial: la X automática.

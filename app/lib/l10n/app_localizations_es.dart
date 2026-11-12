@@ -677,7 +677,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tutorialDialogCluesLine2 =>
-      '\"Junto a\" significa en una casilla vecina (arriba, abajo, izquierda o derecha) de la misma habitación.';
+      '\"Junto a\" un mueble es estar en una casilla VECINA (arriba, abajo, izquierda o derecha, nunca en diagonal) de ese mueble y en la misma habitación. Encima del mismo mueble no cuenta, pero sí una casilla vecina con alfombra, cama u otro mueble donde se puede estar. Ejemplo: si una alfombra queda al lado de una silla y la pista dice \"José estaba junto a la silla\", José puede estar sobre esa alfombra.';
 
   @override
   String get tutorialDialogCluesLine3 =>
@@ -1052,12 +1052,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String tutorialCoachStep3Place(String area, String cell, String victim) {
-    return '$area: la única casilla junto a una cama sin ser cama es $cell. Con $victim elegida, toca esa casilla.';
+    return '$area: la única casilla vecina a una cama, sin ser la cama, es $cell. Con $victim elegida, toca esa casilla.';
   }
 
   @override
   String tutorialCoachStep3Tool(String area, String cell, String victim) {
-    return '$area: la única casilla junto a una cama sin ser cama es $cell. Con $victim elegida, pulsa CONFIRMAR y toca esa casilla.';
+    return '$area: la única casilla vecina a una cama, sin ser la cama, es $cell. Con $victim elegida, pulsa CONFIRMAR y toca esa casilla.';
   }
 
   @override

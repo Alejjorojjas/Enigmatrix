@@ -688,7 +688,7 @@ class NeutralSkin extends BoardSkin {
     );
 
     // Inicial en el pecho: letra, nunca solo color.
-    _drawGlyph(canvas, s.initial, Offset(0, 0.52 * R), R * 0.74,
+    _drawGlyph(canvas, s.initial, Offset(0, 0.52 * R), R * 0.74 * initialScale(s.initial),
         s.victim ? const Color(0xFF22252B) : _onColor(base));
 
     if (a < 1) canvas.restore();
@@ -713,7 +713,7 @@ class NeutralSkin extends BoardSkin {
         ..strokeWidth = 1
         ..color = Color.fromRGBO(255, 255, 255, 0.7 * a),
     );
-    _drawGlyph(canvas, s.initial, center, size * 0.62,
+    _drawGlyph(canvas, s.initial, center, size * 0.62 * initialScale(s.initial),
         _onColor(base).withValues(alpha: a));
   }
 

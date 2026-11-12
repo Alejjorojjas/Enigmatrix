@@ -74,6 +74,16 @@ const kForbiddenWeaponWords = [
   'misil',
 ];
 
+/// Inicial reservada a la víctima. Decisión del dueño (11-11-2026): ningún
+/// personaje de un mundo ni de un caso publicado puede tener un nombre que
+/// empiece por V; la ficha de la víctima en el tablero muestra siempre "V".
+const kVictimInitial = 'V';
+
+/// true si [name] empieza por la inicial reservada a la víctima (sin importar
+/// mayúsculas ni tildes).
+bool startsWithVictimInitial(String name) =>
+    foldEs(name.trim()).startsWith(kVictimInitial.toLowerCase());
+
 /// Minúsculas y sin tildes (para comparar palabras).
 String foldEs(String s) {
   const from = 'áéíóúüñÁÉÍÓÚÜÑ';
@@ -167,6 +177,10 @@ class WorldData {
         p.add('personaje sin nombre o sin arquetipo');
       }
       if (m.name.length > 9) p.add('nombre demasiado largo: ${m.name}');
+      if (startsWithVictimInitial(m.name)) {
+        p.add('nombre que empieza por $kVictimInitial (letra reservada a la '
+            'víctima, decisión 11-11-2026): ${m.name}');
+      }
     }
     if (rooms.length < 8) {
       p.add('el mundo tiene ${rooms.length} habitaciones; hacen falta '

@@ -11,6 +11,15 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 11-11-2026 · cuenta principal · correcciones de la prueba con amigos (rama `fix/tablero-resuelto-victima-y-reglas`)
+
+- **Tablero resuelto.** "Seguir mirando el tablero" devuelve la cámara a la vista normal y muestra la solución completa con lo tachado. Las pistas y Mapa/Notas se pueden usar, el tablero no se puede editar, y se sale con la flecha o con "Ver resumen".
+- **Víctima con V.** Su ficha muestra siempre "V" (tokenInitial). Como resguardo, cualquier otro nombre con V mostraría dos letras.
+- **Ningún personaje con V** (decisión de Alejandro). Valeria se cambió por Yolanda en tools/data/mundos/mansion.json. La regla quedó en WorldData.problems() y en la puerta de contenido. Se regeneraron los 40 casos con las mismas semillas: los mapas y las soluciones son idénticos y solo cambian los nombres. Informe: production/revisiones/2026-11-11-contenido-sin-v.md.
+- **"Junto a" aclarado** en Cómo jugar (casilla vecina, misma habitación, vale sobre una alfombra o una cama), con el ejemplo de la silla y la alfombra.
+- **Pendiente anotado:** mapas más lógicos (Salón con varios sofás).
+- **Pruebas:** app 722, motor 345, catalog-check OK (61 casos).
+
 ## 11-11-2026 · cuenta principal · revisión con Claude Code Game Studios y documentos al día
 
 - **Revisión con CCGS v1.3.0:** copia aparte en la rama `docs/revision-ccgs`, carpeta `Enigmatrix-revision-ccgs`. Configuración: sin agentes de motores, Opus pasado a Sonnet y modo de revisión solo. La revisión la corrió Alejandro en otra sesión y dejó 5 informes, que se copiaron a `production/revisiones/2026-11-11-*.md`.

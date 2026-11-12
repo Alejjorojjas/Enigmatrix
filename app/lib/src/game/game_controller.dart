@@ -50,6 +50,10 @@ class GameState {
   final bool locked; // bloqueo temporal tras error (doc 03)
   final Set<int> errorCells;
   final bool solved;
+
+  /// El caso está resuelto y el jugador sigue mirando el tablero (solo
+  /// lectura): se ven las pistas y se cambia entre Mapa y Notas.
+  final bool reviewing;
   final String? murdererId; // revelado al resolver correcto
   final String? lethalWeaponId;
   final bool mapMode; // true = mapa · false = vista lógica (notas)
@@ -90,6 +94,7 @@ class GameState {
     this.locked = false,
     this.errorCells = const {},
     this.solved = false,
+    this.reviewing = false,
     this.murdererId,
     this.lethalWeaponId,
     this.mapMode = true,
@@ -114,6 +119,7 @@ class GameState {
     bool? locked,
     Set<int>? errorCells,
     bool? solved,
+    bool? reviewing,
     String? murdererId,
     String? lethalWeaponId,
     bool? mapMode,
@@ -137,6 +143,7 @@ class GameState {
     locked: locked ?? this.locked,
     errorCells: errorCells ?? this.errorCells,
     solved: solved ?? this.solved,
+    reviewing: reviewing ?? this.reviewing,
     murdererId: murdererId ?? this.murdererId,
     lethalWeaponId: lethalWeaponId ?? this.lethalWeaponId,
     mapMode: mapMode ?? this.mapMode,
@@ -469,13 +476,26 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   /// Elige (o suelta, si ya estaba elegido) a un sospechoso. Desde Tachar o
   /// Borrar, elegir un retrato vuelve a Anotar.
   void tapSuspect(String charId) {
-    if (state.solved) return;
+    if (state.solved && !state.reviewing) return;
     final selecting = state.selectedChar != charId;
     final backToNotes =
         state.toolMode == ToolMode.erase || state.toolMode == ToolMode.cross;
     state = state.copyWith(
       selectedChar: () => selecting ? charId : null,
       toolMode: backToNotes ? ToolMode.notes : null,
+    );
+  }
+
+  /// Resuelto: pasa a mirar el tablero. Muestra la solución completa (cada
+  /// personaje en su casilla, lo demás tachado) y deja elegir retratos para
+  /// leer las pistas. El tablero sigue sin poder editarse.
+  void startReview() {
+    if (!state.solved || state.reviewing) return;
+    state = state.copyWith(
+      board: state.board.solvedView(state.pc.map.size),
+      reviewing: true,
+      selectedChar: () => null,
+      toolMode: ToolMode.notes,
     );
   }
 

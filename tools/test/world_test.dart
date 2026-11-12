@@ -113,6 +113,29 @@ void main() {
       expect(p, contains('habitaciones'));
     });
 
+    // Decisión del dueño (11-11-2026): la V es exclusiva de la víctima.
+    test('rechaza personajes cuyo nombre empieza por V (letra de la víctima)',
+        () {
+      final w = mansion();
+      WorldData con(String nombre) => WorldData(
+            id: w.id,
+            names: w.names,
+            cast: [
+              ...w.cast,
+              CastMember(name: nombre, female: true, archetype: 'la prima')
+            ],
+            rooms: w.rooms,
+            weapons: w.weapons,
+          );
+      expect(startsWithVictimInitial('Valeria'), isTrue);
+      expect(startsWithVictimInitial('  vicente'), isTrue);
+      expect(startsWithVictimInitial('Yolanda'), isFalse);
+      expect(con('Valeria').problems().join(' '), contains('víctima'));
+      expect(con('Vicenta').problems(), isNotEmpty);
+      expect(con('Yara').problems(), isEmpty);
+      expect(w.cast.where((m) => m.initial == kVictimInitial), isEmpty);
+    });
+
     test('un JSON incompleto lanza FormatException', () {
       expect(() => WorldData.fromJson({'id': 'x'}), throwsFormatException);
     });

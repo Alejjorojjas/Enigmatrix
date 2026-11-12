@@ -248,8 +248,10 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     final sc = _scene;
     sc.board = s.board;
     sc.selectedChar = s.selectedChar;
+    // Resuelto: no hay casillas posibles que resaltar.
     sc.highlightsCandidates =
-        s.toolMode == ToolMode.notes || s.toolMode == ToolMode.place;
+        !s.solved &&
+        (s.toolMode == ToolMode.notes || s.toolMode == ToolMode.place);
     sc.solved = s.solved;
     sc.errorCells = s.errorCells;
     sc.interactive =
@@ -560,16 +562,24 @@ class _GameBodyState extends ConsumerState<_GameBody> {
     });
   }
 
-  void _showSummary() {
+  Future<void> _showSummary() async {
     if (!mounted) return;
     _summaryShown = true;
     _fallbackTimer?.cancel();
+    _summaryTimer?.cancel();
     final state = ref.read(gameControllerProvider(pc));
-    if (tutorial) {
-      showTutorialEnd(context, pc, state);
-    } else {
-      showVictoryScreen(context, ref, pc);
-    }
+    final Future<bool> summary = tutorial
+        ? showTutorialEnd(context, pc, state)
+        : showVictoryScreen(context, ref, pc);
+    final look = await summary;
+    if (look && mounted) _startReview();
+  }
+
+  /// "Seguir mirando el tablero": la cámara vuelve a la vista normal y se
+  /// muestra la solución completa, solo para mirar (pistas, Mapa y Notas).
+  void _startReview() {
+    _game.restoreNormalView();
+    ref.read(gameControllerProvider(pc).notifier).startReview();
   }
 
   void _selectSuspect(String id) => _interaction.selectSuspect(id);
@@ -879,13 +889,25 @@ class _GameBodyState extends ConsumerState<_GameBody> {
               s.solved,
               s.paused,
               s.loading,
+              s.reviewing,
             ),
           ),
         );
-        final (toolMode, selected, board, clueMarks, solved, paused, loading) =
-            v;
+        final (
+          toolMode,
+          selected,
+          board,
+          clueMarks,
+          solved,
+          paused,
+          loading,
+          reviewing,
+        ) = v;
         final controller = ref.read(gameControllerProvider(pc).notifier);
         final enabled = !paused && !loading && !solved;
+        // Mirando el tablero resuelto los retratos siguen sirviendo para leer
+        // las pistas, pero las herramientas quedan apagadas.
+        final panelEnabled = enabled || (solved && reviewing && !paused);
 
         final placed = <String>{
           for (final c in board.confirmedCells) board.cell(c).confirmed!,
@@ -933,7 +955,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
           pulse: _trayPulse,
           selectedChar: selected,
           placed: placed,
-          enabled: enabled,
+          enabled: panelEnabled,
           onSelect: _selectSuspect,
           clueMark: mark,
           onCycleClue: () {

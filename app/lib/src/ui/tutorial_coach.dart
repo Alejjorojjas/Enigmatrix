@@ -594,17 +594,18 @@ class _TutorialCoachState extends ConsumerState<TutorialCoach> {
 /// Cierre del tutorial al resolver bien el caso: revela al asesino, avisa
 /// que el Caso 1 sigue sin empezar y lleva a la lista. NO usa la pantalla de
 /// victoria normal, porque esa escribe "done:" y el feedback del caso.
-Future<void> showTutorialEnd(
+/// Devuelve true si el jugador pidió seguir mirando el tablero.
+Future<bool> showTutorialEnd(
   BuildContext context,
   PuzzleCase pc,
   GameState state,
 ) async {
   await markTutorialPlayed();
-  if (!context.mounted) return;
+  if (!context.mounted) return false;
   final murderer = state.murdererId == null
       ? null
       : pc.character(state.murdererId!);
-  await showDialog<void>(
+  final look = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (ctx) {
@@ -670,7 +671,7 @@ Future<void> showTutorialEnd(
                   ),
                   const SizedBox(height: 6),
                   TextButton(
-                    onPressed: () => Navigator.of(ctx).pop(),
+                    onPressed: () => Navigator.of(ctx).pop(true),
                     child: Text(
                       ctx.l10n.tutorialEndLookBoard,
                       style: TextStyle(fontSize: 15, color: p.textDim),
@@ -684,4 +685,5 @@ Future<void> showTutorialEnd(
       );
     },
   );
+  return look == true;
 }

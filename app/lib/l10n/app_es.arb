@@ -869,7 +869,7 @@
   "@tutorialDialogCluesLine1": {
     "description": "Línea 1 de la tercera página (las pistas) del diálogo de cómo jugar."
   },
-  "tutorialDialogCluesLine2": "\"Junto a\" significa en una casilla vecina (arriba, abajo, izquierda o derecha) de la misma habitación.",
+  "tutorialDialogCluesLine2": "\"Junto a\" un mueble es estar en una casilla VECINA (arriba, abajo, izquierda o derecha, nunca en diagonal) de ese mueble y en la misma habitación. Encima del mismo mueble no cuenta, pero sí una casilla vecina con alfombra, cama u otro mueble donde se puede estar. Ejemplo: si una alfombra queda al lado de una silla y la pista dice \"José estaba junto a la silla\", José puede estar sobre esa alfombra.",
   "@tutorialDialogCluesLine2": {
     "description": "Línea 2 de la tercera página (las pistas) del diálogo de cómo jugar."
   },
@@ -1434,7 +1434,7 @@
       }
     }
   },
-  "tutorialCoachStep3Place": "{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, toca esa casilla.",
+  "tutorialCoachStep3Place": "{area}: la única casilla vecina a una cama, sin ser la cama, es {cell}. Con {victim} elegida, toca esa casilla.",
   "@tutorialCoachStep3Place": {
     "description": "Paso 4 del tutorial: confirmar a la víctima (herramienta Confirmar ya activa).",
     "placeholders": {
@@ -1449,7 +1449,7 @@
       }
     }
   },
-  "tutorialCoachStep3Tool": "{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, pulsa CONFIRMAR y toca esa casilla.",
+  "tutorialCoachStep3Tool": "{area}: la única casilla vecina a una cama, sin ser la cama, es {cell}. Con {victim} elegida, pulsa CONFIRMAR y toca esa casilla.",
   "@tutorialCoachStep3Tool": {
     "description": "Paso 4 del tutorial: confirmar a la víctima (falta elegir la herramienta).",
     "placeholders": {

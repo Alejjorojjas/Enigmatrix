@@ -43,7 +43,7 @@ class BoardInteraction {
   // ---- retratos -----------------------------------------------------------------
 
   void selectSuspect(String charId) {
-    if (read().solved) return;
+    if (read().solved && !read().reviewing) return;
     controller.tapSuspect(charId);
     director.handle(
       SuspectTapped(charId, selected: read().selectedChar == charId),

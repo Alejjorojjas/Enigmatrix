@@ -284,12 +284,12 @@
     },
     {
       "id": "c7",
-      "name_es": "Wenceslao",
-      "female": false
+      "name_es": "Ximena",
+      "female": true
     },
     {
       "id": "c8",
-      "name_es": "Ximena",
+      "name_es": "Yolanda",
       "female": true
     }
   ],

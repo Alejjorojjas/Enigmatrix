@@ -2,6 +2,15 @@
 
 > Archivo de checkpoint. Toda sesión de trabajo lo lee al empezar y lo actualiza al cerrar un hito. Se mantiene corto a propósito: el historial completo está en [historial.md](historial.md).
 
+## Pendientes anotados por Alejandro (11-11-2026)
+
+- **Mapas más lógicos (para revisar después, no es rígido):** a Alejandro no le parece lógica la distribución. Por ejemplo, un "Salón" con varios sofás, cuando debería tener uno solo. Hay que revisar las reglas de muebles por habitación (`tools/lib/src/map_rules.dart`, ADR-0015, hoy máximo 2 del mismo tipo) y los muebles que tiene cada habitación en `tools/data/mundos/mansion.json`, y proponerle opciones antes de regenerar casos.
+- **Correcciones de la prueba con amigos** (en curso, rama `fix/tablero-resuelto-victima-y-reglas`):
+  - poder mirar el tablero ya resuelto;
+  - la víctima siempre con la letra V;
+  - aclarar "junto a" cuando hay una alfombra.
+- **Datos reales y reto diario para los amigos:** es la etapa 5A.3. Ver el plan en el chat del 11-11-2026 y las condiciones en `production/planes/2026-11-07-etapa-5a-diseno.md`.
+
 ## Estado al 10-11-2026 (lo más reciente)
 
 - **Versión 0.8.1+11, "Murdoku Diario"** (`com.murdokudiario.app`).

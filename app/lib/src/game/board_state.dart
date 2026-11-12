@@ -372,6 +372,17 @@ class BoardState {
     };
   }
 
+  /// Vista del tablero ya resuelto: cada personaje queda confirmado en su
+  /// casilla y todo lo demás se muestra descartado, con las X de la fila y la
+  /// columna de cada confirmado (sin notas de candidatos). Solo se mira.
+  BoardState solvedView(int size) {
+    var board = this;
+    for (final i in [...confirmedCells]) {
+      board = board._applyAutoX(i, cell(i).confirmed!, size);
+    }
+    return board;
+  }
+
   /// Posiciones confirmadas charId -> celda.
   /// Devuelve null si algún personaje no está confirmado exactamente una vez.
   Map<String, int>? confirmedPositions(Iterable<String> charIds) {

@@ -329,6 +329,25 @@ class BoardGame extends FlameGame implements VisualSink {
     _finishReveal();
   }
 
+  /// Vuelve a la vista normal tras la secuencia de resolver (para seguir
+  /// mirando el tablero resuelto): sin zoom, sin foco ni oscurecimiento, sin
+  /// efectos sueltos. Las fichas y las X se quedan donde están.
+  void restoreNormalView() {
+    _revealRunning = false;
+    _zoomStartT = -1;
+    _shakeT = 99;
+    _punchT = 99;
+    rig
+      ..reset()
+      ..focus = ui.Offset.zero;
+    overlay.resetReveal();
+    pieces.clearAll();
+    effects.clearAll();
+    if (revealPhase.value != RevealPhase.idle) {
+      revealPhase.value = RevealPhase.done;
+    }
+  }
+
   /// Vuelve la escena a su estado de reposo (para jugar de nuevo).
   void resetScene() {
     pieces.clearAll();

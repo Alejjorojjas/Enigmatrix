@@ -44,8 +44,9 @@ String _fmt(int seconds) =>
     '${(seconds ~/ 60).toString().padLeft(2, '0')}:'
     '${(seconds % 60).toString().padLeft(2, '0')}';
 
-/// Guarda el resultado y muestra la celebración.
-Future<void> showVictoryScreen(
+/// Guarda el resultado y muestra la celebración. Devuelve true si el jugador
+/// pidió seguir mirando el tablero resuelto.
+Future<bool> showVictoryScreen(
   BuildContext context,
   WidgetRef ref,
   PuzzleCase pc,
@@ -61,8 +62,8 @@ Future<void> showVictoryScreen(
     }),
   );
 
-  if (!context.mounted) return;
-  await showDialog<void>(
+  if (!context.mounted) return false;
+  final look = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (ctx) => Dialog.fullscreen(
@@ -72,6 +73,7 @@ Future<void> showVictoryScreen(
       ),
     ),
   );
+  return look == true;
 }
 
 class _VictoryView extends ConsumerStatefulWidget {
@@ -290,7 +292,7 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 ),
                 const SizedBox(height: 8),
                 TextButton(
-                  onPressed: () => _saveAnd(() => Navigator.of(context).pop()),
+                  onPressed: () => _saveAnd(() => Navigator.of(context).pop(true)),
                   child: Text(
                     context.l10n.victoryLookBoard,
                     style: context.body(15, color: p.softText),

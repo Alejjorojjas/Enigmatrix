@@ -251,7 +251,7 @@ abstract class ArtSkin extends BoardSkin {
             ..strokeWidth = br * 0.24
             ..color = outline);
     }
-    drawGlyph(canvas, s.initial, bc, br * 1.15, onColor(badge));
+    drawGlyph(canvas, s.initial, bc, br * 1.15 * initialScale(s.initial), onColor(badge));
     if (a < 1) canvas.restore();
     canvas.restore();
   }
@@ -288,7 +288,7 @@ abstract class ArtSkin extends BoardSkin {
             ..strokeWidth = math.max(1.2, r * 0.16)
             ..color = outline.withValues(alpha: 0.9 * a));
     }
-    drawGlyph(canvas, s.initial, center, size * 0.62, onColor(base).withValues(alpha: a));
+    drawGlyph(canvas, s.initial, center, size * 0.62 * initialScale(s.initial), onColor(base).withValues(alpha: a));
   }
 
   @override
