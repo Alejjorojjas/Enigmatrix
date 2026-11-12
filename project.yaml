@@ -25,3 +25,9 @@ framework:
 # here. `/project-settings --local <key>=<value>` writes there; `/project-settings <key>=<value>`
 # edits this file. See `.claude/docs/config-resolution.md` for the full
 # precedence order.
+
+# Enigmatrix es Flutter/Dart (no Godot, Unity, Unreal ni Web): el código y las pruebas
+# están en app/ (la app) y tools/ (el motor de puzzles). Revisión del 11-11-2026.
+engine:
+  code_root: app/lib
+  test_root: app/test

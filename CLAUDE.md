@@ -1,6 +1,17 @@
 # Enigmatrix
 
 > **COPIA DE REVISIÓN CON CLAUDE CODE GAME STUDIOS v1.3.0 (rama `docs/revision-ccgs`).** Aquí están instalados los agentes y comandos del estudio solo para revisar el juego. No se programa aquí: los hallazgos se escriben en `production/revisiones/` y vuelven al proyecto por un PR. Las instrucciones del estudio están en @.claude/docs/CCGS-CLAUDE.md, pero mandan las reglas de este archivo (español, control de gasto, ramas y PR, sin coautoría). El motor es Flutter/Dart: no es Godot, Unity ni Unreal.
+>
+> **EL JUEGO ESTÁ EN ESTA MISMA CARPETA.** No es una plantilla vacía ni hay que buscarlo en otra carpeta. La línea de abajo que dice "abrir en `Enigmatrix version final Claude`" no aplica a esta copia. Dónde está cada cosa:
+> - **App** (Flutter): `app/lib/`, con las pruebas en `app/test/`.
+> - **Motor de puzzles** (Dart puro): `tools/`.
+> - **Servidor** (Firebase, en el emulador): `backend/`.
+> - **Diseño** (equivale a los GDD del estudio): `docs/`, del 01 al 20. La spec formal es `docs/16-spec-puzzle.md`.
+> - **Decisiones** (ADR): `docs/adr/`, de 0001 a 0017.
+> - **Estado y planes**: `production/session-state/active.md` y `production/planes/`.
+> - **Casos del juego**: `app/assets/cases/`.
+>
+> Los formatos no son los del estudio (no hay `design/gdd/` ni `src/`). Revisa el contenido real; no lo trates como un proyecto nuevo.
 
 
 > **SESIÓN NUEVA U OTRA CUENTA:** antes de hacer nada, lee `production/session-state/TRASPASO.md`. Anota todo lo que hagas en `production/session-state/bitacora-cuentas.md`.
