@@ -1,5 +1,8 @@
 # Enigmatrix - Analitica
 
+> **ACTUALIZACIÓN 11-11-2026:** el índice decía "no hay Firebase en `app/pubspec.yaml`". Corregido: **Firebase ya está** en `app/pubspec.yaml` (`firebase_core`, `firebase_auth`, `cloud_functions`), pero **sin analítica**: no hay SDK de analítica, de anuncios ni de reporte de fallos, y la versión de tienda (`ENX_BACKEND=none`) no envía datos. Los eventos y KPIs de este documento siguen siendo la intención para la etapa 5B o posterior, y dependen de la política de privacidad y del consentimiento (`docs/15-legal.md`).
+>
+
 > ACTUALIZACIÓN 04-11-2026: **este documento es la intención futura, no lo que existe hoy.** El cuerpo se conserva sin cambios.
 >
 > - **Hoy no hay analítica.** La app no mide ni envía nada.

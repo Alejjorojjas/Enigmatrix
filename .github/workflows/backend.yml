@@ -1,0 +1,62 @@
+# Murdoku Diario: pruebas del servidor (Firebase en el emulador).
+#
+# Corre en cada PR hacia main y en cada push a main que toque backend/:
+# 37 pruebas unitarias y 58 de integración contra los emuladores de Auth,
+# Firestore y Functions (proyecto de prueba demo-enigmatrix, sin cuenta real).
+# No despliega nada: el paso al proyecto real de Firebase es la etapa 5A.3.
+
+name: Servidor (pruebas)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: backend-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    name: Pruebas del servidor
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            backend/functions/package-lock.json
+
+      # Los emuladores de Firebase CLI 15 necesitan Java 21.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Dependencias
+        run: |
+          npm ci --no-audit --no-fund
+          npm --prefix functions ci --no-audit --no-fund
+          npm install -g firebase-tools@15.10.0
+
+      - name: Pruebas unitarias y de integración (emulador)
+        run: npm test

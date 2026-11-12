@@ -11,6 +11,30 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 11-11-2026 · cuenta principal · revisión con Claude Code Game Studios y documentos al día
+
+- **Revisión con CCGS v1.3.0:** copia aparte en la rama `docs/revision-ccgs`, carpeta `Enigmatrix-revision-ccgs`. Configuración: sin agentes de motores, Opus pasado a Sonnet y modo de revisión solo. La revisión la corrió Alejandro en otra sesión y dejó 5 informes, que se copiaron a `production/revisiones/2026-11-11-*.md`.
+- **Decisiones de Alejandro (ADR-0014, sección 11-11):**
+  - V1 sin ayudas ni puntos (pregunta 12);
+  - modo daltónico en la V1.1, con validación antes de la publicación abierta;
+  - excepción de 48 px para las casillas del 9×9;
+  - Alejandro es el responsable de la política de privacidad. Falta el correo.
+- **Documentos:** el agente revisor-docs (Sonnet, esfuerzo bajo) corrigió 20 archivos de `docs/` con el informe como lista cerrada:
+  - estado al 11-11 en el roadmap;
+  - índice actualizado;
+  - preguntas 8, 12, 13, 14, 19 y 22 cerradas;
+  - H-40 y H-42 verificados;
+  - doc 11 al día;
+  - ADR-0005 superado.
+
+  El arquitecto revisó el alcance: solo `docs/` y nada borrado.
+- **Servidor:** workflow nuevo `.github/workflows/backend.yml` con las 95 pruebas en el emulador, en cada PR que toque `backend/`.
+- **Pendientes de Alejandro:**
+  - el correo de privacidad y la URL pública de la política;
+  - el intento oficial al borrar datos;
+  - el cierre del ranking semanal (5B);
+  - confirmar que el detector de redundancia queda diferido.
+
 ## 11-11-2026 · cuenta principal · correcciones tras la revisión (misma rama)
 
 - **Pantallas simuladas (pregunta 18).** `kShowSimulated` y `showSimulatedProvider` en `dev_tools.dart`. Sin ENX_DEV, que es la versión de tienda, se ocultan vidas, racha, puntos, la pestaña Ranking, Tienda, Premium, las estadísticas simuladas y los ajustes "Próximamente". La hizo el agente frontend (Sonnet, esfuerzo medio). El arquitecto la revisó en web a 360×740.

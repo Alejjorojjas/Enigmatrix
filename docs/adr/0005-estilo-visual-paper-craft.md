@@ -1,6 +1,6 @@
 # ADR-0005: Estilo visual Paper Craft (papel recortado)
 
-- **Estado**: Propuesto (retroactivo). Escrito el 04-11-2026 para dejar por escrito una decisión ya tomada; falta que se acepte formalmente. **Vigente pero en revisión**: se reevaluará en la etapa 2 del plan (ver ADR-0011).
+- **Estado**: **SUPERADO por el [ADR-0013](0013-direccion-visual-v1-dos-pieles-por-codigo.md) el 11-11-2026** (Aceptado 05-11-2026: dos pieles, "Ilustrada" y "Papel", con el arte por código; la piel Papel conserva parte de esta idea). Texto anterior conservado como historial: Propuesto (retroactivo). Escrito el 04-11-2026 para dejar por escrito una decisión ya tomada; falta que se acepte formalmente. **Vigente pero en revisión**: se reevaluará en la etapa 2 del plan (ver ADR-0011).
 - **Fecha**: 12-07-2026
 - **Decisores**: Alejandro (usuario), eligiendo entre 6 mockups; implementó el arquitecto.
 

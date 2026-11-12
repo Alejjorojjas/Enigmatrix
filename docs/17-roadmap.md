@@ -6,7 +6,46 @@ Ordenar el MVP del doc 01 en fases construibles. El MVP completo es grande (~50 
 
 > ACTUALIZACIÓN 04-11-2026: esta regla sigue vigente, con una excepción explícita aprobada el 12-07-2026 (ver "Excepción aprobada: pantallas simuladas de fases futuras"). Desde el 04-11-2026 el orden de trabajo lo marca el **plan por etapas 0 a 6** de este documento. Las fases originales del 10-06-2026 se conservan al final, en "Historial del plan original (10-06-2026)", con sus entregables marcados según lo que muestra `git log`.
 
-## Estado verificado al 04-11-2026
+## Estado verificado al 11-11-2026
+
+Revisión de diseño con Claude Code Game Studios ([informe](../production/revisiones/2026-11-11-ccgs-design-review.md)), contrastada con el código de `app/lib`, `app/pubspec.yaml`, `app/assets`, `tools/` y `backend/`, más las cifras que dio Alejandro el 11-11-2026. Las cifras de pruebas **no se ejecutaron** en la revisión: son las que declara Alejandro. El estado día a día sigue en `production/session-state/active.md` y `TRASPASO.md`, que mandan si hay diferencia.
+
+### Dónde está el proyecto
+
+- **Versión 0.8.1+11, "Murdoku Diario"**, paquete `com.murdokudiario.app` en Android y en iOS (decisión del 09-11-2026). Se publica en las cuentas de Google Play y de Apple de un amigo de Alejandro (ADR-0017).
+- **Google Play:** la **prueba interna está publicada** (versión 10007). La subida automática sigue apagada hasta crear la cuenta de servicio.
+- **App Store:** el iPhone **entra en la V1** (09-11-2026, ADR-0014), por **TestFlight**. El flujo (`ios-testflight.yml`) está listo pero apagado hasta `IOS_UPLOAD=true`; el proyecto iOS aún no se ha compilado en CI.
+- **Versión de tienda:** compilada sin `ENX_DEV` y con `ENX_BACKEND=none`; **oculta las pantallas simuladas** (pregunta 18; rama `fix/creditos-seguridad-y-documentos`) y sale **sin ayudas ni puntos** (pregunta 12, 11-11-2026): la victoria muestra tiempo y errores.
+- **Plan por etapas (resumen):** etapa 0 hecha (remoto privado en GitHub, PR n.º 1 fusionado); etapa 1, prueba de juego n.º 1 hecha con la 0.3.0+3; etapa 2 resuelta por el ADR-0013 (dos pieles); etapas 3 y 4 hechas por rondas (3.1, 3.2, 4.1, 4.2, 4.3a y 4.3b, según `active.md`); **etapa 5A (servidor) en curso**, solo en el emulador `demo-enigmatrix` (Java 21); 5B (ranking, ayudas y puntos) sin empezar; **etapa 6 (tiendas) en curso**.
+- **Alcance de la V1 (ADR-0014):** Principiante, Casual e Intermedio; Mundo 1 "La Mansión" con 10 casos y 30 días de reto; Experto, Élite y los mundos 2 a 5 en actualizaciones.
+- **Excepción vigente del ADR-0008:** la solución sigue dentro del JSON local (60 de 62 archivos de `app/assets/cases` llevan `solution`) hasta que la app se conecte al servidor (ADR-0016).
+
+### Cifras verificadas
+
+| Qué | Cifra | Dónde se comprueba |
+|---|---|---|
+| Pruebas del motor | 342 | `tools/test` (`dart test`); cifra de Alejandro |
+| Pruebas de la app | 715 | `app/test` (`flutter test`); cifra de Alejandro |
+| Pruebas del servidor | 95 | `backend/` (`npm test`, Vitest); cifra de Alejandro. No están en ningún workflow de CI |
+| Casos en la app | 60 casos: 11 Principiante, 23 Casual y 26 Intermedio (62 archivos con `catalogo.json` e `index.json`) | `app/assets/cases/` (contados el 11-11-2026) |
+| Casos con arma | 14: 12 Intermedio y 2 Casual | `lethalWeapon` en `app/assets/cases/` |
+| Experto (12×12) y Élite (16×16) | El motor tiene el perfil; no hay casos y no entran en la V1 | pregunta 13, ADR-0014 |
+| Tablero | Escena de Flame (`flame: ^1.37.0`), dos pieles, claro y oscuro | `app/lib/src/board/scene/` |
+| Sonido y vibración | 13 sonidos (`flutter_soloud`) y vibración, con interruptores | `app/assets/sonidos/`, `app_settings.dart` |
+| Textos y accesibilidad | 308 claves en `app_es.arb` (solo español); `Semantics` en el tablero y las pantallas principales | `app/lib/l10n/`, `board_semantics.dart` |
+| Servidor | Cloud Functions, reglas de Firestore y pruebas; la app depende de `firebase_core`, `firebase_auth` y `cloud_functions`, pero la tienda va apagada | `backend/`, `app/pubspec.yaml` |
+| Reto diario | Ciclo de 30 días en `mansion-reto.json` y `v1_scope.dart` | `tools/data/mundos/` |
+| Rango de dificultad | El generador rechaza casos fuera de rango (provisional); error de `_stronger` corregido en la etapa 3.1 | `difficulty_ranges.dart`, `Generator.nextStronger` |
+| Publicación | Workflows de Play y TestFlight (ADR-0017), ramas y PR antes de `main` | `.github/workflows/` |
+
+### Lo que sigue pendiente
+
+- **Antes de la prueba cerrada o producción y de la revisión de Apple (NOT READY):** política de privacidad completa y publicada (falta el correo de contacto); enlace a la política dentro de la app; confirmar en el teléfono que la versión de tienda no muestra pantallas simuladas. Detalle en [20-checklist-tiendas.md](20-checklist-tiendas.md).
+- **Antes de la publicación abierta:** validar con un simulador de daltonismo (los tres tipos) y las demás pruebas del doc 11; el modo daltónico llega en la V1.1.
+- **Decisiones de Alejandro todavía abiertas:** cierre del ranking semanal con fechas locales (doc 08, etapa 5B) y qué pasa con el intento oficial al borrar datos o cerrar sesión (doc 03; el ADR-0016 lo acota).
+- **Historial:** el estado del 04-11-2026, de abajo, se conserva tal cual como historial.
+
+## Estado verificado al 04-11-2026 (HISTORIAL: SUPERADO 11-11-2026 por el bloque de arriba)
 
 Comprobado leyendo el código y `git log` el 04-11-2026 (fuente: [auditoría del proyecto](../production/revisiones/2026-11-04-auditoria-proyecto.md)).
 
@@ -36,7 +75,7 @@ Comprobado leyendo el código y `git log` el 04-11-2026 (fuente: [auditoría del
 
 El 12-07-2026 Alejandro aprobó (hallazgo H-18 de la auditoría) construir primero las pantallas completas de la app con datos locales simulados, dejar Firebase para después e incluir ya la monetización simulada. Es una **excepción explícita** a la regla "no se arranca una fase sin cerrar la anterior" y a "no implementar features de fases futuras sin acuerdo explícito".
 
-- **Qué se permite:** pantallas de fases futuras solo como simulación local: Inicio, Mundos, Reto diario, Ranking, Perfil, Tienda y Premium, con vidas, racha y puntajes de ejemplo. Los datos simulados están agrupados al inicio de `home_shell.dart`.
+- **Qué se permite:** pantallas de fases futuras solo como simulación local: Inicio, Mundos, Reto diario, Ranking, Perfil, Tienda y Premium, con vidas, racha y puntajes de ejemplo. Los datos simulados están agrupados al inicio de `home_shell.dart`. (Nota 11-11-2026: hoy están en `mock_data.dart`, `v1_scope.dart`, `home_tabs.dart` y `home_sheets.dart`, y la versión de tienda los oculta.)
 - **Qué sigue prohibido hasta su fase:** cobros reales, validación en el servidor, ranking real, vidas o racha oficiales.
 - **Condición:** lo simulado debe verse como simulado (etiqueta DEMO). Hoy tienda, premium, ranking, configuración y los puntos de la semana del Reto la llevan, pero vidas, racha y estadísticas del perfil no, y hay cuatro ajustes que parecen funcionar sin hacer nada (H-62). Se corrige en la etapa 1.
 - **Caducidad:** las excepciones de la Fase 1 caducan en la etapa 5 (servidor). Si se rehace la parte gráfica, estas pantallas se reescribirán; no se invierte más en ellas hasta tener el sistema visual nuevo.
@@ -306,7 +345,9 @@ Criterio de salida: build cerrada en Google Play (testing interno) con amigos/fa
 > ACTUALIZACIÓN 04-11-2026: ningún entregable de esta fase está hecho (no existe servidor). Lo que tocaba a esta fase se reparte así: la campaña del Mundo 1 pasa a la etapa 3 (como contenido, sin servidor); la parte de servidor (cuentas, validación, casos sin la solución dentro, ranking, reto diario real) pasa a la etapa 5 (5A y 5B). Hay versiones simuladas del perfil, el reto diario y el ranking (excepción del 12-07-2026).
 >
 > - **DECIDIDO 06-11-2026** (auditoría, pregunta 7): el reto diario cambia a la medianoche local de cada jugador, con la fecha calculada por el servidor según la zona guardada en la cuenta. ~~(SUPERADO) PENDIENTE DE DECISIÓN: "ventana por hora de servidor" contradecía a otro documento que decía "día local".~~
-> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14): con cuánto contenido se lanza (el roadmap pone el Mundo 1 con ~10 mapas en esta fase; el plan por etapas incluye el Mundo 1 con 10 casos y 30 días de reto diario en la etapa 3).
+> - **DECIDIDO 05-11-2026** (pregunta 14, ADR-0014): se lanza con el **Mundo 1, "La Mansión", con 10 casos**, más **30 días de reto diario** con casos Casual e Intermedio. Los mundos 2 a 5 quedan para actualizaciones.
+>
+> - **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14): con cuánto contenido se lanza (el roadmap pone el Mundo 1 con ~10 mapas en esta fase; el plan por etapas incluye el Mundo 1 con 10 casos y 30 días de reto diario en la etapa 3).
 > - El criterio de salida (testing interno con amigos y familia) **no cubre** los trámites de las tiendas: en Google Play, una cuenta personal nueva necesita, según lo investigado, 12 probadores durante 14 días (H-24). Pasa a la etapa 6.
 
 ### FASE 3 — Economía y retención
@@ -342,7 +383,9 @@ Criterio de salida: economía completa funcionando en testing cerrado; ninguna c
 
 > ACTUALIZACIÓN 04-11-2026: ningún entregable está hecho del todo. Hay un borrador de política de privacidad (`docs/legal/politica-privacidad.md`, faltan el responsable y el correo) y un checklist por tienda (`docs/20-checklist-tiendas.md`), ambos incompletos. Hoy no hay traducciones, soporte para lectores de pantalla ni audio.
 >
-> - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14): contenido de lanzamiento. Este roadmap pide un stock de 60 días de reto diario y los mundos 2 a 5; la auditoría recomienda lanzar con el Mundo 1 y 30 días de reto diario. No se resuelve aquí.
+> - **DECIDIDO 05-11-2026** (pregunta 14, ADR-0014): se lanza con el **Mundo 1, "La Mansión", con 10 casos**, más **30 días de reto diario** con casos Casual e Intermedio. Los mundos 2 a 5 quedan para actualizaciones.
+>
+> - **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14): contenido de lanzamiento. Este roadmap pide un stock de 60 días de reto diario y los mundos 2 a 5; la auditoría recomienda lanzar con el Mundo 1 y 30 días de reto diario. No se resuelve aquí.
 > - **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 15): si hay inglés desde el lanzamiento y cómo se guardan las pistas (hoy el motor las escribe directamente en español).
 > - **DECIDIDO 04-11-2026** (auditoría, pregunta 20; ver ADR-0012): al tocar una casilla sin sospechoso elegido aparece el aviso "Elige primero a un sospechoso". Hay un modo alternativo de tocar dos veces (elegir y tocar el destino) además de mantener oprimido o arrastrar. Se diseña en la prueba de concepto.
 >   - (SUPERADO 04-11-2026) Versión anterior: la alternativa al arrastre estaba sin decidir (hoy confirmar una ficha exige mantener oprimido o arrastrar).
@@ -352,7 +395,9 @@ Criterio de salida: economía completa funcionando en testing cerrado; ninguna c
 
 iOS, amigos, rankings por país, temporadas, eventos, logros, moneda interna, anti-cheat avanzado — ver `04-futuro.md`.
 
-> ACTUALIZACIÓN 04-11-2026: el 12-07-2026 Alejandro confirmó que tiene acceso a un Mac. **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 22, reducida): solo si el iPhone entra al lanzamiento (este roadmap lo deja fuera; el proyecto iOS ya se generó pero nunca se ha compilado). CLAUDE.md dice "Android primero, iOS después".
+> **DECIDIDO 09-11-2026** (pregunta 22, ADR-0014 y ADR-0017): el **iPhone entra en la V1**, primero por TestFlight (Alejandro pidió subirla a la App Store). El flujo de TestFlight está listo pero apagado (`IOS_UPLOAD`); el proyecto iOS aún no se ha compilado en CI.
+>
+> ACTUALIZACIÓN 04-11-2026: el 12-07-2026 Alejandro confirmó que tiene acceso a un Mac. **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 22, reducida): solo si el iPhone entra al lanzamiento (este roadmap lo deja fuera; el proyecto iOS ya se generó pero nunca se ha compilado). CLAUDE.md dice "Android primero, iOS después".
 
 ## Decisiones de recorte respecto al doc 01 (aprobadas por el usuario, 2026-06-10)
 

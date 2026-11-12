@@ -8,6 +8,12 @@
 > - La parte de servidor (casos en servidor, validación oficial, reto diario) es la **etapa 5**; hoy no existe backend.
 > - El volumen de contenido y el reto diario están **PENDIENTES DE DECISIÓN** (ver más abajo).
 >
+> **ACTUALIZACIÓN 11-11-2026 (qué entró en la etapa 3; revisión CCGS, sección 5.4):** lo que el aviso de arriba daba por NO IMPLEMENTADO cambió así.
+> - **Sí existe:** la **puerta de contenido** (`tools/test/content_gate_test.dart`, `story_gate_test.dart`), el **rechazo por rango de dificultad** (`tools/lib/src/difficulty_ranges.dart`, rangos provisionales), el **tope de tiempo y de nodos** del solver y del generador (`GenerationLimits.maxCaseTime` en `tools/lib/src/generator.dart`, `limits.maxTime` en `uniqueness.dart`; H-42, parte del tiempo cerrada), la corrección de `_stronger` (H-40; `Generator.nextStronger`, prueba `tools/test/stronger_test.dart`) y un `catalogo.json` y un `index.json` en `app/assets/cases` (H-43, primera versión; probado en `tools/test/catalog_test.dart`).
+> - **No existe:** el **detector de redundancia** (H-42), diferido: no entra en la V1.
+> - **Contenido real:** `app/assets/cases` tiene 60 casos (11 Principiante, 23 Casual y 26 Intermedio), incluidos el Mundo 1 (10 casos) y los 30 días de reto. Alcance de la V1 en el ADR-0014.
+> - La parte de servidor sigue siendo la etapa 5: `backend/` ya existe y corre en el emulador (5A), pero la app de tienda no se conecta (ADR-0016).
+>
 > Fuentes verificadas: `tools/bin/enigmatrix.dart`, `tools/lib/src/case_factory.dart`, `generator.dart`, `app/lib/src/data/case_repository.dart` y `app/assets/cases`. La spec vigente del motor es `docs/16-spec-puzzle.md`.
 
 ## Objetivo de este documento
@@ -85,7 +91,7 @@ Límites de este flujo, todos pendientes de la etapa 3:
 - la solucion se alcanza por `deduccion pura`, sin adivinanza
 - todas las pistas son `consistentes` con la solucion
 - ninguna pista es `redundante` mas alla de un margen permitido (**NO IMPLEMENTADO, H-42**: el detector no existe)
-- el numero minimo de pasos de deduccion cae dentro del rango de su etiqueta de dificultad (**NO IMPLEMENTADO como filtro, H-40**: los pasos se calculan y se guardan, pero el generador no rechaza casos fuera de rango)
+- el numero minimo de pasos de deduccion cae dentro del rango de su etiqueta de dificultad (**NO IMPLEMENTADO como filtro, H-40**: los pasos se calculan y se guardan, pero el generador no rechaza casos fuera de rango) (SUPERADO 11-11-2026: el generador ya rechaza los casos fuera de rango, con rangos provisionales en `difficulty_ranges.dart`)
 
 ### Componentes del solver
 - motor logico que resuelve el caso simulando al jugador
@@ -101,7 +107,7 @@ Hoy existen: motor de deducción con contador de pasos y de nivel (T1 a T4), ver
 - caso descartado si requiere adivinanza en algun punto
 - caso descartado si fuera del rango de dificultad objetivo
 - caso registrado con su razon de descarte para mejorar el generador (hoy solo se muestran totales de descartes por motivo al terminar el comando; no se guardan por caso)
-- **NO IMPLEMENTADO (H-42):** no hay límite de tiempo por intento ni tope de nodos; el único tope es de intentos (hasta 40 mapas con 8 intentos cada uno)
+- **NO IMPLEMENTADO (H-42):** no hay límite de tiempo por intento ni tope de nodos; el único tope es de intentos (hasta 40 mapas con 8 intentos cada uno) (SUPERADO 11-11-2026: el tope de tiempo y de nodos ya existe, ver la actualización de arriba)
 
 ## Calibracion de dificultad
 
@@ -196,7 +202,9 @@ Tras lanzamiento se reajustan rangos usando:
 ## Volumen de contenido para V1
 
 ### Mapas autorados por mundo
-> SUPERADO (11-06-2026) en cuanto a mapas autorados: no hay catálogo de 50 mapas, cada caso trae el suyo. **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14): con cuánto contenido se lanza. Dos versiones en conflicto: (a) esta recomendación, tutorial más 5 mundos de 10 y reto diario de 60 a 120 días; (b) la recomendación de la auditoría, el Mundo 1 (La Mansión) con 10 casos más 30 días de reto diario Casual e Intermedio, hasta decidir la pregunta 13. Mientras tanto hay 20 casos en la app y ninguno es de mundo.
+> **DECIDIDO 05-11-2026** (pregunta 14, ADR-0014): se lanza con el **Mundo 1, "La Mansión", con 10 casos**, más **30 días de reto diario** con casos Casual e Intermedio. Los mundos 2 a 5 quedan para actualizaciones.
+>
+> SUPERADO (11-06-2026) en cuanto a mapas autorados: no hay catálogo de 50 mapas, cada caso trae el suyo. **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14): con cuánto contenido se lanza. Dos versiones en conflicto: (a) esta recomendación, tutorial más 5 mundos de 10 y reto diario de 60 a 120 días; (b) la recomendación de la auditoría, el Mundo 1 (La Mansión) con 10 casos más 30 días de reto diario Casual e Intermedio, hasta decidir la pregunta 13. Mientras tanto hay 20 casos en la app y ninguno es de mundo.
 
 Recomendacion inicial:
 
@@ -222,7 +230,9 @@ Numero exacto de N y M se define al cerrar el generador, pero el objetivo es:
 - casos distintos por sospechosos, victima, arma y pistas
 
 ### Reto diario en V1
-> Nota 04-11-2026: las metas de stock dependen de la pregunta 14 (contenido de lanzamiento) y la hora del reto es la pregunta 7: **PENDIENTE DE DECISIÓN**. La distribución semanal de abajo incluye Experto y Élite, que dependen de la pregunta 13 (si entran al lanzamiento).
+> **DECIDIDO 05-11-2026** (preguntas 13 y 14, ADR-0014; la pregunta 7 ya está decidida desde el 06-11-2026): la V1 lleva Principiante, Casual e Intermedio (Experto y Élite en una actualización) y el Mundo 1 con 10 casos más 30 días de reto. Las metas de stock de abajo quedan reducidas a eso.
+>
+> Nota 04-11-2026: las metas de stock dependen de la pregunta 14 (contenido de lanzamiento) y la hora del reto es la pregunta 7: **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN**. La distribución semanal de abajo incluye Experto y Élite, que dependen de la pregunta 13 (si entran al lanzamiento).
 
 - 1 caso por dia
 - meta minima: stock listo y aprobado para `60 dias` antes del lanzamiento

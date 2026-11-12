@@ -1,5 +1,14 @@
 # Enigmatrix - Arquitectura
 
+> **ACTUALIZACIÓN 11-11-2026: documento EN REVISIÓN.** Cambió desde el 04-11-2026 (revisión CCGS 5.2):
+> - **`backend/` ya no está vacío.** Tiene Cloud Functions, reglas de Firestore y pruebas (Vitest, 95 pasan). Corre solo en el emulador (proyecto `demo-enigmatrix`, Java 21), etapa 5A; la app depende de `firebase_core`, `firebase_auth` y `cloud_functions`, pero la versión de tienda se compila con `ENX_BACKEND=none` y no envía datos.
+> - **La validación en el servidor ya tiene su ADR:** [ADR-0016](adr/0016-validacion-en-servidor-y-partida-sin-conexion.md) (Aceptado 07-11-2026): la solución solo vive en el servidor, `submitSolution` valida, y sin conexión se juega pero Resolver espera la señal.
+> - **Publicación:** [ADR-0017](adr/0017-publicacion-continua-a-google-play-con-github-actions.md): al llegar a `main` se sube a la prueba interna de Google Play y a TestFlight con GitHub Actions.
+> - **El tablero ya no es una cuadrícula de widgets:** es una escena de Flame (`flame: ^1.37.0`, `app/lib/src/board/scene/`), con dos pieles (ADR-0013). (SUPERADO 11-11-2026) la última viñeta del bloque de abajo.
+> - Estado y navegación: go_router; textos en `app/lib/l10n/app_es.arb` (intl).
+> El cuerpo del documento sigue siendo la intención de junio de 2026 y no se contrastó línea por línea.
+>
+
 > ACTUALIZACIÓN 04-11-2026: **este documento es la intención de junio de 2026, no lo que existe hoy.** El cuerpo se conserva sin reescribir. Lo que ya está decidido o comprobado en el código, y que manda sobre el texto de abajo:
 >
 > - **Almacenamiento real: `shared_preferences`** (ADR-0009, `docs/adr/0009-almacenamiento-local-shared-preferences-y-tipografias.md`), no Hive ni Isar.

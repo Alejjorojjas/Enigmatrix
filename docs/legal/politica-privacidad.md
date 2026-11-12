@@ -3,7 +3,7 @@
 > NOTA INTERNA (borrar las notas al publicar). Reescrita el 11-11-2026 para la versión 0.8.1 que está en las tiendas.
 >
 > **Sigue pendiente:**
-> - **Responsable y correo:** completar los dos corchetes. La app se publica en la cuenta de desarrollador del socio de Alejandro (ADR-0017), así que hay que acordar quién figura como responsable y qué correo atiende la privacidad.
+> - **Responsable:** decidido el 11-11-2026, es Alejandro (ADR-0014). **Falta el correo de contacto** de privacidad.
 > - **Publicarla en una URL pública:** las dos tiendas la exigen. Sirve GitHub Pages desde un repositorio PÚBLICO aparte que solo contenga esta página, o cualquier alojamiento gratuito.
 > - **Botón en la app:** Apple exige un enlace a esta política dentro de la app (H-06).
 > - **Inglés:** falta la versión en inglés.
@@ -16,7 +16,7 @@
 
 Murdoku Diario es un juego móvil de deducción lógica.
 
-- Responsable del tratamiento: [NOMBRE DEL RESPONSABLE], Colombia.
+- Responsable del tratamiento: Diego Alejandro Rojas Corredor, persona natural, Colombia.
 - Contacto: [CORREO DE PRIVACIDAD].
 
 ## Qué datos recolectamos

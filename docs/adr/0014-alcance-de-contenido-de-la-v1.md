@@ -43,3 +43,10 @@
 ## Actualización 09-11-2026: entra el iPhone
 
 Alejandro pidió subir la app también a la App Store. Con eso la V1 deja de ser solo Android y queda resuelta la pregunta 22. El contenido no cambia (dificultades, Mundo 1, 30 días de reto). La publicación va primero por TestFlight, en la cuenta de Apple del mismo amigo de la cuenta de Google Play (ADR-0017, sección App Store).
+
+## Decisiones de Alejandro (11-11-2026), tras la revisión con Claude Code Game Studios
+
+- **Pregunta 12 (ayudas y puntuación):** la V1 de tienda sale **sin ayudas ni puntos**. La victoria muestra tiempo y errores. Las ayudas y los puntos llegan con el ranking del servidor (etapa 5B).
+- **Modo daltónico:** se aplaza a la **V1.1**. Antes de la publicación abierta hay que validar con un simulador de daltonismo (los tres tipos) que las habitaciones se distinguen también por paredes y nombres. Si no se distinguen, se corrige antes de esa publicación.
+- **Casillas del 9×9:** se acepta como **excepción documentada** al mínimo de 48 px del doc 11 (unos 37 px en un teléfono de 360 de ancho). Se apoya en la confirmación por toque doble. Alejandro lo prueba en su teléfono y, si resulta incómodo, se corrige.
+- **Responsable de la política de privacidad:** Alejandro (Diego Alejandro Rojas Corredor), aunque la app se publique en las cuentas de su socio (ADR-0017). Falta el correo de contacto.
