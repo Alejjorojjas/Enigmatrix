@@ -1,6 +1,12 @@
 # iOS 15 es el mínimo que pide el SDK de Firebase que usa la app (firebase_core 5).
 platform :ios, '15.0'
 
+# Versión del SDK de Firebase para iOS. firebase_core pide 12.19.3, pero
+# FirebaseAppCheck no se publicó en esa versión (la última es 12.19.0) y
+# pod install falla. Se fija la versión común a todos los pods de Firebase.
+# Quitar cuando FirebaseAppCheck alcance la versión que pida firebase_core.
+$FirebaseSDKVersion = '12.19.0'
+
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
