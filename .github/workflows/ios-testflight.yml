@@ -85,9 +85,14 @@ jobs:
     name: IPA firmado y TestFlight
     needs: pruebas
     if: vars.IOS_UPLOAD == 'true'
-    runs-on: macos-15
+    # Apple exige compilar con el SDK de iOS 26 (Xcode 26) para subir a App
+    # Store Connect; la imagen macos-15 trae Xcode 16.4 (SDK 18.5).
+    runs-on: macos-26
     timeout-minutes: 60
     steps:
+      - name: Versión de Xcode
+        run: xcodebuild -version
+
       - uses: actions/checkout@v4
 
       - name: Revisar secretos
