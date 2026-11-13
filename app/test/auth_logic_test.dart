@@ -211,5 +211,61 @@ void main() {
       );
       expect((o as AuthFailed).problem, AuthProblem.unknown);
     });
+
+    group('renueva el token a la fuerza (getIdToken(true))', () {
+      test('tras vincular', () async {
+        var refreshes = 0;
+        await linkOrSignIn(
+          isGuest: true,
+          link: () async {},
+          signIn: (_) async {},
+          refreshToken: () async => refreshes++,
+        );
+        expect(refreshes, 1);
+      });
+
+      test('tras iniciar sesión en la cuenta existente', () async {
+        final calls = <String>[];
+        await linkOrSignIn(
+          isGuest: true,
+          link: () async => throw err('email-already-in-use'),
+          signIn: (_) async => calls.add('signIn'),
+          refreshToken: () async => calls.add('refresh'),
+        );
+        expect(calls, ['signIn', 'refresh']);
+      });
+
+      test('tras iniciar sesión sin ser invitado', () async {
+        final calls = <String>[];
+        await linkOrSignIn(
+          isGuest: false,
+          link: () async {},
+          signIn: (_) async => calls.add('signIn'),
+          refreshToken: () async => calls.add('refresh'),
+        );
+        expect(calls, ['signIn', 'refresh']);
+      });
+
+      test('si el registro falla no se renueva nada', () async {
+        var refreshes = 0;
+        await linkOrSignIn(
+          isGuest: true,
+          link: () async => throw err('weak-password'),
+          signIn: (_) async {},
+          refreshToken: () async => refreshes++,
+        );
+        expect(refreshes, 0);
+      });
+
+      test('si la renovación falla el registro igual sale bien', () async {
+        final o = await linkOrSignIn(
+          isGuest: true,
+          link: () async {},
+          signIn: (_) async {},
+          refreshToken: () async => throw StateError('sin red'),
+        );
+        expect((o as AuthSignedIn).linked, isTrue);
+      });
+    });
   });
 }

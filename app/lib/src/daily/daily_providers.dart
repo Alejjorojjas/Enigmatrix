@@ -63,6 +63,7 @@ class DailyTabState {
     required this.caseId,
     required this.connection,
     this.guest = false,
+    this.unverified = false,
     this.errorMessage,
     this.result,
     this.startedToday = false,
@@ -78,6 +79,9 @@ class DailyTabState {
 
   /// Sesión de invitado: debe registrarse para jugar el reto.
   final bool guest;
+
+  /// Cuenta de correo sin verificar: el reto pide verificarlo antes.
+  final bool unverified;
 
   /// Mensaje en español del servidor, si lo trajo.
   final String? errorMessage;
@@ -149,6 +153,7 @@ final dailyTabProvider = FutureProvider.autoDispose<DailyTabState>((ref) async {
     DailyConnection connection, {
     String? message,
     bool guest = false,
+    bool unverified = false,
   }) async {
     final p = readDailyProgress(prefs, caseId, localDate);
     return DailyTabState(
@@ -156,6 +161,7 @@ final dailyTabProvider = FutureProvider.autoDispose<DailyTabState>((ref) async {
       caseId: caseId,
       connection: connection,
       guest: guest,
+      unverified: unverified,
       errorMessage: message,
       result: p.result,
       startedToday: p.started,
@@ -168,6 +174,15 @@ final dailyTabProvider = FutureProvider.autoDispose<DailyTabState>((ref) async {
   }
   DailyConnection failure = DailyConnection.offline;
   String? message;
+  // Cuenta de correo sin verificar: se avisa en vez del reto (el servidor
+  // tampoco la deja jugar). Se recalcula sola al cambiar la sesión.
+  final authService = ref.watch(authServiceProvider);
+  if (authService != null) {
+    final info = ref.watch(authInfoProvider).valueOrNull ?? authService.current;
+    if (info.needsEmailVerification) {
+      return build(localCase, DailyConnection.online, unverified: true);
+    }
+  }
   try {
     await client.ensureSession();
     if (ref.read(isGuestProvider)) {

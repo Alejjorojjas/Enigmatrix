@@ -200,6 +200,8 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
       ValidationEventKind.rejected => l10n.validationRejected,
       ValidationEventKind.registrationRequired =>
         l10n.validationRegisterRequired,
+      ValidationEventKind.wrongLimit => l10n.validationWrongLimit,
+      ValidationEventKind.emailUnverified => l10n.validationEmailUnverified,
       ValidationEventKind.stalled => l10n.validationStalledTitle,
     };
     _messenger.currentState?.showSnackBar(SnackBar(content: Text(text)));

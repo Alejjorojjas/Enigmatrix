@@ -180,6 +180,8 @@ enum ActionFeedback {
   rateLimited, // el servidor pidió esperar un momento
   validationFailed, // el servidor no aceptó el envío
   registrationRequired, // invitado en un caso que pide registro
+  wrongLimit, // sin intentos fallidos en el reto de hoy
+  emailUnverified, // cuenta de correo sin verificar
 }
 
 /// Tope del tiempo que se informa al servidor (24 h, backend/validation.ts).
@@ -888,6 +890,14 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         state = state.copyWith(submitting: false);
         _startTicker();
         return ActionFeedback.registrationRequired;
+      case OutcomeWrongLimit():
+        state = state.copyWith(submitting: false);
+        _startTicker();
+        return ActionFeedback.wrongLimit;
+      case OutcomeEmailUnverified():
+        state = state.copyWith(submitting: false);
+        _startTicker();
+        return ActionFeedback.emailUnverified;
       case OutcomeStalled():
         // Errores seguidos del servidor: el tablero queda esperando la
         // decisión del jugador (Reintentar o Cancelar envío).
@@ -935,6 +945,8 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         if (r is SubmitWrong) _registerWrong(r.wrongCount, const {});
       case ValidationEventKind.rejected:
       case ValidationEventKind.registrationRequired:
+      case ValidationEventKind.wrongLimit:
+      case ValidationEventKind.emailUnverified:
         state = state.copyWith(
           pendingValidation: false,
           validationStalled: false,

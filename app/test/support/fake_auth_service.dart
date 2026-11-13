@@ -24,6 +24,16 @@ class FakeAuthService implements AuthService {
   int signOuts = 0;
   AuthProblem? resetProblem;
 
+  /// Si la cuenta que crea el próximo registro llega con el correo verificado
+  /// (Google/Apple sí; el correo y contraseña, no).
+  bool signedVerified = true;
+
+  /// true = "Ya lo verifiqué" encuentra el correo verificado.
+  bool verifiesOnRefresh = false;
+  AuthProblem? resendProblem;
+  int refreshes = 0;
+  int resends = 0;
+
   @override
   AuthUserInfo get current => _current;
 
@@ -42,7 +52,13 @@ class FakeAuthService implements AuthService {
     final o = nextOutcome ?? const AuthSignedIn(linked: true);
     nextOutcome = null;
     if (o is AuthSignedIn) {
-      _set(AuthUserInfo(isAnonymous: false, email: signedEmail));
+      _set(
+        AuthUserInfo(
+          isAnonymous: false,
+          email: signedEmail,
+          emailVerified: signedVerified,
+        ),
+      );
     }
     return o;
   }
@@ -69,6 +85,29 @@ class FakeAuthService implements AuthService {
   Future<AuthOutcome> signInWithEmail(String e, String p) async {
     calls.add('signin:$e');
     return _resolve();
+  }
+
+  @override
+  Future<AuthUserInfo> refreshVerification() async {
+    refreshes++;
+    calls.add('refresh');
+    if (verifiesOnRefresh) {
+      _set(
+        AuthUserInfo(
+          isAnonymous: false,
+          email: _current.email,
+          emailVerified: true,
+        ),
+      );
+    }
+    return _current;
+  }
+
+  @override
+  Future<AuthProblem?> resendVerification() async {
+    resends++;
+    calls.add('resend');
+    return resendProblem;
   }
 
   @override

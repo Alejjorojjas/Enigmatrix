@@ -31,6 +31,14 @@ enum ValidationFailure {
   /// `resource-exhausted`: demasiados envíos en un minuto.
   rateLimited,
 
+  /// `failed-precondition` con `details.reason == "wrong-limit"`: el jugador
+  /// ya gastó los intentos fallidos del reto de hoy. Reintentar no sirve.
+  wrongLimit,
+
+  /// `failed-precondition` con `details.reason == "email-unverified"`: la
+  /// cuenta de correo no está verificada y el reto la exige.
+  emailUnverified,
+
   /// `invalid-argument` o `not-found`: el servidor no lo aceptará nunca tal
   /// cual.
   rejected,

@@ -25,7 +25,19 @@ class FakeRankingSource implements DailyRankingSource {
     loads.add(localDate);
     final f = failure;
     if (f != null) throw ValidationException(f, 'falla');
-    final sorted = [...entries]..sort(compareRanking);
+    // Como Firestore: cada fila es un documento con id == uid y SIN campo
+    // `uid`; la app identifica la fila por el id.
+    final docs = <RankingEntry>[
+      for (final e in entries)
+        ?RankingEntry.fromMap(e.uid, {
+          'nickname': e.nickname,
+          'serverElapsedMs': e.serverElapsedMs,
+          'errors': e.errors,
+          'score': e.score,
+          'solvedAt': e.solvedAtMs,
+        }),
+    ];
+    final sorted = [...docs]..sort(compareRanking);
     final top = sorted.take(kRankingLimit).toList();
     final me = ownUid ?? uid;
     final own = me == null

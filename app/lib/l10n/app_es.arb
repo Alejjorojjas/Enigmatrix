@@ -2192,5 +2192,54 @@
   "rankingClose": "Cerrar",
   "@rankingClose": {
     "description": "Botón para cerrar el ranking abierto desde la victoria."
+  },
+  "validationWrongLimit": "Llegaste al máximo de intentos del reto de hoy.",
+  "@validationWrongLimit": {
+    "description": "Aviso cuando el servidor ya no deja enviar más intentos fallidos del reto de hoy."
+  },
+  "validationEmailUnverified": "Verifica tu correo para jugar el reto.",
+  "@validationEmailUnverified": {
+    "description": "Aviso cuando el reto exige un correo verificado."
+  },
+  "emailVerifyTitle": "Te enviamos un correo de verificación",
+  "@emailVerifyTitle": {
+    "description": "Título del aviso de verificación de correo."
+  },
+  "emailVerifyDone": "Ya lo verifiqué",
+  "@emailVerifyDone": {
+    "description": "Botón que comprueba si el correo ya quedó verificado."
+  },
+  "emailVerifyResend": "Reenviar correo",
+  "@emailVerifyResend": {
+    "description": "Botón que reenvía el correo de verificación."
+  },
+  "emailVerifyNotYet": "Todavía no aparece verificado. Revisa tu correo e inténtalo otra vez.",
+  "@emailVerifyNotYet": {
+    "description": "Aviso si el correo aún no está verificado."
+  },
+  "emailVerifyResent": "Te reenviamos el correo.",
+  "@emailVerifyResent": {
+    "description": "Confirmación de que se reenvió el correo de verificación."
+  },
+  "emailVerifyVerified": "¡Correo verificado!",
+  "@emailVerifyVerified": {
+    "description": "Confirmación de que el correo ya está verificado."
+  },
+  "emailVerifyLater": "Más tarde",
+  "@emailVerifyLater": {
+    "description": "Botón para seguir sin verificar el correo todavía."
+  },
+  "dailyVerifyTitle": "Verifica tu correo para jugar el reto",
+  "@dailyVerifyTitle": {
+    "description": "Título en la pestaña Reto cuando el correo no está verificado."
+  },
+  "emailVerifyBody": "Abre el mensaje que llegó a {email} y toca el enlace. Después vuelve aquí.",
+  "@emailVerifyBody": {
+    "description": "Explica qué hacer con el correo de verificación.",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
   }
 }

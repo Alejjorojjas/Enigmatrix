@@ -2,6 +2,7 @@
 /// red.
 library;
 
+import 'package:enigmatrix/src/auth/auth_providers.dart';
 import 'package:enigmatrix/src/backend/backend_config.dart';
 import 'package:enigmatrix/src/backend/validation_client.dart';
 import 'package:enigmatrix/src/backend/validation_providers.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'support/fake_auth_service.dart';
 import 'support/fake_ranking_source.dart';
 import 'support/fake_validation_client.dart';
 import 'support/game_ui.dart' show loadBankCase;
@@ -43,6 +45,7 @@ Future<_Rig> _pump(
   DailyRankingSourceOverride? ranking,
   Map<String, Object> prefs = const {},
   bool noRankingSource = false,
+  FakeAuthService? auth,
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   tester.view.physicalSize = const Size(360, 800);
@@ -69,6 +72,7 @@ Future<_Rig> _pump(
       overrides: [
         backendModeProvider.overrideWithValue(BackendMode.emulator),
         if (client != null) validationClientProvider.overrideWithValue(client),
+        if (auth != null) authServiceProvider.overrideWithValue(auth),
         dailyClockProvider.overrideWithValue(() => _now),
         dailyChallengesProvider.overrideWith(
           (_) async => [
@@ -130,6 +134,49 @@ void main() {
       await tester.tap(find.text(l10nEs.dailyGuestButton.toUpperCase()));
       await tester.pump();
       expect(rig.registrations, hasLength(1));
+    });
+
+    testWidgets('correo sin verificar: muestra el aviso en vez del reto', (
+      tester,
+    ) async {
+      final client = FakeValidationClient()..anonymous = false;
+      final auth = FakeAuthService(guest: false)..verifiesOnRefresh = true;
+      // Sesión de correo sin verificar.
+      auth.signedVerified = false;
+      await auth.createAccountWithEmail('ana@correo.com', '12345678');
+      await _pump(
+        tester,
+        const ServerChallengeTab(),
+        client: client,
+        auth: auth,
+      );
+      expect(find.byKey(const ValueKey('verificar-correo')), findsOneWidget);
+      expect(find.text(l10nEs.dailyVerifyTitle), findsOneWidget);
+      expect(find.text(l10nEs.dailyStartButton.toUpperCase()), findsNothing);
+      expect(client.log.any((l) => l.startsWith('daily:')), isFalse);
+
+      // "Ya lo verifiqué": aparece el reto.
+      await tester.tap(find.text(l10nEs.emailVerifyDone.toUpperCase()));
+      await _settle(tester);
+      await _settle(tester);
+      expect(find.byKey(const ValueKey('verificar-correo')), findsNothing);
+      expect(find.text(l10nEs.dailyStartButton.toUpperCase()), findsOneWidget);
+    });
+
+    testWidgets('correo ya verificado (o Google): juega el reto normal', (
+      tester,
+    ) async {
+      final client = FakeValidationClient()..anonymous = false;
+      final auth = FakeAuthService(guest: false);
+      await auth.signInWithGoogle(); // verificado
+      await _pump(
+        tester,
+        const ServerChallengeTab(),
+        client: client,
+        auth: auth,
+      );
+      expect(find.byKey(const ValueKey('verificar-correo')), findsNothing);
+      expect(find.text(l10nEs.dailyStartButton.toUpperCase()), findsOneWidget);
     });
 
     testWidgets(

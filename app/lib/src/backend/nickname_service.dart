@@ -74,7 +74,8 @@ bool isAccountDataKey(String key) =>
     key.startsWith('started:') ||
     key.startsWith('startedAt:') ||
     key.startsWith('done:') ||
-    key.startsWith('game:');
+    key.startsWith('game:') ||
+    key.startsWith('fb:');
 
 class NicknameService {
   NicknameService({

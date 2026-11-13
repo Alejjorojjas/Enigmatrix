@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
 import '../auth/auth_providers.dart';
@@ -14,6 +15,7 @@ import '../auth/auth_service.dart';
 import '../backend/nickname_service.dart';
 import '../backend/validation_providers.dart' show nicknameServiceProvider;
 import 'case_list_screen.dart' show prefsProvider;
+import 'email_verification_panel.dart';
 import 'game_chrome.dart';
 import 'skin_theme.dart';
 import 'ui_kit.dart';
@@ -121,6 +123,10 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   bool _busy = false;
   bool _hidePassword = true;
 
+  /// Tras crear la cuenta con correo: se muestra el aviso de verificación
+  /// antes de seguir (al apodo o al inicio).
+  bool _verifying = false;
+
   @override
   void dispose() {
     _email.dispose();
@@ -154,7 +160,6 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   Future<void> _finish(AuthSignedIn outcome) async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.maybeOf(context);
-    final router = GoRouter.of(context);
     final text = [
       if (outcome.replacedGuest)
         l10n.registerReplacedGuest
@@ -170,7 +175,23 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     ref.invalidate(prefsProvider);
     final prefs = await ref.read(prefsProvider.future);
     if (!mounted) return;
-    setState(() => _busy = false);
+    setState(() {
+      _busy = false;
+      _verifying = outcome.verificationSent;
+    });
+    if (_verifying) return; // sigue con [_continueAfterVerify]
+    await _continue(prefs);
+  }
+
+  Future<void> _continueAfterVerify() async {
+    final prefs = await ref.read(prefsProvider.future);
+    if (!mounted) return;
+    setState(() => _verifying = false);
+    await _continue(prefs);
+  }
+
+  Future<void> _continue(SharedPreferences prefs) async {
+    final router = GoRouter.of(context);
     // Sin apodo (cuenta nueva o teléfono nuevo): se pide justo ahora.
     if (NicknameService.needsNickname(prefs)) {
       router.go('/apodo');
@@ -256,163 +277,179 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Tooltip(
-                        message: l10n.uiBack,
-                        child: ChromeButton(
-                          onTap: () => context.canPop()
-                              ? context.pop()
-                              : context.go('/home'),
-                          radius: 14,
-                          color: p.surface,
-                          semanticsLabel: l10n.uiBack,
-                          padding: EdgeInsets.zero,
-                          minSize: const Size(SkinUi.minTouch, SkinUi.minTouch),
-                          child: Icon(
-                            Icons.arrow_back_rounded,
-                            size: 24,
-                            color: p.text,
+                  children: _verifying
+                      ? [
+                          const SizedBox(height: 24),
+                          EmailVerificationPanel(
+                            onVerified: _continueAfterVerify,
+                            onLater: _continueAfterVerify,
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      l10n.registerTitle,
-                      style: context.display(30),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      l10n.registerBody,
-                      style: context.note(17, color: p.softText),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 22),
-                    AppButton(
-                      label: l10n.registerGoogle,
-                      icon: Icons.account_circle_rounded,
-                      onTap: _busy
-                          ? null
-                          : () => _run((s) => s.signInWithGoogle()),
-                    ),
-                    if (service?.appleAvailable ?? false) ...[
-                      const SizedBox(height: 10),
-                      AppButton(
-                        label: l10n.registerApple,
-                        icon: Icons.apple_rounded,
-                        quiet: true,
-                        onTap: _busy
-                            ? null
-                            : () => _run((s) => s.signInWithApple()),
-                      ),
-                    ],
-                    const SizedBox(height: 18),
-                    Text(
-                      l10n.registerOr,
-                      style: context.note(15, color: p.softText),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    SegmentedButton<_Mode>(
-                      segments: [
-                        ButtonSegment(
-                          value: _Mode.create,
-                          label: Text(l10n.registerModeCreate),
-                        ),
-                        ButtonSegment(
-                          value: _Mode.signIn,
-                          label: Text(l10n.registerModeSignIn),
-                        ),
-                      ],
-                      selected: {_mode},
-                      onSelectionChanged: _busy
-                          ? null
-                          : (s) => setState(() {
-                              _mode = s.first;
-                              _error = null;
-                              _info = null;
-                            }),
-                    ),
-                    const SizedBox(height: 14),
-                    TextField(
-                      controller: _email,
-                      enabled: !_busy,
-                      keyboardType: TextInputType.emailAddress,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.email],
-                      style: context.body(18),
-                      decoration: InputDecoration(
-                        labelText: l10n.registerEmailLabel,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _password,
-                      enabled: !_busy,
-                      obscureText: _hidePassword,
-                      autocorrect: false,
-                      enableSuggestions: false,
-                      textInputAction: TextInputAction.done,
-                      autofillHints: [
-                        create
-                            ? AutofillHints.newPassword
-                            : AutofillHints.password,
-                      ],
-                      inputFormatters: [LengthLimitingTextInputFormatter(128)],
-                      style: context.body(18),
-                      onSubmitted: (_) => _submitEmail(),
-                      decoration: InputDecoration(
-                        labelText: l10n.registerPasswordLabel,
-                        helperText: create ? l10n.registerPasswordHelper : null,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _hidePassword
-                                ? Icons.visibility_rounded
-                                : Icons.visibility_off_rounded,
+                        ]
+                      : [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Tooltip(
+                              message: l10n.uiBack,
+                              child: ChromeButton(
+                                onTap: () => context.canPop()
+                                    ? context.pop()
+                                    : context.go('/home'),
+                                radius: 14,
+                                color: p.surface,
+                                semanticsLabel: l10n.uiBack,
+                                padding: EdgeInsets.zero,
+                                minSize: const Size(
+                                  SkinUi.minTouch,
+                                  SkinUi.minTouch,
+                                ),
+                                child: Icon(
+                                  Icons.arrow_back_rounded,
+                                  size: 24,
+                                  color: p.text,
+                                ),
+                              ),
+                            ),
                           ),
-                          onPressed: () =>
-                              setState(() => _hidePassword = !_hidePassword),
-                        ),
-                      ),
-                    ),
-                    if (_error != null) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        _error!,
-                        key: const Key('registerError'),
-                        style: context.body(15, color: p.danger),
-                      ),
-                    ],
-                    if (_info != null) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        _info!,
-                        key: const Key('registerInfo'),
-                        style: context.body(15, color: p.good),
-                      ),
-                    ],
-                    const SizedBox(height: 16),
-                    AppButton(
-                      label: _busy
-                          ? l10n.registerBusy
-                          : create
-                          ? l10n.registerSubmitCreate
-                          : l10n.registerSubmitSignIn,
-                      color: p.accent,
-                      onTap: _busy ? null : _submitEmail,
-                    ),
-                    if (!create) ...[
-                      const SizedBox(height: 6),
-                      TextButton(
-                        onPressed: _busy ? null : _forgot,
-                        child: Text(l10n.registerForgot),
-                      ),
-                    ],
-                  ],
+                          const SizedBox(height: 12),
+                          Text(
+                            l10n.registerTitle,
+                            style: context.display(30),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            l10n.registerBody,
+                            style: context.note(17, color: p.softText),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 22),
+                          AppButton(
+                            label: l10n.registerGoogle,
+                            icon: Icons.account_circle_rounded,
+                            onTap: _busy
+                                ? null
+                                : () => _run((s) => s.signInWithGoogle()),
+                          ),
+                          if (service?.appleAvailable ?? false) ...[
+                            const SizedBox(height: 10),
+                            AppButton(
+                              label: l10n.registerApple,
+                              icon: Icons.apple_rounded,
+                              quiet: true,
+                              onTap: _busy
+                                  ? null
+                                  : () => _run((s) => s.signInWithApple()),
+                            ),
+                          ],
+                          const SizedBox(height: 18),
+                          Text(
+                            l10n.registerOr,
+                            style: context.note(15, color: p.softText),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 10),
+                          SegmentedButton<_Mode>(
+                            segments: [
+                              ButtonSegment(
+                                value: _Mode.create,
+                                label: Text(l10n.registerModeCreate),
+                              ),
+                              ButtonSegment(
+                                value: _Mode.signIn,
+                                label: Text(l10n.registerModeSignIn),
+                              ),
+                            ],
+                            selected: {_mode},
+                            onSelectionChanged: _busy
+                                ? null
+                                : (s) => setState(() {
+                                    _mode = s.first;
+                                    _error = null;
+                                    _info = null;
+                                  }),
+                          ),
+                          const SizedBox(height: 14),
+                          TextField(
+                            controller: _email,
+                            enabled: !_busy,
+                            keyboardType: TextInputType.emailAddress,
+                            autocorrect: false,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.email],
+                            style: context.body(18),
+                            decoration: InputDecoration(
+                              labelText: l10n.registerEmailLabel,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _password,
+                            enabled: !_busy,
+                            obscureText: _hidePassword,
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            textInputAction: TextInputAction.done,
+                            autofillHints: [
+                              create
+                                  ? AutofillHints.newPassword
+                                  : AutofillHints.password,
+                            ],
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(128),
+                            ],
+                            style: context.body(18),
+                            onSubmitted: (_) => _submitEmail(),
+                            decoration: InputDecoration(
+                              labelText: l10n.registerPasswordLabel,
+                              helperText: create
+                                  ? l10n.registerPasswordHelper
+                                  : null,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _hidePassword
+                                      ? Icons.visibility_rounded
+                                      : Icons.visibility_off_rounded,
+                                ),
+                                onPressed: () => setState(
+                                  () => _hidePassword = !_hidePassword,
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (_error != null) ...[
+                            const SizedBox(height: 10),
+                            Text(
+                              _error!,
+                              key: const Key('registerError'),
+                              style: context.body(15, color: p.danger),
+                            ),
+                          ],
+                          if (_info != null) ...[
+                            const SizedBox(height: 10),
+                            Text(
+                              _info!,
+                              key: const Key('registerInfo'),
+                              style: context.body(15, color: p.good),
+                            ),
+                          ],
+                          const SizedBox(height: 16),
+                          AppButton(
+                            label: _busy
+                                ? l10n.registerBusy
+                                : create
+                                ? l10n.registerSubmitCreate
+                                : l10n.registerSubmitSignIn,
+                            color: p.accent,
+                            onTap: _busy ? null : _submitEmail,
+                          ),
+                          if (!create) ...[
+                            const SizedBox(height: 6),
+                            TextButton(
+                              onPressed: _busy ? null : _forgot,
+                              child: Text(l10n.registerForgot),
+                            ),
+                          ],
+                        ],
                 ),
               ),
             ),

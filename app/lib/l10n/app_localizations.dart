@@ -2549,6 +2549,72 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cerrar'**
   String get rankingClose;
+
+  /// Aviso cuando el servidor ya no deja enviar más intentos fallidos del reto de hoy.
+  ///
+  /// In es, this message translates to:
+  /// **'Llegaste al máximo de intentos del reto de hoy.'**
+  String get validationWrongLimit;
+
+  /// Aviso cuando el reto exige un correo verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica tu correo para jugar el reto.'**
+  String get validationEmailUnverified;
+
+  /// Título del aviso de verificación de correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviamos un correo de verificación'**
+  String get emailVerifyTitle;
+
+  /// Botón que comprueba si el correo ya quedó verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya lo verifiqué'**
+  String get emailVerifyDone;
+
+  /// Botón que reenvía el correo de verificación.
+  ///
+  /// In es, this message translates to:
+  /// **'Reenviar correo'**
+  String get emailVerifyResend;
+
+  /// Aviso si el correo aún no está verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no aparece verificado. Revisa tu correo e inténtalo otra vez.'**
+  String get emailVerifyNotYet;
+
+  /// Confirmación de que se reenvió el correo de verificación.
+  ///
+  /// In es, this message translates to:
+  /// **'Te reenviamos el correo.'**
+  String get emailVerifyResent;
+
+  /// Confirmación de que el correo ya está verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Correo verificado!'**
+  String get emailVerifyVerified;
+
+  /// Botón para seguir sin verificar el correo todavía.
+  ///
+  /// In es, this message translates to:
+  /// **'Más tarde'**
+  String get emailVerifyLater;
+
+  /// Título en la pestaña Reto cuando el correo no está verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica tu correo para jugar el reto'**
+  String get dailyVerifyTitle;
+
+  /// Explica qué hacer con el correo de verificación.
+  ///
+  /// In es, this message translates to:
+  /// **'Abre el mensaje que llegó a {email} y toca el enlace. Después vuelve aquí.'**
+  String emailVerifyBody(String email);
 }
 
 class _AppLocalizationsDelegate

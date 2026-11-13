@@ -160,7 +160,8 @@ class RankingEntry {
   final int score;
   final int solvedAtMs;
 
-  /// Lee un documento; null si le falta algo (la fila se omite).
+  /// Lee un documento (`id` == uid del jugador); null si le falta algo (la
+  /// fila se omite).
   static RankingEntry? fromMap(String id, Map<String, Object?> data) {
     final nick = data['nickname'];
     final ms = data['serverElapsedMs'];
@@ -170,9 +171,9 @@ class RankingEntry {
     if (nick is! String || ms is! num || errors is! num || score is! num) {
       return null;
     }
-    final uid = data['uid'];
+    // Los documentos ya no traen `uid`: el id del documento ES el uid.
     return RankingEntry(
-      uid: uid is String && uid.isNotEmpty ? uid : id,
+      uid: id,
       nickname: nick,
       serverElapsedMs: ms.toInt(),
       errors: errors.toInt(),

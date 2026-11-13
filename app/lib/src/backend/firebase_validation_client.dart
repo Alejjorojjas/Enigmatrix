@@ -25,20 +25,31 @@ import 'validation_client.dart';
 ///  - `failed-precondition` con el mensaje "Regístrate para seguir jugando"
 ///    es [ValidationFailure.registrationRequired]: se distingue del bloqueo
 ///    por App Check mirando el mensaje del servidor.
-ValidationFailure failureForFunctionsCode(String code, [String? message]) =>
-    switch (code) {
-      'failed-precondition'
-          when message != null &&
-              message.toLowerCase().contains('regístrate') =>
-        ValidationFailure.registrationRequired,
-      'resource-exhausted' => ValidationFailure.rateLimited,
-      'invalid-argument' || 'not-found' => ValidationFailure.rejected,
-      'unavailable' || 'deadline-exceeded' => ValidationFailure.network,
-      'unauthenticated' ||
-      'permission-denied' ||
-      'failed-precondition' => ValidationFailure.blocked,
-      _ => ValidationFailure.serverError,
-    };
+///  - `failed-precondition` con `details.reason` `wrong-limit` o
+///    `email-unverified` son estados propios (se mira antes que el mensaje).
+ValidationFailure failureForFunctionsCode(
+  String code, [
+  String? message,
+  Object? details,
+]) {
+  final reason = details is Map ? details['reason'] : null;
+  return switch (code) {
+    'failed-precondition' when reason == 'wrong-limit' =>
+      ValidationFailure.wrongLimit,
+    'failed-precondition' when reason == 'email-unverified' =>
+      ValidationFailure.emailUnverified,
+    'failed-precondition'
+        when message != null && message.toLowerCase().contains('regístrate') =>
+      ValidationFailure.registrationRequired,
+    'resource-exhausted' => ValidationFailure.rateLimited,
+    'invalid-argument' || 'not-found' => ValidationFailure.rejected,
+    'unavailable' || 'deadline-exceeded' => ValidationFailure.network,
+    'unauthenticated' ||
+    'permission-denied' ||
+    'failed-precondition' => ValidationFailure.blocked,
+    _ => ValidationFailure.serverError,
+  };
+}
 
 class FirebaseValidationClient implements ValidationClient {
   FirebaseValidationClient({
@@ -129,7 +140,7 @@ class FirebaseValidationClient implements ValidationClient {
       return result.data;
     } on FirebaseFunctionsException catch (e) {
       throw ValidationException(
-        failureForFunctionsCode(e.code, e.message),
+        failureForFunctionsCode(e.code, e.message, e.details),
         e.code,
         e.message,
       );

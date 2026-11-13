@@ -153,6 +153,7 @@ void main() {
         'started:reto-003': '0',
         'done:mansion-01': '{"time":10}',
         'game:mansion-02': '{}',
+        'fb:mansion-01': 'notas de playtest',
         kNickKey: 'Ana',
         kNickPendingKey: '1',
         // Estas se quedan: no son de la cuenta.
@@ -174,6 +175,7 @@ void main() {
         'started:x',
         'done:x',
         'game:x',
+        'fb:mansion-01',
       ]) {
         expect(isAccountDataKey(k), isTrue, reason: k);
       }

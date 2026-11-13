@@ -27,6 +27,11 @@ class AuthUserInfo {
   final String? email;
   final bool emailVerified;
 
+  /// Cuenta con correo todavía sin verificar: el reto pide verificarlo.
+  /// (Google y Apple traen el correo ya verificado.)
+  bool get needsEmailVerification =>
+      !isAnonymous && email != null && !emailVerified;
+
   @override
   bool operator ==(Object other) =>
       other is AuthUserInfo &&
@@ -131,6 +136,14 @@ abstract class AuthService {
   Future<AuthOutcome> createAccountWithEmail(String email, String password);
 
   Future<AuthOutcome> signInWithEmail(String email, String password);
+
+  /// "Ya lo verifiqué": recarga al usuario y renueva el token (para que el
+  /// servidor vea `email_verified`). Nunca lanza; devuelve la sesión ya
+  /// actualizada.
+  Future<AuthUserInfo> refreshVerification();
+
+  /// "Reenviar correo" de verificación. null si salió bien.
+  Future<AuthProblem?> resendVerification();
 
   /// Envía el correo para cambiar la contraseña. null si salió bien.
   Future<AuthProblem?> sendPasswordReset(String email);

@@ -1587,4 +1587,42 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rankingClose => 'Cerrar';
+
+  @override
+  String get validationWrongLimit =>
+      'Llegaste al máximo de intentos del reto de hoy.';
+
+  @override
+  String get validationEmailUnverified =>
+      'Verifica tu correo para jugar el reto.';
+
+  @override
+  String get emailVerifyTitle => 'Te enviamos un correo de verificación';
+
+  @override
+  String get emailVerifyDone => 'Ya lo verifiqué';
+
+  @override
+  String get emailVerifyResend => 'Reenviar correo';
+
+  @override
+  String get emailVerifyNotYet =>
+      'Todavía no aparece verificado. Revisa tu correo e inténtalo otra vez.';
+
+  @override
+  String get emailVerifyResent => 'Te reenviamos el correo.';
+
+  @override
+  String get emailVerifyVerified => '¡Correo verificado!';
+
+  @override
+  String get emailVerifyLater => 'Más tarde';
+
+  @override
+  String get dailyVerifyTitle => 'Verifica tu correo para jugar el reto';
+
+  @override
+  String emailVerifyBody(String email) {
+    return 'Abre el mensaje que llegó a $email y toca el enlace. Después vuelve aquí.';
+  }
 }

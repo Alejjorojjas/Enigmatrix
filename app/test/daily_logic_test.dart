@@ -135,8 +135,8 @@ void main() {
 
     test('RankingEntry.fromMap omite documentos incompletos', () {
       expect(RankingEntry.fromMap('x', {'nickname': 'Ana'}), isNull);
-      final e = RankingEntry.fromMap('x', {
-        'uid': 'u1',
+      // El documento no trae `uid`: la fila se identifica por el id.
+      final e = RankingEntry.fromMap('u1', {
         'nickname': 'Ana',
         'serverElapsedMs': 90000,
         'errors': 1,
@@ -146,6 +146,17 @@ void main() {
       expect(e.uid, 'u1');
       expect(e.score, 120000);
       expect(e.solvedAtMs, 77);
+    });
+
+    test('RankingEntry.fromMap usa el id aunque el dato traiga otro uid', () {
+      final e = RankingEntry.fromMap('u1', {
+        'uid': 'otro',
+        'nickname': 'Ana',
+        'serverElapsedMs': 1,
+        'errors': 0,
+        'score': 1,
+      })!;
+      expect(e.uid, 'u1');
     });
   });
 

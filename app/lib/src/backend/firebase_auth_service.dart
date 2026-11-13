@@ -24,10 +24,23 @@ Future<AuthOutcome> linkOrSignIn({
   required bool isGuest,
   required Future<void> Function() link,
   required Future<void> Function(AuthCredential? replacement) signIn,
+  Future<void> Function()? refreshToken,
 }) async {
+  // Tras vincular o iniciar sesión se renueva el token a la fuerza: así el
+  // claim `sign_in_provider` deja de ser "anonymous" de inmediato. Un fallo
+  // aquí no tumba el registro (el token se renueva solo más tarde).
+  Future<void> refresh() async {
+    try {
+      await refreshToken?.call();
+    } on Object catch (e) {
+      debugPrint('No se pudo renovar el token: $e');
+    }
+  }
+
   if (!isGuest) {
     try {
       await signIn(null);
+      await refresh();
       return const AuthSignedIn();
     } on FirebaseAuthException catch (e) {
       return AuthFailed(authProblemFromCode(e.code));
@@ -37,6 +50,7 @@ Future<AuthOutcome> linkOrSignIn({
   }
   try {
     await link();
+    await refresh();
     return const AuthSignedIn(linked: true);
   } on FirebaseAuthException catch (e) {
     if (!_inUseCodes.contains(e.code)) {
@@ -44,6 +58,7 @@ Future<AuthOutcome> linkOrSignIn({
     }
     try {
       await signIn(e.credential);
+      await refresh();
       return const AuthSignedIn(replacedGuest: true);
     } on FirebaseAuthException catch (f) {
       var problem = authProblemFromCode(f.code);
@@ -106,7 +121,21 @@ class FirebaseAuthService implements AuthService {
       link: () => user!.linkWithCredential(credential),
       signIn: (replacement) =>
           _auth.signInWithCredential(replacement ?? credential),
+      refreshToken: _refreshToken,
     );
+  }
+
+  Future<void> _refreshToken() async {
+    await _auth.currentUser?.getIdToken(true);
+  }
+
+  /// Igual que en [linkOrSignIn]: renueva el token sin tumbar el acceso.
+  Future<void> _refreshQuietly() async {
+    try {
+      await _refreshToken();
+    } on Object catch (e) {
+      debugPrint('No se pudo renovar el token: $e');
+    }
   }
 
   GoogleSignIn get _googleSignIn => _google ?? GoogleSignIn.instance;
@@ -198,6 +227,7 @@ class FirebaseAuthService implements AuthService {
         email: email,
         password: password,
       );
+      await _refreshQuietly();
       return const AuthSignedIn();
     } on FirebaseAuthException catch (e) {
       return AuthFailed(authProblemFromCode(e.code));
@@ -214,11 +244,35 @@ class FirebaseAuthService implements AuthService {
         email: email.trim(),
         password: password,
       );
+      await _refreshQuietly();
       return AuthSignedIn(replacedGuest: wasGuest);
     } on FirebaseAuthException catch (e) {
       return AuthFailed(authProblemFromCode(e.code));
     } on Object {
       return const AuthFailed(AuthProblem.unknown);
+    }
+  }
+
+  @override
+  Future<AuthUserInfo> refreshVerification() async {
+    try {
+      await _auth.currentUser?.reload();
+      await _refreshToken();
+    } on Object catch (e) {
+      debugPrint('No se pudo recargar la verificación: $e');
+    }
+    return current;
+  }
+
+  @override
+  Future<AuthProblem?> resendVerification() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return authProblemFromCode(e.code);
+    } on Object {
+      return AuthProblem.unknown;
     }
   }
 

@@ -223,6 +223,17 @@ class OutcomeRegistrationRequired extends SubmitOutcome {
   const OutcomeRegistrationRequired();
 }
 
+/// Ya no quedan intentos fallidos del reto de hoy. El envío no se guarda.
+class OutcomeWrongLimit extends SubmitOutcome {
+  const OutcomeWrongLimit();
+}
+
+/// La cuenta de correo no está verificada y el reto lo exige. El envío no se
+/// guarda en la cola.
+class OutcomeEmailUnverified extends SubmitOutcome {
+  const OutcomeEmailUnverified();
+}
+
 /// El servidor respondió con errores seguidos (o falta algo que reintentar no
 /// arregla): el envío se detiene y el jugador elige Reintentar o Cancelar.
 class OutcomeStalled extends SubmitOutcome {
@@ -235,6 +246,8 @@ enum ValidationEventKind {
   rejected,
   stalled,
   registrationRequired,
+  wrongLimit,
+  emailUnverified,
 }
 
 /// Respuesta de un envío que estaba en la cola (el jugador ya no esperaba).
@@ -608,6 +621,12 @@ class ValidationService {
         case ValidationFailure.registrationRequired:
           await _drop(p);
           return const OutcomeRegistrationRequired();
+        case ValidationFailure.wrongLimit:
+          await _drop(p);
+          return const OutcomeWrongLimit();
+        case ValidationFailure.emailUnverified:
+          await _drop(p);
+          return const OutcomeEmailUnverified();
       }
     } on Object catch (e) {
       // Un error que no viene del servidor tampoco debe perder el envío.
@@ -660,6 +679,10 @@ class ValidationService {
         _emit(ValidationEvent(ValidationEventKind.stalled, p));
       case OutcomeRegistrationRequired():
         _emit(ValidationEvent(ValidationEventKind.registrationRequired, p));
+      case OutcomeWrongLimit():
+        _emit(ValidationEvent(ValidationEventKind.wrongLimit, p));
+      case OutcomeEmailUnverified():
+        _emit(ValidationEvent(ValidationEventKind.emailUnverified, p));
       case OutcomeRateLimited():
       case OutcomeQueued():
         break;

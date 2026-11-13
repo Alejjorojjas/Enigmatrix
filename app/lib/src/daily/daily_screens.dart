@@ -12,6 +12,7 @@ import '../../l10n/l10n.dart';
 import '../backend/validation_client.dart';
 import '../data/case_repository.dart';
 import '../game/game_config.dart';
+import '../ui/email_verification_panel.dart';
 import '../ui/skin_theme.dart';
 import '../ui/ui_kit.dart';
 import '../ui/v1_scope.dart';
@@ -153,6 +154,12 @@ class _ServerChallengeTabState extends ConsumerState<ServerChallengeTab> {
 
   Widget _body(BuildContext context, DailyTabState s) {
     final p = context.pal;
+    if (s.unverified) {
+      return EmailVerificationPanel(
+        title: context.l10n.dailyVerifyTitle,
+        onVerified: () => ref.invalidate(dailyTabProvider),
+      );
+    }
     if (s.guest) {
       return AppCard(
         key: const ValueKey('reto-invitado'),

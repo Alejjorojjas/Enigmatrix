@@ -213,12 +213,52 @@ void main() {
       final router = await _pump(tester, auth: auth, initial: '/registro');
       await _fill(tester, 'ana@correo.com', '12345678');
       await _tap(tester, l10nEs.registerSubmitCreate);
-      expect(router.state.uri.path, '/apodo');
-      expect(find.text(l10nEs.nickScreenTitle), findsOneWidget);
+      // Primero el aviso de verificación; el apodo viene después.
+      expect(find.text(l10nEs.emailVerifyTitle), findsOneWidget);
+      expect(router.state.uri.path, '/registro');
       expect(
         find.textContaining(l10nEs.registerVerificationSent),
         findsOneWidget,
       );
+      await tester.tap(find.text(l10nEs.emailVerifyLater));
+      await _settle(tester);
+      expect(router.state.uri.path, '/apodo');
+      expect(find.text(l10nEs.nickScreenTitle), findsOneWidget);
+    });
+
+    testWidgets('verificación: reenviar, "Ya lo verifiqué" y seguir', (
+      tester,
+    ) async {
+      final auth = FakeAuthService()
+        ..signedVerified = false
+        ..nextOutcome = const AuthSignedIn(
+          linked: true,
+          verificationSent: true,
+        );
+      final router = await _pump(tester, auth: auth, initial: '/registro');
+      await _fill(tester, 'ana@correo.com', '12345678');
+      await _tap(tester, l10nEs.registerSubmitCreate);
+      expect(find.text(l10nEs.emailVerifyTitle), findsOneWidget);
+      expect(
+        find.textContaining('ana@correo.com', findRichText: true),
+        findsWidgets,
+      );
+
+      await _tap(tester, l10nEs.emailVerifyResend);
+      expect(auth.resends, 1);
+      expect(find.text(l10nEs.emailVerifyResent), findsOneWidget);
+
+      // Todavía sin verificar: avisa y se queda.
+      await _tap(tester, l10nEs.emailVerifyDone);
+      expect(auth.refreshes, 1);
+      expect(find.text(l10nEs.emailVerifyNotYet), findsOneWidget);
+      expect(router.state.uri.path, '/registro');
+
+      // Ya verificado: sigue al apodo.
+      auth.verifiesOnRefresh = true;
+      await _tap(tester, l10nEs.emailVerifyDone);
+      expect(auth.refreshes, 2);
+      expect(router.state.uri.path, '/apodo');
     });
 
     testWidgets('cuenta con apodo en el servidor: no pide /apodo', (

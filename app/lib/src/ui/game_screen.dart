@@ -538,6 +538,16 @@ class _GameBodyState extends ConsumerState<_GameBody> {
           context.l10n.validationRejected,
           duration: const Duration(milliseconds: 3500),
         );
+      case ActionFeedback.wrongLimit:
+        _showToast(
+          context.l10n.validationWrongLimit,
+          duration: const Duration(milliseconds: 4500),
+        );
+      case ActionFeedback.emailUnverified:
+        _showToast(
+          context.l10n.validationEmailUnverified,
+          duration: const Duration(milliseconds: 4500),
+        );
       case ActionFeedback.registrationRequired:
         unawaited(showRegistrationInvite(context));
       default:
