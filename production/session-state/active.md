@@ -88,3 +88,39 @@ Las decisiones técnicas importantes se registran como ADR en [docs/adr/](../../
 ## Historial
 
 Todo lo anterior (entradas de sesión, decisiones y hallazgos desde el 10-06-2026, estado del motor y comandos útiles) está en [historial.md](historial.md).
+
+## 12-11-2026: servidor real encendido (5A.3), rama `feature/firebase-real`
+
+- **Proyecto de Firebase** `murdoku-diario`, de la cuenta de Alejandro.
+  - Plan Blaze: alerta de 5.000 COP; los créditos de prueba vencen el 10-02-2027 y hay recordatorio en el calendario.
+  - Firestore en `southamerica-east1`.
+  - Registro con correo, Google, Apple y anónimo (invitados).
+  - App Check registrado: Play Integrity y App Attest.
+  - Huellas SHA-1 y SHA-256 de la firma de Play.
+- **Desplegado el 12-11-2026:**
+  - 6 funciones (`getDailyChallenge`, `startCase`, `submitSolution`, `setNickname`, `deleteAccount`, `dailyCleanup`);
+  - reglas e índice;
+  - política de limpieza de imágenes.
+  - Comando: `cd backend && firebase deploy --only functions,firestore:rules,firestore:indexes --project murdoku-diario`. Usa Java 21 para las pruebas del emulador (`C:\Program Files\Java\jdk-21.0.10.7-hotspot`).
+- **Producto:**
+  - los invitados juegan el tutorial y `mansion-01` y `mansion-02`; el resto y el reto exigen registro;
+  - el reto exige además el correo verificado;
+  - el apodo se pide tras registrarse;
+  - el ranking diario usa el tiempo del servidor más 30 s por error;
+  - el ciclo de retos empieza el 16-11-2026.
+- **Seguridad:**
+  - las soluciones salieron de la app; están en `tools/data/casos-servidor/` y las funciones las incluyen al compilar;
+  - por defecto `ENX_BACKEND=firebase`;
+  - los secretos de GitHub `GOOGLE_SERVICES_JSON_B64` y `GOOGLE_SERVICE_INFO_PLIST_B64` están creados;
+  - el App ID de Apple `com.murdokudiario.app` está creado con App Attest y Sign In with Apple.
+- **Pruebas:** app 864, tools 356, backend 200.
+- **Pendientes:**
+  - Enforce de App Check en Firestore y Auth, después de probar en el teléfono;
+  - plantillas de correo de Firebase en español;
+  - revocar el token de Apple al borrar la cuenta (necesita una clave .p8 de Apple);
+  - limpieza de usuarios anónimos (Identity Platform);
+  - prueba flaky de 20 envíos en paralelo bajo carga;
+  - publicar la política en una URL y agregar el enlace en la app;
+  - formularios de datos de Play y de App Store;
+  - pasos 1 a 8 de la guía de Apple para TestFlight;
+  - mapas más lógicos.
