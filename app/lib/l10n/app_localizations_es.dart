@@ -1245,4 +1245,74 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get validationCancelSubmit => 'Cancelar envío';
+
+  @override
+  String get nickScreenTitle => '¿Cómo te llamamos?';
+
+  @override
+  String get nickScreenBody =>
+      'Elige un apodo para el ranking del reto diario. Lo verán los demás jugadores: no uses tu nombre real ni datos personales.';
+
+  @override
+  String get nickFieldLabel => 'Apodo';
+
+  @override
+  String get nickHelper =>
+      'De 3 a 16 caracteres: letras, números, espacio, punto, guion y guion bajo.';
+
+  @override
+  String get nickContinue => 'Continuar';
+
+  @override
+  String get nickSaveChange => 'Guardar apodo';
+
+  @override
+  String get nickSaving => 'Guardando…';
+
+  @override
+  String get nickTooShort => 'El apodo debe tener al menos 3 caracteres.';
+
+  @override
+  String get nickTooLong => 'El apodo puede tener hasta 16 caracteres.';
+
+  @override
+  String get nickInvalidChars =>
+      'Usa solo letras, números, espacio, punto, guion y guion bajo.';
+
+  @override
+  String get nickRejected => 'No se pudo guardar ese apodo. Prueba con otro.';
+
+  @override
+  String get nickOfflineNote =>
+      'Sin conexión: tu apodo quedó guardado en el teléfono y se enviará cuando haya señal.';
+
+  @override
+  String get settingsChangeNick => 'Cambiar apodo';
+
+  @override
+  String get settingsDeleteAccount => 'Borrar mi cuenta y mis datos';
+
+  @override
+  String get settingsDeleteAccountHint =>
+      'Elimina tu apodo, tus entradas del ranking y tu progreso.';
+
+  @override
+  String get deleteAccountTitle => '¿Borrar tu cuenta?';
+
+  @override
+  String get deleteAccountBody =>
+      'Se borrarán tu apodo, tus entradas del ranking y tu progreso, en el servidor y en este teléfono. No se puede deshacer.';
+
+  @override
+  String get deleteAccountConfirm => 'Borrar todo';
+
+  @override
+  String get deleteAccountDone => 'Tu cuenta y tus datos se borraron.';
+
+  @override
+  String get deleteAccountFailed =>
+      'No se pudo borrar. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get validationRegisterRequired => 'Regístrate para seguir jugando';
 }

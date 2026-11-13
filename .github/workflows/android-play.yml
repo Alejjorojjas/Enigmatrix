@@ -12,6 +12,8 @@
 # production/guias/2026-11-09-google-play-github-actions.md:
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS,
 #   ANDROID_KEY_PASSWORD, PLAY_SERVICE_ACCOUNT_JSON.
+# Firebase (etapa 5A.3): GOOGLE_SERVICES_JSON_B64, el google-services.json en
+# base64 (el archivo no va a git). Se escribe en app/android/app antes de compilar.
 
 name: Android a Google Play
 
@@ -127,6 +129,21 @@ jobs:
             echo "keyPassword=$KEY_PASSWORD"
           } > key.properties
 
+      - name: Archivo de Firebase (desde el secreto)
+        env:
+          GOOGLE_SERVICES_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON_B64" ]; then
+            echo "::error::Falta el secreto GOOGLE_SERVICES_JSON_B64 (el google-services.json de Firebase en base64). Agrégalo en Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          DEST=app/android/app/google-services.json
+          if ! printf '%s' "$GOOGLE_SERVICES_JSON_B64" | base64 --decode > "$DEST" 2>/dev/null || [ ! -s "$DEST" ]; then
+            rm -f "$DEST"
+            echo "::error::El secreto GOOGLE_SERVICES_JSON_B64 no es un base64 válido o está vacío."
+            exit 1
+          fi
+
       - name: Compilar AAB
         working-directory: app
         run: |
@@ -140,7 +157,7 @@ jobs:
       - name: Borrar la llave del runner
         if: always()
         working-directory: app/android
-        run: rm -f key.properties app/upload-keystore.jks
+        run: rm -f key.properties app/upload-keystore.jks app/google-services.json
 
       - name: Comprobar la firma del AAB
         working-directory: app

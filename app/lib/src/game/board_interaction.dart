@@ -99,6 +99,7 @@ class BoardInteraction {
       case ActionFeedback.pendingValidation:
       case ActionFeedback.rateLimited:
       case ActionFeedback.validationFailed:
+      case ActionFeedback.registrationRequired:
         break; // no salen de colocar
     }
   }

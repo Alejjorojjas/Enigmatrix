@@ -46,10 +46,15 @@ class PendingSubmission {
     required this.createdAt,
     this.serverErrors = 0,
     this.stalled = false,
+    this.localDate,
   });
 
   final String caseId;
   final String submissionId;
+
+  /// Fecha local (`YYYY-MM-DD`) con que se envía un reto (`reto-*`). Se fija al
+  /// enviar y se repite igual en los reintentos.
+  final String? localDate;
   final Map<String, int> positions;
   final int clientElapsedMs;
   final bool startedOnline;
@@ -69,22 +74,27 @@ class PendingSubmission {
   /// reintentar o cancelar.
   final bool stalled;
 
-  PendingSubmission copyWith({int? serverErrors, bool? stalled}) =>
-      PendingSubmission(
-        caseId: caseId,
-        submissionId: submissionId,
-        positions: positions,
-        clientElapsedMs: clientElapsedMs,
-        startedOnline: startedOnline,
-        elapsedSeconds: elapsedSeconds,
-        errorCount: errorCount,
-        createdAt: createdAt,
-        serverErrors: serverErrors ?? this.serverErrors,
-        stalled: stalled ?? this.stalled,
-      );
+  PendingSubmission copyWith({
+    int? serverErrors,
+    bool? stalled,
+    String? localDate,
+  }) => PendingSubmission(
+    caseId: caseId,
+    submissionId: submissionId,
+    positions: positions,
+    clientElapsedMs: clientElapsedMs,
+    startedOnline: startedOnline,
+    elapsedSeconds: elapsedSeconds,
+    errorCount: errorCount,
+    createdAt: createdAt,
+    serverErrors: serverErrors ?? this.serverErrors,
+    stalled: stalled ?? this.stalled,
+    localDate: localDate ?? this.localDate,
+  );
 
   SubmitRequest toRequest() => SubmitRequest(
     caseId: caseId,
+    localDate: localDate,
     positions: positions,
     clientElapsedMs: clientElapsedMs,
     startedOnline: startedOnline,
@@ -102,6 +112,7 @@ class PendingSubmission {
     'createdAt': createdAt.toIso8601String(),
     'serverErrors': serverErrors,
     'stalled': stalled,
+    if (localDate != null) 'localDate': localDate!,
   };
 
   /// Null si el dato está dañado.
@@ -119,6 +130,7 @@ class PendingSubmission {
       final created = json['createdAt'];
       final serverErrors = json['serverErrors'];
       final stalled = json['stalled'];
+      final localDate = json['localDate'];
       if (caseId is! String || id is! String) return null;
       if (clientMs is! int || started is! bool) return null;
       if (secs is! int || errors is! int || created is! String) return null;
@@ -137,6 +149,7 @@ class PendingSubmission {
             ? serverErrors
             : 0,
         stalled: stalled == true,
+        localDate: localDate is String ? localDate : null,
       );
     } on FormatException {
       return null;
@@ -177,13 +190,25 @@ class OutcomeRejected extends SubmitOutcome {
   const OutcomeRejected();
 }
 
+/// Un invitado pidió un caso que no es gratis: hay que invitarlo a registrarse.
+/// El envío no se guarda en la cola.
+class OutcomeRegistrationRequired extends SubmitOutcome {
+  const OutcomeRegistrationRequired();
+}
+
 /// El servidor respondió con errores seguidos (o falta algo que reintentar no
 /// arregla): el envío se detiene y el jugador elige Reintentar o Cancelar.
 class OutcomeStalled extends SubmitOutcome {
   const OutcomeStalled();
 }
 
-enum ValidationEventKind { solved, wrong, rejected, stalled }
+enum ValidationEventKind {
+  solved,
+  wrong,
+  rejected,
+  stalled,
+  registrationRequired,
+}
 
 /// Respuesta de un envío que estaba en la cola (el jugador ya no esperaba).
 @immutable
@@ -393,7 +418,12 @@ class ValidationService {
       }
       try {
         await _session();
-        await client.startCase(caseId);
+        await client.startCase(
+          caseId,
+          localDate: caseId.startsWith('reto-')
+              ? formatLocalDate(_clock())
+              : null,
+        );
       } on ValidationException catch (e) {
         if (e.kind == ValidationFailure.network) {
           // De verdad empezó sin conexión: no entra al ranking y se recuerda.
@@ -434,6 +464,11 @@ class ValidationService {
   /// lanza.
   Future<SubmitOutcome> submit(PendingSubmission submission) async {
     await ready;
+    // Los retos llevan la fecha local del jugador (puerta del día en el
+    // servidor).
+    if (submission.localDate == null && submission.caseId.startsWith('reto-')) {
+      submission = submission.copyWith(localDate: formatLocalDate(_clock()));
+    }
     if (_queue.containsKey(submission.caseId)) return const OutcomeQueued();
     _queue[submission.caseId] = submission;
     _inFlight.add(submission.submissionId);
@@ -485,6 +520,9 @@ class ValidationService {
         case ValidationFailure.rejected:
           await _drop(p);
           return const OutcomeRejected();
+        case ValidationFailure.registrationRequired:
+          await _drop(p);
+          return const OutcomeRegistrationRequired();
       }
     } on Object catch (e) {
       // Un error que no viene del servidor tampoco debe perder el envío.
@@ -534,6 +572,8 @@ class ValidationService {
         _emit(ValidationEvent(ValidationEventKind.rejected, p));
       case OutcomeStalled():
         _emit(ValidationEvent(ValidationEventKind.stalled, p));
+      case OutcomeRegistrationRequired():
+        _emit(ValidationEvent(ValidationEventKind.registrationRequired, p));
       case OutcomeRateLimited():
       case OutcomeQueued():
         break;
@@ -653,6 +693,19 @@ class ValidationService {
     } on Object catch (e) {
       debugPrint('No se pudo guardar el error de ${p.caseId}: $e');
     }
+  }
+
+  /// Tras borrar la cuenta: olvida la cola, los inicios y la sesión en
+  /// memoria (lo guardado en SharedPreferences lo limpia quien llama). La
+  /// próxima llamada inicia una sesión anónima nueva.
+  Future<void> resetAfterAccountDeletion() async {
+    _queue.clear();
+    _starts.clear();
+    _inFlight.clear();
+    _sessionFuture = null;
+    _timer?.cancel();
+    _timer = null;
+    _notify();
   }
 
   void dispose() {

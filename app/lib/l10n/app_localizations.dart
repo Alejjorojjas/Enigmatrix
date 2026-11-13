@@ -1961,6 +1961,132 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cancelar envío'**
   String get validationCancelSubmit;
+
+  /// Título de la pantalla de apodo del primer arranque.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo te llamamos?'**
+  String get nickScreenTitle;
+
+  /// Explicación de la pantalla de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige un apodo para el ranking del reto diario. Lo verán los demás jugadores: no uses tu nombre real ni datos personales.'**
+  String get nickScreenBody;
+
+  /// Etiqueta del campo de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Apodo'**
+  String get nickFieldLabel;
+
+  /// Ayuda bajo el campo de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'De 3 a 16 caracteres: letras, números, espacio, punto, guion y guion bajo.'**
+  String get nickHelper;
+
+  /// Botón que guarda el apodo en el primer arranque.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get nickContinue;
+
+  /// Botón que guarda el apodo nuevo en Configuración.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar apodo'**
+  String get nickSaveChange;
+
+  /// Texto del botón mientras se guarda el apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardando…'**
+  String get nickSaving;
+
+  /// Error: apodo demasiado corto.
+  ///
+  /// In es, this message translates to:
+  /// **'El apodo debe tener al menos 3 caracteres.'**
+  String get nickTooShort;
+
+  /// Error: apodo demasiado largo.
+  ///
+  /// In es, this message translates to:
+  /// **'El apodo puede tener hasta 16 caracteres.'**
+  String get nickTooLong;
+
+  /// Error: el apodo tiene caracteres no permitidos.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa solo letras, números, espacio, punto, guion y guion bajo.'**
+  String get nickInvalidChars;
+
+  /// Error genérico cuando el servidor rechaza el apodo sin dar motivo.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar ese apodo. Prueba con otro.'**
+  String get nickRejected;
+
+  /// Aviso al guardar el apodo sin conexión.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión: tu apodo quedó guardado en el teléfono y se enviará cuando haya señal.'**
+  String get nickOfflineNote;
+
+  /// Fila de Configuración que abre el cambio de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar apodo'**
+  String get settingsChangeNick;
+
+  /// Fila de Configuración que borra la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar mi cuenta y mis datos'**
+  String get settingsDeleteAccount;
+
+  /// Explicación de la fila de borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Elimina tu apodo, tus entradas del ranking y tu progreso.'**
+  String get settingsDeleteAccountHint;
+
+  /// Título de la confirmación de borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Borrar tu cuenta?'**
+  String get deleteAccountTitle;
+
+  /// Cuerpo de la confirmación de borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Se borrarán tu apodo, tus entradas del ranking y tu progreso, en el servidor y en este teléfono. No se puede deshacer.'**
+  String get deleteAccountBody;
+
+  /// Botón que confirma el borrado de la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar todo'**
+  String get deleteAccountConfirm;
+
+  /// Aviso tras borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu cuenta y tus datos se borraron.'**
+  String get deleteAccountDone;
+
+  /// Aviso si falla el borrado de la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo borrar. Revisa tu conexión e inténtalo de nuevo.'**
+  String get deleteAccountFailed;
+
+  /// Aviso cuando un invitado pide un caso que exige registro.
+  ///
+  /// In es, this message translates to:
+  /// **'Regístrate para seguir jugando'**
+  String get validationRegisterRequired;
 }
 
 class _AppLocalizationsDelegate

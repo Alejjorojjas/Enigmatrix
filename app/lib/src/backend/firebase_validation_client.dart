@@ -6,6 +6,7 @@ library;
 import 'dart:async';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -20,15 +21,23 @@ import 'validation_client.dart';
 ///    pasa si falta App Check): el envío se detiene de una vez;
 ///  - cualquier otro código (`internal`...): el servidor respondió con un
 ///    error, se reintenta unas pocas veces.
-ValidationFailure failureForFunctionsCode(String code) => switch (code) {
-  'resource-exhausted' => ValidationFailure.rateLimited,
-  'invalid-argument' || 'not-found' => ValidationFailure.rejected,
-  'unavailable' || 'deadline-exceeded' => ValidationFailure.network,
-  'unauthenticated' ||
-  'permission-denied' ||
-  'failed-precondition' => ValidationFailure.blocked,
-  _ => ValidationFailure.serverError,
-};
+///  - `failed-precondition` con el mensaje "Regístrate para seguir jugando"
+///    es [ValidationFailure.registrationRequired]: se distingue del bloqueo
+///    por App Check mirando el mensaje del servidor.
+ValidationFailure failureForFunctionsCode(String code, [String? message]) =>
+    switch (code) {
+      'failed-precondition'
+          when message != null &&
+              message.toLowerCase().contains('regístrate') =>
+        ValidationFailure.registrationRequired,
+      'resource-exhausted' => ValidationFailure.rateLimited,
+      'invalid-argument' || 'not-found' => ValidationFailure.rejected,
+      'unavailable' || 'deadline-exceeded' => ValidationFailure.network,
+      'unauthenticated' ||
+      'permission-denied' ||
+      'failed-precondition' => ValidationFailure.blocked,
+      _ => ValidationFailure.serverError,
+    };
 
 class FirebaseValidationClient implements ValidationClient {
   FirebaseValidationClient({
@@ -45,6 +54,9 @@ class FirebaseValidationClient implements ValidationClient {
   final Duration timeout;
 
   Future<void>? _session;
+
+  @override
+  bool get isAnonymous => _auth.currentUser?.isAnonymous ?? true;
 
   /// Una sola sesión anónima, compartida: dos llamadas a la vez esperan al
   /// mismo trabajo. Si falla, la siguiente vuelve a intentarlo.
@@ -111,7 +123,11 @@ class FirebaseValidationClient implements ValidationClient {
       final result = await callable.call<Object?>(data);
       return result.data;
     } on FirebaseFunctionsException catch (e) {
-      throw ValidationException(failureForFunctionsCode(e.code), e.code);
+      throw ValidationException(
+        failureForFunctionsCode(e.code, e.message),
+        e.code,
+        e.message,
+      );
     } on ValidationException {
       rethrow;
     } catch (e) {
@@ -121,22 +137,71 @@ class FirebaseValidationClient implements ValidationClient {
   }
 
   @override
-  Future<void> startCase(String caseId) async {
-    await _call('startCase', {'caseId': caseId});
+  Future<int?> startCase(String caseId, {String? localDate}) async {
+    final raw = await _call('startCase', {
+      'caseId': caseId,
+      if (localDate != null) 'localDate': localDate,
+    });
+    final startedAt = raw is Map ? raw['startedAt'] : null;
+    return startedAt is num ? startedAt.toInt() : null;
   }
 
   @override
   Future<SubmitResponse> submitSolution(SubmitRequest request) async =>
       parseSubmitResponse(await _call('submitSolution', request.toCallData()));
+
+  @override
+  Future<DailyChallengeInfo> getDailyChallenge(String localDate) async =>
+      parseDailyChallenge(
+        await _call('getDailyChallenge', {'localDate': localDate}),
+      );
+
+  @override
+  Future<String> setNickname(String nickname) async =>
+      parseNicknameResponse(await _call('setNickname', {'nickname': nickname}));
+
+  @override
+  Future<void> deleteAccount() async {
+    await _call('deleteAccount', const <String, Object>{});
+    // El usuario de Auth ya no existe en el servidor: se cierra la sesión
+    // local y la próxima llamada empieza una anónima nueva.
+    _session = null;
+    try {
+      await _auth.signOut();
+    } on Object catch (e) {
+      debugPrint('signOut tras borrar la cuenta falló: $e');
+    }
+  }
+}
+
+/// Activa App Check: en un build de release, Play Integrity (Android) y App
+/// Attest (iPhone); en debug, el proveedor de depuración (el token que imprime
+/// se registra en la consola de Firebase). Si falla no frena la app: las
+/// llamadas al servidor quedarán bloqueadas y se verá como "sin validar".
+Future<void> activateAppCheck({required bool releaseMode}) async {
+  try {
+    await FirebaseAppCheck.instance.activate(
+      providerAndroid: releaseMode
+          ? const AndroidPlayIntegrityProvider()
+          : const AndroidDebugProvider(),
+      providerApple: releaseMode
+          ? const AppleAppAttestProvider()
+          : const AppleDebugProvider(),
+    );
+  } on Object catch (e) {
+    debugPrint('No se pudo activar App Check: $e');
+  }
 }
 
 /// Arranca Firebase según el modo y devuelve el cliente del servidor, o null
 /// si el modo es [BackendMode.none]: en ese caso no se toca Firebase ni la red.
 ///
 /// En modo emulador usa opciones escritas a mano para `demo-enigmatrix`: no
-/// hace falta `google-services.json`. El modo `firebase` (proyecto real) llega
-/// en la ronda de corte; hasta entonces intenta la configuración nativa y, si
-/// no existe, deja un cliente "sin conexión" (nunca valida en el teléfono).
+/// hace falta `google-services.json` ni App Check (el emulador no lo exige).
+/// El modo `firebase` (proyecto real) usa la configuración nativa
+/// (`google-services.json` / `GoogleService-Info.plist`, fuera de git), activa
+/// App Check y, si Firebase no arranca, deja un cliente "sin conexión" (nunca
+/// valida en el teléfono).
 Future<ValidationClient?> bootstrapBackend(
   BackendMode mode, {
   required Duration timeout,
@@ -172,6 +237,7 @@ Future<ValidationClient?> bootstrapBackend(
         );
       case BackendMode.firebase:
         final app = await Firebase.initializeApp();
+        await activateAppCheck(releaseMode: kReleaseMode);
         return FirebaseValidationClient(
           auth: FirebaseAuth.instanceFor(app: app),
           functions: FirebaseFunctions.instanceFor(

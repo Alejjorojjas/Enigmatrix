@@ -22,6 +22,7 @@ import 'src/ui/bank_screen.dart';
 import 'src/ui/case_list_screen.dart';
 import 'src/ui/game_screen.dart';
 import 'src/ui/home_shell.dart';
+import 'src/ui/nickname_screen.dart';
 import 'src/ui/skin_theme.dart';
 import 'src/ui/splash_screen.dart';
 import 'src/ui/v1_scope.dart' show caseTitle;
@@ -65,6 +66,7 @@ GoRouter buildAppRouter({required bool Function() devTools}) => GoRouter(
   },
   routes: [
     GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
+    GoRoute(path: '/apodo', builder: (_, __) => const NicknameScreen()),
     GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
     GoRoute(path: '/casos', builder: (_, __) => const CaseListScreen()),
     // Banco de pruebas (desarrollo): se abre desde Configuración.
@@ -112,8 +114,15 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
     final service = ref.read(validationServiceProvider);
     if (service != null) {
       _validationSub = service.events.listen(_onValidationEvent);
-      unawaited(service.start());
+      unawaited(_startAndSyncNickname(service));
     }
+  }
+
+  /// Inicia la sesión y la cola; después reenvía el apodo que quedó guardado
+  /// sin conexión.
+  Future<void> _startAndSyncNickname(ValidationService service) async {
+    await service.start();
+    await ref.read(nicknameServiceProvider)?.syncPending();
   }
 
   @override
@@ -129,6 +138,7 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
     ref.read(appLifecycleProvider.notifier).state = state;
     if (state == AppLifecycleState.resumed) {
       ref.read(validationServiceProvider)?.onResumed();
+      unawaited(ref.read(nicknameServiceProvider)?.syncPending());
     }
   }
 
@@ -149,6 +159,8 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
         response is SubmitWrong ? response.wrongCount : 0,
       ),
       ValidationEventKind.rejected => l10n.validationRejected,
+      ValidationEventKind.registrationRequired =>
+        l10n.validationRegisterRequired,
       ValidationEventKind.stalled => l10n.validationStalledTitle,
     };
     _messenger.currentState?.showSnackBar(SnackBar(content: Text(text)));

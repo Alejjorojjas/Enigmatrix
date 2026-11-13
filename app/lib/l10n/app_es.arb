@@ -1764,5 +1764,89 @@
   "validationCancelSubmit": "Cancelar envío",
   "@validationCancelSubmit": {
     "description": "Botón que quita de la cola un envío detenido y desbloquea el tablero."
+  },
+  "nickScreenTitle": "¿Cómo te llamamos?",
+  "@nickScreenTitle": {
+    "description": "Título de la pantalla de apodo del primer arranque."
+  },
+  "nickScreenBody": "Elige un apodo para el ranking del reto diario. Lo verán los demás jugadores: no uses tu nombre real ni datos personales.",
+  "@nickScreenBody": {
+    "description": "Explicación de la pantalla de apodo."
+  },
+  "nickFieldLabel": "Apodo",
+  "@nickFieldLabel": {
+    "description": "Etiqueta del campo de apodo."
+  },
+  "nickHelper": "De 3 a 16 caracteres: letras, números, espacio, punto, guion y guion bajo.",
+  "@nickHelper": {
+    "description": "Ayuda bajo el campo de apodo."
+  },
+  "nickContinue": "Continuar",
+  "@nickContinue": {
+    "description": "Botón que guarda el apodo en el primer arranque."
+  },
+  "nickSaveChange": "Guardar apodo",
+  "@nickSaveChange": {
+    "description": "Botón que guarda el apodo nuevo en Configuración."
+  },
+  "nickSaving": "Guardando…",
+  "@nickSaving": {
+    "description": "Texto del botón mientras se guarda el apodo."
+  },
+  "nickTooShort": "El apodo debe tener al menos 3 caracteres.",
+  "@nickTooShort": {
+    "description": "Error: apodo demasiado corto."
+  },
+  "nickTooLong": "El apodo puede tener hasta 16 caracteres.",
+  "@nickTooLong": {
+    "description": "Error: apodo demasiado largo."
+  },
+  "nickInvalidChars": "Usa solo letras, números, espacio, punto, guion y guion bajo.",
+  "@nickInvalidChars": {
+    "description": "Error: el apodo tiene caracteres no permitidos."
+  },
+  "nickRejected": "No se pudo guardar ese apodo. Prueba con otro.",
+  "@nickRejected": {
+    "description": "Error genérico cuando el servidor rechaza el apodo sin dar motivo."
+  },
+  "nickOfflineNote": "Sin conexión: tu apodo quedó guardado en el teléfono y se enviará cuando haya señal.",
+  "@nickOfflineNote": {
+    "description": "Aviso al guardar el apodo sin conexión."
+  },
+  "settingsChangeNick": "Cambiar apodo",
+  "@settingsChangeNick": {
+    "description": "Fila de Configuración que abre el cambio de apodo."
+  },
+  "settingsDeleteAccount": "Borrar mi cuenta y mis datos",
+  "@settingsDeleteAccount": {
+    "description": "Fila de Configuración que borra la cuenta."
+  },
+  "settingsDeleteAccountHint": "Elimina tu apodo, tus entradas del ranking y tu progreso.",
+  "@settingsDeleteAccountHint": {
+    "description": "Explicación de la fila de borrar la cuenta."
+  },
+  "deleteAccountTitle": "¿Borrar tu cuenta?",
+  "@deleteAccountTitle": {
+    "description": "Título de la confirmación de borrar la cuenta."
+  },
+  "deleteAccountBody": "Se borrarán tu apodo, tus entradas del ranking y tu progreso, en el servidor y en este teléfono. No se puede deshacer.",
+  "@deleteAccountBody": {
+    "description": "Cuerpo de la confirmación de borrar la cuenta."
+  },
+  "deleteAccountConfirm": "Borrar todo",
+  "@deleteAccountConfirm": {
+    "description": "Botón que confirma el borrado de la cuenta."
+  },
+  "deleteAccountDone": "Tu cuenta y tus datos se borraron.",
+  "@deleteAccountDone": {
+    "description": "Aviso tras borrar la cuenta."
+  },
+  "deleteAccountFailed": "No se pudo borrar. Revisa tu conexión e inténtalo de nuevo.",
+  "@deleteAccountFailed": {
+    "description": "Aviso si falla el borrado de la cuenta."
+  },
+  "validationRegisterRequired": "Regístrate para seguir jugando",
+  "@validationRegisterRequired": {
+    "description": "Aviso cuando un invitado pide un caso que exige registro."
   }
 }

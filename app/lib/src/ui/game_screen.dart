@@ -537,6 +537,12 @@ class _GameBodyState extends ConsumerState<_GameBody> {
           context.l10n.validationRejected,
           duration: const Duration(milliseconds: 3500),
         );
+      case ActionFeedback.registrationRequired:
+        // La invitación completa a registrarse llega en la ronda del registro.
+        _showToast(
+          context.l10n.validationRegisterRequired,
+          duration: const Duration(milliseconds: 3500),
+        );
       default:
         _afterResolve(fb);
     }

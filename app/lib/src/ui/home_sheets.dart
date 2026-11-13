@@ -11,12 +11,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
 import '../app_version.dart';
+import '../backend/validation_providers.dart'
+    show nicknameServiceProvider, validationClientProvider;
 import '../game/app_settings.dart';
 import '../game/dev_tools.dart';
 import 'appearance_picker.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'dev_texts.dart';
 import 'feedback_report.dart';
+import 'nickname_screen.dart';
 import 'skin_theme.dart';
 import 'tutorial_dialog.dart';
 import 'ui_kit.dart';
@@ -217,6 +220,31 @@ class _SettingsSheet extends ConsumerWidget {
             ),
           ],
         ),
+        // Con servidor: apodo del ranking y borrado de la cuenta.
+        if (ref.watch(nicknameServiceProvider) != null) ...[
+          const Divider(height: 24),
+          // El apodo es del ranking: solo para usuarios registrados.
+          if (ref.watch(validationClientProvider)?.isAnonymous == false) ...[
+            AppButton(
+              label: context.l10n.settingsChangeNick,
+              quiet: true,
+              icon: Icons.edit_rounded,
+              onTap: () => showNicknameDialog(context, ref),
+            ),
+            const SizedBox(height: 10),
+          ],
+          AppButton(
+            label: context.l10n.settingsDeleteAccount,
+            quiet: true,
+            icon: Icons.delete_forever_rounded,
+            onTap: () => confirmDeleteAccount(context, ref),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            context.l10n.settingsDeleteAccountHint,
+            style: context.note(14, color: p.softText),
+          ),
+        ],
         // La cuenta es simulada hasta la etapa 5.
         if (showSim) ...[
           const SizedBox(height: 14),

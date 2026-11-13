@@ -176,6 +176,7 @@ enum ActionFeedback {
   pendingValidation, // sin conexión: queda "por validar"
   rateLimited, // el servidor pidió esperar un momento
   validationFailed, // el servidor no aceptó el envío
+  registrationRequired, // invitado en un caso que pide registro
 }
 
 /// Tope del tiempo que se informa al servidor (24 h, backend/validation.ts).
@@ -831,6 +832,10 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         state = state.copyWith(submitting: false);
         _startTicker();
         return ActionFeedback.validationFailed;
+      case OutcomeRegistrationRequired():
+        state = state.copyWith(submitting: false);
+        _startTicker();
+        return ActionFeedback.registrationRequired;
       case OutcomeStalled():
         // Errores seguidos del servidor: el tablero queda esperando la
         // decisión del jugador (Reintentar o Cancelar envío).
@@ -877,6 +882,7 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
         final r = e.response;
         if (r is SubmitWrong) _registerWrong(r.wrongCount, const {});
       case ValidationEventKind.rejected:
+      case ValidationEventKind.registrationRequired:
         state = state.copyWith(
           pendingValidation: false,
           validationStalled: false,
