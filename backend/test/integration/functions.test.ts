@@ -316,7 +316,7 @@ describe("submitSolution", () => {
     expect(prog.attempts).toBe(6);
   });
 
-  it("20 envíos fallidos en paralelo: exactamente 6 wrong, el resto bloqueados (resource-exhausted o aborted), attempts == 6", async () => {
+  it("20 envíos fallidos en paralelo: como máximo 6 wrong, el resto bloqueados (resource-exhausted o aborted), attempts == wrongs", async () => {
     const c = loadCase("reto-002");
     await setDaily(2);
     const u = await signInRegistered();
@@ -338,14 +338,17 @@ describe("submitSolution", () => {
     const wrongs = rs.filter((r) => r.result?.result === "wrong");
     // Con 20 transacciones a la vez el emulador puede abortar algunas por
     // contención: deben llegar como "aborted" (reintentable), nunca como
-    // "internal". Lo que importa es que no pasen más de 6 intentos.
+    // "internal". Lo que importa es que no pasen más de 6 intentos. Cuántos
+    // llegan a contarse antes de que los demás aborten depende de la carga de
+    // la máquina (en CI a veces son 4), así que se exige el tope, no el número.
     const blocked = rs.filter((r) => r.errorStatus === "RESOURCE_EXHAUSTED" || r.errorStatus === "ABORTED");
     expect(rs.filter((r) => r.errorStatus === "INTERNAL")).toHaveLength(0);
-    expect(wrongs).toHaveLength(6);
-    expect(blocked).toHaveLength(14);
+    expect(wrongs.length).toBeGreaterThanOrEqual(1);
+    expect(wrongs.length).toBeLessThanOrEqual(6);
+    expect(wrongs.length + blocked.length).toBe(20);
     const prog = (await db.doc(`users/${u.uid}/progress/reto-002`).get()).data()!;
-    expect(prog.attempts).toBe(6);
-    expect(prog.errors).toBe(6);
+    expect(prog.attempts).toBe(wrongs.length);
+    expect(prog.errors).toBe(wrongs.length);
   });
 
   it("sondear sin startCase, luego startCase y luego el tablero correcto: ranked false para siempre", async () => {
