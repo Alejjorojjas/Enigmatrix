@@ -272,6 +272,8 @@ describe("App Check no se puede apagar en producción", () => {
   });
   it("solo en el emulador se usa el parámetro", () => {
     expect(resolveEnforceAppCheck({ FUNCTIONS_EMULATOR: "true" }, false)).toBe(false);
+    expect(resolveEnforceAppCheck({ APP_CHECK_TEMPORALMENTE_APAGADO: "si" }, false)).toBe(false);
+    expect(resolveEnforceAppCheck({ APP_CHECK_TEMPORALMENTE_APAGADO: "true" }, false)).toBe(true);
     expect(resolveEnforceAppCheck({ FUNCTIONS_EMULATOR: "true" }, true)).toBe(true);
   });
   it("index.ts pasa por resolveEnforceAppCheck y las funciones no usan el parámetro directo", () => {
