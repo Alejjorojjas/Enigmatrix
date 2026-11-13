@@ -4,9 +4,9 @@
   "type": "module",
   "description": "Backend de Enigmatrix: pruebas, scripts y herramientas (las funciones viven en functions/)",
   "scripts": {
-    "build": "npm --prefix functions run build",
-    "publish:cases": "tsx scripts/publish-cases.ts",
-    "test:unit": "vitest run --config vitest.unit.config.ts",
+    "build:solutions": "tsx scripts/build-solutions.ts",
+    "build": "npm run build:solutions && npm --prefix functions run build",
+    "test:unit": "npm run build:solutions && vitest run --config vitest.unit.config.ts",
     "test:emulator": "npm run build && firebase emulators:exec --project demo-enigmatrix --only auth,firestore,functions \"vitest run --config vitest.emulator.config.ts\"",
     "test": "npm run test:unit && npm run test:emulator"
   },

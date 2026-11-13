@@ -10,3 +10,5 @@ ui-debug.log
 .env
 .env.*
 !.env.local
+# Soluciones generadas por scripts/build-solutions.ts (nunca se versionan)
+functions/data/

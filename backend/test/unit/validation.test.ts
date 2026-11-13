@@ -17,8 +17,14 @@ import {
   findSubmission,
   isSuspicious,
   rememberSubmission,
+  computeScore,
+  assertCanPlay,
+  isRegisteredProvider,
+  resolveFreeCaseIds,
   resolveClientClockMarginMs,
+  resolveErrorPenaltyMs,
   resolveMaxSubmitsPerMinute,
+  resolveMaxWrongPerCase,
   type CaseShape,
 } from "../../functions/src/validation";
 
@@ -272,5 +278,85 @@ describe("App Check no se puede apagar en producción", () => {
     const uses = src.match(/enforceAppCheck:\s*\w+/g) ?? [];
     expect(uses.length).toBeGreaterThanOrEqual(2);
     for (const u of uses) expect(u).toMatch(/enforceAppCheck:\s*ENFORCE_APP_CHECK$/);
+  });
+});
+
+describe("score del ranking", () => {
+  it("score = tiempo del servidor + errores x penalización", () => {
+    expect(computeScore(60_000, 0, 30_000)).toBe(60_000);
+    expect(computeScore(60_000, 2, 30_000)).toBe(120_000);
+    expect(computeScore(0, 3, 10_000)).toBe(30_000);
+    expect(computeScore(45_000, 4, 0)).toBe(45_000);
+  });
+  it("un error cuesta 30 s: 90 s con 1 error empata con 120 s sin errores", () => {
+    expect(computeScore(90_000, 1, 30_000)).toBe(computeScore(120_000, 0, 30_000));
+  });
+  it("errorPenaltyMs sale de config/server con 30000 por defecto", () => {
+    expect(resolveErrorPenaltyMs(undefined)).toBe(30_000);
+    expect(resolveErrorPenaltyMs({ errorPenaltyMs: 0 })).toBe(0);
+    expect(resolveErrorPenaltyMs({ errorPenaltyMs: 15_000 })).toBe(15_000);
+    for (const bad of [-1, 1.5, "9", null, 86_400_001]) expect(resolveErrorPenaltyMs({ errorPenaltyMs: bad })).toBe(30_000);
+  });
+});
+
+describe("tope de errores por caso", () => {
+  it("maxWrongPerCase sale de config/server (1 a 1000) con 15 por defecto", () => {
+    expect(resolveMaxWrongPerCase(undefined)).toBe(15);
+    expect(resolveMaxWrongPerCase({ maxWrongPerCase: 3 })).toBe(3);
+    expect(resolveMaxWrongPerCase({ maxWrongPerCase: 0 })).toBe(1);
+    expect(resolveMaxWrongPerCase({ maxWrongPerCase: 5000 })).toBe(1000);
+    for (const bad of ["9", 1.5, null]) expect(resolveMaxWrongPerCase({ maxWrongPerCase: bad })).toBe(15);
+  });
+});
+
+describe("invitados y usuarios registrados", () => {
+  const free = ["mansion-01", "mansion-02"];
+  it("solo 'anonymous' (o sin proveedor) es invitado", () => {
+    expect(isRegisteredProvider("anonymous")).toBe(false);
+    for (const bad of [undefined, null, "", 5, {}]) expect(isRegisteredProvider(bad)).toBe(false);
+    for (const ok of ["password", "google.com", "apple.com", "custom", "phone"]) expect(isRegisteredProvider(ok)).toBe(true);
+  });
+  it("el invitado solo juega los casos gratis; nunca un reto", () => {
+    assertCanPlay("anonymous", "mansion-01", false, free);
+    assertCanPlay("anonymous", "mansion-02", false, free);
+    rejects(() => assertCanPlay("anonymous", "mansion-03", false, free), "failed-precondition");
+    rejects(() => assertCanPlay("anonymous", "reto-001", true, free), "failed-precondition");
+    rejects(() => assertCanPlay("anonymous", "reto-001", true, ["reto-001"]), "failed-precondition");
+    // Sin proveedor se trata como invitado: solo los gratis.
+    assertCanPlay(undefined, "mansion-01", false, free);
+    rejects(() => assertCanPlay(undefined, "mansion-03", false, free), "failed-precondition");
+  });
+  it("el registrado juega todo", () => {
+    assertCanPlay("password", "mansion-09", false, free);
+    assertCanPlay("google.com", "reto-030", true, []);
+  });
+  it("el mensaje es 'Regístrate para seguir jugando'", () => {
+    try {
+      assertCanPlay("anonymous", "mansion-03", false, free);
+    } catch (e) {
+      expect((e as Error).message).toContain("Regístrate para seguir jugando");
+      return;
+    }
+    throw new Error("Debía fallar");
+  });
+  it("freeCaseIds sale de config/server con mansion-01 y mansion-02 por defecto", () => {
+    expect(resolveFreeCaseIds(undefined)).toEqual(["mansion-01", "mansion-02"]);
+    expect(resolveFreeCaseIds({})).toEqual(["mansion-01", "mansion-02"]);
+    expect(resolveFreeCaseIds({ freeCaseIds: ["mansion-05"] })).toEqual(["mansion-05"]);
+    expect(resolveFreeCaseIds({ freeCaseIds: [] })).toEqual([]);
+    for (const bad of ["mansion-05", [5], ["../x"], ["-a"], null, {}, Array.from({ length: 51 }, (_, i) => `m-${i}`)]) {
+      expect(resolveFreeCaseIds({ freeCaseIds: bad })).toEqual(["mansion-01", "mansion-02"]);
+    }
+  });
+});
+
+describe("limpieza programada", () => {
+  it("index.ts declara la función programada diaria en la zona America/Bogota", () => {
+    const here = path.dirname(fileURLToPath(import.meta.url));
+    const src = readFileSync(path.join(here, "../../functions/src/index.ts"), "utf8");
+    expect(src).toContain("onSchedule(");
+    expect(src).toContain('timeZone: "America/Bogota"');
+    expect(src).toContain("every day");
+    expect(src).toContain("runCleanup(");
   });
 });
