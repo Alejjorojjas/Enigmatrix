@@ -1,5 +1,9 @@
 # Enigmatrix - Pantallas UI
 
+> **ACTUALIZACIÓN 11-11-2026 (versión de tienda 0.8.1+11, "Murdoku Diario"; revisión CCGS 5.4 y de UX punto 8):** lo que ve el jugador en la versión de tienda es una lista corta; el resto del documento es la visión completa. Rutas de `app/lib/main.dart`: carga (`/`), Inicio con sus pestañas (`/home`), lista de casos del Mundo 1 (`/casos`), partida (`/play/:id`, con selector Mapa/Notas, mini panel y victoria) y tutorial (`/tutorial`). El **banco de pruebas** (`/banco`), el feedback de prueba y el medidor de FPS solo existen con `ENX_DEV=true`, no en la tienda. La versión de tienda **oculta las pantallas simuladas** (Tienda, Premium, Ranking, vidas, racha, protectores, puntos de la semana y estadísticas simuladas): `kShowSimulated = kEnxDev` en `app/lib/src/game/dev_tools.dart` (decisión 18, 06-11-2026; rama `fix/creditos-seguridad-y-documentos`). Experto, Élite y los mundos 2 a 5 se muestran "Próximamente" y no se abren (`app/lib/src/ui/v1_scope.dart`, ADR-0014). La V1 sale **sin ayudas ni puntos** (pregunta 12, 11-11-2026): la victoria muestra tiempo y errores. Esta lista sirve de especificación real y de guion para las capturas de la ficha de la tienda; no se contrastó pantalla por pantalla con la app abierta.
+>
+> (SUPERADO 11-11-2026) Las rutas y el "aviso del prototipo" de los bloques de abajo hablan de constantes en `home_shell.dart`: los datos simulados viven hoy en `mock_data.dart`, `v1_scope.dart`, `home_tabs.dart` y `home_sheets.dart`.
+
 > ACTUALIZACIÓN 04-11-2026: este documento lista las ~50 pantallas de la **app completa**. El prototipo de la Fase 1 implementa solo una parte, y su diseño visual está en revisión (etapa 2 del plan, prueba de concepto gráfica). Se conserva el texto original salvo donde se marca **SUPERADO**. Auditoría: `production/revisiones/2026-11-04-auditoria-proyecto.md` (H-25, H-28 a H-31).
 >
 > **Aviso del prototipo (Fase 1).** En el juego de hoy las pantallas de vidas, racha, reto diario, ranking, tienda, premium y las estadísticas del perfil usan **datos simulados** (constantes escritas en `app/lib/src/ui/home_shell.dart`, aprobadas el 12-07-2026). No hay servidor ni cuentas. Lo que este documento dice sobre esas pantallas es la intención de la Fase 2 en adelante, no lo que la app hace hoy.
@@ -314,7 +318,9 @@ Header de partida:
 - intentos fallidos de resolver
 - puntos actuales estimados
 
-> ACTUALIZACIÓN 04-11-2026: el header de hoy muestra solo **tiempo y errores**. Ayudas y puntos estimados no existen (**PENDIENTE DE DECISIÓN**, auditoría 04-11-2026, pregunta 12, H-30). Las pistas son tarjetas compactas con scroll horizontal bajo el tablero, y el texto de cada una puede cortarse (H-56). Reglas de colocación: ver la nota de las pantallas 20 y 21.
+> **DECIDIDO 11-11-2026** (pregunta 12, ADR-0014, "Decisiones de Alejandro (11-11-2026)"): la V1 de tienda sale **sin ayudas ni puntos**. La victoria muestra tiempo y errores. Las ayudas y los puntos llegan en la **etapa 5B**, con el ranking del servidor.
+>
+> ACTUALIZACIÓN 04-11-2026: el header de hoy muestra solo **tiempo y errores**. Ayudas y puntos estimados no existen (**(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN**, auditoría 04-11-2026, pregunta 12, H-30). Las pistas son tarjetas compactas con scroll horizontal bajo el tablero, y el texto de cada una puede cortarse (H-56). Reglas de colocación: ver la nota de las pantallas 20 y 21.
 >
 > **DECIDIDO 04-11-2026** (auditoría, pregunta 10; ver ADR-0012): la partida se guarda siempre. Al salir, el reloj se pausa y el tablero se oculta durante la pausa. Vale mientras no haya ranking real y la regla se revisa antes de la etapa 5. Esto reemplaza lo de "el tiempo sigue corriendo si la app se minimiza" del doc 03.
 >
@@ -366,7 +372,9 @@ Muestra:
 
 ### 23. Panel de ayudas
 
-> **No existe en la app de hoy.** **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30): qué ayudas existen y cómo se puntúan.
+> **DECIDIDO 11-11-2026** (pregunta 12, ADR-0014, "Decisiones de Alejandro (11-11-2026)"): la V1 de tienda sale **sin ayudas ni puntos**. La victoria muestra tiempo y errores. Las ayudas y los puntos llegan en la **etapa 5B**, con el ranking del servidor.
+>
+> **No existe en la app de hoy.** **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30): qué ayudas existen y cómo se puntúan.
 
 Funcion:
 - listar ayudas disponibles

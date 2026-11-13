@@ -109,10 +109,13 @@ void main() {
   });
 
   group('banderas', () {
-    test('sin bandera el modo es none', () {
-      expect(kEnxBackendRaw, 'none');
-      expect(parseBackendMode(kEnxBackendRaw), BackendMode.none);
-      expect(ProviderContainer().read(backendModeProvider), BackendMode.none);
+    test('sin bandera el modo es firebase (corte de la ronda 5A.3)', () {
+      expect(kEnxBackendRaw, 'firebase');
+      expect(parseBackendMode(kEnxBackendRaw), BackendMode.firebase);
+      expect(
+        ProviderContainer().read(backendModeProvider),
+        BackendMode.firebase,
+      );
     });
 
     test('se leen los tres modos y lo desconocido cae en none', () {

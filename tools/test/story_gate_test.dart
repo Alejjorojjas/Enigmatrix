@@ -20,6 +20,45 @@ PuzzleCase conHistoria(CaseStory s, {String id = 'test'}) =>
     cabanaCase(cabanaPin, caseId: id).withStory(s);
 
 void main() {
+  // Decisión del dueño (11-11-2026): la V es exclusiva de la víctima.
+  group('letra V reservada a la víctima', () {
+    PuzzleCase conNombre(String nombre) {
+      final base = cabanaCase(cabanaPin);
+      final c = base.characters.first;
+      return PuzzleCase(
+        caseId: base.caseId,
+        map: base.map,
+        characters: [
+          Character(id: c.id, nameEs: nombre, female: c.female),
+          ...base.characters.skip(1),
+        ],
+        victimId: base.victimId,
+        clues: base.clues,
+        hasWeapon: base.hasWeapon,
+        difficulty: base.difficulty,
+        solution: base.solution,
+        metrics: base.metrics,
+        story: base.story,
+      );
+    }
+
+    test('un personaje cuyo nombre empieza por V no pasa la puerta de mundo',
+        () {
+      final rules = MapRules.generic;
+      final malo = conNombre('Valeria');
+      expect(reservedInitialProblems(malo), hasLength(1));
+      final check = checkCaseContent(malo, mapRules: rules);
+      expect(check.passed, isFalse);
+      expect(check.problems.join(' '), contains('víctima'));
+    });
+
+    test('con otro nombre pasa, y sin reglas de mundo no se exige', () {
+      expect(reservedInitialProblems(conNombre('Yolanda')), isEmpty);
+      expect(checkCaseContent(conNombre('Valeria')).problems,
+          isNot(contains(contains('víctima'))));
+    });
+  });
+
   group('contentTextProblems', () {
     test('un caso sin historia no tiene problemas de texto', () {
       expect(contentTextProblems(cabanaCase(cabanaPin)), isEmpty);

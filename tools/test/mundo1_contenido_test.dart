@@ -22,7 +22,7 @@ final retoPlan = Plan.fromFile(File('data/mundos/mansion-reto.json'));
 
 PuzzleCase load(String id) {
   final e = catalog.byId(id)!;
-  return loadCaseFile(File('${casesDir.path}/${e.archivo}'));
+  return loadFullCaseFile(File('${casesDir.path}/${e.archivo}'));
 }
 
 /// Huella del caso: pistas + solución. Dos casos con la misma huella serían
@@ -220,7 +220,8 @@ void main() {
         for (final c in plan.cases) {
           final b = buildPlanCase(c, world);
           expect(b.puzzle, isNotNull, reason: '${c.id}: ${b.rejections}');
-          final file = File('${casesDir.path}/${c.id}.json');
+          // La fuente completa (con solución) vive en casos-servidor.
+          final file = File('${findServerCasesDir().path}/${c.id}.json');
           final enDisco = jsonEncode(
               (jsonDecode(file.readAsStringSync()) as Map<String, dynamic>));
           expect(jsonEncode(b.puzzle!.toJson()), enDisco,

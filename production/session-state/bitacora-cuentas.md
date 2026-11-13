@@ -11,6 +11,90 @@ Cada sesión anota aquí lo que hizo, de lo más reciente arriba a lo más antig
 - Pendiente o dudas para la otra cuenta:
 ```
 
+## 11-11-2026 · cuenta principal · correcciones de la prueba con amigos (rama `fix/tablero-resuelto-victima-y-reglas`)
+
+- **Tablero resuelto.** "Seguir mirando el tablero" devuelve la cámara a la vista normal y muestra la solución completa con lo tachado. Las pistas y Mapa/Notas se pueden usar, el tablero no se puede editar, y se sale con la flecha o con "Ver resumen".
+- **Víctima con V.** Su ficha muestra siempre "V" (tokenInitial). Como resguardo, cualquier otro nombre con V mostraría dos letras.
+- **Ningún personaje con V** (decisión de Alejandro). Valeria se cambió por Yolanda en tools/data/mundos/mansion.json. La regla quedó en WorldData.problems() y en la puerta de contenido. Se regeneraron los 40 casos con las mismas semillas: los mapas y las soluciones son idénticos y solo cambian los nombres. Informe: production/revisiones/2026-11-11-contenido-sin-v.md.
+- **"Junto a" aclarado** en Cómo jugar (casilla vecina, misma habitación, vale sobre una alfombra o una cama), con el ejemplo de la silla y la alfombra.
+- **Pendiente anotado:** mapas más lógicos (Salón con varios sofás).
+- **Pruebas:** app 722, motor 345, catalog-check OK (61 casos).
+
+## 11-11-2026 · cuenta principal · revisión con Claude Code Game Studios y documentos al día
+
+- **Revisión con CCGS v1.3.0:** copia aparte en la rama `docs/revision-ccgs`, carpeta `Enigmatrix-revision-ccgs`. Configuración: sin agentes de motores, Opus pasado a Sonnet y modo de revisión solo. La revisión la corrió Alejandro en otra sesión y dejó 5 informes, que se copiaron a `production/revisiones/2026-11-11-*.md`.
+- **Decisiones de Alejandro (ADR-0014, sección 11-11):**
+  - V1 sin ayudas ni puntos (pregunta 12);
+  - modo daltónico en la V1.1, con validación antes de la publicación abierta;
+  - excepción de 48 px para las casillas del 9×9;
+  - Alejandro es el responsable de la política de privacidad. Falta el correo.
+- **Documentos:** el agente revisor-docs (Sonnet, esfuerzo bajo) corrigió 20 archivos de `docs/` con el informe como lista cerrada:
+  - estado al 11-11 en el roadmap;
+  - índice actualizado;
+  - preguntas 8, 12, 13, 14, 19 y 22 cerradas;
+  - H-40 y H-42 verificados;
+  - doc 11 al día;
+  - ADR-0005 superado.
+
+  El arquitecto revisó el alcance: solo `docs/` y nada borrado.
+- **Servidor:** workflow nuevo `.github/workflows/backend.yml` con las 95 pruebas en el emulador, en cada PR que toque `backend/`.
+- **Pendientes de Alejandro:**
+  - el correo de privacidad y la URL pública de la política;
+  - el intento oficial al borrar datos;
+  - el cierre del ranking semanal (5B);
+  - confirmar que el detector de redundancia queda diferido.
+
+## 11-11-2026 · cuenta principal · correcciones tras la revisión (misma rama)
+
+- **Pantallas simuladas (pregunta 18).** `kShowSimulated` y `showSimulatedProvider` en `dev_tools.dart`. Sin ENX_DEV, que es la versión de tienda, se ocultan vidas, racha, puntos, la pestaña Ranking, Tienda, Premium, las estadísticas simuladas y los ajustes "Próximamente". La hizo el agente frontend (Sonnet, esfuerzo medio). El arquitecto la revisó en web a 360×740.
+- **Política de privacidad** reescrita para la 0.8.1 (sin datos y con permisos de red reales). Faltan el responsable, el correo, la URL pública y el botón en la app.
+- **pubspec.lock versionado** (app, tools y prototipo). Los workflows usan --enforce-lockfile, y las acciones de terceros (r0adkll y subosito) quedaron fijadas por SHA.
+- **iOS** corre las pruebas en Linux antes de usar el Mac (needs: pruebas).
+- **Servidor.** Las transacciones abortadas por contención ahora devuelven "aborted" en vez de "internal". Ajustada la prueba de 20 envíos en paralelo; en el emulador pasa con el tope de 90 s.
+- **Pruebas:** app 715, servidor 95 (corridas dos veces), analyze limpio.
+
+## 11-11-2026 · cuenta principal · revisión del trabajo de la otra cuenta (rama `fix/creditos-seguridad-y-documentos`)
+
+- **Revisión:** el arquitecto corrió todo y pasa: motor 342, app 707, servidor 95 y la puerta de contenido con 61 casos. Los commits no llevan coautoría y no hay secretos en el repositorio ni en su historial. Los dos flujos de GitHub suben a las tiendas solo desde `main`.
+- **Aclaraciones de Alejandro (anotadas en el ADR-0017):**
+  - el orden de publicar pronto fue decisión suya;
+  - el nombre "Murdoku Diario" lo eligió él y ya averiguó que no hay problema;
+  - el iPhone se adelanta a propósito.
+- **Control de gasto** (pedido de Alejandro: los créditos se acaban rápido):
+  - la sección "Orquestación y control de gasto" de `CLAUDE.md` tiene las reglas: sesión principal en Sonnet para lo normal, sin ultracode, máximo 2 agentes a la vez, nunca Opus ni esfuerzo alto en agentes sin su permiso;
+  - los agentes bajaron de esfuerzo (`puzzle-engineer` y `frontend` de high a medium; `contenido-puzzles` y `revisor-docs` a low) y todos tienen tope de turnos.
+- **Agente de seguridad:** ya existía. Se reescribió como auditor de vulnerabilidades (app, servidor, flujos de GitHub, dependencias y privacidad), de solo lectura, y quedó **DORMIDO**: bloqueado con `Agent(seguridad)` en `.claude/settings.json`. Se activa cuando Alejandro diga "activa el agente de seguridad".
+- **Documentos corregidos:**
+  - permisos de red reales en los docs 15, 18 y 20 y en el ADR-0009;
+  - aviso en la política de privacidad;
+  - cifras y planes de `TRASPASO.md`;
+  - nombre público y regla de ramas en `CLAUDE.md`;
+  - estado del agente `backend`.
+- **Servidor:** el tiempo máximo de las pruebas del emulador pasó de 30 a 90 s, porque la prueba de 20 envíos en paralelo falló una vez con la máquina cargada.
+- **Incluye** el commit pendiente de la rama `docs/traspaso-app-store`.
+- **Pruebas:** sin cambios en el código de la app ni del motor.
+- **No se hizo (pendiente de decidir):**
+  - versionar `pubspec.lock`;
+  - fijar por SHA las acciones de terceros;
+  - que el flujo de iOS espere a las pruebas;
+  - ocultar las pantallas simuladas en la versión de tienda (pregunta 18);
+  - reescribir la política de privacidad.
+
+## 10-11-2026 · cuenta secundaria · traspaso (rama `docs/traspaso-app-store`)
+
+- **Qué se hizo:**
+  - **PR n.º 1 fusionado por Alejandro:** `claude/ios-app-store` (TestFlight, identificador iOS, iOS 15 y guía).
+  - **Ramas:** Alejandro pidió que no se llamen `claude/...`. Eligió `feature/`, `fix/`, `release/` y `docs/`, y quedó en TRASPASO y en la memoria.
+  - **Mac:** se le explicó a Alejandro (y a su amigo) que no hace falta un Mac propio, porque lo pone GitHub y el certificado se hace con OpenSSL en Windows.
+  - **Guía de Apple:** se le dieron los pasos 1 y 2. El 2 (crear la app en App Store Connect) quedó en curso.
+  - **Plan acordado:** todo enlazado. Cada PR aprobado sube a la prueba interna de Play y a TestFlight, cuando estén los pasos de Apple y la cuenta de servicio de Play.
+- **Archivos tocados:** `TRASPASO.md` (sección "ESTADO AL 10-11-2026" y nombres de rama), `active.md` y esta bitácora.
+- **Pruebas:** sin cambios de código.
+- **Pendiente para la próxima sesión:**
+  - confirmar los pasos 1 y 2 de Apple y seguir con el 3 (certificado);
+  - después, el paso 5 de la guía de Play (cuenta de servicio);
+  - por último, una prueba completa con un PR pequeño.
+
 ## 09-11-2026 · cuenta secundaria · App Store por TestFlight (rama `claude/ios-app-store`)
 
 - **Pedido de Alejandro:** "ayúdame a subirla a app store", después de que la prueba interna de Google Play ya funcionó.

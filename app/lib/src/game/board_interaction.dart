@@ -43,7 +43,7 @@ class BoardInteraction {
   // ---- retratos -----------------------------------------------------------------
 
   void selectSuspect(String charId) {
-    if (read().solved) return;
+    if (read().solved && !read().reviewing) return;
     controller.tapSuspect(charId);
     director.handle(
       SuspectTapped(charId, selected: read().selectedChar == charId),
@@ -99,6 +99,10 @@ class BoardInteraction {
       case ActionFeedback.pendingValidation:
       case ActionFeedback.rateLimited:
       case ActionFeedback.validationFailed:
+      case ActionFeedback.registrationRequired:
+      case ActionFeedback.wrongLimit:
+      case ActionFeedback.emailUnverified:
+      case ActionFeedback.serverOnly:
         break; // no salen de colocar
     }
   }

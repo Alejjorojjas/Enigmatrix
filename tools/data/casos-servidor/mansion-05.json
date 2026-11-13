@@ -1,0 +1,412 @@
+{
+  "caseId": "mansion-05",
+  "mapId": "mapa-casual-s8",
+  "map": {
+    "id": "mapa-casual-s8",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          19,
+          20,
+          21,
+          22,
+          23,
+          27,
+          28,
+          29,
+          30,
+          31,
+          36,
+          37,
+          38,
+          39,
+          44,
+          45
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          16,
+          24,
+          25,
+          26,
+          32,
+          33,
+          34,
+          35,
+          40,
+          48,
+          56
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
+          0,
+          1,
+          2,
+          8,
+          9,
+          10,
+          17,
+          18
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          41,
+          42,
+          43,
+          46,
+          47,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "mesa-1",
+        "type": "mesa",
+        "cells": [
+          44,
+          36
+        ]
+      },
+      {
+        "id": "silla-2",
+        "type": "silla",
+        "cells": [
+          38
+        ]
+      },
+      {
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          39
+        ]
+      },
+      {
+        "id": "chimenea-4",
+        "type": "chimenea",
+        "cells": [
+          37
+        ]
+      },
+      {
+        "id": "caja-5",
+        "type": "caja",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "caja-6",
+        "type": "caja",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "mesa-7",
+        "type": "mesa",
+        "cells": [
+          56,
+          48
+        ]
+      },
+      {
+        "id": "mesa-8",
+        "type": "mesa",
+        "cells": [
+          26,
+          34
+        ]
+      },
+      {
+        "id": "silla-9",
+        "type": "silla",
+        "cells": [
+          12
+        ]
+      },
+      {
+        "id": "mesa-10",
+        "type": "mesa",
+        "cells": [
+          15,
+          7
+        ]
+      },
+      {
+        "id": "silla-11",
+        "type": "silla",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "banera-12",
+        "type": "banera",
+        "cells": [
+          9
+        ]
+      },
+      {
+        "id": "alfombra-13",
+        "type": "alfombra",
+        "cells": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "planta-14",
+        "type": "planta",
+        "cells": [
+          8
+        ]
+      },
+      {
+        "id": "mesa-15",
+        "type": "mesa",
+        "cells": [
+          59,
+          51
+        ]
+      },
+      {
+        "id": "alfombra-16",
+        "type": "alfombra",
+        "cells": [
+          62,
+          61
+        ]
+      },
+      {
+        "id": "chimenea-17",
+        "type": "chimenea",
+        "cells": [
+          54
+        ]
+      },
+      {
+        "id": "planta-18",
+        "type": "planta",
+        "cells": [
+          60
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "bodega"
+      },
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras de podar",
+        "category": "cortante",
+        "area": "salon"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c7",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Damián",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Máximo",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Rodrigo",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Ulises",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Yolanda",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Zacarías",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "beside_object",
+      "subject": "c1",
+      "group": "banera"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "same_area",
+      "a": "c3",
+      "b": "c4"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "chimenea"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c5",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c7",
+      "group": "chimenea"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "mesa"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 1,
+      "c2": 11,
+      "c3": 20,
+      "c4": 29,
+      "c5": 38,
+      "c6": 40,
+      "c7": 55,
+      "c8": 58
+    },
+    "murderer": "c8"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El retrato cambiado de pared"
+    },
+    "premise": {
+      "es": "Un retrato muy antiguo ha cambiado de pared y nadie sabe quién lo movió. Esa misma noche, uno de los presentes es hallado sin vida."
+    }
+  }
+}

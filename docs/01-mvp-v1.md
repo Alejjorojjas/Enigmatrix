@@ -4,6 +4,8 @@
 >
 > **Aviso del prototipo (Fase 1).** En el juego de hoy las pantallas de vidas, racha, reto diario, ranking, tienda, premium y las estadísticas del perfil usan **datos simulados** (constantes escritas en `app/lib/src/ui/home_shell.dart`, aprobadas el 12-07-2026). No hay servidor ni cuentas. Lo que este documento dice sobre esas pantallas es la intención de la Fase 2 en adelante, no lo que la app hace hoy.
 >
+> **ACTUALIZACIÓN 11-11-2026 (revisión CCGS, `production/revisiones/2026-11-11-ccgs-design-review.md`, sección 5.3):** lo que sale en la **V1 de tienda** es: Android y iPhone (TestFlight primero), Principiante, Casual e Intermedio, Mundo 1 con 10 casos y 30 días de reto, **sin ayudas ni puntos**, sin tienda, premium ni ranking simulados (decisión 18), versión 0.8.1+11 "Murdoku Diario" (`com.murdokudiario.app`). Todo lo demás de este documento (cinco mundos, Experto y Élite, ranking, racha, vidas, premium, tienda) es visión de la etapa 5B o posterior. Prueba interna de Google Play publicada (versión 10007). Las preguntas 12, 13, 14, 19 y 22 de abajo ya están decididas; la V1 de tienda se describe en `docs/17-roadmap.md` (bloque "Estado verificado al 11-11-2026").
+>
 > **Decisiones ya tomadas por Alejandro el 04-11-2026**
 > - Plan por etapas aprobado (etapas 0 a 6 de la sección 4 de la auditoría).
 > - Protección del trabajo: autorizó **solo** el repositorio privado en GitHub (aún no creado). Todavía no autorizó el commit, sacar el proyecto de OneDrive ni cambiar la configuración de firma.
@@ -43,7 +45,9 @@ Lanzar una primera version jugable y competitiva de Enigmatrix enfocada en el mo
 - Prioridad inicial: `Android`
 - Se deja preparada la definicion para llevarlo despues a `iOS`
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 22, H-10): el 12-07-2026 Alejandro confirmó que tiene acceso a un Mac, así que ese punto está resuelto. Queda abierto **si el iPhone entra al lanzamiento**. Hoy la app nunca se ha compilado para iPhone.
+> **DECIDIDO 09-11-2026** (pregunta 22, ADR-0014 y ADR-0017): el **iPhone entra en la V1**, primero por TestFlight (Alejandro pidió subirla a la App Store). El flujo de TestFlight está listo pero apagado (`IOS_UPLOAD`); el proyecto iOS aún no se ha compilado en CI.
+>
+> **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 22, H-10): el 12-07-2026 Alejandro confirmó que tiene acceso a un Mac, así que ese punto está resuelto. Queda abierto **si el iPhone entra al lanzamiento**. Hoy la app nunca se ha compilado para iPhone.
 
 ### Cuenta y acceso
 - Inicio de sesion con `Google`
@@ -94,11 +98,15 @@ La dificultad del juego se organizara con estas etiquetas:
 
 La dificultad puede subir dentro de un mismo mundo.
 
-> ACTUALIZACIÓN 04-11-2026 (H-33): los tamaños de tablero vigentes son 6×6, 8×8, 9×9, 12×12 y 16×16 (`tools/lib/src/generator.dart`; spec 16, sección 1.1). Los casos incluidos hoy en la app son 20, de Principiante, Casual e Intermedio; **nunca se han generado casos Experto ni Élite**.
+> ACTUALIZACIÓN 04-11-2026 (H-33): los tamaños de tablero vigentes son 6×6, 8×8, 9×9, 12×12 y 16×16 (`tools/lib/src/generator.dart`; spec 16, sección 1.1). Los casos incluidos hoy en la app son 20, de Principiante, Casual e Intermedio; **nunca se han generado casos Experto ni Élite**. (SUPERADO 11-11-2026: hoy `app/assets/cases` tiene 60 casos, 11 de Principiante, 23 de Casual y 26 de Intermedio, más dos archivos de índice; sigue sin haber Experto ni Élite y no entran en la V1.)
 >
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 13, H-39): si Experto (12×12) y Élite (16×16) entran al lanzamiento. Este documento los da por incluidos.
+> **DECIDIDO 05-11-2026** (pregunta 13, ADR-0014): la V1 lleva solo **Principiante, Casual e Intermedio**. Experto y Élite llegan en una actualización, cuando el motor los genere de forma confiable.
 >
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14, H-49): con cuánto contenido se lanza. Este documento lista cinco mundos más el tutorial; la propuesta de la auditoría (solo recomendación) es el Mundo 1, La Mansión, con 10 casos más 30 días de reto diario.
+> **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 13, H-39): si Experto (12×12) y Élite (16×16) entran al lanzamiento. Este documento los da por incluidos.
+>
+> **DECIDIDO 05-11-2026** (pregunta 14, ADR-0014): se lanza con el **Mundo 1, "La Mansión", con 10 casos**, más **30 días de reto diario** con casos Casual e Intermedio. Los mundos 2 a 5 quedan para actualizaciones.
+>
+> **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 14, H-49): con cuánto contenido se lanza. Este documento lista cinco mundos más el tutorial; la propuesta de la auditoría (solo recomendación) es el Mundo 1, La Mansión, con 10 casos más 30 días de reto diario.
 
 ### Sistema de arma homicida
 - `Tutorial` e `Principiante`: no usan arma homicida
@@ -117,7 +125,9 @@ La dificultad puede subir dentro de un mismo mundo.
 - Puede haber varias armas potenciales visibles en dificultades altas, pero solo una es la correcta
 - El jugador sabe desde la pantalla previa si el caso incluye arma homicida
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 19, H-52): este documento dice que desde Intermedio el arma es parte normal del caso. En los casos de hoy el arma aparece solo en una parte pequeña de los casos y nunca por encima de Casual. Falta decidir si se usa más en el Mundo 1, desde Intermedio.
+> **DECIDIDO 05-11-2026** (pregunta 19, H-52, ADR-0014): el arma aparece en **Intermedio**, como dice este documento. En `app/assets/cases` hay 14 casos con arma: 12 Intermedio y 2 Casual (comprobado el 11-11-2026). H-52 cerrado.
+>
+> **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 19, H-52): este documento dice que desde Intermedio el arma es parte normal del caso. En los casos de hoy el arma aparece solo en una parte pequeña de los casos y nunca por encima de Casual. Falta decidir si se usa más en el Mundo 1, desde Intermedio.
 
 ### Lista base oficial de armas V1
 - Cuchillo de cocina
@@ -344,7 +354,9 @@ La dificultad puede subir dentro de un mismo mundo.
 >   - Validación final en servidor: etapa 5 del plan. En la Fase 1 la validación es local (riesgo aceptado, `docs/18-revision-seguridad-fase1.md`).
 >   - Detecciones avanzadas de fraude: Fase 2 en adelante.
 >
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30): ayudas y puntuación. Aunque el doc 08 propone números, **la app no tiene hoy ni ayudas ni puntos** (la pantalla de victoria solo muestra tiempo y errores) y la spec 16 no define cómo se calculan. La prueba de juego se hará sin ayudas; en la etapa 3 `puzzle-engineer` las especificaría.
+> **DECIDIDO 11-11-2026** (pregunta 12, ADR-0014, "Decisiones de Alejandro (11-11-2026)"): la V1 de tienda sale **sin ayudas ni puntos**. La victoria muestra tiempo y errores. Las ayudas y los puntos llegan en la **etapa 5B**, con el ranking del servidor.
+>
+> **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30): ayudas y puntuación. Aunque el doc 08 propone números, **la app no tiene hoy ni ayudas ni puntos** (la pantalla de victoria solo muestra tiempo y errores) y la spec 16 no define cómo se calculan. La prueba de juego se hará sin ayudas; en la etapa 3 `puzzle-engineer` las especificaría.
 
 **Lista original:**
 - Formula exacta de puntuacion

@@ -3,8 +3,9 @@ name: contenido-puzzles
 description: Usar para producir y curar el contenido jugable de Enigmatrix - generar lotes de casos con el CLI de tools/ para un mundo (por ejemplo Mundo 1 Mansión), asignar nombres y textos temáticos ES/EN, ordenar por dificultad creciente, registrar descartes y calibrar con el feedback de playtest. No modifica el motor. Triggers - mundo, generar casos, caso temático, nombres de sospechosos, narrativa de caso, calibrar dificultad, reto diario (contenido).
 tools: Read, Grep, Glob, Write, Edit, Bash
 model: sonnet
-effort: medium
+effort: low
 color: pink
+maxTurns: 40
 ---
 
 Eres el responsable de contenido de puzzles de Enigmatrix: conviertes el motor de `tools/` en campañas y retos que se sienten pensados, no aleatorios.

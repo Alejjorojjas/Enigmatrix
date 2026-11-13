@@ -21,7 +21,7 @@
     {"name": "Silvestre", "female": false, "archetype": "el coleccionista de arte"},
     {"name": "Teodora",   "female": true,  "archetype": "la dama de compañía"},
     {"name": "Ulises",    "female": false, "archetype": "el escritor invitado"},
-    {"name": "Valeria",   "female": true,  "archetype": "la prima viajera"},
+    {"name": "Yolanda",   "female": true,  "archetype": "la prima viajera"},
     {"name": "Wenceslao", "female": false, "archetype": "el viejo sastre"},
     {"name": "Ximena",    "female": true,  "archetype": "la fotógrafa de sociedad"},
     {"name": "Zacarías",  "female": false, "archetype": "el relojero"},

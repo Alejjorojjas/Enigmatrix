@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../game/game_config.dart';
 import 'backend_config.dart';
+import 'nickname_service.dart';
 import 'validation_client.dart';
 import 'validation_service.dart';
 
@@ -42,4 +43,17 @@ final validationServiceProvider = Provider<ValidationService?>((ref) {
     service.dispose();
   });
   return service;
+});
+
+/// Apodo y borrado de cuenta. Null si el modo es `none` (o no hay cliente):
+/// entonces no hay apodo, ni pantalla de apodo, ni borrado de cuenta.
+final nicknameServiceProvider = Provider<NicknameService?>((ref) {
+  final mode = ref.watch(backendModeProvider);
+  final client = ref.watch(validationClientProvider);
+  if (!mode.usesServer || client == null) return null;
+  return NicknameService(
+    client: client,
+    onAccountDeleted: () async =>
+        ref.read(validationServiceProvider)?.resetAfterAccountDeletion(),
+  );
 });

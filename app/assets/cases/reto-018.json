@@ -364,8 +364,8 @@
     },
     {
       "id": "c9",
-      "name_es": "Valeria",
-      "female": true
+      "name_es": "Wenceslao",
+      "female": false
     }
   ],
   "clues": [
@@ -481,20 +481,6 @@
       "area": "sala-de-musica"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 2,
-      "c2": 9,
-      "c3": 25,
-      "c4": 31,
-      "c5": 41,
-      "c6": 48,
-      "c7": 62,
-      "c8": 64,
-      "c9": 78
-    },
-    "murderer": "c4"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

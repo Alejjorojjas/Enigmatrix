@@ -282,12 +282,12 @@
     },
     {
       "id": "c6",
-      "name_es": "Valeria",
-      "female": true
+      "name_es": "Wenceslao",
+      "female": false
     },
     {
       "id": "c7",
-      "name_es": "Ximena",
+      "name_es": "Yolanda",
       "female": true
     },
     {
@@ -382,19 +382,6 @@
       ]
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 1,
-      "c2": 11,
-      "c3": 20,
-      "c4": 29,
-      "c5": 38,
-      "c6": 40,
-      "c7": 55,
-      "c8": 58
-    },
-    "murderer": "c8"
-  },
   "metrics": {
     "deductionSteps": 7,
     "maxTier": 3,

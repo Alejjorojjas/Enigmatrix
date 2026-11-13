@@ -370,17 +370,17 @@
     },
     {
       "id": "c7",
-      "name_es": "Valeria",
-      "female": true
-    },
-    {
-      "id": "c8",
       "name_es": "Wenceslao",
       "female": false
     },
     {
-      "id": "c9",
+      "id": "c8",
       "name_es": "Ximena",
+      "female": true
+    },
+    {
+      "id": "c9",
+      "name_es": "Yolanda",
       "female": true
     }
   ],
@@ -475,21 +475,6 @@
       ]
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 3,
-      "c2": 9,
-      "c3": 26,
-      "c4": 28,
-      "c5": 41,
-      "c6": 51,
-      "c7": 56,
-      "c8": 67,
-      "c9": 79
-    },
-    "murderer": "c8",
-    "lethalWeapon": "cordon"
-  },
   "metrics": {
     "deductionSteps": 12,
     "maxTier": 4,

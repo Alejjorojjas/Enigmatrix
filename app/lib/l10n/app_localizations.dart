@@ -1249,7 +1249,7 @@ abstract class AppLocalizations {
   /// Línea 2 de la tercera página (las pistas) del diálogo de cómo jugar.
   ///
   /// In es, this message translates to:
-  /// **'\"Junto a\" significa en una casilla vecina (arriba, abajo, izquierda o derecha) de la misma habitación.'**
+  /// **'\"Junto a\" un mueble es estar en una casilla VECINA (arriba, abajo, izquierda o derecha, nunca en diagonal) de ese mueble y en la misma habitación. Encima del mismo mueble no cuenta, pero sí una casilla vecina con alfombra, cama u otro mueble donde se puede estar. Ejemplo: si una alfombra queda al lado de una silla y la pista dice \"José estaba junto a la silla\", José puede estar sobre esa alfombra.'**
   String get tutorialDialogCluesLine2;
 
   /// Línea 3 de la tercera página (las pistas) del diálogo de cómo jugar.
@@ -1699,13 +1699,13 @@ abstract class AppLocalizations {
   /// Paso 4 del tutorial: confirmar a la víctima (herramienta Confirmar ya activa).
   ///
   /// In es, this message translates to:
-  /// **'{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, toca esa casilla.'**
+  /// **'{area}: la única casilla vecina a una cama, sin ser la cama, es {cell}. Con {victim} elegida, toca esa casilla.'**
   String tutorialCoachStep3Place(String area, String cell, String victim);
 
   /// Paso 4 del tutorial: confirmar a la víctima (falta elegir la herramienta).
   ///
   /// In es, this message translates to:
-  /// **'{area}: la única casilla junto a una cama sin ser cama es {cell}. Con {victim} elegida, pulsa CONFIRMAR y toca esa casilla.'**
+  /// **'{area}: la única casilla vecina a una cama, sin ser la cama, es {cell}. Con {victim} elegida, pulsa CONFIRMAR y toca esa casilla.'**
   String tutorialCoachStep3Tool(String area, String cell, String victim);
 
   /// Paso 5 del tutorial: la X automática.
@@ -1920,6 +1920,12 @@ abstract class AppLocalizations {
   /// **'Demasiados intentos. Espera un momento.'**
   String get validationRateLimited;
 
+  /// Aviso de desarrollo (ENX_BACKEND=none): un caso publicado no trae su solución y solo se puede validar en el servidor.
+  ///
+  /// In es, this message translates to:
+  /// **'Este caso se valida en el servidor. Esta compilación no tiene servidor conectado.'**
+  String get solveServerOnly;
+
   /// Aviso cuando el servidor no acepta el envío de Resolver.
   ///
   /// In es, this message translates to:
@@ -1961,6 +1967,660 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cancelar envío'**
   String get validationCancelSubmit;
+
+  /// Título de la pantalla de apodo del primer arranque.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo te llamamos?'**
+  String get nickScreenTitle;
+
+  /// Explicación de la pantalla de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige un apodo para el ranking del reto diario. Lo verán los demás jugadores: no uses tu nombre real ni datos personales.'**
+  String get nickScreenBody;
+
+  /// Etiqueta del campo de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Apodo'**
+  String get nickFieldLabel;
+
+  /// Ayuda bajo el campo de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'De 3 a 16 caracteres: letras, números, espacio, punto, guion y guion bajo.'**
+  String get nickHelper;
+
+  /// Botón que guarda el apodo en el primer arranque.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get nickContinue;
+
+  /// Botón que guarda el apodo nuevo en Configuración.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar apodo'**
+  String get nickSaveChange;
+
+  /// Texto del botón mientras se guarda el apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardando…'**
+  String get nickSaving;
+
+  /// Error: apodo demasiado corto.
+  ///
+  /// In es, this message translates to:
+  /// **'El apodo debe tener al menos 3 caracteres.'**
+  String get nickTooShort;
+
+  /// Error: apodo demasiado largo.
+  ///
+  /// In es, this message translates to:
+  /// **'El apodo puede tener hasta 16 caracteres.'**
+  String get nickTooLong;
+
+  /// Error: el apodo tiene caracteres no permitidos.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa solo letras, números, espacio, punto, guion y guion bajo.'**
+  String get nickInvalidChars;
+
+  /// Error genérico cuando el servidor rechaza el apodo sin dar motivo.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar ese apodo. Prueba con otro.'**
+  String get nickRejected;
+
+  /// Aviso al guardar el apodo sin conexión.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión: tu apodo quedó guardado en el teléfono y se enviará cuando haya señal.'**
+  String get nickOfflineNote;
+
+  /// Fila de Configuración que abre el cambio de apodo.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar apodo'**
+  String get settingsChangeNick;
+
+  /// Fila de Configuración que borra la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar mi cuenta y mis datos'**
+  String get settingsDeleteAccount;
+
+  /// Explicación de la fila de borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Elimina tu apodo, tus entradas del ranking y tu progreso.'**
+  String get settingsDeleteAccountHint;
+
+  /// Título de la confirmación de borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Borrar tu cuenta?'**
+  String get deleteAccountTitle;
+
+  /// Cuerpo de la confirmación de borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Se borrarán tu apodo, tus entradas del ranking y tu progreso, en el servidor y en este teléfono. No se puede deshacer.'**
+  String get deleteAccountBody;
+
+  /// Botón que confirma el borrado de la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar todo'**
+  String get deleteAccountConfirm;
+
+  /// Aviso tras borrar la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu cuenta y tus datos se borraron.'**
+  String get deleteAccountDone;
+
+  /// Aviso si falla el borrado de la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo borrar. Revisa tu conexión e inténtalo de nuevo.'**
+  String get deleteAccountFailed;
+
+  /// Aviso cuando un invitado pide un caso que exige registro.
+  ///
+  /// In es, this message translates to:
+  /// **'Regístrate para seguir jugando'**
+  String get validationRegisterRequired;
+
+  /// Título de la pantalla de registro.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea tu cuenta'**
+  String get registerTitle;
+
+  /// Explicación en la pantalla de registro.
+  ///
+  /// In es, this message translates to:
+  /// **'Con una cuenta sigues la campaña, juegas el reto diario y entras al ranking. Lo que ya jugaste se conserva.'**
+  String get registerBody;
+
+  /// Botón de registro con Google.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar con Google'**
+  String get registerGoogle;
+
+  /// Botón de registro con Apple (solo iPhone).
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar con Apple'**
+  String get registerApple;
+
+  /// Separador entre los botones de Google/Apple y el correo.
+  ///
+  /// In es, this message translates to:
+  /// **'o con tu correo'**
+  String get registerOr;
+
+  /// Pestaña para crear cuenta con correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get registerModeCreate;
+
+  /// Pestaña para iniciar sesión con correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya tengo cuenta'**
+  String get registerModeSignIn;
+
+  /// Campo de correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo'**
+  String get registerEmailLabel;
+
+  /// Campo de contraseña.
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña'**
+  String get registerPasswordLabel;
+
+  /// Ayuda del campo de contraseña al crear la cuenta.
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo 8 caracteres'**
+  String get registerPasswordHelper;
+
+  /// Botón que crea la cuenta con correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get registerSubmitCreate;
+
+  /// Botón que inicia sesión con correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar sesión'**
+  String get registerSubmitSignIn;
+
+  /// Texto del botón mientras se registra.
+  ///
+  /// In es, this message translates to:
+  /// **'Un momento...'**
+  String get registerBusy;
+
+  /// Enlace para recuperar la contraseña.
+  ///
+  /// In es, this message translates to:
+  /// **'Olvidé mi contraseña'**
+  String get registerForgot;
+
+  /// Aviso tras pedir el cambio de contraseña.
+  ///
+  /// In es, this message translates to:
+  /// **'Si ese correo tiene cuenta, te enviamos un enlace para cambiar la contraseña.'**
+  String get registerResetSent;
+
+  /// Error si piden recuperar la contraseña sin correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu correo para enviarte el enlace.'**
+  String get registerResetNeedsEmail;
+
+  /// Error de correo mal escrito.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un correo válido.'**
+  String get registerErrEmailInvalid;
+
+  /// Error de contraseña corta.
+  ///
+  /// In es, this message translates to:
+  /// **'La contraseña debe tener al menos 8 caracteres.'**
+  String get registerErrPasswordShort;
+
+  /// Aviso tras crear la cuenta con correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviamos un correo para verificar tu cuenta.'**
+  String get registerVerificationSent;
+
+  /// Aviso cuando la cuenta ya existía y el progreso de invitado se pierde.
+  ///
+  /// In es, this message translates to:
+  /// **'Entraste en tu cuenta existente. Lo que jugaste como invitado no se pasó a ella.'**
+  String get registerReplacedGuest;
+
+  /// Aviso tras registrarse.
+  ///
+  /// In es, this message translates to:
+  /// **'Listo, ya tienes cuenta.'**
+  String get registerDone;
+
+  /// Error de Firebase: correo inválido.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese correo no es válido.'**
+  String get authErrInvalidEmail;
+
+  /// Error de Firebase: credenciales.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo o contraseña incorrectos.'**
+  String get authErrWrongCredentials;
+
+  /// Error de Firebase: correo ya registrado.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese correo ya tiene una cuenta. Inicia sesión con su contraseña o con el método que usaste.'**
+  String get authErrEmailInUse;
+
+  /// Error de Firebase: contraseña débil.
+  ///
+  /// In es, this message translates to:
+  /// **'La contraseña es muy débil. Usa al menos 8 caracteres.'**
+  String get authErrWeakPassword;
+
+  /// Error de Firebase: cuenta deshabilitada.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta cuenta está deshabilitada.'**
+  String get authErrUserDisabled;
+
+  /// Error de Firebase: red.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión. Revisa tu internet e inténtalo de nuevo.'**
+  String get authErrNetwork;
+
+  /// Error de Firebase: demasiados intentos.
+  ///
+  /// In es, this message translates to:
+  /// **'Demasiados intentos. Espera un momento e inténtalo de nuevo.'**
+  String get authErrTooManyRequests;
+
+  /// Error de Firebase: método no habilitado.
+  ///
+  /// In es, this message translates to:
+  /// **'Este método de ingreso no está disponible por ahora.'**
+  String get authErrNotAllowed;
+
+  /// Apple fuera de iPhone.
+  ///
+  /// In es, this message translates to:
+  /// **'Este método no está disponible en tu teléfono.'**
+  String get authErrUnavailable;
+
+  /// Error genérico de registro.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo completar. Inténtalo de nuevo.'**
+  String get authErrUnknown;
+
+  /// Título de la invitación a registrarse.
+  ///
+  /// In es, this message translates to:
+  /// **'Regístrate para seguir jugando'**
+  String get registerInviteTitle;
+
+  /// Cuerpo de la invitación a registrarse.
+  ///
+  /// In es, this message translates to:
+  /// **'Los dos primeros casos son gratis. Con una cuenta sigues la campaña, juegas el reto diario y entras al ranking.'**
+  String get registerInviteBody;
+
+  /// Botón de la invitación.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrarme'**
+  String get registerInviteAction;
+
+  /// Botón para cerrar la invitación.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no'**
+  String get registerInviteLater;
+
+  /// Botón y etiqueta de un caso bloqueado para invitados.
+  ///
+  /// In es, this message translates to:
+  /// **'Regístrate para seguir'**
+  String get caseListRegisterToContinue;
+
+  /// Etiqueta corta sobre una ficha bloqueada.
+  ///
+  /// In es, this message translates to:
+  /// **'Con cuenta'**
+  String get caseListLockedTag;
+
+  /// Fila de Configuración para invitados.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar sesión / Registrarse'**
+  String get settingsSignIn;
+
+  /// Correo de la cuenta en Configuración.
+  ///
+  /// In es, this message translates to:
+  /// **'Sesión iniciada con {email}'**
+  String settingsSignedInAs(String email);
+
+  /// Configuración cuando la cuenta no tiene correo (Apple oculto).
+  ///
+  /// In es, this message translates to:
+  /// **'Sesión iniciada'**
+  String get settingsSignedIn;
+
+  /// Fila de Configuración.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar sesión'**
+  String get settingsSignOut;
+
+  /// Título del diálogo.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cerrar sesión?'**
+  String get settingsSignOutTitle;
+
+  /// Cuerpo del diálogo.
+  ///
+  /// In es, this message translates to:
+  /// **'Volverás a ser invitado en este teléfono. Podrás iniciar sesión otra vez cuando quieras.'**
+  String get settingsSignOutBody;
+
+  /// Error al cerrar sesión.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo cerrar la sesión. Inténtalo de nuevo.'**
+  String get settingsSignOutFailed;
+
+  /// Mientras se consulta el reto del día.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando el reto de hoy…'**
+  String get dailyLoading;
+
+  /// Botón para volver a intentar una carga.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get dailyRetry;
+
+  /// Aviso antes de empezar el reto diario con ranking.
+  ///
+  /// In es, this message translates to:
+  /// **'El reloj del reto no se detiene aunque salgas de la app.'**
+  String get dailyClockWarning;
+
+  /// Explica cómo se mide el tiempo y la penalización.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu tiempo se mide en el servidor desde que empiezas. Cada error suma {seconds} segundos a tu total.'**
+  String dailyPenaltyNote(int seconds);
+
+  /// Botón para empezar el reto del día.
+  ///
+  /// In es, this message translates to:
+  /// **'Empezar el reto'**
+  String get dailyStartButton;
+
+  /// Botón para volver al reto del día ya empezado.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar el reto'**
+  String get dailyContinueButton;
+
+  /// Título del aviso previo al reto.
+  ///
+  /// In es, this message translates to:
+  /// **'Antes de empezar'**
+  String get dailyWarningTitle;
+
+  /// Botón para no empezar el reto aún.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no'**
+  String get dailyWarningStay;
+
+  /// Botón para confirmar el inicio del reto.
+  ///
+  /// In es, this message translates to:
+  /// **'Empezar ahora'**
+  String get dailyWarningGo;
+
+  /// Estado del reto ya empezado y sin resolver.
+  ///
+  /// In es, this message translates to:
+  /// **'Reto en curso'**
+  String get dailyInProgress;
+
+  /// Tiempo transcurrido del reto en curso (mm:ss).
+  ///
+  /// In es, this message translates to:
+  /// **'Llevas {time}'**
+  String dailyElapsedLine(String time);
+
+  /// Estado del reto del día ya resuelto.
+  ///
+  /// In es, this message translates to:
+  /// **'Reto de hoy resuelto'**
+  String get dailySolvedTitle;
+
+  /// Rótulo del tiempo más la penalización por errores.
+  ///
+  /// In es, this message translates to:
+  /// **'Total'**
+  String get dailyScoreLabel;
+
+  /// Rótulo del puesto en el ranking del día.
+  ///
+  /// In es, this message translates to:
+  /// **'Puesto'**
+  String get dailyRankLabel;
+
+  /// Valor cuando el jugador no entró al ranking.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin puesto'**
+  String get dailyNoRankShort;
+
+  /// Aviso cuando la partida no entró al ranking.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta vez no entraste al ranking del día.'**
+  String get dailyNoRank;
+
+  /// Botón para abrir el ranking del día.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver ranking'**
+  String get dailySeeRanking;
+
+  /// Título de la invitación a registrarse en la pestaña Reto.
+  ///
+  /// In es, this message translates to:
+  /// **'El reto diario es para detectives registrados'**
+  String get dailyGuestTitle;
+
+  /// Cuerpo de la invitación a registrarse.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea tu cuenta para jugar el reto y competir en el ranking. No pierdes lo que ya jugaste.'**
+  String get dailyGuestBody;
+
+  /// Botón de la invitación a registrarse.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrarme'**
+  String get dailyGuestButton;
+
+  /// Aviso cuando no hay red en la pestaña Reto.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión: puedes jugar el reto de hoy, pero no entrará al ranking.'**
+  String get dailyOfflineNote;
+
+  /// Aviso cuando el servidor respondió con un error.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos consultar el reto en el servidor. Puedes jugar, pero no entrará al ranking.'**
+  String get dailyServerErrorNote;
+
+  /// Error al cargar la pestaña Reto.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar el reto. Revisa tu conexión y vuelve a intentar.'**
+  String get dailyLoadError;
+
+  /// Subtítulo del ranking: fecha del reto (dd-mm-aaaa).
+  ///
+  /// In es, this message translates to:
+  /// **'Reto del {date}'**
+  String rankingTodaySub(String date);
+
+  /// Estado vacío del ranking del día.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía nadie ha resuelto el reto de hoy. ¡Sé el primero!'**
+  String get rankingEmpty;
+
+  /// Error al cargar el ranking.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar el ranking. Revisa tu conexión y vuelve a intentar.'**
+  String get rankingLoadError;
+
+  /// El ranking no se puede consultar en esta sesión.
+  ///
+  /// In es, this message translates to:
+  /// **'El ranking no está disponible por ahora.'**
+  String get rankingUnavailable;
+
+  /// Detalle de una fila del ranking: tiempo, errores y total.
+  ///
+  /// In es, this message translates to:
+  /// **'{time} · {errors, plural, =0{sin errores} =1{1 error} other{{errors} errores}} · total {total}'**
+  String rankingRowDetail(String time, int errors, String total);
+
+  /// Etiqueta de la fila propia en el ranking.
+  ///
+  /// In es, this message translates to:
+  /// **'Tú'**
+  String get rankingYouTag;
+
+  /// Título de la fila propia que queda fuera del top.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu puesto'**
+  String get rankingYourPlace;
+
+  /// Explica cómo se calcula el total del ranking.
+  ///
+  /// In es, this message translates to:
+  /// **'Total = tiempo + {seconds} s por error.'**
+  String rankingPenaltyNote(int seconds);
+
+  /// Aviso a invitados en el ranking.
+  ///
+  /// In es, this message translates to:
+  /// **'Regístrate para aparecer en el ranking.'**
+  String get rankingGuestNote;
+
+  /// Botón para cerrar el ranking abierto desde la victoria.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get rankingClose;
+
+  /// Aviso cuando el servidor ya no deja enviar más intentos fallidos del reto de hoy.
+  ///
+  /// In es, this message translates to:
+  /// **'Llegaste al máximo de intentos del reto de hoy.'**
+  String get validationWrongLimit;
+
+  /// Aviso cuando el reto exige un correo verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica tu correo para jugar el reto.'**
+  String get validationEmailUnverified;
+
+  /// Título del aviso de verificación de correo.
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviamos un correo de verificación'**
+  String get emailVerifyTitle;
+
+  /// Botón que comprueba si el correo ya quedó verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya lo verifiqué'**
+  String get emailVerifyDone;
+
+  /// Botón que reenvía el correo de verificación.
+  ///
+  /// In es, this message translates to:
+  /// **'Reenviar correo'**
+  String get emailVerifyResend;
+
+  /// Aviso si el correo aún no está verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no aparece verificado. Revisa tu correo e inténtalo otra vez.'**
+  String get emailVerifyNotYet;
+
+  /// Confirmación de que se reenvió el correo de verificación.
+  ///
+  /// In es, this message translates to:
+  /// **'Te reenviamos el correo.'**
+  String get emailVerifyResent;
+
+  /// Confirmación de que el correo ya está verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Correo verificado!'**
+  String get emailVerifyVerified;
+
+  /// Botón para seguir sin verificar el correo todavía.
+  ///
+  /// In es, this message translates to:
+  /// **'Más tarde'**
+  String get emailVerifyLater;
+
+  /// Título en la pestaña Reto cuando el correo no está verificado.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica tu correo para jugar el reto'**
+  String get dailyVerifyTitle;
+
+  /// Explica qué hacer con el correo de verificación.
+  ///
+  /// In es, this message translates to:
+  /// **'Abre el mensaje que llegó a {email} y toca el enlace. Después vuelve aquí.'**
+  String emailVerifyBody(String email);
 }
 
 class _AppLocalizationsDelegate

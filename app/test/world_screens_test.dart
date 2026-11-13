@@ -66,6 +66,8 @@ Future<GoRouter> _pumpApp(
       overrides: [
         ...contentOverrides(_world, challenges: _retos, bank: _bank),
         devToolsProvider.overrideWithValue(devTools),
+        // Versión de pruebas internas: con lo simulado a la vista.
+        showSimulatedProvider.overrideWithValue(true),
         initialSettingsProvider.overrideWithValue(AppSettings(skinId: skin)),
       ],
       child: MaterialApp.router(
@@ -122,33 +124,33 @@ void main() {
   });
 
   group('día del reto', () {
-    test('el 01-11-2026 es el día 1 y avanza un día por fecha', () {
-      expect(challengeDayFor(DateTime(2026, 11, 1)), 1);
-      expect(challengeDayFor(DateTime(2026, 11, 2)), 2);
-      expect(challengeDayFor(DateTime(2026, 11, 5)), 5);
-      expect(challengeDayFor(DateTime(2026, 11, 30)), 30);
+    test('el 16-11-2026 es el día 1 y avanza un día por fecha', () {
+      expect(challengeDayFor(DateTime(2026, 11, 16)), 1);
+      expect(challengeDayFor(DateTime(2026, 11, 17)), 2);
+      expect(challengeDayFor(DateTime(2026, 11, 20)), 5);
+      expect(challengeDayFor(DateTime(2026, 12, 15)), 30);
     });
 
     test('después del día 30 vuelve al 1 (mod 30)', () {
-      expect(challengeDayFor(DateTime(2026, 12, 1)), 1);
-      expect(challengeDayFor(DateTime(2026, 12, 2)), 2);
-      expect(challengeDayFor(DateTime(2026, 12, 31)), 1);
+      expect(challengeDayFor(DateTime(2026, 12, 16)), 1);
+      expect(challengeDayFor(DateTime(2026, 12, 17)), 2);
+      expect(challengeDayFor(DateTime(2027, 1, 15)), 1);
     });
 
     test('cuenta días de calendario: la hora no mueve el día', () {
-      expect(challengeDayFor(DateTime(2026, 11, 5, 0, 0, 1)), 5);
-      expect(challengeDayFor(DateTime(2026, 11, 5, 23, 59, 59)), 5);
+      expect(challengeDayFor(DateTime(2026, 11, 20, 0, 0, 1)), 5);
+      expect(challengeDayFor(DateTime(2026, 11, 20, 23, 59, 59)), 5);
       // A través de un cambio de hora (marzo) sigue contando fechas.
       final days = DateTime.utc(
         2027,
         3,
         29,
-      ).difference(DateTime.utc(2026, 11, 1)).inDays;
+      ).difference(DateTime.utc(2026, 11, 16)).inDays;
       expect(challengeDayFor(DateTime(2027, 3, 29)), days % 30 + 1);
     });
 
-    test('antes del 01-11-2026 también da un día entre 1 y 30', () {
-      expect(challengeDayFor(DateTime(2026, 10, 31)), 30);
+    test('antes del 16-11-2026 también da un día entre 1 y 30', () {
+      expect(challengeDayFor(DateTime(2026, 11, 15)), 30);
       for (var d = 0; d < 90; d++) {
         final date = DateTime(2026, 8, 1).add(Duration(days: d));
         expect(challengeDayFor(date), inInclusiveRange(1, 30));
@@ -156,10 +158,10 @@ void main() {
     });
 
     test('todaysChallenge devuelve el reto de ese día', () {
-      final c = todaysChallenge(_retos, DateTime(2026, 11, 8));
+      final c = todaysChallenge(_retos, DateTime(2026, 11, 23));
       expect(c?.day, 8);
       expect(c?.puzzle.caseId, 'reto-008');
-      expect(todaysChallenge(const [], DateTime(2026, 11, 8)), isNull);
+      expect(todaysChallenge(const [], DateTime(2026, 11, 23)), isNull);
     });
   });
 

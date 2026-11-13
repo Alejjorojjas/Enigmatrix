@@ -384,8 +384,8 @@
     },
     {
       "id": "c8",
-      "name_es": "Valeria",
-      "female": true
+      "name_es": "Wenceslao",
+      "female": false
     },
     {
       "id": "c9",
@@ -484,21 +484,6 @@
       "group": "alfombra"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 8,
-      "c2": 14,
-      "c3": 18,
-      "c4": 29,
-      "c5": 42,
-      "c6": 49,
-      "c7": 61,
-      "c8": 66,
-      "c9": 73
-    },
-    "murderer": "c5",
-    "lethalWeapon": "pisapapeles"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

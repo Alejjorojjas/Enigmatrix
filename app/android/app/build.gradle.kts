@@ -8,6 +8,15 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Firebase: el plugin exige google-services.json y ese archivo no va a git
+// (ver .gitignore; en CI se escribe desde un secreto). Sin el archivo la app
+// compila igual y solo sirve con ENX_BACKEND=none o emulator.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    logger.warn("google-services.json no existe: Firebase real no estará disponible en este build.")
+}
+
 // Firma de subida para Play Store. El keystore y key.properties NO van al
 // repositorio (ver .gitignore); respaldar ambos fuera del PC.
 val keystoreProperties = Properties()

@@ -418,10 +418,10 @@ class PiecesLayer extends Component with HasGameReference<BoardGame> {
 
   bool _femaleOf(String charId) => game.session.pc.character(charId).female;
 
-  String _initialOf(String charId) {
-    final name = game.session.pc.character(charId).nameEs;
-    return name.isEmpty ? '?' : String.fromCharCode(name.runes.first).toUpperCase();
-  }
+  String _initialOf(String charId) => tokenInitial(
+    game.session.pc.character(charId).nameEs,
+    victim: charId == game.session.pc.victimId,
+  );
 
   void _drawToken(ui.Canvas canvas, int cellIndex, String charId) {
     final game = this.game;

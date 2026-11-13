@@ -36,6 +36,14 @@ class WorldConfig {
   int get hashCode => Object.hash(id, available);
 }
 
+/// Inicio del ciclo de retos por defecto: el mismo día que usa el servidor
+/// (`config/server.dailyStartDate`, backend/functions/src/daily.ts). Es la
+/// única copia en el código; `game_config.json` la repite solo como dato.
+const String kDefaultChallengeStartDate = '2026-11-16';
+
+/// Días del ciclo de retos por defecto (`reto-001` a `reto-030`).
+const int kDefaultChallengeDays = 30;
+
 @immutable
 class GameConfig {
   const GameConfig({
@@ -43,8 +51,8 @@ class GameConfig {
     this.periodicSaveSeconds = 15,
     this.wrongSolveLockSeconds = 3,
     this.splashMinMillis = 1700,
-    this.challengeStartDate = '2026-11-01',
-    this.challengeDays = 30,
+    this.challengeStartDate = kDefaultChallengeStartDate,
+    this.challengeDays = kDefaultChallengeDays,
     this.maxLives = 5,
     this.serverTimeoutSeconds = 15,
     this.pendingRetrySeconds = 60,
@@ -99,7 +107,7 @@ class GameConfig {
 
   /// Fecha de inicio del reto como [DateTime] local (medianoche).
   DateTime get challengeStart =>
-      _parseDate(challengeStartDate) ?? DateTime(2026, 11, 1);
+      _parseDate(challengeStartDate) ?? DateTime(2026, 11, 16);
 
   bool isV1Difficulty(String difficulty) => v1Difficulties.contains(difficulty);
 

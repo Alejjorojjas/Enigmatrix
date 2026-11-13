@@ -100,6 +100,8 @@ Future<GoRouter> _pumpShell(
       overrides: [
         ...contentOverrides(_world, challenges: loadAllChallenges()),
         devToolsProvider.overrideWithValue(devTools),
+        // Versión de pruebas internas: con lo simulado a la vista.
+        showSimulatedProvider.overrideWithValue(true),
         initialSettingsProvider.overrideWithValue(
           AppSettings(skinId: skin, themeMode: mode),
         ),

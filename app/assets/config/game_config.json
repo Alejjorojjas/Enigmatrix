@@ -3,7 +3,7 @@
   "periodicSaveSeconds": 15,
   "wrongSolveLockSeconds": 3,
   "splashMinMillis": 1700,
-  "challengeStartDate": "2026-11-01",
+  "challengeStartDate": "2026-11-16",
   "challengeDays": 30,
   "maxLives": 5,
   "serverTimeoutSeconds": 15,

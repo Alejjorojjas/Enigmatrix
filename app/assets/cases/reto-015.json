@@ -316,8 +316,8 @@
     },
     {
       "id": "c8",
-      "name_es": "Wenceslao",
-      "female": false
+      "name_es": "Ximena",
+      "female": true
     }
   ],
   "clues": [
@@ -395,19 +395,6 @@
       ]
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 7,
-      "c2": 13,
-      "c3": 20,
-      "c4": 25,
-      "c5": 35,
-      "c6": 40,
-      "c7": 54,
-      "c8": 58
-    },
-    "murderer": "c1"
-  },
   "metrics": {
     "deductionSteps": 8,
     "maxTier": 3,

@@ -55,13 +55,27 @@ class CaseCheck {
 List<String> mapCoherenceProblems(PuzzleCase pc, MapRules rules) =>
     [for (final p in rules.problemsOf(pc.map)) 'mapa: $p'];
 
+/// Problemas de nombres reservados: ningún personaje de un caso publicado
+/// empieza por V. Decisión del dueño (11-11-2026): la V es exclusiva de la
+/// víctima, cuya ficha muestra siempre "V". Se exige a los casos de los
+/// mundos (campaña y retos); el banco de pruebas y el tutorial no se regeneran.
+List<String> reservedInitialProblems(PuzzleCase pc) => [
+      for (final c in pc.characters)
+        if (startsWithVictimInitial(c.nameEs))
+          'personaje con nombre que empieza por $kVictimInitial '
+              '(${c.nameEs}): la V es exclusiva de la víctima'
+    ];
+
 /// [mapRules]: si se da, el mapa también debe cumplir las reglas de
 /// coherencia (05-11-2026). Null = no se comprueban (banco de pruebas,
 /// tutorial y fixtures a mano).
 CaseCheck checkCaseContent(PuzzleCase pc,
     {SolverLimits limits = SolverLimits.standard, MapRules? mapRules}) {
   final problems = <String>[];
-  if (mapRules != null) problems.addAll(mapCoherenceProblems(pc, mapRules));
+  if (mapRules != null) {
+    problems.addAll(mapCoherenceProblems(pc, mapRules));
+    problems.addAll(reservedInitialProblems(pc));
+  }
 
   final v = Validator.validate(pc, pc.solution.positions);
   if (!v.valid) problems.add('el Validator rechaza la solución: ${v.errors}');

@@ -235,7 +235,9 @@ Durante una partida se muestran:
 - deshacer
 - rehacer
 
-> ACTUALIZACIÓN 04-11-2026: la partida de hoy muestra tiempo y errores. **No hay ayudas ni puntos estimados.** **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30): cómo se calculan ayudas y puntuación; la spec 16 no lo define.
+> **DECIDIDO 11-11-2026** (pregunta 12, ADR-0014, "Decisiones de Alejandro (11-11-2026)"): la V1 de tienda sale **sin ayudas ni puntos**. La victoria muestra tiempo y errores. Las ayudas y los puntos llegan en la **etapa 5B**, con el ranking del servidor.
+>
+> ACTUALIZACIÓN 04-11-2026: la partida de hoy muestra tiempo y errores. **No hay ayudas ni puntos estimados.** **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30): cómo se calculan ayudas y puntuación; la spec 16 no lo define.
 >
 > Los botones X, Borrador, Deshacer y Rehacer van después del tablero, las pistas y la papelera y, según el diseño, podrían quedar fuera de la pantalla en un teléfono (estimado, sin medir; H-67).
 
@@ -363,7 +365,9 @@ Si el tablero esta bien:
 
 ### Resumen normal
 
-> ACTUALIZACIÓN 04-11-2026: la pantalla de victoria de hoy solo muestra tiempo y errores (más el asesino revelado). Puntuación, posición, promedio y mejor marca no existen. Puntos y ayudas: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30). Posición y promedio dependen del servidor (etapa 5).
+> **DECIDIDO 11-11-2026** (pregunta 12, ADR-0014, "Decisiones de Alejandro (11-11-2026)"): la V1 de tienda sale **sin ayudas ni puntos**. La victoria muestra tiempo y errores. Las ayudas y los puntos llegan en la **etapa 5B**, con el ranking del servidor.
+>
+> ACTUALIZACIÓN 04-11-2026: la pantalla de victoria de hoy solo muestra tiempo y errores (más el asesino revelado). Puntuación, posición, promedio y mejor marca no existen. Puntos y ayudas: **(SUPERADO 11-11-2026, versión anterior conservada como historial) antes PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30). Posición y promedio dependen del servidor (etapa 5).
 
 Muestra:
 

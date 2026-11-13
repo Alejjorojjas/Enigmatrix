@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart' show kMundoMansion;
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'l10n/l10n.dart';
+import 'src/auth/auth_providers.dart';
+import 'src/auth/auth_service.dart';
 import 'src/backend/backend_config.dart';
+import 'src/backend/firebase_auth_service.dart';
 import 'src/backend/firebase_validation_client.dart';
 import 'src/backend/validation_client.dart' show SubmitWrong, ValidationClient;
 import 'src/backend/validation_providers.dart';
@@ -22,6 +26,8 @@ import 'src/ui/bank_screen.dart';
 import 'src/ui/case_list_screen.dart';
 import 'src/ui/game_screen.dart';
 import 'src/ui/home_shell.dart';
+import 'src/ui/nickname_screen.dart';
+import 'src/ui/registration_screen.dart';
 import 'src/ui/skin_theme.dart';
 import 'src/ui/splash_screen.dart';
 import 'src/ui/v1_scope.dart' show caseTitle;
@@ -39,6 +45,10 @@ Future<void> main() async {
     parseBackendMode(kEnxBackendRaw),
     timeout: Duration(seconds: config.serverTimeoutSeconds),
   );
+  // Registro (Google, Apple, correo): solo con un servidor de verdad.
+  final AuthService? authService = validationClient is FirebaseValidationClient
+      ? FirebaseAuthService(FirebaseAuth.instance)
+      : null;
   // El audio carga los sonidos en segundo plano: hasta que termina, la
   // partida simplemente no suena.
   final audio = SoloudSoundService();
@@ -49,6 +59,7 @@ Future<void> main() async {
         initialSettingsProvider.overrideWithValue(settings),
         gameConfigProvider.overrideWithValue(config),
         validationClientProvider.overrideWithValue(validationClient),
+        authServiceProvider.overrideWithValue(authService),
         soundSinkProvider.overrideWithValue(audio),
       ],
       child: const EnigmatrixApp(),
@@ -56,15 +67,44 @@ Future<void> main() async {
   );
 }
 
+/// Redirecciones de la app (separadas del router para probarlas).
+String? appRedirect(
+  Uri uri, {
+  required bool Function() devTools,
+  bool Function(String caseId)? needsRegistration,
+}) {
+  if (uri.path == '/banco' && !devTools()) return '/home';
+  final seg = uri.pathSegments;
+  if (needsRegistration != null &&
+      seg.length == 2 &&
+      seg[0] == 'play' &&
+      needsRegistration(seg[1])) {
+    return kRegistrationRoute;
+  }
+  return null;
+}
+
 /// Rutas de la app. Las herramientas de desarrollo (`/banco`) solo existen
 /// con la bandera ENX_DEV (H-66): sin ella la ruta redirige a `/home`.
-GoRouter buildAppRouter({required bool Function() devTools}) => GoRouter(
-  redirect: (_, state) {
-    if (state.uri.path == '/banco' && !devTools()) return '/home';
-    return null;
-  },
+///
+/// [needsRegistration] (solo con servidor) dice si un invitado debe registrarse
+/// para abrir un caso: `/play/<caso>` lo manda a `/registro`.
+GoRouter buildAppRouter({
+  required bool Function() devTools,
+  bool Function(String caseId)? needsRegistration,
+}) => GoRouter(
+  redirect: (_, state) => appRedirect(
+    state.uri,
+    devTools: devTools,
+    needsRegistration: needsRegistration,
+  ),
   routes: [
     GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
+    GoRoute(path: '/apodo', builder: (_, __) => const NicknameScreen()),
+    GoRoute(
+      path: kRegistrationRoute,
+      builder: (_, __) => const RegistrationScreen(),
+    ),
     GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
     GoRoute(path: '/casos', builder: (_, __) => const CaseListScreen()),
     // Banco de pruebas (desarrollo): se abre desde Configuración.
@@ -98,6 +138,7 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
     with WidgetsBindingObserver {
   late final GoRouter _router = buildAppRouter(
     devTools: () => ref.read(devToolsProvider),
+    needsRegistration: (id) => ref.read(needsRegistrationProvider(id)),
   );
   final GlobalKey<ScaffoldMessengerState> _messenger =
       GlobalKey<ScaffoldMessengerState>();
@@ -112,8 +153,15 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
     final service = ref.read(validationServiceProvider);
     if (service != null) {
       _validationSub = service.events.listen(_onValidationEvent);
-      unawaited(service.start());
+      unawaited(_startAndSyncNickname(service));
     }
+  }
+
+  /// Inicia la sesión y la cola; después reenvía el apodo que quedó guardado
+  /// sin conexión.
+  Future<void> _startAndSyncNickname(ValidationService service) async {
+    await service.start();
+    await ref.read(nicknameServiceProvider)?.syncPending();
   }
 
   @override
@@ -129,6 +177,7 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
     ref.read(appLifecycleProvider.notifier).state = state;
     if (state == AppLifecycleState.resumed) {
       ref.read(validationServiceProvider)?.onResumed();
+      unawaited(ref.read(nicknameServiceProvider)?.syncPending());
     }
   }
 
@@ -149,6 +198,10 @@ class _EnigmatrixAppState extends ConsumerState<EnigmatrixApp>
         response is SubmitWrong ? response.wrongCount : 0,
       ),
       ValidationEventKind.rejected => l10n.validationRejected,
+      ValidationEventKind.registrationRequired =>
+        l10n.validationRegisterRequired,
+      ValidationEventKind.wrongLimit => l10n.validationWrongLimit,
+      ValidationEventKind.emailUnverified => l10n.validationEmailUnverified,
       ValidationEventKind.stalled => l10n.validationStalledTitle,
     };
     _messenger.currentState?.showSnackBar(SnackBar(content: Text(text)));

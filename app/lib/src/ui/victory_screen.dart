@@ -13,6 +13,11 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
+import '../backend/validation_client.dart';
+import '../backend/validation_providers.dart';
+import '../daily/daily_logic.dart';
+import '../daily/daily_providers.dart' show dailyClockProvider;
+import '../daily/daily_screens.dart' show showRankingDialog;
 import '../game/dev_tools.dart';
 import '../game/game_controller.dart';
 import 'dev_texts.dart';
@@ -44,41 +49,56 @@ String _fmt(int seconds) =>
     '${(seconds ~/ 60).toString().padLeft(2, '0')}:'
     '${(seconds % 60).toString().padLeft(2, '0')}';
 
-/// Guarda el resultado y muestra la celebración.
-Future<void> showVictoryScreen(
+/// Guarda el resultado y muestra la celebración. Devuelve true si el jugador
+/// pidió seguir mirando el tablero resuelto.
+Future<bool> showVictoryScreen(
   BuildContext context,
   WidgetRef ref,
   PuzzleCase pc,
 ) async {
   final state = ref.read(gameControllerProvider(pc));
   final prefs = await SharedPreferences.getInstance();
+  // Retos con servidor: tiempo, errores, score y puesto oficiales.
+  final service = ref.read(validationServiceProvider);
+  final solved = service?.solvedResponse(pc.caseId);
+  final official = (solved != null && isDailyCaseId(pc.caseId))
+      ? dailyResultFromSolved(
+          solved,
+          formatLocalDate(ref.read(dailyClockProvider)()),
+        )
+      : null;
   await prefs.setString(
     'done:${pc.caseId}',
     jsonEncode({
       'time': state.elapsedSeconds,
       'errors': state.errorCount,
       'date': DateTime.now().toIso8601String().substring(0, 16),
+      ...?official?.toJson(),
     }),
   );
 
-  if (!context.mounted) return;
-  await showDialog<void>(
+  if (!context.mounted) return false;
+  final look = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (ctx) => Dialog.fullscreen(
       backgroundColor: ctx.pal.bg,
       child: ScreenBackground(
-        child: _VictoryView(pc: pc, prefs: prefs),
+        child: _VictoryView(pc: pc, prefs: prefs, official: official),
       ),
     ),
   );
+  return look == true;
 }
 
 class _VictoryView extends ConsumerStatefulWidget {
-  const _VictoryView({required this.pc, required this.prefs});
+  const _VictoryView({required this.pc, required this.prefs, this.official});
 
   final PuzzleCase pc;
   final SharedPreferences prefs;
+
+  /// Resultado oficial del servidor (solo en los retos con ranking).
+  final DailyResult? official;
 
   @override
   ConsumerState<_VictoryView> createState() => _VictoryViewState();
@@ -111,6 +131,8 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
     final murderer = state.murdererId == null
         ? null
         : pc.character(state.murdererId!);
+    final official = widget.official;
+    final errors = official?.errors ?? state.errorCount;
     final weapon = state.lethalWeaponId == null
         ? null
         : pc.map.weapons.firstWhere((w) => w.id == state.lethalWeaponId);
@@ -226,7 +248,9 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                         children: [
                           Expanded(
                             child: StatTile(
-                              value: _fmt(state.elapsedSeconds),
+                              value: official != null
+                                  ? formatElapsedMs(official.serverElapsedMs)
+                                  : _fmt(state.elapsedSeconds),
                               label: context.l10n.victoryTime,
                               icon: Icons.timer_outlined,
                               color: p.world(0),
@@ -235,16 +259,53 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: StatTile(
-                              value: '${state.errorCount}',
+                              value: '$errors',
                               label: context.l10n.victoryErrors,
-                              icon: state.errorCount == 0
+                              icon: errors == 0
                                   ? Icons.verified_outlined
                                   : Icons.close_rounded,
-                              color: state.errorCount == 0 ? p.good : p.danger,
+                              color: errors == 0 ? p.good : p.danger,
                             ),
                           ),
                         ],
                       ),
+                      if (official != null) ...[
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: StatTile(
+                                key: const ValueKey('victoria-score'),
+                                value: formatElapsedMs(official.score),
+                                label: context.l10n.dailyScoreLabel,
+                                icon: Icons.stars_rounded,
+                                color: p.accent,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: StatTile(
+                                key: const ValueKey('victoria-puesto'),
+                                value: official.rank == null
+                                    ? context.l10n.dailyNoRankShort
+                                    : '#${official.rank}',
+                                label: context.l10n.dailyRankLabel,
+                                icon: Icons.emoji_events_rounded,
+                                color: p.medal(0),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (official.rank == null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              context.l10n.dailyNoRank,
+                              textAlign: TextAlign.center,
+                              style: context.note(15, color: p.softText),
+                            ),
+                          ),
+                      ],
                     ],
                   ),
                 ),
@@ -281,6 +342,15 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 ],
                 const SizedBox(height: 20),
 
+                if (official != null) ...[
+                  AppButton(
+                    key: const ValueKey('victoria-ver-ranking'),
+                    label: context.l10n.dailySeeRanking,
+                    color: p.danger,
+                    onTap: () => showRankingDialog(context),
+                  ),
+                  const SizedBox(height: 8),
+                ],
                 AppButton(
                   label: context.l10n.victoryKeepGoing,
                   onTap: () => _saveAnd(() {
@@ -290,7 +360,8 @@ class _VictoryViewState extends ConsumerState<_VictoryView> {
                 ),
                 const SizedBox(height: 8),
                 TextButton(
-                  onPressed: () => _saveAnd(() => Navigator.of(context).pop()),
+                  onPressed: () =>
+                      _saveAnd(() => Navigator.of(context).pop(true)),
                   child: Text(
                     context.l10n.victoryLookBoard,
                     style: context.body(15, color: p.softText),

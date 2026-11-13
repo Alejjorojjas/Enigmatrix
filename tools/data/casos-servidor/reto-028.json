@@ -1,0 +1,549 @@
+{
+  "caseId": "reto-028",
+  "mapId": "mapa-intermedio-s104-v3",
+  "map": {
+    "id": "mapa-intermedio-s104-v3",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          41,
+          42,
+          43,
+          44,
+          50,
+          51,
+          52,
+          53,
+          60,
+          61
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          27,
+          28,
+          29,
+          30,
+          36,
+          37,
+          38,
+          39,
+          45,
+          46,
+          47,
+          54,
+          63,
+          64
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          62,
+          67,
+          68,
+          69,
+          70,
+          71,
+          76,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          15,
+          21,
+          22,
+          23,
+          24,
+          25,
+          31,
+          32,
+          33,
+          34,
+          35
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          40,
+          48,
+          49,
+          55,
+          56,
+          57,
+          58,
+          59,
+          65,
+          66,
+          72,
+          73,
+          74,
+          75
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          12,
+          13,
+          14,
+          16,
+          17,
+          26
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          10,
+          11,
+          18,
+          19,
+          20
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "mesa-1",
+        "type": "mesa",
+        "cells": [
+          43,
+          42
+        ]
+      },
+      {
+        "id": "armario-2",
+        "type": "armario",
+        "cells": [
+          41
+        ]
+      },
+      {
+        "id": "armario-3",
+        "type": "armario",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "perchero-4",
+        "type": "perchero",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "armario-5",
+        "type": "armario",
+        "cells": [
+          39
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          36
+        ]
+      },
+      {
+        "id": "alfombra-7",
+        "type": "alfombra",
+        "cells": [
+          45,
+          54
+        ]
+      },
+      {
+        "id": "armario-8",
+        "type": "armario",
+        "cells": [
+          69
+        ]
+      },
+      {
+        "id": "chimenea-9",
+        "type": "chimenea",
+        "cells": [
+          70
+        ]
+      },
+      {
+        "id": "silla-10",
+        "type": "silla",
+        "cells": [
+          79
+        ]
+      },
+      {
+        "id": "armario-11",
+        "type": "armario",
+        "cells": [
+          71
+        ]
+      },
+      {
+        "id": "alfombra-12",
+        "type": "alfombra",
+        "cells": [
+          34,
+          33
+        ]
+      },
+      {
+        "id": "armario-13",
+        "type": "armario",
+        "cells": [
+          15
+        ]
+      },
+      {
+        "id": "mesa-14",
+        "type": "mesa",
+        "cells": [
+          23,
+          22
+        ]
+      },
+      {
+        "id": "armario-15",
+        "type": "armario",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "alfombra-16",
+        "type": "alfombra",
+        "cells": [
+          57,
+          66
+        ]
+      },
+      {
+        "id": "silla-17",
+        "type": "silla",
+        "cells": [
+          49
+        ]
+      },
+      {
+        "id": "planta-18",
+        "type": "planta",
+        "cells": [
+          55
+        ]
+      },
+      {
+        "id": "silla-19",
+        "type": "silla",
+        "cells": [
+          72
+        ]
+      },
+      {
+        "id": "piano-20",
+        "type": "piano",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "alfombra-21",
+        "type": "alfombra",
+        "cells": [
+          7,
+          8
+        ]
+      },
+      {
+        "id": "chimenea-22",
+        "type": "chimenea",
+        "cells": [
+          14
+        ]
+      },
+      {
+        "id": "planta-23",
+        "type": "planta",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "alfombra-24",
+        "type": "alfombra",
+        "cells": [
+          19,
+          20
+        ]
+      },
+      {
+        "id": "mesa-25",
+        "type": "mesa",
+        "cells": [
+          9,
+          10
+        ]
+      },
+      {
+        "id": "planta-26",
+        "type": "planta",
+        "cells": [
+          0
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "vestibulo"
+      },
+      {
+        "id": "atizador",
+        "name_es": "el atizador de la chimenea",
+        "category": "contundente",
+        "area": "biblioteca"
+      },
+      {
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "estudio"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c9",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Alberto",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Eugenia",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Leandro",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Silvestre",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Ximena",
+      "female": true
+    },
+    {
+      "id": "c9",
+      "name_es": "Yolanda",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "salon"
+        },
+        {
+          "type": "on_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c2",
+      "group": "chimenea"
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "comedor"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "mesa"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "galeria"
+        },
+        {
+          "type": "on_object",
+          "subject": "c7",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "biblioteca"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c9",
+      "group": "silla"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 8,
+      "c2": 13,
+      "c3": 19,
+      "c4": 27,
+      "c5": 38,
+      "c6": 52,
+      "c7": 57,
+      "c8": 68,
+      "c9": 78
+    },
+    "murderer": "c8",
+    "lethalWeapon": "atizador"
+  },
+  "metrics": {
+    "deductionSteps": 8,
+    "maxTier": 3,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Una herencia en disputa"
+    },
+    "premise": {
+      "es": "Una herencia en disputa mantiene tensos a los presentes toda la semana. Esa noche, uno de ellos es hallado sin vida."
+    }
+  }
+}

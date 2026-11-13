@@ -30,8 +30,38 @@ List<File> caseFilesIn(Directory dir) => [
           f
     ]..sort((a, b) => _name(a).compareTo(_name(b)));
 
-PuzzleCase loadCaseFile(File f) => PuzzleCase.fromJson(
-    jsonDecode(_stripBom(f.readAsStringSync())) as Map<String, dynamic>);
+PuzzleCase loadCaseFile(File f) => PuzzleCase.fromJson(_readJson(f));
+
+Map<String, dynamic> _readJson(File f) =>
+    jsonDecode(_stripBom(f.readAsStringSync())) as Map<String, dynamic>;
+
+/// Carpeta de casos del servidor: la del directorio de trabajo (tools/ o la
+/// raíz del repo, como en las pruebas) o, si no, la relativa al script.
+Directory findServerCasesDir() {
+  for (final p in ['data/casos-servidor', 'tools/data/casos-servidor']) {
+    if (Directory(p).existsSync()) return Directory(p);
+  }
+  return defaultServerCasesDir();
+}
+
+/// Caso COMPLETO de un archivo de la carpeta de la app: los `mansion-*` y
+/// `reto-*` se leen de su fuente en [serverCasesDir] (por omisión,
+/// tools/data/casos-servidor); el resto, del propio archivo.
+PuzzleCase loadFullCaseFile(File f, {Directory? serverCasesDir}) {
+  final name = _name(f);
+  if (!isServerCaseId(name.replaceFirst(RegExp(r'\.json$'), ''))) {
+    return loadCaseFile(f);
+  }
+  return loadCaseFile(
+      File('${(serverCasesDir ?? findServerCasesDir()).path}/$name'));
+}
+
+/// Archivos de caso del servidor (`mansion-*`, `reto-*`) de [dir].
+List<File> serverCaseFilesIn(Directory dir) => [
+      for (final f in caseFilesIn(dir))
+        if (isServerCaseId(_name(f).replaceFirst(RegExp(r'\.json$'), '')))
+          f
+    ];
 
 class ContentGateReport {
   /// Por nombre de archivo.
@@ -58,6 +88,41 @@ Directory _findWorldsDir() {
   return defaultWorldsDir();
 }
 
+/// Fuente completa de un caso del servidor: lee [serverDir]/[name], exige que
+/// traiga solución y que el archivo de la app sea idéntico sin ella y sin
+/// `solution`. Devuelve null (y deja el problema en [report]) si algo falla.
+PuzzleCase? _serverSource(
+    File asset, String name, Directory serverDir, ContentGateReport report) {
+  final assetJson = _readJson(asset);
+  if (assetJson.containsKey('solution')) {
+    report.problems.add('$name: el asset de la app lleva "solution" (los '
+        'casos mansion-*/reto-* se validan en el servidor)');
+  }
+  final src = File('${serverDir.path}/$name');
+  if (!src.existsSync()) {
+    report.problems.add('$name: falta la fuente completa en ${serverDir.path}');
+    return null;
+  }
+  final PuzzleCase full;
+  try {
+    full = loadCaseFile(src);
+  } catch (e) {
+    report.problems.add('$name: la fuente del servidor no se pudo leer: $e');
+    return null;
+  }
+  if (!full.hasSolution) {
+    report.problems.add('$name: la fuente del servidor no trae solución');
+    return null;
+  }
+  final srcJson = _readJson(src)..remove('solution');
+  assetJson.remove('solution');
+  if (jsonEncode(srcJson) != jsonEncode(assetJson)) {
+    report.problems.add('$name: el asset de la app no coincide con la fuente '
+        'del servidor (salvo la solución)');
+  }
+  return full;
+}
+
 /// Recorre [casesDir] (y [tutorialDir] si existe) y comprueba cada caso y la
 /// coherencia entre archivos, catálogo e índice.
 ///
@@ -68,6 +133,12 @@ Directory _findWorldsDir() {
 /// - los mundos de [mapRulesExemptMundos] (por defecto, solo el banco de
 ///   pruebas, que no se regenera), y
 /// - el tutorial, salvo que [mapRulesOnTutorial] sea true.
+///
+/// [serverCasesDir] (tools/data/casos-servidor): si se da, los casos
+/// `mansion-*` y `reto-*` se validan sobre su fuente COMPLETA de allí, y de
+/// los assets de [casesDir] se exige que no lleven `solution` y que sean
+/// idénticos a la fuente (salvo la solución). Sin él, todos los casos se
+/// leen de [casesDir] como siempre (carpetas de prueba).
 ContentGateReport runContentGate({
   required Directory casesDir,
   Directory? tutorialDir,
@@ -75,6 +146,7 @@ ContentGateReport runContentGate({
   Set<String> mapRulesExemptMundos = const {kBancoDePruebas},
   bool mapRulesOnTutorial = false,
   Directory? worldsDir,
+  Directory? serverCasesDir,
 }) {
   final report = ContentGateReport();
   final cases = <String, PuzzleCase>{}; // archivo -> caso (solo catálogo)
@@ -87,7 +159,14 @@ ContentGateReport runContentGate({
     for (final f in caseFilesIn(dir)) {
       final name = _name(f);
       try {
-        final pc = loadCaseFile(f);
+        var pc = loadCaseFile(f);
+        if (inCatalog &&
+            serverCasesDir != null &&
+            isServerCaseId(name.replaceFirst(RegExp(r'\.json$'), ''))) {
+          final full = _serverSource(f, name, serverCasesDir, report);
+          if (full == null) continue;
+          pc = full;
+        }
         (inCatalog ? cases : tutorialCases)[name] = pc;
         if (inCatalog) {
           caseIds[name] = pc.caseId;
@@ -103,6 +182,15 @@ ContentGateReport runContentGate({
   }
 
   checkDir(casesDir, inCatalog: true);
+  if (serverCasesDir != null) {
+    final inAssets = serverCaseFilesIn(casesDir).map(_name).toSet();
+    for (final f in serverCaseFilesIn(serverCasesDir)) {
+      if (!inAssets.contains(_name(f))) {
+        report.problems.add('${_name(f)}: está en la fuente del servidor pero '
+            'no en los assets de la app');
+      }
+    }
+  }
   if (tutorialDir != null && tutorialDir.existsSync()) {
     checkDir(tutorialDir, inCatalog: false);
   }
@@ -200,7 +288,10 @@ ContentGateReport runContentGate({
   for (final e in cases.entries) {
     final mundo = mundoOfFile[e.key];
     if (mundo != null && mapRulesExemptMundos.contains(mundo)) continue;
-    final extra = mapCoherenceProblems(e.value, rulesFor(mundo));
+    final extra = [
+      ...mapCoherenceProblems(e.value, rulesFor(mundo)),
+      ...reservedInitialProblems(e.value),
+    ];
     final previo = report.checks[e.key];
     if (previo != null) report.checks[e.key] = previo.withProblems(extra);
   }
@@ -263,6 +354,10 @@ CatalogAddResult addCasesToCatalog({
   /// el orden de [sources]. Si es null en un reto, continúa tras el último
   /// día ya usado del catálogo. En la campaña se ignora.
   int? diaInicio,
+
+  /// Fuente completa de los casos `mansion-*`/`reto-*` (por omisión,
+  /// tools/data/casos-servidor).
+  Directory? serverCasesDir,
 }) {
   final catalogFile = File('${casesDir.path}/$kCatalogFileName');
   var catalog = catalogFile.existsSync()
@@ -322,7 +417,14 @@ CatalogAddResult addCasesToCatalog({
   if (errors.isNotEmpty) return CatalogAddResult(const [], errors);
 
   casesDir.createSync(recursive: true);
+  final serverDir = serverCasesDir ?? findServerCasesDir();
   toCopy.forEach((src, name) {
+    final pc = loadCaseFile(src);
+    if (isServerCaseId(pc.caseId)) {
+      // Completo a la fuente del servidor; sin solución a los assets.
+      publishCaseFile(pc, casesDir, serverDir);
+      return;
+    }
     final dest = File('${casesDir.path}/$name');
     if (src.absolute.path != dest.absolute.path) {
       dest.writeAsBytesSync(src.readAsBytesSync());

@@ -6,6 +6,7 @@ library;
 import 'dart:convert';
 
 import 'package:enigmatrix/src/game/board_state.dart';
+import 'package:enigmatrix/src/game/dev_tools.dart';
 import 'package:enigmatrix/src/game/saved_game.dart';
 import 'package:enigmatrix/src/ui/case_list_screen.dart';
 import 'package:enigmatrix/src/ui/home_shell.dart';
@@ -31,14 +32,23 @@ Future<List<PuzzleCase>> _loadRealCases() async {
   return cases;
 }
 
-Future<void> _pumpShell(WidgetTester tester) async {
+/// [showSimulated] sobreescribe showSimulatedProvider: kShowSimulated es const
+/// (sale de --dart-define=ENX_DEV) y no se puede cambiar dentro de un test.
+/// false = versión de tienda; true = pruebas internas (con DEMO).
+Future<void> _pumpShell(
+  WidgetTester tester, {
+  bool showSimulated = true,
+}) async {
   SharedPreferences.setMockInitialValues({'tutorial:v2:done': true});
   tester.view.physicalSize = const Size(800, 1600);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [...contentOverrides(const [])],
+      overrides: [
+        ...contentOverrides(const []),
+        showSimulatedProvider.overrideWithValue(showSimulated),
+      ],
       child: MaterialApp(
         localizationsDelegates: kL10nDelegates,
         supportedLocales: kL10nLocales,
@@ -97,6 +107,98 @@ void main() {
       expect(find.text('Próximamente'), findsNWidgets(2));
       expect(find.text('Sonido'), findsOneWidget);
       expect(find.text('Vibración'), findsOneWidget);
+    });
+  });
+
+  group('versión de tienda (sin ENX_DEV): nada simulado', () {
+    testWidgets('el valor por defecto es el de la compilación sin bandera', (
+      tester,
+    ) async {
+      expect(kShowSimulated, isFalse);
+      expect(ProviderContainer().read(showSimulatedProvider), isFalse);
+    });
+
+    testWidgets('Inicio: sin DEMO, vidas, racha ni Tienda; el reto sigue', (
+      tester,
+    ) async {
+      await _pumpShell(tester, showSimulated: false);
+      expect(find.text('DEMO'), findsNothing);
+      expect(find.text('4/5'), findsNothing);
+      expect(find.textContaining('Racha:'), findsNothing);
+      expect(find.text('TIENDA'), findsNothing);
+      expect(find.textContaining('Tienda'), findsNothing);
+      expect(find.byIcon(Icons.storefront_rounded), findsNothing);
+      expect(find.textContaining('Premium'), findsNothing);
+      expect(find.text('RETO DIARIO'), findsOneWidget);
+      expect(find.text('MUNDO 1 · LA MANSIÓN'), findsOneWidget);
+    });
+
+    testWidgets('la barra no tiene la pestaña Ranking y quedan cuatro', (
+      tester,
+    ) async {
+      await _pumpShell(tester, showSimulated: false);
+      expect(find.text('Ranking'), findsNothing);
+      expect(find.byIcon(Icons.emoji_events_rounded), findsNothing);
+      for (final t in ['Inicio', 'Mundos', 'Reto', 'Perfil']) {
+        expect(find.text(t), findsOneWidget);
+      }
+    });
+
+    testWidgets('Reto: sin racha ni puntos de la semana, con el caso de hoy', (
+      tester,
+    ) async {
+      await _pumpShell(tester, showSimulated: false);
+      await _openTab(tester, Icons.today_rounded);
+      expect(find.text('DEMO'), findsNothing);
+      expect(find.textContaining('días de racha'), findsNothing);
+      expect(find.text('PUNTOS DE LA SEMANA'), findsNothing);
+      expect(find.text('EL CASO DE HOY'), findsOneWidget);
+    });
+
+    testWidgets('Perfil: sin DEMO, Tienda ni Premium; quedan lo real', (
+      tester,
+    ) async {
+      await _pumpShell(tester, showSimulated: false);
+      await _openTab(tester, Icons.person_rounded);
+      expect(find.text('DEMO'), findsNothing);
+      expect(find.textContaining('Tienda'), findsNothing);
+      expect(find.textContaining('Premium'), findsNothing);
+      expect(find.text('Configuración'), findsOneWidget);
+      expect(find.text('Cómo jugar'), findsOneWidget);
+    });
+
+    testWidgets('Configuración: sin "Próximamente", Música ni Notificaciones', (
+      tester,
+    ) async {
+      await _pumpShell(tester, showSimulated: false);
+      await _openTab(tester, Icons.person_rounded);
+      await tester.tap(find.text('Configuración'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('Próximamente'), findsNothing);
+      expect(find.text('Música'), findsNothing);
+      expect(find.text('Notificaciones'), findsNothing);
+      expect(find.text('DEMO'), findsNothing);
+      expect(find.text('Sonido'), findsOneWidget);
+      expect(find.text('Vibración'), findsOneWidget);
+    });
+  });
+
+  group('versión de pruebas internas (ENX_DEV): todo a la vista', () {
+    testWidgets('Inicio muestra DEMO, Tienda y la pestaña Ranking', (
+      tester,
+    ) async {
+      await _pumpShell(tester, showSimulated: true);
+      expect(find.text('DEMO'), findsAtLeastNWidgets(2));
+      expect(find.text('TIENDA'), findsOneWidget);
+      expect(find.text('Ranking'), findsOneWidget);
+    });
+
+    testWidgets('Perfil muestra Tienda y Premium con DEMO', (tester) async {
+      await _pumpShell(tester, showSimulated: true);
+      await _openTab(tester, Icons.person_rounded);
+      expect(find.textContaining('Tienda'), findsWidgets);
+      expect(find.textContaining('Premium'), findsWidgets);
     });
   });
 

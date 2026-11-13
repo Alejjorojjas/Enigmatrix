@@ -361,8 +361,8 @@
     },
     {
       "id": "c9",
-      "name_es": "Valeria",
-      "female": true
+      "name_es": "Wenceslao",
+      "female": false
     }
   ],
   "clues": [
@@ -477,20 +477,6 @@
       ]
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 5,
-      "c2": 15,
-      "c3": 26,
-      "c4": 29,
-      "c5": 36,
-      "c6": 49,
-      "c7": 57,
-      "c8": 64,
-      "c9": 79
-    },
-    "murderer": "c3"
-  },
   "metrics": {
     "deductionSteps": 7,
     "maxTier": 3,

@@ -395,8 +395,8 @@
     },
     {
       "id": "c9",
-      "name_es": "Wenceslao",
-      "female": false
+      "name_es": "Ximena",
+      "female": true
     }
   ],
   "clues": [
@@ -512,21 +512,6 @@
       "area": "cocina"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 7,
-      "c2": 12,
-      "c3": 19,
-      "c4": 31,
-      "c5": 41,
-      "c6": 51,
-      "c7": 56,
-      "c8": 63,
-      "c9": 80
-    },
-    "murderer": "c8",
-    "lethalWeapon": "copa"
-  },
   "metrics": {
     "deductionSteps": 11,
     "maxTier": 4,

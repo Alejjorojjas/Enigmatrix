@@ -3,6 +3,7 @@
 /// cfg:vibracion), se leen al arrancar y se cambian desde Configuración.
 library;
 
+import 'package:enigmatrix/src/game/dev_tools.dart' show showSimulatedProvider;
 import 'package:enigmatrix/src/game/app_settings.dart';
 import 'package:enigmatrix/src/game/feedback_providers.dart';
 import 'package:enigmatrix/src/ui/skin_theme.dart' show resolveBrightness;
@@ -249,6 +250,7 @@ void main() {
       final c = ProviderContainer(
         overrides: [
           ...contentOverrides(const []),
+          showSimulatedProvider.overrideWithValue(true),
           initialSettingsProvider.overrideWithValue(
             const AppSettings(fpsMeter: false),
           ),

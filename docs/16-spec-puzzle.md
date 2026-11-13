@@ -19,6 +19,7 @@ Fuentes: versión web jugable (murdoku.com, reglas verificadas contra su código
 - Tamaños por dificultad (mapeo Murdoku, decidido 2026-06-11 con referencias del usuario): **Principiante 6×6 · Casual 8×8 · Intermedio 9×9 · Experto 12×12 · Elite 16×16**. Vigente y comprobado en `DifficultyProfile` de `tools/lib/src/generator.dart` (04-11-2026). Los tamaños de rondas anteriores (4×4 hasta 7×7/8×8) están **SUPERADOS** (ver historial).
 - **Tutorial (decidido 04-11-2026, pregunta 11):** el caso del tutorial (4×4 o 5×5) queda por debajo del perfil Principiante de 6×6 y se crea como caso fijo; ver §7, pregunta 1.
 - **Experto y Élite: definidos pero nunca generados (H-39).** Los perfiles de 12×12 y 16×16 existen en el código, pero no hay ningún caso de esos niveles en `app/assets/cases` (hoy hay 8 de Principiante, 7 de Casual y 5 de Intermedio), no se han medido tiempos de generación y no se ha probado que se puedan tocar y leer en un teléfono. Si entran al lanzamiento lo decide Alejandro: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 13: entran al lanzamiento o se recortan).
+- **ACTUALIZACIÓN 11-11-2026 (pregunta 13 DECIDIDA 05-11-2026, ADR-0014):** la V1 lleva solo **Principiante, Casual e Intermedio**; Experto y Élite llegan en una actualización, cuando el motor los genere de forma confiable. (SUPERADO 11-11-2026) La marca PENDIENTE DE DECISIÓN de arriba y el conteo "8 / 7 / 5" de arriba. **Conteo comprobado el 11-11-2026 en `app/assets/cases`:** 62 archivos, de los cuales 60 son casos (11 de Principiante, 23 de Casual y 26 de Intermedio; incluyen los 10 del Mundo 1 y los 30 del reto) más `catalogo.json` e `index.json`.
 - **Cada caso tiene su propio mapa** (decisión 2026-06-11): la distribución de habitaciones, muebles y armas se genera proceduralmente por caso (`tools/lib/src/map_generator.dart`). Los nombres de habitaciones/lugares salen de pools temáticos; el arte por mundo se aplicará como piel encima (Fase 2).
 
 ### 1.2 Áreas (habitaciones)
@@ -141,7 +142,7 @@ Cada pista es una restricción formal con representación textual localizable. E
 
 Categorías de arma (doc 03, no visibles en UI): cortante, contundente, veneno, asfixia/atadura.
 
-**Tipos de pista vigentes (comprobado en `tools/lib/src/clue.dart`, 04-11-2026):** los 16 de la tabla existen y el generador los usa. Los extras salen de `area_empty`, `weapon_area` y `weapon_category`, y de `weapon_exact` cuando el arma sigue ambigua tras la categoría. En los 20 casos de `app/assets/cases` aparecen `in_area`, `on_object`, `beside_object`, `only_one_on`, `compound`, `alone`, `alone_with`, `same_area` y `victim_filler`; los demás tipos están definidos en el código pero no aparecen en esos casos.
+**Tipos de pista vigentes (comprobado en `tools/lib/src/clue.dart`, 04-11-2026):** los 16 de la tabla existen y el generador los usa. Los extras salen de `area_empty`, `weapon_area` y `weapon_category`, y de `weapon_exact` cuando el arma sigue ambigua tras la categoría. En los 20 casos de `app/assets/cases` aparecen (SUPERADO 11-11-2026: hoy son 60 casos, ver §1.1; la lista de tipos usados no se volvió a medir) `in_area`, `on_object`, `beside_object`, `only_one_on`, `compound`, `alone`, `alone_with`, `same_area` y `victim_filler`; los demás tipos están definidos en el código pero no aparecen en esos casos.
 
 **Eliminadas de V1** (decisión 2026-06-11): las pistas mecánicas de fila/columna, esquina y cardinales ("al oeste de"). Las TÉCNICAS de fila/columna siguen siendo el corazón del juego (el jugador tacha la fila y columna de cada persona ubicada, como en el video del cuadernillo); lo que no existe son pistas que las mencionen. Si un caso difícil no logra unicidad, se amuebla más el mapa — no se recurre a pistas mecánicas.
 
@@ -164,8 +165,8 @@ Categorías de arma (doc 03, no visibles en UI): cortante, contundente, veneno, 
 Estados de marca sobre una celda (docs 02/03 + reglas 2026-06-12):
 
 - **Candidato**: letra del personaje (anotación). Varios candidatos coexisten.
-- **Confirmado**: círculo con avatar (mantener oprimido o arrastrar). Colocar confirmado limpia la celda; una celda con confirmado rechaza candidatos y X. **DECIDIDO 04-11-2026** (auditoría, pregunta 20; ver ADR-0012): además de mantener oprimido o arrastrar, hay un modo alternativo de tocar dos veces (elegir y tocar el destino), y al tocar una casilla sin sospechoso elegido aparece el aviso "Elige primero a un sospechoso". El diseño exacto se hace en la prueba de concepto (etapa 2); hoy la app aún no lo tiene.
-- **X parcial / X fuerte**: descarte del jugador (X pequeña / X grande).
+- **Confirmado**: círculo con avatar (mantener oprimido o arrastrar). Colocar confirmado limpia la celda; una celda con confirmado rechaza candidatos y X. **DECIDIDO 04-11-2026** (auditoría, pregunta 20; ver ADR-0012): además de mantener oprimido o arrastrar, hay un modo alternativo de tocar dos veces (elegir y tocar el destino), y al tocar una casilla sin sospechoso elegido aparece el aviso "Elige primero a un sospechoso". El diseño exacto se hace en la prueba de concepto (etapa 2). **IMPLEMENTADO (comprobado el 11-11-2026):** `boardPickSuspectFirst` en `app/lib/l10n/app_es.arb`, `PlacementProblem.noSuspect` en `src/board/feedback/feedback_director.dart` y `doubleTapConfirm = true` en `app/lib/src/game/board_interaction.dart`. (SUPERADO 11-11-2026) "hoy la app aún no lo tiene".
+- **X (descarte del jugador), una sola a mano (unificado 11-11-2026 con el doc 03):** manda lo que hace el código. La herramienta X tacha la casilla (`crossAt` en `game_controller.dart`, guardada como `XLevel.small`) y tocarla otra vez la quita; la interfaz no tiene el paso a una "X grande". `XLevel.large` sigue en el modelo (`board_state.dart`) solo por compatibilidad con partidas guardadas. La X automática (Auto-X) es aparte. (SUPERADO 11-11-2026) "X parcial / X fuerte (X pequeña / X grande)".
 - **Reglas de convivencia (2026-06-12)**: X y candidatos NO conviven — una celda con X rechaza candidatos (mensaje), y la X manual limpia los candidatos de la celda (acto deliberado). La **auto-X** (al confirmar se tachan fila y columna) solo marca celdas vacías: nunca pisa candidatos ni confirmados, y se retira si se borra su confirmado.
 - **Un confirmado por personaje**: confirmar a alguien que ya está fijado en otra celda se rechaza con mensaje; al confirmarse, sus candidatos desaparecen de todo el tablero.
 - **Borrado**: herramienta borrador (toca casillas y las limpia por completo), papelera (arrastrar marcas) y mini panel (tocar celda sin herramienta seleccionada).
@@ -225,6 +226,8 @@ Notas sobre el formato real:
 
 **Excepción vigente de la Fase 1 (aprobada, caduca en la etapa 5):** los JSON de `app/assets/cases` son el formato completo, con `solution` y `metrics`, y la validación es local. Es un riesgo aceptado (doc 18).
 
+> **Estado de la excepción al 11-11-2026:** **sigue vigente en la V1 de tienda.** 60 de los 62 archivos de `app/assets/cases` llevan `solution` (comprobado en la revisión CCGS) y la validación es local, porque la versión de tienda corre con `ENX_BACKEND=none`. El ADR-0016 (Aceptado 07-11-2026) decide cómo dejará de existir: la solución solo vive en el servidor, `submitSolution` valida, y los JSON de la app dejan de llevar `solution`. La excepción caduca cuando la etapa 5A (servidor, hoy en el emulador `demo-enigmatrix`) se conecte a la app, no antes. Hasta entonces el ADR-0008 sigue en pie.
+
 ## 6. Solver (Fase 0 — el primer código del proyecto)
 
 ### 6.1 Componentes
@@ -232,14 +235,16 @@ Notas sobre el formato real:
 1. **Motor de deducción**: aplica propagación de restricciones imitando a un jugador humano: cada pista reduce dominios (celdas posibles por personaje); las restricciones globales (fila/columna, ocupabilidad, asesino-a-solas) propagan descartes.
 2. **Verificador de unicidad**: búsqueda exhaustiva (backtracking) que demuestra que existe exactamente una asignación válida.
 3. **Contador de pasos de deducción**: un "paso" = una inferencia que fija una posición o elimina la última alternativa de una celda. Define la dificultad (rangos en doc 05, hoy **en recalibración**; ver 6.5 y H-40). El motor devuelve además `maxTier`, el nivel de la técnica más difícil que hizo falta (T1 a T4).
-4. **Detector de redundancia**: una pista es redundante si al quitarla el caso sigue teniendo solución única con los mismos pasos. **NO IMPLEMENTADO (H-42):** no existe en `tools/lib` ni en `tools/bin` (la búsqueda de "redundan" no encuentra nada). Hoy nada garantiza que cada pista sea necesaria. Es un pendiente técnico sin decisión de Alejandro de por medio; si se decide no hacerlo, se marca "diferido".
+4. **Detector de redundancia**: una pista es redundante si al quitarla el caso sigue teniendo solución única con los mismos pasos. **NO IMPLEMENTADO (H-42):** no existe en `tools/lib` ni en `tools/bin` (la búsqueda de "redundan" no encuentra nada). Hoy nada garantiza que cada pista sea necesaria. Es un pendiente técnico sin decisión de Alejandro de por medio; si se decide no hacerlo, se marca "diferido". **Estado 11-11-2026:** sigue sin existir (verificado en la revisión CCGS) y **queda DIFERIDO: no entra en la V1** (el contenido de la V1 ya está generado y pasa la puerta de contenido); el arquitecto debe confirmarlo.
 
 ### 6.2 Criterio de aceptación de un caso
 
 - Solución única (verificada por búsqueda exhaustiva).
 - Resoluble por deducción pura: el motor de deducción llega a la solución sin ramificar (sin "probar y ver").
 - Pasos de deducción dentro del rango de la etiqueta de dificultad (doc 05). **NO IMPLEMENTADO como filtro (H-40):** el generador calcula los pasos y los guarda en `metrics`, pero no rechaza ni reclasifica un caso que quede fuera del rango. La dificultad real depende del sorteo y los rangos del doc 05 están desactualizados para los tamaños 6/8/9. Primero se recalibran los rangos con los datos de la prueba de juego y después se imponen en el generador (etapas 1 y 3).
+  - **ACTUALIZACIÓN 11-11-2026 (SUPERADO 11-11-2026 en lo de "no rechaza ni reclasifica"):** el generador **ya rechaza** los casos fuera de rango y registra el motivo (`DifficultyRange.violation` en `tools/lib/src/difficulty_ranges.dart`, probado en `tools/test/difficulty_ranges_test.dart`). Los valores de `kDifficultyRanges` son **PROVISIONALES** y se ajustan con la prueba de juego. Criterio medible vigente (pasos de deducción y `maxTier`): Tutorial 2 a 8 pasos y `maxTier` 2 a 4 · Principiante 3 a 12 y 2 a 4 · Casual 4 a 14 y 2 a 4 · Intermedio 4 a 16 y 3 a 4 · Experto 6 a 40 y 3 a 4 · Élite 8 a 80 y 3 a 4. Esto cierra el criterio sin número de la sección; falta solo recalibrar con datos reales.
 - Tiempo de solver acotado (límite configurable; caso descartado si lo excede). **NO IMPLEMENTADO (H-42):** no hay `Stopwatch`, límite de tiempo ni tope de nodos en `UniquenessChecker.countSolutions` ni en `CaseFactory`. El único tope es de intentos (hasta 40 mapas con 8 intentos de caso cada uno), no de tiempo. Sin límite, un caso difícil (sobre todo 12×12 y 16×16, H-39) puede colgar la generación.
+  - **ACTUALIZACIÓN 11-11-2026 (H-42, parte del tope de tiempo: CERRADA):** (SUPERADO 11-11-2026) el texto "NO IMPLEMENTADO" de arriba ya no es cierto para el tiempo. Existe `GenerationLimits.maxCaseTime` en `tools/lib/src/generator.dart`, el corte por tiempo en `tools/lib/src/case_factory.dart` y `limits.maxTime` en `tools/lib/src/uniqueness.dart`; además hay un tope de nodos determinista, probado en `tools/test/solver_cap_test.dart`. Lo que sigue sin existir de H-42 es el detector de redundancia (§6.1, diferido).
 
 ### 6.3 Generador
 
@@ -247,6 +252,7 @@ Notas sobre el formato real:
 - Proceso: coloca personajes respetando invariantes → elige asesino/arma → genera pool de pistas verdaderas → selecciona subconjunto mínimo+margen que produzca unicidad → valida con solver → calcula métricas.
 - Salida: caso candidato para revisión editorial (doc 05). En código, la salida es un archivo JSON por semilla (ver doc 05, "Flujo real de generación").
 - Elección de la pista de reparación: cuando la deducción se atasca, el generador salta a la pista candidata más fuerte en vez de la inmediatamente más fuerte (`_stronger` en `generator.dart`), lo que aplana la dificultad. Es el hallazgo H-40, pendiente de arreglo en la etapa 3.
+  - **ACTUALIZACIÓN 11-11-2026 (H-40, error de `_stronger`: CORREGIDO en la etapa 3.1):** (SUPERADO 11-11-2026) la frase anterior ya no describe el código. `_stronger` ahora delega en `Generator.nextStronger` (`tools/lib/src/generator.dart`), que devuelve la candidata **inmediatamente** más fuerte y no la más fuerte de todas. Comprobado el 11-11-2026 leyendo el código y la prueba `tools/test/stronger_test.dart` (no se ejecutó en esta revisión). El riesgo de H-40 que queda es de calibración: los rangos son provisionales (§6.2).
 
 ### 6.4 Implementación
 
@@ -264,7 +270,7 @@ El motor aplica siempre la técnica más simple que pode algo; cada aplicación 
 | T3 | soporte entre pares · single oculto fila/columna · confinamiento fila/columna |
 | T4 | conteo de áreas · regla del asesino · cadena del arma |
 
-`metrics` de cada caso guarda `deductionSteps` (pasos), `maxTier` (técnica más alta) y `clueCount`. Ejemplo real: `caso-intermedio-s1` tiene 9 pistas, 7 pasos y `maxTier` 3. La tabla de calibración por dificultad (pasos mínimo y máximo, número de pistas, extras, uso de arma) **no está definida**: depende de los datos de la prueba de juego (etapa 1) y del arreglo del generador (etapa 3; H-40). Los rangos del doc 05 no sirven de referencia hasta entonces.
+`metrics` de cada caso guarda `deductionSteps` (pasos), `maxTier` (técnica más alta) y `clueCount`. Ejemplo real: `caso-intermedio-s1` tiene 9 pistas, 7 pasos y `maxTier` 3. La tabla de calibración por dificultad (pasos mínimo y máximo, número de pistas, extras, uso de arma) **no está definida**: depende de los datos de la prueba de juego (etapa 1) y del arreglo del generador (etapa 3; H-40). Los rangos del doc 05 no sirven de referencia hasta entonces. (Nota 11-11-2026: el arreglo del generador ya está hecho; los rangos provisionales de `kDifficultyRanges` están en §6.2. La tabla definitiva sigue pendiente de la prueba de juego.)
 
 ## 7. Decisiones tomadas y preguntas abiertas
 
@@ -274,17 +280,17 @@ El motor aplica siempre la técnica más simple que pode algo; cada aplicación 
 - "Junto a" exige misma área además de adyacencia ortogonal (regla de la web).
 - Norte/sur/este/oeste NO exigen misma área salvo que la pista lo diga (regla de la web).
 - **Grilla cuadrada N×N con N = personajes (incluida la víctima); exactamente una persona por fila y por columna; ninguna fila/columna vacía.** Tamaño escala con dificultad ~~(4×4 → 7×7/8×8)~~ **SUPERADO**: vigente 6×6 → 16×16 (ver §1.1).
-- **Ayudas en Principiante y Tutorial: NO penalizan.** Desde Casual: todas penalizan. Manda `08-balance.md`; `03-reglas-del-juego.md` fue corregido. Nota 04-11-2026: las ayudas no existen en la app hoy y su especificación y puntuación están abiertas: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12).
+- **Ayudas en Principiante y Tutorial: NO penalizan.** Desde Casual: todas penalizan. Manda `08-balance.md`; `03-reglas-del-juego.md` fue corregido. Nota 04-11-2026: las ayudas no existen en la app hoy y su especificación y puntuación están abiertas: **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12). **DECIDIDO 11-11-2026 (pregunta 12, ADR-0014):** la V1 sale **sin ayudas ni puntos**; la victoria muestra tiempo y errores; ayudas y puntos llegan en la etapa 5B. (SUPERADO 11-11-2026) la marca PENDIENTE DE DECISIÓN.
 - **SUPERADO (ver "La rotación anti-trampa quedó SIN pistas que rotar texto direccional", ronda del 11-06-2026):** **La rotación del mapa también rota las pistas**: la pista lógica se guarda en coordenadas canónicas; el renderizador de texto la transforma según la orientación del jugador. Bajo rotación de 90°/270° las referencias de fila/columna se intercambian ("primera fila" → "primera columna") y las cardinales se remapean (oeste→norte, etc.). El servidor valida siempre en coordenadas canónicas; la rotación nunca toca la lógica.
 - "Island" en la versión web es solo vocabulario de resaltado (nombre de zona/objeto de mapas concretos), no una regla del motor. En Enigmatrix los nombres de áreas y objetos son **datos del mapa**, no palabras clave del motor: el renderizador de pistas los toma del mapa autorado.
-- Nomenclatura de marcas del jugador: la del doc 03 (candidato/confirmado/X parcial/X fuerte).
+- Nomenclatura de marcas del jugador: la del doc 03 (candidato/confirmado/X). (SUPERADO 11-11-2026: "X parcial/X fuerte"; hoy hay una sola X a mano.)
 
 ### [DECISIÓN] cerradas (2026-06-11, segunda ronda de playtest)
 
 - **Mapas únicos por caso**: habitaciones, muebles y armas generados proceduralmente; dos casos jamás comparten distribución. Reemplaza el "mapas autorados a mano" del doc 05 — el autorado pasa a ser la piel artística por mundo.
 - **Tamaños = Murdoku**: 6×6 / 8×8 / 9×9 / 12×12 / 16×16 para las 5 dificultades.
 - **Auto-X**: opción del jugador (activada por defecto): al confirmar a alguien se tachan automáticamente su fila y columna; las X automáticas se retiran si se borra el confirmado.
-- **Marcas visuales**: candidato = solo la letra del personaje; confirmado = círculo con avatar (mantener oprimido o arrastrar); X grandes.
+- **Marcas visuales**: candidato = solo la letra del personaje; confirmado = círculo con avatar (mantener oprimido o arrastrar); X grandes. (SUPERADO 11-11-2026: lo que hace el código es una sola X a mano; ver §4.)
 
 ### [DECISIÓN] cerradas (2026-06-11, rediseño Murdoku tras playtest del usuario)
 

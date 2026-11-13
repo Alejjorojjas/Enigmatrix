@@ -86,3 +86,10 @@ Alejandro pidió lo mismo para iPhone. La cuenta de Apple también es la del ami
 - falta la etiqueta de privacidad (equivalente a la sección Seguridad de los datos de Play).
 
 **Guía paso a paso:** `production/guias/2026-11-09-app-store-github-actions.md`.
+
+## Aclaraciones de Alejandro (11-11-2026)
+
+- **El orden fue decisión suya.** Publicar pronto en la prueba interna, aunque falten cosas, para ir ganando los tiempos de espera de las tiendas. Las correcciones se van subiendo como versiones nuevas.
+- **El nombre "Murdoku Diario" lo eligió él** y ya averiguó que no hay problema con usarlo.
+- **El iPhone se adelanta a propósito**, porque también toma tiempo y quiere publicar lo antes posible.
+- **Subida automática:** confirmado que solo ocurre cuando un PR aprobado por él llega a `main`. En las ramas y en los PR no se sube nada.

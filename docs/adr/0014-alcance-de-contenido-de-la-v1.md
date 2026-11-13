@@ -43,3 +43,36 @@
 ## Actualización 09-11-2026: entra el iPhone
 
 Alejandro pidió subir la app también a la App Store. Con eso la V1 deja de ser solo Android y queda resuelta la pregunta 22. El contenido no cambia (dificultades, Mundo 1, 30 días de reto). La publicación va primero por TestFlight, en la cuenta de Apple del mismo amigo de la cuenta de Google Play (ADR-0017, sección App Store).
+
+## Decisiones de Alejandro (11-11-2026), tras la revisión con Claude Code Game Studios
+
+- **Pregunta 12 (ayudas y puntuación):** la V1 de tienda sale **sin ayudas ni puntos**. La victoria muestra tiempo y errores. Las ayudas y los puntos llegan con el ranking del servidor (etapa 5B).
+- **Modo daltónico:** se aplaza a la **V1.1**. Antes de la publicación abierta hay que validar con un simulador de daltonismo (los tres tipos) que las habitaciones se distinguen también por paredes y nombres. Si no se distinguen, se corrige antes de esa publicación.
+- **Casillas del 9×9:** se acepta como **excepción documentada** al mínimo de 48 px del doc 11 (unos 37 px en un teléfono de 360 de ancho). Se apoya en la confirmación por toque doble. Alejandro lo prueba en su teléfono y, si resulta incómodo, se corrige.
+- **Responsable de la política de privacidad:** Alejandro (Diego Alejandro Rojas Corredor), aunque la app se publique en las cuentas de su socio (ADR-0017). Falta el correo de contacto.
+
+## Decisiones de Alejandro (12-11-2026): servidor real (etapa 5A.3)
+
+- **Dueño del proyecto de Firebase:** la cuenta de Google de Alejandro, coherente con que él es el responsable de los datos. Proyecto creado el 12-11-2026: nombre "Murdoku Diario", ID `murdoku-diario`, sin Google Analytics.
+- **Prueba con amigos:** sale con el **reto diario del servidor y el ranking diario con apodo juntos**, no por separado. El apodo es un dato nuevo y debe entrar en la política de privacidad antes de encender el servidor.
+- **Ranking diario (decidido el mismo día):**
+  - cuenta el tiempo del servidor, sin pausas; con esto se cierra la decisión 10 del ADR-0012 para los retos con ranking;
+  - el orden es el tiempo más 30 s por cada error;
+  - el apodo se pide al abrir la app por primera vez y se puede cambiar en Configuración;
+  - el correo de privacidad es murdokudiario@gmail.com.
+
+  El detalle está en `production/planes/2026-11-12-etapa-5a3-reto-y-ranking.md`.
+- **Plan Blaze:** se activa con una **alerta de presupuesto de 1 USD**. Activado el 12-11-2026 con presupuesto de 5.000 COP y la prueba gratuita de Google Cloud (90 días, vence hacia el 10-02-2027; antes hay que activar la cuenta completa o el servidor se apaga).
+- **App Check en Android:** lo enlaza el socio dueño de la cuenta de Google Play (Play Integrity); Alejandro le pasa las instrucciones. En iPhone se usa App Attest.
+  - **Hecho por Alejandro el 12-11-2026** (tiene acceso a las dos cuentas).
+  - Quedaron listos:
+    - Auth anónima habilitada;
+    - Firestore `(default)` Estándar en `southamerica-east1`, sin copias de seguridad por ahora;
+    - apps Android e iOS registradas con el paquete `com.murdokudiario.app`;
+    - huella SHA-256 de la clave de firma de Play agregada;
+    - Play Integrity vinculada al proyecto;
+    - Team ID de Apple agregado;
+    - App Check registrado: Play Integrity en Android y App Attest en iOS.
+  - **La aplicación obligatoria de App Check (Enforce) sigue apagada** hasta que la app esté conectada.
+  - Los archivos `google-services.json` y `GoogleService-Info.plist` están en la copia local y fuera de git.
+  - Play Console tiene activa la "protección automática", que bloquea instalaciones fuera de la tienda: los amigos instalan desde la prueba interna de Google Play.

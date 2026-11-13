@@ -384,12 +384,12 @@
     },
     {
       "id": "c8",
-      "name_es": "Wenceslao",
-      "female": false
+      "name_es": "Ximena",
+      "female": true
     },
     {
       "id": "c9",
-      "name_es": "Ximena",
+      "name_es": "Yolanda",
       "female": true
     }
   ],
@@ -517,21 +517,6 @@
       "group": "silla"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 8,
-      "c2": 13,
-      "c3": 19,
-      "c4": 27,
-      "c5": 38,
-      "c6": 52,
-      "c7": 57,
-      "c8": 68,
-      "c9": 78
-    },
-    "murderer": "c8",
-    "lethalWeapon": "atizador"
-  },
   "metrics": {
     "deductionSteps": 8,
     "maxTier": 3,

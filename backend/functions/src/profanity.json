@@ -1,0 +1,15 @@
+{
+  "_nota": "Filtro de groserias de apodos (es/en). Las palabras van sin tildes y en minuscula; el filtro quita tildes, cambia 0->o 1->i 3->e 4->a 5->s 7->t @->a $->s y junta letras repetidas. exacta = solo si es una palabra entera del apodo; contiene = si aparece en cualquier parte (solo palabras que casi no estan dentro de palabras normales).",
+  "exacta": [
+    "puta", "putas", "puto", "putos", "putita", "putito", "hdp", "hpta", "verga", "vergon", "culo", "culos", "culero", "culera",
+    "pene", "pija", "pijas", "cojon", "cojones", "joder", "jodete", "jodido", "follar", "folla", "zorra", "zorras", "perra", "marica", "maricas",
+    "maricon", "mariconas", "idiota", "imbecil", "estupido", "estupida", "tarado", "mamon", "nazi", "hitler", "violador", "violar",
+    "fck", "fuk", "fuq", "dick", "dicks", "cock", "cocks", "pussy", "cunt", "twat", "anus", "cum", "porn", "porno", "rape", "rapist",
+    "retard", "retarded", "tits", "wanker", "prick", "bollocks", "whore", "slut", "hoe", "faggot", "fag", "nigger", "niger", "nigga", "dumbass"
+  ],
+  "contiene": [
+    "mierda", "pendej", "gilipoll", "cabron", "hijueputa", "hijoeputa", "hijodeputa", "hijoputa", "malparid", "gonorrea", "chingad",
+    "chingar", "chingat", "mamahuevo", "mamaverga", "hijodelagranputa", "fuck", "shit", "bitch", "bastard", "asshole", "motherfuck",
+    "faggot", "cocksuck"
+  ]
+}

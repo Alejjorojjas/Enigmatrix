@@ -352,12 +352,12 @@
     },
     {
       "id": "c8",
-      "name_es": "Valeria",
-      "female": true
+      "name_es": "Wenceslao",
+      "female": false
     },
     {
       "id": "c9",
-      "name_es": "Ximena",
+      "name_es": "Yolanda",
       "female": true
     }
   ],
@@ -452,21 +452,6 @@
       "group": "alfombra"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 3,
-      "c2": 16,
-      "c3": 18,
-      "c4": 31,
-      "c5": 42,
-      "c6": 53,
-      "c7": 56,
-      "c8": 68,
-      "c9": 73
-    },
-    "murderer": "c1",
-    "lethalWeapon": "copa"
-  },
   "metrics": {
     "deductionSteps": 14,
     "maxTier": 4,

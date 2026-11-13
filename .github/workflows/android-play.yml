@@ -2,7 +2,7 @@
 #
 # Cada push a main que toque código:
 #   1. corre las pruebas del motor (tools) y de la app;
-#   2. compila el .aab de tienda (sin ENX_DEV, servidor apagado: ENX_BACKEND=none);
+#   2. compila el .aab de tienda (sin ENX_DEV, con el servidor real: ENX_BACKEND=firebase, que es el valor por defecto);
 #   3. lo guarda como artefacto del run (sirve para la primera subida manual);
 #   4. si la variable del repositorio PLAY_UPLOAD vale "true", lo sube a la pista
 #      que diga PLAY_TRACK (por defecto "internal": prueba interna, sin revisión),
@@ -12,6 +12,8 @@
 # production/guias/2026-11-09-google-play-github-actions.md:
 #   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS,
 #   ANDROID_KEY_PASSWORD, PLAY_SERVICE_ACCOUNT_JSON.
+# Firebase (etapa 5A.3): GOOGLE_SERVICES_JSON_B64, el google-services.json en
+# base64 (el archivo no va a git). Se escribe en app/android/app antes de compilar.
 
 name: Android a Google Play
 
@@ -55,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2 (fijada por SHA)
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
@@ -77,14 +79,14 @@ jobs:
       - name: Motor (tools)
         working-directory: tools
         run: |
-          dart pub get
+          dart pub get --enforce-lockfile
           dart analyze
           dart test
 
       - name: App
         working-directory: app
         run: |
-          flutter pub get
+          flutter pub get --enforce-lockfile
           flutter analyze
           flutter test
 
@@ -101,7 +103,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2 (fijada por SHA)
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
@@ -127,20 +129,35 @@ jobs:
             echo "keyPassword=$KEY_PASSWORD"
           } > key.properties
 
+      - name: Archivo de Firebase (desde el secreto)
+        env:
+          GOOGLE_SERVICES_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON_B64" ]; then
+            echo "::error::Falta el secreto GOOGLE_SERVICES_JSON_B64 (el google-services.json de Firebase en base64). Agrégalo en Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          DEST=app/android/app/google-services.json
+          if ! printf '%s' "$GOOGLE_SERVICES_JSON_B64" | base64 --decode > "$DEST" 2>/dev/null || [ ! -s "$DEST" ]; then
+            rm -f "$DEST"
+            echo "::error::El secreto GOOGLE_SERVICES_JSON_B64 no es un base64 válido o está vacío."
+            exit 1
+          fi
+
       - name: Compilar AAB
         working-directory: app
         run: |
-          flutter pub get
+          flutter pub get --enforce-lockfile
           # versionCode = 10000 + número de run: siempre crece y queda por encima
           # de los APK compilados a mano (split-per-abi llega a ~3010). El nombre sale de pubspec.yaml.
           flutter build appbundle --release \
             --build-number=$((10000 + ${{ github.run_number }})) \
-            --dart-define=ENX_BACKEND=none
+            --dart-define=ENX_BACKEND=firebase
 
       - name: Borrar la llave del runner
         if: always()
         working-directory: app/android
-        run: rm -f key.properties app/upload-keystore.jks
+        run: rm -f key.properties app/upload-keystore.jks app/google-services.json
 
       - name: Comprobar la firma del AAB
         working-directory: app
@@ -169,7 +186,7 @@ jobs:
         with:
           name: enigmatrix-aab-${{ github.run_number }}
 
-      - uses: r0adkll/upload-google-play@v1
+      - uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1 (fijada por SHA: recibe la credencial de Play)
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: ${{ env.PACKAGE_NAME }}

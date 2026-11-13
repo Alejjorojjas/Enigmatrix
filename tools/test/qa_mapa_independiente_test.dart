@@ -12,6 +12,9 @@ import 'package:test/test.dart';
 import 'support/regeneracion_pendiente.dart';
 
 final dir = Directory('../app/assets/cases');
+// Fuente completa (con solución) de mansion-* y reto-*: los assets de la app
+// ya no la llevan.
+final serverDir = Directory('data/casos-servidor');
 
 const familias = {
   'asientos': {'silla', 'sillon', 'sofa'},
@@ -37,9 +40,9 @@ const soloEn = {
 
 List<File> archivos() => [
       for (var i = 1; i <= 10; i++)
-        File('${dir.path}/mansion-${i.toString().padLeft(2, '0')}.json'),
+        File('${serverDir.path}/mansion-${i.toString().padLeft(2, '0')}.json'),
       for (var i = 1; i <= 30; i++)
-        File('${dir.path}/reto-${i.toString().padLeft(3, '0')}.json'),
+        File('${serverDir.path}/reto-${i.toString().padLeft(3, '0')}.json'),
     ];
 
 /// Problemas de las 3 reglas leyendo el JSON crudo.
@@ -129,7 +132,10 @@ void main() {
       () {
     final tmp = Directory.systemTemp.createTempSync('enx_qa_');
     addTearDown(() => tmp.deleteSync(recursive: true));
-    for (final f in dir.listSync().whereType<File>()) {
+    for (final f in [
+      ...serverDir.listSync().whereType<File>(),
+      File('${dir.path}/catalogo.json'),
+    ]) {
       final n = f.uri.pathSegments.last;
       if (n.startsWith('mansion-') || n == 'catalogo.json') {
         f.copySync('${tmp.path}/$n');

@@ -42,6 +42,37 @@ class FakeValidationClient implements ValidationClient {
 
   final List<SubmitRequest> submits = [];
   final List<String> starts = [];
+
+  /// `localDate` con que llegó cada `startCase` (null si no se envió).
+  final List<String?> startDates = [];
+
+  /// Lo que contestaría `getDailyChallenge` (por fecha); si falta, `reto-001`.
+  final Map<String, String> dailyByDate = {};
+
+  /// `startedAt` que devuelve `startCase` (ms desde la época).
+  int startedAtMs = 1700000000000;
+
+  /// Respuesta de un reto resuelto: tiempo del servidor, penalización por
+  /// error (30 s) y puesto. `retoRank` null = no entró al ranking.
+  int retoElapsedMs = 95000;
+  int? retoRank = 3;
+  int retoErrors = 1;
+
+  /// false = usuario registrado (Google/Apple); true = invitado.
+  bool anonymous = true;
+
+  @override
+  bool get isAnonymous => anonymous;
+
+  /// true = `submitSolution` responde "Regístrate para seguir jugando".
+  bool requiresRegistration = false;
+
+  /// Apodo guardado en el "servidor" y palabras que el filtro rechaza.
+  String? serverNickname;
+  final Set<String> blockedWords = {'groseria'};
+  final List<String> nicknameCalls = [];
+  bool accountDeleted = false;
+  int deleteCalls = 0;
   int sessions = 0;
   final Map<String, SubmitResponse> _seen = {};
 
@@ -67,12 +98,68 @@ class FakeValidationClient implements ValidationClient {
   }
 
   @override
-  Future<void> startCase(String caseId) async {
+  Future<int?> startCase(String caseId, {String? localDate}) async {
     log.add('start:$caseId');
     _checkNetwork();
     final failure = startFailure;
     if (failure != null) throw ValidationException(failure, 'falla');
     starts.add(caseId);
+    startDates.add(localDate);
+    return startedAtMs;
+  }
+
+  @override
+  Future<DailyChallengeInfo> getDailyChallenge(String localDate) async {
+    log.add('daily:$localDate');
+    _checkNetwork();
+    return DailyChallengeInfo(
+      localDate: localDate,
+      caseId: dailyByDate[localDate] ?? 'reto-001',
+    );
+  }
+
+  @override
+  Future<String> setNickname(String nickname) async {
+    log.add('nick');
+    nicknameCalls.add(nickname);
+    _checkNetwork();
+    final clean = nickname.trim();
+    final lower = clean.toLowerCase();
+    if (blockedWords.any(lower.contains)) {
+      throw const ValidationException(
+        ValidationFailure.rejected,
+        'invalid-argument',
+        'Ese apodo no está permitido.',
+      );
+    }
+    if (clean.length < 3 || clean.length > 16) {
+      throw const ValidationException(
+        ValidationFailure.rejected,
+        'invalid-argument',
+        'El apodo debe tener entre 3 y 16 caracteres.',
+      );
+    }
+    serverNickname = clean;
+    return clean;
+  }
+
+  /// Apodo que el "servidor" devuelve al leer `users/{uid}`; null = ninguno.
+  int fetchNicknameCalls = 0;
+
+  @override
+  Future<String?> fetchServerNickname() async {
+    fetchNicknameCalls++;
+    if (!online) return null;
+    return serverNickname;
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    log.add('delete');
+    deleteCalls++;
+    _checkNetwork();
+    accountDeleted = true;
+    serverNickname = null;
   }
 
   @override
@@ -82,6 +169,13 @@ class FakeValidationClient implements ValidationClient {
     _checkNetwork();
     final failure = submitFailure;
     if (failure != null) throw ValidationException(failure, 'falla');
+    if (requiresRegistration) {
+      throw const ValidationException(
+        ValidationFailure.registrationRequired,
+        'failed-precondition',
+        'Regístrate para seguir jugando',
+      );
+    }
     final seen = _seen[request.submissionId];
     if (seen != null) return seen;
     if (rejects) {
@@ -105,6 +199,15 @@ class FakeValidationClient implements ValidationClient {
         murdererId: v.murdererId!,
         lethalWeaponId: v.lethalWeaponId,
         ranked: request.startedOnline,
+        // Solo los retos traen tiempo del servidor, score y puesto.
+        serverElapsedMs: request.caseId.startsWith('reto-')
+            ? retoElapsedMs
+            : null,
+        errors: request.caseId.startsWith('reto-') ? retoErrors : null,
+        score: request.caseId.startsWith('reto-')
+            ? retoElapsedMs + retoErrors * 30000
+            : null,
+        rank: request.caseId.startsWith('reto-') ? retoRank : null,
       );
     } else {
       response = SubmitWrong(wrong);

@@ -1,0 +1,506 @@
+{
+  "caseId": "reto-027",
+  "mapId": "mapa-intermedio-s132",
+  "map": {
+    "id": "mapa-intermedio-s132",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          9,
+          18,
+          27,
+          28,
+          36,
+          37,
+          38,
+          45,
+          46,
+          54,
+          55,
+          63,
+          64,
+          65,
+          72,
+          73,
+          74
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          14,
+          15,
+          22,
+          23,
+          24,
+          32,
+          33,
+          41,
+          42,
+          43,
+          51,
+          52,
+          60,
+          69,
+          70,
+          78
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          10,
+          12,
+          13
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          39,
+          40,
+          47,
+          48,
+          49,
+          50,
+          56,
+          57,
+          58,
+          59,
+          66,
+          67,
+          68,
+          75,
+          76,
+          77
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          7,
+          8,
+          16,
+          17,
+          25,
+          26,
+          34,
+          35,
+          44,
+          53,
+          61,
+          62,
+          71,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          11,
+          19,
+          20,
+          21,
+          29,
+          30,
+          31
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "alfombra-1",
+        "type": "alfombra",
+        "cells": [
+          55,
+          54
+        ]
+      },
+      {
+        "id": "armario-2",
+        "type": "armario",
+        "cells": [
+          36
+        ]
+      },
+      {
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          64
+        ]
+      },
+      {
+        "id": "perchero-4",
+        "type": "perchero",
+        "cells": [
+          73
+        ]
+      },
+      {
+        "id": "mesa-5",
+        "type": "mesa",
+        "cells": [
+          14,
+          15
+        ]
+      },
+      {
+        "id": "mesa-6",
+        "type": "mesa",
+        "cells": [
+          22,
+          23
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          70
+        ]
+      },
+      {
+        "id": "silla-8",
+        "type": "silla",
+        "cells": [
+          60
+        ]
+      },
+      {
+        "id": "planta-9",
+        "type": "planta",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "silla-10",
+        "type": "silla",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "alfombra-11",
+        "type": "alfombra",
+        "cells": [
+          10,
+          1
+        ]
+      },
+      {
+        "id": "mesa-12",
+        "type": "mesa",
+        "cells": [
+          66,
+          75
+        ]
+      },
+      {
+        "id": "mesa-13",
+        "type": "mesa",
+        "cells": [
+          50,
+          49
+        ]
+      },
+      {
+        "id": "armario-14",
+        "type": "armario",
+        "cells": [
+          40
+        ]
+      },
+      {
+        "id": "armario-15",
+        "type": "armario",
+        "cells": [
+          48
+        ]
+      },
+      {
+        "id": "perchero-16",
+        "type": "perchero",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "armario-17",
+        "type": "armario",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "alfombra-18",
+        "type": "alfombra",
+        "cells": [
+          7,
+          8
+        ]
+      },
+      {
+        "id": "armario-19",
+        "type": "armario",
+        "cells": [
+          79
+        ]
+      },
+      {
+        "id": "silla-20",
+        "type": "silla",
+        "cells": [
+          31
+        ]
+      },
+      {
+        "id": "planta-21",
+        "type": "planta",
+        "cells": [
+          21
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "bodega"
+      },
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "estudio"
+      },
+      {
+        "id": "tijeras",
+        "name_es": "las tijeras de podar",
+        "category": "cortante",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c7",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Bernardo",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Elvira",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Heliodora",
+      "female": true
+    },
+    {
+      "id": "c5",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Ulises",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Zacarías",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "dormitorio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c1",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "comedor"
+        },
+        {
+          "type": "on_object",
+          "subject": "c2",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "planta"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "same_area",
+      "a": "c5",
+      "b": "c3"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c7"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "invernadero"
+        },
+        {
+          "type": "on_object",
+          "subject": "c8",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c9",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c9",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c9",
+          "group": "mesa"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 8,
+      "c2": 10,
+      "c3": 24,
+      "c4": 30,
+      "c5": 41,
+      "c6": 45,
+      "c7": 56,
+      "c8": 70,
+      "c9": 76
+    },
+    "murderer": "c9",
+    "lethalWeapon": "copa"
+  },
+  "metrics": {
+    "deductionSteps": 8,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Eclipse de luna"
+    },
+    "premise": {
+      "es": "Un eclipse de luna convierte la noche en terciopelo oscuro sobre la mansión. Cuando vuelve la claridad, una de las personas presentes yace sin vida."
+    }
+  }
+}

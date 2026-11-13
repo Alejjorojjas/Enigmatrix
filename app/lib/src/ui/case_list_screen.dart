@@ -17,10 +17,12 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
+import '../auth/auth_providers.dart';
 import '../backend/validation_providers.dart';
 import '../data/case_repository.dart';
 import '../game/game_config.dart';
 import 'game_chrome.dart';
+import 'registration_screen.dart' show openRegistration;
 import 'skin_theme.dart';
 import 'tutorial_coach.dart';
 import 'tutorial_dialog.dart';
@@ -641,6 +643,9 @@ class _CaseFileState extends ConsumerState<_CaseFile>
           )
         : null;
     final title = caseTitle(widget.pc);
+    // Invitado ante un caso que exige cuenta: candado.
+    final locked =
+        !isDone && ref.watch(needsRegistrationProvider(widget.pc.caseId));
 
     final tile = SizedBox(
       width: _tileSize,
@@ -666,6 +671,8 @@ class _CaseFileState extends ConsumerState<_CaseFile>
                   child: Icon(
                     isDone
                         ? Icons.check_rounded
+                        : locked
+                        ? Icons.lock_rounded
                         : widget.pendingValidation
                         ? Icons.hourglass_top_rounded
                         : widget.isCurrent
@@ -713,6 +720,9 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             children: [
               if (pendingTag != null) ...[
                 pendingTag,
+                const SizedBox(height: 6),
+              ] else if (locked) ...[
+                _Tag(text: context.l10n.caseListLockedTag),
                 const SizedBox(height: 6),
               ] else if (widget.savedGame != null) ...[
                 _Tag(
@@ -765,6 +775,8 @@ class _CaseFileState extends ConsumerState<_CaseFile>
     final diffColor = p.difficulty(pc.difficulty);
     final done = widget.doneInfo;
     final premise = pc.story?.premise('es');
+    final locked =
+        done == null && ref.read(needsRegistrationProvider(pc.caseId));
 
     showAppSheet<void>(
       context,
@@ -850,8 +862,19 @@ class _CaseFileState extends ConsumerState<_CaseFile>
               ),
             ),
           const SizedBox(height: 18),
+          if (locked)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                ctx.l10n.registerInviteBody,
+                style: ctx.body(15, color: p.softText),
+              ),
+            ),
           AppButton(
-            label: done != null
+            icon: locked ? Icons.lock_rounded : null,
+            label: locked
+                ? context.l10n.caseListRegisterToContinue
+                : done != null
                 ? context.l10n.caseListReopen
                 : widget.pendingValidation
                 ? context.l10n.validationPendingOpen
@@ -861,7 +884,11 @@ class _CaseFileState extends ConsumerState<_CaseFile>
             color: done != null ? diffColor : null,
             onTap: () {
               Navigator.pop(ctx);
-              context.go('/play/${pc.caseId}');
+              if (locked) {
+                openRegistration(context);
+              } else {
+                context.go('/play/${pc.caseId}');
+              }
             },
           ),
         ],

@@ -11,6 +11,10 @@
 # production/guias/2026-11-09-app-store-github-actions.md:
 #   IOS_DIST_CERT_P12_BASE64, IOS_DIST_CERT_PASSWORD, IOS_PROVISION_PROFILE_BASE64,
 #   APPSTORE_API_KEY_ID, APPSTORE_API_ISSUER_ID, APPSTORE_API_PRIVATE_KEY.
+# Firebase (etapa 5A.3): GOOGLE_SERVICE_INFO_PLIST_B64, el GoogleService-Info.plist
+# en base64 (el archivo no va a git). Se escribe en app/ios/Runner antes de compilar.
+#
+# Primero corren las pruebas en Linux (barato); solo si pasan se usa la máquina Mac.
 
 name: iOS a TestFlight
 
@@ -38,8 +42,48 @@ env:
   BUNDLE_ID: com.murdokudiario.app
 
 jobs:
+  pruebas:
+    name: Pruebas (motor y app)
+    # Antes de compilar para iPhone se corren las mismas pruebas que en Android:
+    # nada llega a TestFlight si alguna falla (11-11-2026).
+    if: vars.IOS_UPLOAD == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2 (fijada por SHA)
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Fuentes Material del SDK
+        run: |
+          SDK="$(dirname "$(dirname "$(command -v flutter)")")"
+          FONTS="$SDK/bin/cache/artifacts/material_fonts"
+          if [ ! -f "$FONTS/Roboto-Regular.ttf" ]; then
+            flutter precache --universal
+          fi
+          test -f "$FONTS/Roboto-Regular.ttf"
+
+      - name: Motor (tools)
+        working-directory: tools
+        run: |
+          dart pub get --enforce-lockfile
+          dart analyze
+          dart test
+
+      - name: App
+        working-directory: app
+        run: |
+          flutter pub get --enforce-lockfile
+          flutter analyze
+          flutter test
+
   testflight:
     name: IPA firmado y TestFlight
+    needs: pruebas
     if: vars.IOS_UPLOAD == 'true'
     runs-on: macos-15
     timeout-minutes: 60
@@ -54,6 +98,7 @@ jobs:
           KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
           ISSUER_ID: ${{ secrets.APPSTORE_API_ISSUER_ID }}
           API_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+          FIREBASE_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_B64 }}
         run: |
           missing=""
           [ -z "$P12" ] && missing="$missing IOS_DIST_CERT_P12_BASE64"
@@ -62,16 +107,32 @@ jobs:
           [ -z "$KEY_ID" ] && missing="$missing APPSTORE_API_KEY_ID"
           [ -z "$ISSUER_ID" ] && missing="$missing APPSTORE_API_ISSUER_ID"
           [ -z "$API_KEY" ] && missing="$missing APPSTORE_API_PRIVATE_KEY"
+          [ -z "$FIREBASE_PLIST" ] && missing="$missing GOOGLE_SERVICE_INFO_PLIST_B64"
           if [ -n "$missing" ]; then
             echo "::error::Faltan secretos:$missing"
             exit 1
           fi
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2 (fijada por SHA)
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+
+      - name: Archivo de Firebase (desde el secreto)
+        env:
+          FIREBASE_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_B64 }}
+        run: |
+          if [ -z "$FIREBASE_PLIST" ]; then
+            echo "::error::Falta el secreto GOOGLE_SERVICE_INFO_PLIST_B64 (el GoogleService-Info.plist de Firebase en base64). Agrégalo en Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          DEST=app/ios/Runner/GoogleService-Info.plist
+          if ! printf '%s' "$FIREBASE_PLIST" | base64 --decode > "$DEST" 2>/dev/null || [ ! -s "$DEST" ]; then
+            rm -f "$DEST"
+            echo "::error::El secreto GOOGLE_SERVICE_INFO_PLIST_B64 no es un base64 válido o está vacío."
+            exit 1
+          fi
 
       - name: Certificado de distribución (llavero temporal)
         env:
@@ -146,12 +207,12 @@ jobs:
       - name: Compilar IPA
         working-directory: app
         run: |
-          flutter pub get
+          flutter pub get --enforce-lockfile
           # CFBundleVersion = 10000 + número de run de este workflow (siempre crece).
           # El número de versión (0.8.1) sale de pubspec.yaml.
           flutter build ipa --release \
             --build-number=$((10000 + ${{ github.run_number }})) \
-            --dart-define=ENX_BACKEND=none \
+            --dart-define=ENX_BACKEND=firebase \
             --export-options-plist="$RUNNER_TEMP/ExportOptions.plist"
           ls -la build/ios/ipa
 
@@ -179,4 +240,4 @@ jobs:
         if: always()
         run: |
           security delete-keychain "$RUNNER_TEMP/murdoku.keychain-db" 2>/dev/null || true
-          rm -rf "$HOME/.appstoreconnect/private_keys" "$RUNNER_TEMP/app.mobileprovision" "$RUNNER_TEMP/dist.p12"
+          rm -rf "$HOME/.appstoreconnect/private_keys" "$RUNNER_TEMP/app.mobileprovision" "$RUNNER_TEMP/dist.p12" app/ios/Runner/GoogleService-Info.plist

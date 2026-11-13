@@ -1,0 +1,409 @@
+{
+  "caseId": "reto-003",
+  "mapId": "mapa-casual-s104-v2",
+  "map": {
+    "id": "mapa-casual-s104-v2",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          8,
+          9,
+          16,
+          17,
+          18,
+          24,
+          25,
+          26,
+          32,
+          40,
+          41,
+          48,
+          49,
+          50,
+          56,
+          57,
+          58
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          6,
+          7,
+          14,
+          15,
+          22,
+          23,
+          30,
+          31,
+          38
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          28,
+          29,
+          37,
+          39,
+          45,
+          46,
+          47,
+          52,
+          53,
+          54,
+          55,
+          59,
+          60,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          10
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          5,
+          11,
+          12,
+          13,
+          19,
+          20,
+          21,
+          27,
+          33,
+          34,
+          35,
+          36,
+          42,
+          43,
+          44,
+          51
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "perchero-1",
+        "type": "perchero",
+        "cells": [
+          18
+        ]
+      },
+      {
+        "id": "alfombra-2",
+        "type": "alfombra",
+        "cells": [
+          56,
+          57
+        ]
+      },
+      {
+        "id": "silla-3",
+        "type": "silla",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "armario-4",
+        "type": "armario",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "armario-5",
+        "type": "armario",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          14,
+          6
+        ]
+      },
+      {
+        "id": "armario-7",
+        "type": "armario",
+        "cells": [
+          31
+        ]
+      },
+      {
+        "id": "armario-8",
+        "type": "armario",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "armario-9",
+        "type": "armario",
+        "cells": [
+          45
+        ]
+      },
+      {
+        "id": "mesa-10",
+        "type": "mesa",
+        "cells": [
+          63,
+          55
+        ]
+      },
+      {
+        "id": "mesa-11",
+        "type": "mesa",
+        "cells": [
+          61,
+          53
+        ]
+      },
+      {
+        "id": "silla-12",
+        "type": "silla",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "silla-13",
+        "type": "silla",
+        "cells": [
+          2
+        ]
+      },
+      {
+        "id": "nevera-14",
+        "type": "nevera",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "mesa-15",
+        "type": "mesa",
+        "cells": [
+          21,
+          20
+        ]
+      },
+      {
+        "id": "planta-16",
+        "type": "planta",
+        "cells": [
+          43
+        ]
+      },
+      {
+        "id": "planta-17",
+        "type": "planta",
+        "cells": [
+          36
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "cocina"
+      },
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "bodega"
+      },
+      {
+        "id": "atizador",
+        "name_es": "el atizador de la chimenea",
+        "category": "contundente",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c3",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Alberto",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Leandro",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c5",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Silvestre",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Ximena",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Yolanda",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "only_one_on",
+      "subject": "c1",
+      "group": "alfombra"
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "armario"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "same_area",
+      "a": "c6",
+      "b": "c7"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c8",
+      "b": "c5"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 6,
+      "c2": 12,
+      "c3": 23,
+      "c4": 24,
+      "c5": 37,
+      "c6": 41,
+      "c7": 50,
+      "c8": 59
+    },
+    "murderer": "c1"
+  },
+  "metrics": {
+    "deductionSteps": 7,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Una carta sin remitente"
+    },
+    "premise": {
+      "es": "Una carta sin remitente llega a la mansión en la bandeja del correo. Antes de que nadie la abra, alguien es hallado sin vida."
+    }
+  }
+}

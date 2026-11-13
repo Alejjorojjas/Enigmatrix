@@ -45,6 +45,24 @@ class TokenStyle {
   });
 }
 
+/// Letra de la ficha o del retrato: la inicial del nombre. La víctima lleva
+/// siempre "V" (su retrato dice "Víctima"). Otro personaje cuyo nombre empiece
+/// por V lleva sus dos primeras letras ("Va" para Valeria), para no
+/// confundirlo con la víctima.
+String tokenInitial(String name, {required bool victim}) {
+  if (victim) return 'V';
+  if (name.isEmpty) return '?';
+  final letters = name.runes.map(String.fromCharCode).toList();
+  final first = letters.first.toUpperCase();
+  if (first == 'V' && letters.length > 1) {
+    return first + letters[1].toLowerCase();
+  }
+  return first;
+}
+
+/// Escala del tamaño de letra: dos letras caben en la ficha si se achican.
+double initialScale(String initial) => initial.runes.length > 1 ? 0.72 : 1.0;
+
 abstract class BoardSkin {
   String get id;
 

@@ -216,8 +216,8 @@
     },
     {
       "id": "c6",
-      "name_es": "Wenceslao",
-      "female": false
+      "name_es": "Ximena",
+      "female": true
     }
   ],
   "clues": [
@@ -273,17 +273,6 @@
       "group": "mesa"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 5,
-      "c2": 7,
-      "c3": 14,
-      "c4": 18,
-      "c5": 28,
-      "c6": 33
-    },
-    "murderer": "c6"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

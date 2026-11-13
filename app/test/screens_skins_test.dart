@@ -8,6 +8,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:enigmatrix/src/game/dev_tools.dart' show showSimulatedProvider;
 import 'package:enigmatrix/src/game/app_settings.dart';
 import 'package:enigmatrix/src/game/board_state.dart';
 import 'package:enigmatrix/src/game/game_config.dart';
@@ -106,6 +107,8 @@ Future<void> _pump(
     ProviderScope(
       overrides: [
         ...contentOverrides(list),
+        // Versión de pruebas internas: con lo simulado a la vista.
+        showSimulatedProvider.overrideWithValue(true),
         initialSettingsProvider.overrideWithValue(
           AppSettings(skinId: skin, themeMode: mode),
         ),

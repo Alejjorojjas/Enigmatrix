@@ -7,6 +7,12 @@
 > - **Visión de la Fase 2 en adelante (hoy no existe):** vidas, ayudas, puntos, intento oficial, ranking, racha, protectores, antitrampa, reto diario oficial y modo online.
 >
 > **Aviso del prototipo (Fase 1).** En el juego de hoy las pantallas de vidas, racha, reto diario, ranking, tienda, premium y las estadísticas del perfil usan **datos simulados** (constantes escritas en `app/lib/src/ui/home_shell.dart`, aprobadas el 12-07-2026). No hay servidor ni cuentas. Lo que este documento dice sobre esas pantallas es la intención de la Fase 2 en adelante, no lo que la app hace hoy.
+>
+> **ACTUALIZACIÓN 11-11-2026 (revisión CCGS, `production/revisiones/2026-11-11-ccgs-design-review.md`, sección 3):** los datos simulados ya no viven en `home_shell.dart` sino en `mock_data.dart`, `v1_scope.dart`, `home_tabs.dart` y `home_sheets.dart` (`app/lib/src/ui/`). La **versión de tienda** (0.8.1+11, "Murdoku Diario", paquete `com.murdokudiario.app`, compilada sin `ENX_DEV` y con `ENX_BACKEND=none`) **oculta las pantallas simuladas** (decisión 18, 06-11-2026; rama `fix/creditos-seguridad-y-documentos`): sin tienda, premium ni ranking simulados. Lo que queda DEMO es solo lo que se ve en la versión de desarrollo. La V1 de tienda sale **sin ayudas ni puntos** (pregunta 12, ver "Puntos"). El orden de este documento mezcla tres capas; para leerlo:
+>
+> - **Reglas vigentes de la V1:** Identidad, Regla de victoria, Estructura del caso, Reglas del tablero, Sistema de arma homicida, Reglas de colocación (bloque ACTUALIZACIÓN), Reglas de borrado, Resolver, Errores, Pistas, Tiempo, Deshacer y rehacer, Limpiar tablero y Conexión (manda el ADR-0016).
+> - **Visión de la Fase 2 en adelante (etapas 5B y 6; hoy no existe en la tienda):** Puntos, Ayudas, Vidas, Publicidad, Práctica, Mapa oficial, Mapa sin resolver, Reto diario oficial, Ranking semanal, Racha, Protectores y Antitrampa.
+> - **Historial:** todo lo marcado SUPERADO, que se conserva en su sitio (no se movió para no perder el contexto de cada decisión).
 
 ## Identidad del juego
 Enigmatrix es un juego de deduccion visual y logica espacial. El jugador resuelve casos colocando sospechosos y marcas sobre un mapa con habitaciones y objetos, a partir de pistas textuales.
@@ -38,7 +44,9 @@ De forma opcional segun dificultad, un caso tambien puede incluir:
 - La victima no aparece al inicio
 - Al final, todas las personas deben estar ubicadas correctamente
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 8, H-35): representación de la víctima. Versión de este documento (y de los docs 13, 15 y 20): la víctima no se ve. Versión del juego de hoy, de `CLAUDE.md` y de `docs/16-spec-puzzle.md`: el jugador **ubica a todos los personajes, incluida la víctima**, y en el tablero y en el panel la víctima aparece con una ficha normal marcada con una † (`board_view.dart`, `game_screen.dart`). La auditoría recomienda confirmar la ficha con † sin cuerpo ni sangre y corregir los docs 13, 15 y 20. Falta que Alejandro lo confirme.
+> **DECIDIDO 06-11-2026** (auditoría 04-11-2026, pregunta 8, H-35; roadmap, decisiones del 06-11-2026): el jugador **ubica a todos los personajes, incluida la víctima**, y en el tablero y en el panel la víctima aparece con una **ficha normal marcada con una †, sin cuerpo ni sangre** (`board_view.dart`, `game_screen.dart`). Cerrado en este documento el 11-11-2026 (la línea "La victima no aparece al inicio" de arriba se refiere solo a que no hay un cuerpo dibujado en el mapa).
+>
+> (SUPERADO 11-11-2026) Versión anterior, conservada como historial: PENDIENTE DE DECISIÓN. Versión de este documento (y de los docs 13, 15 y 20): la víctima no se ve. Versión del juego de hoy, de `CLAUDE.md` y de `docs/16-spec-puzzle.md`: el jugador ubica a todos los personajes, incluida la víctima. La auditoría recomendaba confirmar la ficha con † sin cuerpo ni sangre.
 - El jugador puede usar notas o no
 
 ## Sistema de arma homicida
@@ -49,7 +57,9 @@ De forma opcional segun dificultad, un caso tambien puede incluir:
 - `Casual`: algunos casos pueden incluir arma homicida en una version simplificada
 - `Intermedio`, `Experto` y `Elite`: el arma homicida puede formar parte normal del caso
 
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 19, H-52): uso del arma. Este documento dice que desde Intermedio el arma es parte normal del caso. En los casos de hoy el arma aparece solo en una parte pequeña de los casos y nunca por encima de Casual. Falta decidir si se usa más en el Mundo 1, desde Intermedio.
+> **DECIDIDO 05-11-2026** (auditoría 04-11-2026, pregunta 19, H-52; ADR-0014, "Actualización 05-11-2026"): el arma aparece en **Intermedio**, como dice este documento. En el Mundo 1 está en 3 de los 4 casos Intermedio (mansion-08 a mansion-10) y en 9 de los 30 retos, los últimos de cada semana. En `app/assets/cases` hay 14 casos con arma: 12 Intermedio y 2 Casual (comprobado el 11-11-2026). **H-52 cerrado.**
+>
+> (SUPERADO 11-11-2026) Versión anterior, conservada como historial: PENDIENTE DE DECISIÓN. En los casos de entonces el arma aparecía solo en una parte pequeña de los casos y nunca por encima de Casual. Faltaba decidir si se usaba más desde Intermedio.
 
 ### Regla general
 - El arma homicida agrega complejidad al caso
@@ -197,6 +207,8 @@ Cada arma especifica pertenece a una sola categoria.
 ### Descarte fuerte
 - `X grande`
 
+> **ACTUALIZACIÓN 11-11-2026 (tamaño de la X, unificado con `docs/16-spec-puzzle.md`, sección 4):** manda lo que hace el código. La app tiene **una sola X a mano**: tocar una casilla con la herramienta X la tacha (`crossAt` en `game_controller.dart`, que la guarda como `XLevel.small`) y tocarla otra vez la quita. No existe en la interfaz el paso de "X pequeña a X grande". El modelo de datos conserva el valor `XLevel.large` (`board_state.dart`) solo para leer partidas guardadas y para la lista del mini panel; ninguna acción de la pantalla lo crea. La **X automática** (Auto-X) es aparte. Los textos "X pequeña / X grande" de abajo quedan como historial (SUPERADO 11-11-2026).
+
 ### Colores base
 - error: rojo
 - exito/confirmacion: verde
@@ -215,7 +227,8 @@ Cada arma especifica pertenece a una sola categoria.
 > - **Auto-X.** Interruptor "Auto-X", encendido por defecto. Al confirmar a un personaje se tachan su fila y su columna, pero solo en casillas vacías: nunca pisa candidatos ni confirmados, y esas X se retiran si se borra el confirmado que las originó.
 > - **Borrador.** Herramienta aparte: con el borrador elegido, tocar una casilla la deja vacía (candidatos, X y confirmado, con sus X automáticas). Además existen la papelera (arrastrar una marca) y el mini panel (tocar una casilla con contenido sin ninguna herramienta elegida, para borrar un elemento).
 > - **Mapa / Notas.** Es un selector de dos opciones sobre **un solo tablero**, no dos cuadrículas. "Mapa" dibuja los muebles y los nombres de las habitaciones con el color de cada habitación más intenso. "Notas" oculta muebles y nombres y atenúa los colores para ver mejor las marcas. Las marcas son las mismas en ambas vistas. Esto reemplaza a los "dos modos de notas" (separadas / superpuestas) de los textos anteriores.
-> - **Tocar una casilla vacía sin herramienta elegida** no da ninguna respuesta. El aviso ("Elige primero a un sospechoso") y un gesto alternativo al de mantener oprimido quedaron **DECIDIDOS 04-11-2026** (auditoría, pregunta 20; ver ADR-0012): al tocar una casilla sin sospechoso elegido aparece el aviso, y hay un modo alternativo de tocar dos veces (elegir y tocar el destino) además de mantener oprimido o arrastrar. Se diseña en la prueba de concepto (etapa 2); ver `docs/11-accesibilidad.md`. Hasta que se implemente, la app de hoy sigue sin dar respuesta.
+> - **Tocar una casilla vacía sin herramienta elegida** no da ninguna respuesta. El aviso ("Elige primero a un sospechoso") y un gesto alternativo al de mantener oprimido quedaron **DECIDIDOS 04-11-2026** (auditoría, pregunta 20; ver ADR-0012): al tocar una casilla sin sospechoso elegido aparece el aviso, y hay un modo alternativo de tocar dos veces (elegir y tocar el destino) además de mantener oprimido o arrastrar. Se diseña en la prueba de concepto (etapa 2); ver `docs/11-accesibilidad.md`.
+> - **IMPLEMENTADO (comprobado el 11-11-2026):** el aviso existe (`boardPickSuspectFirst` en `app/lib/l10n/app_es.arb`, `PlacementProblem.noSuspect` en `src/board/feedback/feedback_director.dart`) y el modo de tocar dos veces está activo (`doubleTapConfirm = true` en `app/lib/src/game/board_interaction.dart`). (SUPERADO 11-11-2026) La frase "Hasta que se implemente, la app de hoy sigue sin dar respuesta" ya no es cierta.
 > - **Deshacer / rehacer.** Historial de 50 acciones del tablero (no incluye las pistas).
 
 **Texto original (superado):**
@@ -226,7 +239,7 @@ Cada arma especifica pertenece a una sola categoria.
 - Tocar avatar otra vez: confirmado
 - Se arrastra al mapa
 
-### Para X
+### Para X (SUPERADO 11-11-2026: hoy hay una sola X a mano, ver "Elementos visuales del tablero")
 - Tocar una vez: X pequena
 - Tocar otra vez: X grande
 - Se arrastra al mapa
@@ -268,8 +281,7 @@ Si se coloca otro confirmado sobre un confirmado:
 - admite:
   - candidatos
   - confirmados
-  - X pequenas
-  - X grandes
+  - X (a mano; "X pequenas / X grandes" SUPERADO 11-11-2026: hoy hay una sola X a mano)
 - tiene feedback visual al pasar por encima
 - borrar puede recuperarse con `deshacer`
 
@@ -302,7 +314,7 @@ Si se coloca otro confirmado sobre un confirmado:
 
 ## Errores
 
-> Ver el bloque **DECIDIDO 04-11-2026** de la pregunta 9 en la sección "Resolver": hoy el resaltado es exacto, pero la regla decidida es mostrar solo cuántas casillas no cuadran.
+> Ver el bloque **DECIDIDO 04-11-2026** de la pregunta 9 en la sección "Resolver". **IMPLEMENTADO (comprobado el 11-11-2026):** la app muestra cuántas casillas no cuadran (`boardWrongCells` en `app_es.arb`) y deja el resaltado exacto solo para el tutorial (`tutorialCoachStep14`). (SUPERADO 11-11-2026) La frase "hoy el resaltado es exacto" ya no es cierta.
 
 - Los errores solo cuentan al pulsar `Resolver`
 - Confirmar o marcar mal antes de validar no penaliza
@@ -321,11 +333,13 @@ Numeros exactos: `pendiente`
 
 > ACTUALIZACIÓN 04-11-2026: el doc 08 propone fórmula y números, pero siguen en revisión (se recalibran con la prueba de juego). **La app de hoy no calcula puntos.**
 >
-> **PENDIENTE DE DECISIÓN** (auditoría 04-11-2026, pregunta 12, H-30): ayudas y puntuación. La spec 16 solo dice cuándo penalizan las ayudas; no define cómo se calcula cada una ni la fórmula de puntos. Recomendación de la auditoría: la prueba de juego se hace sin ayudas y en la etapa 3 `puzzle-engineer` las especifica. Falta que Alejandro decida.
+> **DECIDIDO 11-11-2026** (auditoría 04-11-2026, pregunta 12, H-30; ADR-0014, "Decisiones de Alejandro (11-11-2026)"): la **V1 de tienda sale sin ayudas ni puntos**. La pantalla de victoria muestra **el tiempo y los errores**. Las ayudas y los puntos llegan en la **etapa 5B**, junto con el ranking del servidor. Todo lo que sigue en "Puntos" y "Ayudas" es la intención de la etapa 5B, no de la V1.
+>
+> (SUPERADO 11-11-2026) Versión anterior, conservada como historial: PENDIENTE DE DECISIÓN. La spec 16 solo dice cuándo penalizan las ayudas; no define cómo se calcula cada una ni la fórmula de puntos. Recomendación de la auditoría: la prueba de juego se hace sin ayudas y en la etapa 3 `puzzle-engineer` las especifica.
 
 ## Ayudas
 
-> **Hoy no existen ayudas en la app.** Ver el **PENDIENTE DE DECISIÓN** de la pregunta 12 en la sección "Puntos": las cinco ayudas de abajo son la intención original y no están decididas ni especificadas.
+> **Hoy no existen ayudas en la app, y la V1 sale sin ellas** (pregunta 12 DECIDIDA 11-11-2026, ver "Puntos"): las cinco ayudas de abajo son la intención original para la etapa 5B y aún no están especificadas.
 
 ### Ayudas V1
 - resaltar pista importante
@@ -353,6 +367,8 @@ Numeros exactos: `pendiente`
 - El estado de la pista queda guardado si abandona la partida
 
 > ACTUALIZACIÓN 04-11-2026: hoy el estado de las pistas **no se guarda** al salir (se pierde junto con el tablero). Ver pregunta 10.
+>
+> **ACTUALIZACIÓN 11-11-2026:** (SUPERADO 11-11-2026) la frase anterior ya no es cierta. Las pistas **sí se guardan al salir**: `clueMarks` en `app/lib/src/game/saved_game.dart`, restauradas en `game_controller.dart`.
 - El cambio de estado funciona en ciclo:
   - normal
   - destacada
@@ -452,7 +468,7 @@ Un mapa queda `sin resolver` cuando pierde su intento oficial.
 >
 > ~~(SUPERADO 06-11-2026) Versión anterior: PENDIENTE DE DECISIÓN. Este documento dice "dentro del día local"; `docs/08-balance.md` dice hora del servidor (cierre semanal domingo 23:59 UTC). Recomendación de la auditoría: medianoche de Colombia, igual para todos.~~
 >
-> Hoy el Reto es una simulación DEMO: elige el caso por la fecha del teléfono (cualquier dificultad) y se puede repetir sin límite; "un intento" y "mismo caso para todos" no se cumplen.
+> Hoy el Reto es una simulación DEMO: "un intento" y "mismo caso para todos" no se cumplen y se puede repetir sin límite. **ACTUALIZACIÓN 11-11-2026:** el caso ya no se elige "de cualquier dificultad": existe el ciclo de **30 días** con casos Casual e Intermedio (`tools/data/mundos/mansion-reto.json` y `app/lib/src/ui/v1_scope.dart`), que sigue eligiéndose por la fecha del teléfono hasta que exista el servidor (etapa 5B). (SUPERADO 11-11-2026) "cualquier dificultad".
 
 ### Reglas
 - un intento oficial
@@ -534,6 +550,8 @@ Un mapa queda `sin resolver` cuando pierde su intento oficial.
 - si se borra cache o datos, se pierde el intento oficial
 - si se cierra sesion con una partida pendiente, se pierde el intento oficial
 
+> **ACTUALIZACIÓN 11-11-2026 (intento oficial al borrar datos o cerrar sesión):** la etapa 5A ya empezó y el ADR-0016 (Aceptado 07-11-2026) cambia el marco: el servidor anota la hora de inicio y el resultado de cada partida oficial, así que lo ya registrado allí no depende de la caché del teléfono. **Esta regla concreta sigue siendo una decisión pendiente de Alejandro** (informe CCGS, sección 7, punto 4; choca con el pilar 3) y debe cerrarse antes de encender el servidor en la etapa 5B. En la V1 de tienda no aplica: no hay intento oficial ni ranking.
+>
 > **DECIDIDO 04-11-2026** (auditoría, pregunta 10; ver ADR-0012): la partida se guarda siempre. Al salir, el reloj se pausa y el tablero se oculta durante la pausa. Vale mientras no haya ranking real y la regla se revisa antes de la etapa 5. Esto reemplaza lo de "el tiempo sigue corriendo si la app se minimiza" del doc 03. Esta decisión no cubre perder el intento oficial por borrar la memoria o cerrar sesión: esa parte sigue sin resolverse y se revisa junto con la regla antes de la etapa 5 (choca con el pilar 3 de `docs/09-pillars.md`).
 >
 > (SUPERADO 04-11-2026) Versión anterior, conservada como historial: Antes pendiente (auditoría 04-11-2026, pregunta 10, H-32, H-55): guardado de la partida al salir. Perder el intento oficial por borrar la memoria o cerrar sesión choca con el pilar 3 de `docs/09-pillars.md` (la sección de tensiones de ese documento no lo menciona). Falta decidir la regla antes de la Fase 2.
@@ -541,11 +559,15 @@ Un mapa queda `sin resolver` cuando pierde su intento oficial.
 ## Conexion
 
 > ACTUALIZACIÓN 04-11-2026: el prototipo de la Fase 1 funciona sin conexión. Esta sección es la intención para cuando exista servidor (etapa 5).
+>
+> **MANDA EL ADR-0016 (Aceptado 07-11-2026; decidido 11-11-2026 sobre esta sección):** **sin conexión se juega, pero Resolver espera la señal.**
+> - El tablero, las notas, las pistas y el reloj funcionan sin internet.
+> - Si al pulsar Resolver no hay conexión, el tablero queda guardado como "por validar" y se envía cuando vuelve la señal; entonces la app muestra la victoria o cuántas casillas no cuadran.
+> - Una partida cuenta para el ranking de tiempo solo si se empezó con conexión (el servidor anota la hora de inicio). El **reto diario** exige conexión para empezar; si la señal se cae a mitad, se puede terminar y Resolver espera.
+> - Un Resolver fallido descuenta la vida cuando el servidor lo valida.
+> - Hoy (V1 de tienda, `ENX_BACKEND=none`) todo es local y no hay validación en servidor.
 
-- Todo el juego es online
-- si se pierde conexion durante una partida oficial:
-  - puede seguir un tiempo
-  - luego se bloquea
-  - no deja ver tablero ni pistas
+- ~~Todo el juego es online~~ (SUPERADO 11-11-2026 por el ADR-0016)
+- ~~si se pierde conexion durante una partida oficial: puede seguir un tiempo, luego se bloquea y no deja ver tablero ni pistas~~ (SUPERADO 11-11-2026 por el ADR-0016)
 - al volver la conexion:
-  - reintento automatico
+  - reintento automatico (sigue valiendo para el envío pendiente de Resolver)

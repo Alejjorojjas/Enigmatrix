@@ -1,62 +1,85 @@
-# Política de Privacidad — Enigmatrix
+# Política de Privacidad — Murdoku Diario
 
-Última actualización: 12 de julio de 2026
-
-> ACTUALIZACIÓN INTERNA 04-11-2026 (auditoría 04-11-2026, hallazgos H-06, H-07, H-08 y H-09). Este borrador NO está listo para publicar y esta nota se borra al publicar, igual que la nota interna de abajo. Lo que sigue pendiente:
+> NOTA INTERNA (borrar las notas al publicar). Reescrita el 12-11-2026 para la versión con servidor (etapa 5A.3: reto diario y ranking con apodo). La versión 0.8.1, sin servidor, no trata datos; esta política aplica desde la primera versión que se conecte a Firebase y debe estar publicada ANTES de esa versión.
 >
-> - **Nombre del responsable y correo de privacidad: SIGUEN SIN COMPLETARSE.** Dependen de la decisión 17 (identidad legal), que todavía no ha tomado Alejandro (**PENDIENTE DE DECISIÓN**, auditoría 04-11-2026, pregunta 17). No se rellenan los corchetes hasta entonces.
-> - **Edad mínima:** el texto dice "mayores de 12 años". **DECIDIDO 06-11-2026** (pregunta 16, H-09): 13 años o más. El texto ya está alineado.
-> - **Tipografías:** las secciones "Qué datos recolectamos" y "Conexión a internet" dicen que no se recolecta nada y que la descarga de tipografías "no envía datos personales". La app sí descarga las tipografías de Google Fonts (`google_fonts`) la primera vez que se abre, y con esa conexión la dirección IP del dispositivo llega a Google; según lo investigado, un tribunal alemán (2022) la trató como dato personal (H-07). Hay que revisar esas dos frases, o empaquetar las tipografías dentro de la app para que no haya descarga; ese cambio de código no está hecho.
-> - **Enlace dentro de la app:** hoy la app no tiene ningún botón que abra esta política (H-06), y Apple exige uno.
-> - **Solo está en español.** Falta la versión en inglés (`docs/07-arquitectura.md` la prevé).
-> - Estado de la app hoy: no hay cuentas, anuncios ni compras reales; la Tienda, Premium y el Ranking son pantallas simuladas marcadas "DEMO". Ver `docs/15-legal.md` y `docs/20-checklist-tiendas.md`.
+> **Sigue pendiente:**
+> - **Publicarla en una URL pública:** las dos tiendas la exigen. Sirve GitHub Pages desde un repositorio PÚBLICO aparte que solo contenga esta página, o cualquier alojamiento gratuito.
+> - **Botón en la app:** Apple exige un enlace a esta política dentro de la app (H-06).
+> - **Formularios de las tiendas:** actualizar "Seguridad de los datos" en Play Console y la "Privacidad de la app" en App Store Connect con lo que dice esta versión.
+> - **Inglés:** falta la versión en inglés.
+> - **Confirmar** que el correo murdokudiario@gmail.com existe y Alejandro lo revisa.
+> - Se recomienda revisarla con un abogado antes del lanzamiento comercial (`docs/15-legal.md`).
 
-> NOTA INTERNA (borrar al publicar): ambas tiendas exigen esta política
-> alojada en una URL pública (sirve GitHub Pages). Este texto cubre la
-> versión actual de la app (sin cuentas ni recolección de datos). Cuando
-> entre la Fase 2 (cuentas, ranking, Firebase) DEBE actualizarse con las
-> secciones marcadas [FASE 2]. Revisión por abogado recomendada antes del
-> lanzamiento comercial (ver docs/15-legal.md).
+Última actualización: [FECHA DE PUBLICACIÓN]
 
 ## Quiénes somos
 
-Enigmatrix es un juego móvil de deducción lógica. Responsable del
-tratamiento: [NOMBRE DEL RESPONSABLE — persona natural], Colombia.
-Contacto: [CORREO DE PRIVACIDAD].
+Murdoku Diario es un juego móvil de deducción lógica.
 
-## Qué datos recolectamos
+- **Responsable del tratamiento:** Diego Alejandro Rojas Corredor, persona natural, Colombia.
+- **Contacto:** murdokudiario@gmail.com
 
-**Ninguno.** La versión actual de Enigmatrix:
+## Resumen
 
-- No requiere cuenta ni registro.
-- No recolecta datos personales, identificadores ni ubicación.
-- No usa publicidad ni SDKs de terceros de análisis o rastreo.
-- No comparte ni vende información de ningún tipo.
+- Puedes ver el tutorial y jugar los dos primeros casos **sin registrarte**.
+- Para seguir la campaña y jugar el reto diario necesitas una cuenta. Puedes registrarte con **Google**, con **Apple** o con **correo y contraseña**.
+- No pedimos teléfono ni ubicación.
+- No hay publicidad, herramientas de análisis ni compras dentro de la app.
+- Puedes borrar tu cuenta y tus datos desde la app en cualquier momento.
 
-## Qué se guarda en tu dispositivo
+## Qué datos tratamos y para qué
 
-Tu progreso de juego (casos resueltos, tiempos y notas de práctica) se
-guarda únicamente en el almacenamiento local de tu dispositivo. Se elimina
-al desinstalar la app y nunca sale de tu teléfono.
+| Dato | Para qué |
+|---|---|
+| **Identificador de invitado.** Lo crea Firebase Authentication (Google) al abrir la app. No está ligado a tu nombre ni a tu correo. | Reconocer tus partidas de invitado. Si te registras, tu progreso pasa a tu cuenta. |
+| **Datos de la cuenta.** Si te registras: tu **correo** y el identificador que entrega Google o Apple. Si usas Apple con "Ocultar mi correo", recibimos solo un correo de reenvío de Apple. Si usas correo y contraseña, la contraseña la guarda cifrada Firebase Authentication y nosotros nunca la vemos. | Crear tu cuenta, iniciar sesión, recuperar la contraseña y conservar tu progreso al cambiar de teléfono. **No te enviamos publicidad.** |
+| **Apodo.** El nombre que eliges para el ranking. | Mostrarlo en el ranking diario. **Otros jugadores lo ven.** No uses tu nombre real si no quieres. |
+| **Datos de cada partida en línea:** el caso, la hora de inicio y de fin, el tiempo, los errores y si lo resolviste. | Validar tu solución en el servidor, calcular tu puesto y armar el ranking. |
+| **Ranking diario:** tu apodo, tu tiempo y tus errores en el reto del día. | Mostrar la tabla del día a todos los jugadores. |
+| **Verificación de la app.** Firebase App Check (Google) usa Play Integrity en Android y App Attest en iPhone. | Comprobar que las solicitudes vienen de la app original y no de un programa que hace trampa. |
+| **Datos técnicos de conexión**, como la dirección IP. Los recibe Google al prestar el servicio. | Hacer funcionar la conexión y la seguridad del servicio. No los usamos para identificarte. |
 
-## Conexión a internet
+La base del tratamiento es tu **autorización**, que das al usar las funciones en línea, y la necesidad de prestarte el servicio que pediste.
 
-La app puede descargar tipografías desde servidores de Google Fonts la
-primera vez que se abre. Esa conexión no envía datos personales.
+**No vendemos, alquilamos ni compartimos tus datos** con nadie para publicidad ni para ningún otro fin.
+
+## Dónde se guardan y quién los procesa
+
+- Los datos en línea se guardan en **Google Firebase** (Google Cloud), en la región **southamerica-east1 (São Paulo, Brasil)**.
+- Google actúa como **encargado del tratamiento**: procesa los datos solo para prestar el servicio.
+- Esto implica una **transferencia internacional** de datos fuera de Colombia, hacia un proveedor con estándares de protección adecuados.
+
+## Qué se guarda solo en tu teléfono
+
+Tus preferencias de apariencia, sonido y vibración, las partidas en curso y los casos de práctica se guardan en tu teléfono. Se borran al desinstalar la app.
+
+## Cuánto tiempo guardamos los datos
+
+- **Ranking diario:** se borra a los **30 días**.
+- **Cuenta, correo, apodo y datos de partidas:** se guardan **hasta que borres tu cuenta** desde la app.
+- **Cuentas sin uso:** se eliminan tras **12 meses** sin abrir el juego.
+
+## Tus derechos
+
+De acuerdo con la Ley 1581 de 2012 de Colombia, puedes:
+
+- conocer, actualizar y rectificar tus datos;
+- pedir que se borren;
+- revocar tu autorización;
+- presentar una queja ante la Superintendencia de Industria y Comercio.
+
+**Puedes cambiar tu apodo y borrar tu cuenta con todos sus datos desde Configuración, dentro de la app.**
+
+Para cualquier otra solicitud escríbenos a murdokudiario@gmail.com. Respondemos en un máximo de **15 días hábiles**.
 
 ## Menores de edad
 
-Enigmatrix está dirigida a personas de 13 años o más y no recolecta datos de
-ningún usuario, incluidos menores.
+Murdoku Diario está dirigido a personas de **13 años o más**. No pedimos datos que identifiquen a nadie. Si eres padre o tutor y crees que un menor de 13 años nos dio un apodo con datos personales, escríbenos y lo borramos.
 
 ## Cambios a esta política
 
-Publicaremos cualquier cambio en esta misma página, actualizando la fecha
-del encabezado. Si en el futuro el juego añade cuentas, rankings en línea u
-otras funciones que traten datos personales, esta política se actualizará
-ANTES de activar esas funciones, detallando qué datos se tratan, con qué
-base legal y cómo ejercer tus derechos (acceso, rectificación, supresión).
+Publicaremos cualquier cambio en esta misma página y actualizaremos la fecha del encabezado. Si un cambio trata datos nuevos, te lo avisaremos en la app antes de activarlo.
 
 ## Contacto
 
-Para cualquier pregunta sobre privacidad: [CORREO DE PRIVACIDAD].
+Para cualquier pregunta sobre privacidad: murdokudiario@gmail.com

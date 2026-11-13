@@ -2,6 +2,8 @@
 
 > ACTUALIZACIÓN 04-11-2026 (auditoría 04-11-2026, H-36): la sección "Qué NO está todavía" estaba desfasada y se corrigió con una nota. Además, la **prueba de juego con personas** (etapa 1 del plan aprobado el 04-11-2026) todavía no se ha hecho: las rondas de feedback documentadas hasta hoy fueron sobre la apariencia, no sobre si el juego es divertido y justo (H-22). **DECIDIDO 04-11-2026** (auditoría, pregunta 21; ver ADR-0012): Alejandro puede conseguir de 3 a 5 personas para la prueba de juego. Su teléfono de prueba es un Android de gama media.
 
+> **ACTUALIZACIÓN 11-11-2026 (verificación de fecha):** cifras para el comando único de pruebas, dadas por Alejandro el 11-11-2026 y **no ejecutadas** en esta revisión: app 715, motor 342, servidor 95 (`cd backend && npm test`, necesita Java 21). Versión 0.8.1+11, "Murdoku Diario"; la prueba interna de Google Play está publicada (versión 10007). La prueba de juego n.º 1 se hizo con la 0.3.0+3 (resultados en `active.md`); (SUPERADO 11-11-2026) la frase de arriba de que "todavía no se ha hecho". Publicar ya no es "DESPUÉS": la prueba interna de Play ya está publicada.
+
 Cómo jugar la versión actual, en qué dispositivo, y cómo fluye una ronda de
 correcciones. Publicar en Play Store / App Store es DESPUÉS, cuando el juego
 esté pulido (roadmap doc 17).
@@ -21,6 +23,7 @@ esté pulido (roadmap doc 17).
   (recompila y abre la carpeta del APK) y reinstalar en el teléfono.
 
 ### 3. En un iPhone (requiere el Mac, cuando se quiera)
+> **ACTUALIZACIÓN 11-11-2026 (pregunta 22 DECIDIDA 09-11-2026, ADR-0014 y ADR-0017):** el iPhone **entra en la V1** y se prueba por **TestFlight**, no con un Mac propio: el workflow `.github/workflows/ios-testflight.yml` compila en un Mac de GitHub y sube a TestFlight. Está listo pero **apagado** hasta `IOS_UPLOAD=true`; la guía es `production/guias/2026-11-09-app-store-github-actions.md`. El proyecto iOS aún no se ha compilado en CI. Los pasos con Mac de abajo quedan como historial (SUPERADO 11-11-2026) y VoiceOver se prueba en TestFlight.
 > Nota 04-11-2026: el 12-07-2026 Alejandro confirmó que tiene acceso a un Mac. La pregunta 22 queda reducida a si el iPhone entra al lanzamiento, y sigue pendiente de Alejandro. Hasta hoy no hay constancia de que iOS se haya compilado (H-10).
 
 En el Mac, una sola vez:

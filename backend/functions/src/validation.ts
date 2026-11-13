@@ -10,6 +10,16 @@ export const MAX_SUBMITS_PER_MINUTE_LIMIT = 60;
 /** Margen por defecto entre el reloj del teléfono y el del servidor para marcar `suspicious`. */
 export const DEFAULT_CLIENT_CLOCK_MARGIN_MS = 5000;
 export const MAX_LAST_SUBMISSIONS = 20;
+export const DEFAULT_MAX_WRONG_PER_CASE = 15;
+export const MAX_WRONG_PER_CASE_LIMIT = 1000;
+export const DEFAULT_ERROR_PENALTY_MS = 30_000;
+export const MAX_ERROR_PENALTY_MS = 24 * 60 * 60 * 1000;
+/** Casos que puede jugar un invitado (sesión anónima), además del tutorial que corre en el teléfono. */
+export const DEFAULT_FREE_CASE_IDS: readonly string[] = ["mansion-01", "mansion-02"];
+export const MAX_FREE_CASE_IDS = 50;
+/** Tiempo mínimo plausible (servidor) para resolver un reto y entrar al ranking. */
+export const DEFAULT_MIN_RANKED_ELAPSED_MS = 20_000;
+export const MAX_MIN_RANKED_ELAPSED_MS = 60 * 60 * 1000;
 
 /** Ids de caso y de personaje: empiezan por letra o número; luego letras, números, `-` y `_`. */
 export const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
@@ -18,8 +28,10 @@ export const SUBMISSION_ID_PATTERN = /^[A-Za-z0-9_-]{8,64}$/;
 /** Error de entrada: `code` usa los mismos nombres que HttpsError. */
 export class InputError extends Error {
   constructor(
-    public readonly code: "invalid-argument" | "not-found" | "resource-exhausted",
+    public readonly code: "invalid-argument" | "not-found" | "resource-exhausted" | "failed-precondition",
     message: string,
+    /** Datos extra para el cliente (HttpsError.details), p. ej. `{ reason: "email-unverified" }`. */
+    public readonly details?: Record<string, unknown>,
   ) {
     super(message);
     this.name = "InputError";
@@ -179,6 +191,100 @@ export function resolveMaxSubmitsPerMinute(cfg: unknown): number {
     }
   }
   return DEFAULT_MAX_SUBMITS_PER_MINUTE;
+}
+
+/** Lee `maxWrongPerCase` de config/server (entero entre 1 y 1000); si no, 15. */
+export function resolveMaxWrongPerCase(cfg: unknown): number {
+  if (isPlainObject(cfg)) {
+    const v = cfg.maxWrongPerCase;
+    if (typeof v === "number" && Number.isInteger(v)) {
+      return Math.min(MAX_WRONG_PER_CASE_LIMIT, Math.max(1, v));
+    }
+  }
+  return DEFAULT_MAX_WRONG_PER_CASE;
+}
+
+/** Lee `errorPenaltyMs` de config/server (entero entre 0 y 24 h); si no, 30000 ms. */
+export function resolveErrorPenaltyMs(cfg: unknown): number {
+  if (isPlainObject(cfg)) {
+    const v = cfg.errorPenaltyMs;
+    if (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= MAX_ERROR_PENALTY_MS) return v;
+  }
+  return DEFAULT_ERROR_PENALTY_MS;
+}
+
+/** Puntaje del ranking: tiempo del servidor más la penalización por cada error. Gana el menor. */
+export function computeScore(serverElapsedMs: number, errors: number, penaltyMs: number): number {
+  return serverElapsedMs + errors * penaltyMs;
+}
+
+/** Lee `freeCaseIds` de config/server (lista de ids de caso); si falta o es inválida, mansion-01 y mansion-02. */
+export function resolveFreeCaseIds(cfg: unknown): string[] {
+  if (isPlainObject(cfg)) {
+    const v = cfg.freeCaseIds;
+    if (
+      Array.isArray(v) &&
+      v.length <= MAX_FREE_CASE_IDS &&
+      v.every((x) => typeof x === "string" && x.length <= MAX_CASE_ID_LENGTH && ID_PATTERN.test(x))
+    ) {
+      return [...(v as string[])];
+    }
+  }
+  return [...DEFAULT_FREE_CASE_IDS];
+}
+
+/** ¿El proveedor de inicio de sesión es de un usuario registrado? Solo "anonymous" (o ausente) es invitado. */
+export function isRegisteredProvider(provider: unknown): boolean {
+  return typeof provider === "string" && provider.length > 0 && provider !== "anonymous";
+}
+
+export const REGISTER_MESSAGE = "Regístrate para seguir jugando.";
+
+export const EMAIL_UNVERIFIED_MESSAGE = "Verifica tu correo para jugar el reto.";
+
+/**
+ * Un correo con contraseña sin verificar no cuenta como registrado para el reto ni para el apodo.
+ * Los demás proveedores (Google, Apple...) ya vienen verificados. Lanza failed-precondition
+ * con details `{ reason: "email-unverified" }`.
+ */
+export function assertEmailVerified(provider: unknown, emailVerified: unknown): void {
+  if (provider === "password" && emailVerified !== true) {
+    throw new InputError("failed-precondition", EMAIL_UNVERIFIED_MESSAGE, { reason: "email-unverified" });
+  }
+}
+
+/**
+ * Los invitados solo juegan los casos gratis; el resto de la campaña y todos los retos exigen registro.
+ * En la campaña basta con no ser anónimo; en los retos, además, el correo debe estar verificado.
+ * Lanza failed-precondition si no se puede jugar.
+ */
+export function assertCanPlay(
+  provider: unknown,
+  caseId: string,
+  isReto: boolean,
+  freeCaseIds: readonly string[],
+  emailVerified?: unknown,
+): void {
+  if (isRegisteredProvider(provider)) {
+    if (isReto) assertEmailVerified(provider, emailVerified);
+    return;
+  }
+  if (!isReto && freeCaseIds.includes(caseId)) return;
+  throw new InputError("failed-precondition", REGISTER_MESSAGE);
+}
+
+/** Lee `minRankedElapsedMs` de config/server (entero entre 0 y 1 h); si no, 20000 ms. */
+export function resolveMinRankedElapsedMs(cfg: unknown): number {
+  if (isPlainObject(cfg)) {
+    const v = cfg.minRankedElapsedMs;
+    if (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= MAX_MIN_RANKED_ELAPSED_MS) return v;
+  }
+  return DEFAULT_MIN_RANKED_ELAPSED_MS;
+}
+
+/** ¿Un reto resuelto en menos del mínimo plausible? Entonces no es rankeable y es sospechoso. */
+export function isTooFast(serverElapsedMs: number | null, minMs: number): boolean {
+  return serverElapsedMs !== null && serverElapsedMs < minMs;
 }
 
 /** Lee `clientClockMarginMs` de config/server (entero >= 0); si no, 5000 ms. */

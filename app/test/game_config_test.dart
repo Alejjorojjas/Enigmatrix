@@ -35,8 +35,8 @@ void main() {
       expect(c.periodicSaveSeconds, 15);
       expect(c.wrongSolveLockSeconds, 3);
       expect(c.splashMinMillis, 1700);
-      expect(c.challengeStartDate, '2026-11-01');
-      expect(c.challengeStart, DateTime(2026, 11, 1));
+      expect(c.challengeStartDate, '2026-11-16');
+      expect(c.challengeStart, DateTime(2026, 11, 16));
       expect(c.challengeDays, 30);
       expect(c.maxLives, 5);
       expect(c.v1Difficulties, ['principiante', 'casual', 'intermedio']);
@@ -142,10 +142,10 @@ void main() {
 
   group('día del reto con la configuración', () {
     test('con la configuración por defecto sigue igual', () {
-      expect(challengeDayFor(DateTime(2026, 11, 1)), 1);
-      expect(challengeDayFor(DateTime(2026, 11, 30)), 30);
-      expect(challengeDayFor(DateTime(2026, 12, 1)), 1);
-      expect(challengeDayFor(DateTime(2026, 10, 31)), 30);
+      expect(challengeDayFor(DateTime(2026, 11, 16)), 1);
+      expect(challengeDayFor(DateTime(2026, 12, 15)), 30);
+      expect(challengeDayFor(DateTime(2026, 12, 16)), 1);
+      expect(challengeDayFor(DateTime(2026, 11, 15)), 30);
     });
 
     test('otra fecha de inicio y otro número de días', () {

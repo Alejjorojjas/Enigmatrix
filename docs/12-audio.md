@@ -1,5 +1,8 @@
 # Enigmatrix - Audio
 
+> **ACTUALIZACIÓN 11-11-2026: PARCIALMENTE OBSOLETO.** La frase "hoy la app no tiene audio ni vibración" ya no es cierta: la app tiene **sonido y vibración desde la 0.3.0+3** (ADR-0013): **13 sonidos** (`app/assets/sonidos/`, 13 archivos), director de feedback del tablero y los interruptores propios `cfg:sonido` y `cfg:vibracion` en `app/lib/src/game/app_settings.dart` (no hay interruptor de música en el código). El motor de audio es `flutter_soloud` (`app/pubspec.yaml`). La lista de sonidos y la estrategia de costo casi cero de abajo siguen siendo la dirección; qué sonidos faltan o sobran no se contrastó. (SUPERADO 11-11-2026) el bloque siguiente del 04-11-2026.
+>
+
 > ACTUALIZACIÓN 04-11-2026: **hoy la app no tiene audio.** No hay sonidos, música ni vibración, y `app/pubspec.yaml` no incluye ningún paquete de audio ni de vibración (comprobado el 04-11-2026). En Configuración existen los interruptores "Sonido", "Música" y "Vibración", pero solo guardan la preferencia y no controlan nada todavía.
 >
 > El audio entra en la **etapa 4 (producción visual)** del plan aprobado el 04-11-2026, junto con el game feel, y solo si pasan la prueba de juego y la prueba de concepto gráfica. La estrategia de costo casi cero (10 a 15 sonidos clave, vibración, motor de audio y presupuesto estimado) está en la [sección 6 del informe de investigación gráfica](../production/revisiones/2026-11-04-investigacion-grafica.md). Cuando se llegue a esa etapa, este documento se revisa contra ese informe; mientras tanto, lo de abajo es la intención original (junio de 2026), no algo construido.

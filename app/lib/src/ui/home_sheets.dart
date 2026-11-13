@@ -11,12 +11,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
 import '../app_version.dart';
+import '../auth/auth_providers.dart';
+import '../backend/validation_providers.dart' show nicknameServiceProvider;
 import '../game/app_settings.dart';
 import '../game/dev_tools.dart';
 import 'appearance_picker.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'dev_texts.dart';
 import 'feedback_report.dart';
+import 'nickname_screen.dart';
+import 'registration_screen.dart';
 import 'skin_theme.dart';
 import 'tutorial_dialog.dart';
 import 'ui_kit.dart';
@@ -153,6 +157,7 @@ class _SettingsSheet extends ConsumerWidget {
     final p = context.pal;
     final settings = ref.watch(settingsProvider);
     final notifier = ref.read(settingsProvider.notifier);
+    final showSim = ref.watch(showSimulatedProvider);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,24 +172,27 @@ class _SettingsSheet extends ConsumerWidget {
           value: settings.soundOn,
           onChanged: notifier.setSound,
         ),
-        SwitchRow(
-          icon: Icons.music_note_rounded,
-          label: context.l10n.sheetMusic,
-          value: false,
-          onChanged: null,
-        ),
+        // Música y Notificaciones no hacen nada aún: solo con simulados.
+        if (showSim)
+          SwitchRow(
+            icon: Icons.music_note_rounded,
+            label: context.l10n.sheetMusic,
+            value: false,
+            onChanged: null,
+          ),
         SwitchRow(
           icon: Icons.vibration_rounded,
           label: context.l10n.sheetHaptics,
           value: settings.hapticsOn,
           onChanged: notifier.setHaptics,
         ),
-        SwitchRow(
-          icon: Icons.notifications_rounded,
-          label: context.l10n.sheetNotifications,
-          value: false,
-          onChanged: null,
-        ),
+        if (showSim)
+          SwitchRow(
+            icon: Icons.notifications_rounded,
+            label: context.l10n.sheetNotifications,
+            value: false,
+            onChanged: null,
+          ),
         SwitchRow(
           icon: Icons.slow_motion_video_rounded,
           label: context.l10n.sheetReduceMotion,
@@ -213,20 +221,76 @@ class _SettingsSheet extends ConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 14),
-        Row(
-          children: [
-            Flexible(
-              child: Text(context.l10n.sheetAccount, style: context.body(16)),
+        // Con servidor: apodo del ranking y borrado de la cuenta.
+        if (ref.watch(nicknameServiceProvider) != null) ...[
+          const Divider(height: 24),
+          if (ref.watch(isGuestProvider)) ...[
+            AppButton(
+              label: context.l10n.settingsSignIn,
+              icon: Icons.login_rounded,
+              onTap: () {
+                final router = GoRouter.of(context);
+                Navigator.pop(context);
+                router.push(kRegistrationRoute);
+              },
             ),
-            const SizedBox(width: 8),
-            const DemoBadge(),
+            const SizedBox(height: 10),
+          ] else ...[
+            Text(
+              switch (ref.watch(accountEmailProvider)) {
+                final String email => context.l10n.settingsSignedInAs(email),
+                _ => context.l10n.settingsSignedIn,
+              },
+              style: context.body(15, color: p.softText),
+            ),
+            const SizedBox(height: 10),
+            if (ref.watch(authServiceProvider) != null) ...[
+              AppButton(
+                label: context.l10n.settingsSignOut,
+                quiet: true,
+                icon: Icons.logout_rounded,
+                onTap: () => confirmSignOut(context, ref),
+              ),
+              const SizedBox(height: 10),
+            ],
+            // El apodo es del ranking: solo para usuarios registrados.
+            AppButton(
+              label: context.l10n.settingsChangeNick,
+              quiet: true,
+              icon: Icons.edit_rounded,
+              onTap: () => showNicknameDialog(context, ref),
+            ),
+            const SizedBox(height: 10),
           ],
-        ),
-        Text(
-          context.l10n.sheetAccountBody,
-          style: context.note(15, color: p.softText),
-        ),
+          AppButton(
+            label: context.l10n.settingsDeleteAccount,
+            quiet: true,
+            icon: Icons.delete_forever_rounded,
+            onTap: () => confirmDeleteAccount(context, ref),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            context.l10n.settingsDeleteAccountHint,
+            style: context.note(14, color: p.softText),
+          ),
+        ],
+        // La cuenta es simulada hasta la etapa 5.
+        if (showSim) ...[
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Flexible(
+                child: Text(context.l10n.sheetAccount, style: context.body(16)),
+              ),
+              const SizedBox(width: 8),
+              const DemoBadge(),
+            ],
+          ),
+          Text(
+            context.l10n.sheetAccountBody,
+            style: context.note(15, color: p.softText),
+          ),
+        ],
         // Banco de pruebas y feedback de playtest: solo con ENX_DEV (H-66).
         if (ref.watch(devToolsProvider)) ...[
           const Divider(height: 24),

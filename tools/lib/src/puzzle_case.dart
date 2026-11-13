@@ -71,7 +71,10 @@ class PuzzleCase {
   final String difficulty;
 
   /// SOLO pipeline interno. El cliente JAMÁS la recibe (ver toClientJson).
-  final Solution solution;
+  /// Es null en los casos publicados de los mundos (mansion-*, reto-*): se
+  /// validan en el servidor y su JSON de la app no lleva `solution`. Los
+  /// casos locales (tutorial y banco `caso-*`) sí la traen.
+  final Solution? solutionOrNull;
   final CaseMetrics? metrics;
 
   /// Historia del caso (mundo, título y premisa). Opcional: los casos sin
@@ -87,10 +90,20 @@ class PuzzleCase {
     required this.clues,
     required this.hasWeapon,
     required this.difficulty,
-    required this.solution,
+    Solution? solution,
     this.metrics,
     this.story,
-  });
+  }) : solutionOrNull = solution;
+
+  /// true si el caso trae su solución (se puede validar en este equipo).
+  bool get hasSolution => solutionOrNull != null;
+
+  /// La solución. Lanza [StateError] si el caso no la trae: quien valida en
+  /// local debe preguntar antes por [hasSolution].
+  Solution get solution =>
+      solutionOrNull ??
+      (throw StateError('El caso $caseId no trae solución: se valida en el '
+          'servidor.'));
 
   /// Copia del caso con otra historia (o sin ella si [story] es null).
   PuzzleCase withStory(CaseStory? story) => PuzzleCase(
@@ -101,7 +114,7 @@ class PuzzleCase {
         clues: clues,
         hasWeapon: hasWeapon,
         difficulty: difficulty,
-        solution: solution,
+        solution: solutionOrNull,
         metrics: metrics,
         story: story,
       );
@@ -139,8 +152,23 @@ class PuzzleCase {
         lethalWeaponId: lethal,
       );
 
-  /// JSON completo del pipeline interno (incluye solución). El mapa viaja
-  /// embebido: cada caso tiene su propio mapa (decisión 2026-06-11).
+  /// Copia del caso sin solución (la versión que va en los assets de la app
+  /// para los casos que valida el servidor).
+  PuzzleCase withoutSolution() => PuzzleCase(
+        caseId: caseId,
+        map: map,
+        characters: characters,
+        victimId: victimId,
+        clues: clues,
+        hasWeapon: hasWeapon,
+        difficulty: difficulty,
+        metrics: metrics,
+        story: story,
+      );
+
+  /// JSON completo del pipeline interno (incluye solución si el caso la
+  /// trae). El mapa viaja embebido: cada caso tiene su propio mapa
+  /// (decisión 2026-06-11).
   Map<String, dynamic> toJson() => {
         'caseId': caseId,
         'mapId': map.id,
@@ -153,7 +181,7 @@ class PuzzleCase {
             {'id': c.id, 'name_es': c.nameEs, 'female': c.female}
         ],
         'clues': [for (final c in clues) c.toJson()],
-        'solution': solution.toJson(),
+        if (solutionOrNull != null) 'solution': solutionOrNull!.toJson(),
         if (metrics != null) 'metrics': metrics!.toJson(),
         if (story != null) 'story': story!.toJson(),
       };
@@ -198,8 +226,11 @@ class PuzzleCase {
       ],
       hasWeapon: j['hasWeapon'] as bool,
       difficulty: j['difficulty'] as String,
-      solution:
-          Solution.fromJson((j['solution'] as Map).cast<String, dynamic>()),
+      // La solución es opcional: los casos de los mundos la llevan solo en
+      // la fuente del servidor (tools/data/casos-servidor).
+      solution: j['solution'] == null
+          ? null
+          : Solution.fromJson((j['solution'] as Map).cast<String, dynamic>()),
       metrics: j['metrics'] == null
           ? null
           : CaseMetrics.fromJson((j['metrics'] as Map).cast<String, dynamic>()),

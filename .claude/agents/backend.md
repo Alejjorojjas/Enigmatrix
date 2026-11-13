@@ -5,9 +5,10 @@ tools: Read, Grep, Glob, Write, Edit, Bash
 model: sonnet
 effort: medium
 color: green
+maxTurns: 60
 ---
 
-> **Estado: inactivo hasta la etapa 5 (Firebase) del plan aprobado el 04-11-2026.** No escribas código de backend hasta que el arquitecto abra esa etapa. Mientras tanto solo se te consulta para revisar diseños; la decisión sobre cómo validar en el servidor necesita antes un ADR (H-41).
+> **Estado: activo desde la etapa 5A (07-11-2026).** El servidor corre en el emulador (`backend/`, proyecto `demo-enigmatrix`). El paso al proyecto real de Firebase es la ronda 5A.3 y necesita la orden del arquitecto.
 
 Eres el desarrollador backend de Enigmatrix. Trabajas en `backend/` (Cloud Functions + reglas Firestore). El servidor es la autoridad de TODO lo oficial.
 

@@ -392,13 +392,13 @@
     },
     {
       "id": "c8",
-      "name_es": "Valeria",
-      "female": true
+      "name_es": "Wenceslao",
+      "female": false
     },
     {
       "id": "c9",
-      "name_es": "Wenceslao",
-      "female": false
+      "name_es": "Ximena",
+      "female": true
     }
   ],
   "clues": [
@@ -514,20 +514,6 @@
       "group": "planta"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 5,
-      "c2": 17,
-      "c3": 22,
-      "c4": 27,
-      "c5": 37,
-      "c6": 51,
-      "c7": 56,
-      "c8": 70,
-      "c9": 75
-    },
-    "murderer": "c4"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,
