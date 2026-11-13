@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import '../../l10n/l10n.dart';
 import '../backend/validation_client.dart';
 import '../data/case_repository.dart';
+import '../game/game_config.dart';
 import '../ui/skin_theme.dart';
 import '../ui/ui_kit.dart';
 import '../ui/v1_scope.dart';
@@ -213,7 +214,7 @@ class _ServerChallengeTabState extends ConsumerState<ServerChallengeTab> {
                 Text(
                   context.l10n.challengeTodaySummary(
                     today.day,
-                    kDailyCycleDays,
+                    ref.watch(gameConfigProvider).challengeDays,
                     difficultyName(context.l10n, today.puzzle.difficulty),
                     today.puzzle.map.size,
                   ),

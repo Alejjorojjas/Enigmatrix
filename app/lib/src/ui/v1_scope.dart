@@ -76,7 +76,7 @@ List<WorldInfo> worldsFor(GameConfig config, AppLocalizations l10n) => [
 
 /// Día del reto (1 a [GameConfig.challengeDays]) que corresponde a una fecha
 /// local: `((días desde el inicio del reto) mod días del ciclo) + 1`. Con los
-/// valores por defecto el inicio es el 01-11-2026 y el ciclo de 30 días. Se
+/// valores por defecto el inicio es el 16-11-2026 y el ciclo de 30 días. Se
 /// cuentan días de calendario (no bloques de 24 horas) para que el cambio de
 /// hora no mueva el día. La hora oficial de cambio de día está pendiente
 /// (pregunta 7): hoy es la medianoche del teléfono y el reto sigue marcado

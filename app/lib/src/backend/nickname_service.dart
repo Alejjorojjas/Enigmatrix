@@ -95,6 +95,29 @@ class NicknameService {
   static bool needsNickname(SharedPreferences prefs) =>
       (prefs.getString(kNickKey) ?? '').trim().isEmpty;
 
+  /// Al iniciar sesión con una cuenta registrada: si el teléfono no tiene
+  /// apodo, lo trae del servidor y lo guarda como `profile:nick`. Así solo se
+  /// pide /apodo si tampoco existe allá. Un invitado, un apodo local ya
+  /// puesto, un apodo del servidor inválido o cualquier fallo no cambian
+  /// nada. Nunca lanza. Devuelve true si guardó un apodo.
+  Future<bool> restoreFromServer() async {
+    try {
+      if (client.isAnonymous) return false;
+      final prefs = await _loadPrefs();
+      if (!needsNickname(prefs)) return false;
+      final remote = await client.fetchServerNickname();
+      if (remote == null) return false;
+      final nick = cleanNickname(remote);
+      if (checkNickname(nick) != null) return false;
+      await prefs.setString(kNickKey, nick);
+      await prefs.remove(kNickPendingKey);
+      return true;
+    } on Object catch (e) {
+      debugPrint('No se pudo traer el apodo del servidor: $e');
+      return false;
+    }
+  }
+
   Future<NicknameResult> save(String raw) async {
     final problem = checkNickname(raw);
     if (problem != null) return NicknameInvalid(problem);

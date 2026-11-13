@@ -64,6 +64,14 @@ class FirestoreRankingSource implements DailyRankingSource {
   @override
   String? get currentUid => _uid();
 
+  /// `users/{uid}.nickname` del dueño (las reglas se lo dejan leer). null si
+  /// el documento o el campo no existen.
+  Future<String?> readNickname(String uid) async {
+    final doc = await _db.collection('users').doc(uid).get();
+    final nick = doc.data()?['nickname'];
+    return nick is String ? nick : null;
+  }
+
   static int _ms(Object? v) =>
       v is Timestamp ? v.millisecondsSinceEpoch : (v is num ? v.toInt() : 0);
 

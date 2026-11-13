@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
+import '../daily/ranking_source.dart' show FirestoreRankingSource;
 import 'backend_config.dart';
 import 'validation_client.dart';
 
@@ -44,6 +45,7 @@ class FirebaseValidationClient implements ValidationClient {
     required FirebaseAuth auth,
     required FirebaseFunctions functions,
     required this.timeout,
+    this.nicknameReader,
   }) : _auth = auth,
        _functions = functions;
 
@@ -52,6 +54,9 @@ class FirebaseValidationClient implements ValidationClient {
 
   /// Tiempo máximo de cada llamada (sale de la configuración del juego).
   final Duration timeout;
+
+  /// Lee `users/{uid}.nickname` en Firestore (null si no hay Firestore).
+  final Future<String?> Function(String uid)? nicknameReader;
 
   Future<void>? _session;
 
@@ -161,6 +166,20 @@ class FirebaseValidationClient implements ValidationClient {
       parseNicknameResponse(await _call('setNickname', {'nickname': nickname}));
 
   @override
+  Future<String?> fetchServerNickname() async {
+    try {
+      await ensureSession();
+      final uid = _auth.currentUser?.uid;
+      final reader = nicknameReader;
+      if (uid == null || reader == null) return null;
+      return await reader(uid).timeout(timeout);
+    } on Object catch (e) {
+      debugPrint('No se pudo leer el apodo del servidor: $e');
+      return null;
+    }
+  }
+
+  @override
   Future<void> deleteAccount() async {
     await _call('deleteAccount', const <String, Object>{});
     // El usuario de Auth ya no existe en el servidor: se cierra la sesión
@@ -234,12 +253,21 @@ Future<ValidationClient?> bootstrapBackend(
           auth: auth,
           functions: functions,
           timeout: timeout,
+          nicknameReader: FirestoreRankingSource.forMode(
+            BackendMode.emulator,
+            () => auth.currentUser?.uid,
+          )?.readNickname,
         );
       case BackendMode.firebase:
         final app = await Firebase.initializeApp();
         await activateAppCheck(releaseMode: kReleaseMode);
+        final realAuth = FirebaseAuth.instanceFor(app: app);
         return FirebaseValidationClient(
-          auth: FirebaseAuth.instanceFor(app: app),
+          auth: realAuth,
+          nicknameReader: FirestoreRankingSource.forMode(
+            BackendMode.firebase,
+            () => realAuth.currentUser?.uid,
+          )?.readNickname,
           functions: FirebaseFunctions.instanceFor(
             app: app,
             region: kFunctionsRegion,

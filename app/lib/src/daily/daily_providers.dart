@@ -16,6 +16,7 @@ import '../backend/firebase_validation_client.dart';
 import '../backend/validation_client.dart';
 import '../backend/validation_providers.dart';
 import '../backend/validation_service.dart' show startedAtKey;
+import '../game/game_config.dart';
 import 'daily_logic.dart';
 import 'ranking_source.dart';
 
@@ -134,7 +135,12 @@ class DailyTabState {
 final dailyTabProvider = FutureProvider.autoDispose<DailyTabState>((ref) async {
   final clock = ref.watch(dailyClockProvider);
   final localDate = formatLocalDate(clock());
-  final localCase = dailyCaseIdForLocalDate(localDate);
+  final config = ref.watch(gameConfigProvider);
+  final localCase = dailyCaseIdForLocalDate(
+    localDate,
+    startDate: config.challengeStartDate,
+    cycleDays: config.challengeDays,
+  );
   final client = ref.watch(validationClientProvider);
   final prefs = await SharedPreferences.getInstance();
 
@@ -199,7 +205,12 @@ final dailyRankingProvider = FutureProvider.autoDispose<RankingData>((
   final data = await source.load(localDate, ownUid: source.currentUid);
   // Puesto propio guardado al resolver, por si la fila queda fuera del top.
   final prefs = await SharedPreferences.getInstance();
-  final caseId = dailyCaseIdForLocalDate(localDate);
+  final config = ref.watch(gameConfigProvider);
+  final caseId = dailyCaseIdForLocalDate(
+    localDate,
+    startDate: config.challengeStartDate,
+    cycleDays: config.challengeDays,
+  );
   final stored = readDailyProgress(prefs, caseId, localDate).result?.rank;
   return RankingData(
     top: data.top,

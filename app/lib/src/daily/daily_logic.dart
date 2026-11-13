@@ -6,13 +6,8 @@ library;
 import 'package:flutter/foundation.dart';
 
 import '../backend/validation_client.dart' show SubmitSolved;
-
-/// Inicio del ciclo de retos si el servidor no dice otra cosa
-/// (`config/server.dailyStartDate`, backend/functions/src/daily.ts).
-const String kDailyStartDate = '2026-11-16';
-
-/// Días del ciclo: `reto-001` a `reto-030`.
-const int kDailyCycleDays = 30;
+import '../game/game_config.dart'
+    show kDefaultChallengeDays, kDefaultChallengeStartDate;
 
 /// Penalización por error en el ranking (`config/server.errorPenaltyMs`, por
 /// defecto 30 000 ms). Solo se usa para recalcular o explicar el total: el
@@ -37,8 +32,8 @@ int _dayNumber(String date) {
 /// al inicio siguen el ciclo hacia atrás.
 String dailyCaseIdForLocalDate(
   String localDate, {
-  String startDate = kDailyStartDate,
-  int cycleDays = kDailyCycleDays,
+  String startDate = kDefaultChallengeStartDate,
+  int cycleDays = kDefaultChallengeDays,
 }) {
   final diff = _dayNumber(localDate) - _dayNumber(startDate);
   final idx = ((diff % cycleDays) + cycleDays) % cycleDays;
@@ -48,8 +43,8 @@ String dailyCaseIdForLocalDate(
 /// Número de día (1 a [cycleDays]) del reto de [localDate].
 int dailyDayForLocalDate(
   String localDate, {
-  String startDate = kDailyStartDate,
-  int cycleDays = kDailyCycleDays,
+  String startDate = kDefaultChallengeStartDate,
+  int cycleDays = kDefaultChallengeDays,
 }) => int.parse(
   dailyCaseIdForLocalDate(
     localDate,

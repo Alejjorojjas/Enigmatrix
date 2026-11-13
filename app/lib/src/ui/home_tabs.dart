@@ -42,8 +42,11 @@ List<PuzzleCase> worldCases(WidgetRef ref) =>
 DailyChallenge? todaysChallengeOf(WidgetRef ref) {
   final all = ref.watch(dailyChallengesProvider).valueOrNull ?? const [];
   if (ref.watch(backendModeProvider).usesServer) {
+    final config = ref.watch(gameConfigProvider);
     final id = dailyCaseIdForLocalDate(
       formatLocalDate(ref.watch(dailyClockProvider)()),
+      startDate: config.challengeStartDate,
+      cycleDays: config.challengeDays,
     );
     return all.where((c) => c.puzzle.caseId == id).firstOrNull;
   }

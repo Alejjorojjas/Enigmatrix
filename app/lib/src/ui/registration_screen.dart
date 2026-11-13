@@ -12,6 +12,7 @@ import '../../l10n/l10n.dart';
 import '../auth/auth_providers.dart';
 import '../auth/auth_service.dart';
 import '../backend/nickname_service.dart';
+import '../backend/validation_providers.dart' show nicknameServiceProvider;
 import 'case_list_screen.dart' show prefsProvider;
 import 'game_chrome.dart';
 import 'skin_theme.dart';
@@ -164,6 +165,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     messenger?.showSnackBar(
       SnackBar(content: Text(text), duration: const Duration(seconds: 6)),
     );
+    // Cuenta que ya tenía apodo en el servidor: se trae, no se vuelve a pedir.
+    await ref.read(nicknameServiceProvider)?.restoreFromServer();
     ref.invalidate(prefsProvider);
     final prefs = await ref.read(prefsProvider.future);
     if (!mounted) return;

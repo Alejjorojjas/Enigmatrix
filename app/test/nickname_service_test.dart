@@ -200,4 +200,51 @@ void main() {
       expect(resets, 0);
     });
   });
+
+  group('apodo desde el servidor al iniciar sesión', () {
+    late FakeValidationClient client;
+    late NicknameService service;
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+      client = FakeValidationClient()
+        ..anonymous = false
+        ..serverNickname = '  Sherlock ';
+      service = NicknameService(client: client);
+    });
+
+    test('cuenta registrada sin apodo local: lo trae y lo guarda', () async {
+      expect(await service.restoreFromServer(), isTrue);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString(kNickKey), 'Sherlock');
+      expect(NicknameService.needsNickname(prefs), isFalse);
+      expect(client.nicknameCalls, isEmpty); // solo lee, no escribe
+    });
+
+    test('con apodo local no lo toca ni consulta al servidor', () async {
+      SharedPreferences.setMockInitialValues({kNickKey: 'Local'});
+      expect(await service.restoreFromServer(), isFalse);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString(kNickKey), 'Local');
+      expect(client.fetchNicknameCalls, 0);
+    });
+
+    test('invitado: no consulta', () async {
+      client.anonymous = true;
+      expect(await service.restoreFromServer(), isFalse);
+      expect(client.fetchNicknameCalls, 0);
+    });
+
+    test('sin apodo en el servidor, sin señal o inválido: no guarda', () async {
+      client.serverNickname = null;
+      expect(await service.restoreFromServer(), isFalse);
+      client.serverNickname = 'Ana';
+      client.online = false;
+      expect(await service.restoreFromServer(), isFalse);
+      client.online = true;
+      client.serverNickname = 'a!';
+      expect(await service.restoreFromServer(), isFalse);
+      final prefs = await SharedPreferences.getInstance();
+      expect(NicknameService.needsNickname(prefs), isTrue);
+    });
+  });
 }

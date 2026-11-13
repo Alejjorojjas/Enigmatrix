@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:enigmatrix_engine/enigmatrix_engine.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/widgets.dart' show AppLifecycleState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,8 @@ import '../backend/backend_config.dart' show isServerCaseId;
 import '../backend/validation_client.dart';
 import '../backend/validation_providers.dart';
 import '../backend/validation_service.dart';
+import '../daily/daily_logic.dart' show elapsedSince, isDailyCaseId;
+import '../daily/daily_providers.dart' show dailyClockProvider;
 import '../data/case_repository.dart' show kTutorialCaseId;
 import 'board_state.dart';
 import 'game_config.dart';
@@ -205,6 +208,12 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   ValidationService? _validation;
   bool _serverCase = false;
 
+  /// `startedAt` del servidor del reto en curso (ms desde la época). Si no es
+  /// null, el tiempo mostrado sale de él y el reloj NO se pausa (decisión de
+  /// Alejandro: tiempo del servidor sin pausas). Null en la campaña y en el
+  /// reto sin red: reloj local con pausa.
+  int? _serverStartMs;
+
   /// true cuando hay algo que vale la pena guardar: el jugador cambió algo
   /// o se restauró una partida. Abrir un caso y salir sin tocar nada no
   /// deja partida guardada.
@@ -336,12 +345,15 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     // que ya tiene tiempo y no tiene registro de cómo empezó se da por
     // empezada sin conexión: no entra al ranking.
     if (server != null && !pending) {
-      unawaited(
-        server.ensureStarted(
-          arg.caseId,
-          alreadyPlayed: (saved?.elapsed ?? 0) > 0,
-        ),
+      final started = server.ensureStarted(
+        arg.caseId,
+        alreadyPlayed: (saved?.elapsed ?? 0) > 0,
       );
+      if (isDailyCaseId(arg.caseId)) {
+        unawaited(_adoptServerClock(server, started));
+      } else {
+        unawaited(started);
+      }
     }
     // Si la app ya está en segundo plano al terminar la carga, queda en
     // pausa y el reloj no arranca.
@@ -352,6 +364,34 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
       state = state.copyWith(paused: true);
     }
     _startTicker();
+  }
+
+  /// Reto en modo servidor: cuando el servidor dio el inicio, el tiempo pasa a
+  /// medirse desde él. Sin `startedAt` (sin red) sigue el reloj local.
+  Future<void> _adoptServerClock(
+    ValidationService server,
+    Future<bool> started,
+  ) async {
+    try {
+      await started;
+      final at = await server.serverStartedAtMs(arg.caseId);
+      if (!_alive || at == null || state.solved) return;
+      _serverStartMs = at;
+      _syncServerClock();
+      _startTicker();
+    } on Object catch (e) {
+      debugPrint('No se pudo adoptar el reloj del servidor: $e');
+    }
+  }
+
+  void _syncServerClock() {
+    final start = _serverStartMs;
+    if (start == null) return;
+    final now = ref.read(dailyClockProvider)().millisecondsSinceEpoch;
+    final secs = elapsedSince(start, now) ~/ 1000;
+    if (secs != state.elapsedSeconds) {
+      state = state.copyWith(elapsedSeconds: secs);
+    }
   }
 
   SavedGame _snapshot() => SavedGame(
@@ -415,9 +455,9 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
     _ticker?.cancel();
     _ticker = null;
     if (!ref.read(gameTickerEnabledProvider)) return;
-    if (state.loading || state.paused || state.solved || _held || _waiting) {
-      return;
-    }
+    final serverClock = _serverStartMs != null;
+    if (state.loading || state.solved || _waiting) return;
+    if (!serverClock && (state.paused || _held)) return;
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => tick());
   }
 
@@ -430,6 +470,7 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
 
   /// Detiene el reloj SIN tapar el tablero (p. ej. diálogo de salida).
   void holdClock() {
+    if (_serverStartMs != null) return; // el tiempo del servidor no se pausa
     _held = true;
     _stopTicker();
   }
@@ -449,6 +490,14 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   /// Un segundo de juego. No avanza si la partida está en pausa, cargando
   /// o resuelta.
   void tick() {
+    if (_serverStartMs != null) {
+      if (state.loading || state.solved || _waiting) return;
+      _syncServerClock();
+      if (state.elapsedSeconds % _config.periodicSaveSeconds == 0) {
+        _enqueueSave();
+      }
+      return;
+    }
     if (state.loading || state.paused || state.solved || _held || _waiting) {
       return;
     }
@@ -460,7 +509,9 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   /// Detiene el reloj, tapa el tablero y guarda.
   void pause() {
     if (state.loading || state.solved || state.paused) return;
-    _stopTicker();
+    // Con el tiempo del servidor el reloj sigue corriendo: la pausa solo tapa
+    // el tablero.
+    if (_serverStartMs == null) _stopTicker();
     state = state.copyWith(paused: true);
     _enqueueSave();
   }
@@ -469,6 +520,7 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
   void resume() {
     if (!state.paused) return;
     state = state.copyWith(paused: false);
+    if (_serverStartMs != null) _syncServerClock();
     _startTicker();
   }
 

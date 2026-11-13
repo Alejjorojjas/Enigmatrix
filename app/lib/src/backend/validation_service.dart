@@ -423,6 +423,22 @@ class ValidationService {
   Future<bool> ensureStarted(String caseId, {bool alreadyPlayed = false}) =>
       _starts[caseId] ??= _startOnce(caseId, alreadyPlayed);
 
+  /// `startedAt` del servidor (ms desde la época) de un reto empezado HOY con
+  /// conexión; null si no hay (sin red, otro día o dato dañado). Espera al
+  /// aviso de inicio si todavía está en vuelo. Nunca llama a `startCase`.
+  Future<int?> serverStartedAtMs(String caseId) async {
+    final inFlight = _starts[caseId];
+    if (inFlight != null) await inFlight;
+    try {
+      final prefs = await _prefs();
+      final rec = _readStartedAt(prefs, caseId);
+      if (rec == null || rec.$1 != formatLocalDate(_clock())) return null;
+      return rec.$2;
+    } on Object {
+      return null;
+    }
+  }
+
   /// Si la partida empezó con conexión, para decidir `startedOnline` al
   /// enviar. Solo lee lo guardado (`started:<id>` == '1'): NUNCA llama a
   /// `startCase`, porque un inicio justo antes del envío fijaría la hora de

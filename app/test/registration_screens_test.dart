@@ -221,6 +221,25 @@ void main() {
       );
     });
 
+    testWidgets('cuenta con apodo en el servidor: no pide /apodo', (
+      tester,
+    ) async {
+      final client = FakeValidationClient()
+        ..anonymous = false
+        ..serverNickname = 'Sherlock';
+      final auth = FakeAuthService();
+      final router = await _pump(
+        tester,
+        auth: auth,
+        client: client,
+        initial: '/registro',
+      );
+      await _tap(tester, l10nEs.registerGoogle);
+      expect(router.state.uri.path, '/home');
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString('profile:nick'), 'Sherlock');
+    });
+
     testWidgets('el apodo guardado tras registrarse lleva al inicio', (
       tester,
     ) async {

@@ -229,6 +229,11 @@ abstract class ValidationClient {
   /// [ValidationFailure.rejected] (con `message`) si no cumple las reglas.
   Future<String> setNickname(String nickname);
 
+  /// Apodo guardado en el servidor para la sesión actual (`users/{uid}`,
+  /// que las reglas dejan leer a su dueño). null si no hay, o si no se pudo
+  /// leer (sin señal u otro fallo): nunca lanza.
+  Future<String?> fetchServerNickname();
+
   /// `deleteAccount`: borra la cuenta y sus datos en el servidor.
   Future<void> deleteAccount();
 }
@@ -264,6 +269,9 @@ class UnavailableValidationClient implements ValidationClient {
 
   @override
   Future<String> setNickname(String nickname) => Future.error(_error);
+
+  @override
+  Future<String?> fetchServerNickname() async => null;
 
   @override
   Future<void> deleteAccount() => Future.error(_error);

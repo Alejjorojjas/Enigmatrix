@@ -143,6 +143,16 @@ class FakeValidationClient implements ValidationClient {
     return clean;
   }
 
+  /// Apodo que el "servidor" devuelve al leer `users/{uid}`; null = ninguno.
+  int fetchNicknameCalls = 0;
+
+  @override
+  Future<String?> fetchServerNickname() async {
+    fetchNicknameCalls++;
+    if (!online) return null;
+    return serverNickname;
+  }
+
   @override
   Future<void> deleteAccount() async {
     log.add('delete');
