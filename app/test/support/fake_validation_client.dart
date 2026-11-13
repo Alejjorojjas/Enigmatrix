@@ -49,6 +49,15 @@ class FakeValidationClient implements ValidationClient {
   /// Lo que contestaría `getDailyChallenge` (por fecha); si falta, `reto-001`.
   final Map<String, String> dailyByDate = {};
 
+  /// `startedAt` que devuelve `startCase` (ms desde la época).
+  int startedAtMs = 1700000000000;
+
+  /// Respuesta de un reto resuelto: tiempo del servidor, penalización por
+  /// error (30 s) y puesto. `retoRank` null = no entró al ranking.
+  int retoElapsedMs = 95000;
+  int? retoRank = 3;
+  int retoErrors = 1;
+
   /// false = usuario registrado (Google/Apple); true = invitado.
   bool anonymous = true;
 
@@ -96,7 +105,7 @@ class FakeValidationClient implements ValidationClient {
     if (failure != null) throw ValidationException(failure, 'falla');
     starts.add(caseId);
     startDates.add(localDate);
-    return 1700000000000;
+    return startedAtMs;
   }
 
   @override
@@ -180,6 +189,15 @@ class FakeValidationClient implements ValidationClient {
         murdererId: v.murdererId!,
         lethalWeaponId: v.lethalWeaponId,
         ranked: request.startedOnline,
+        // Solo los retos traen tiempo del servidor, score y puesto.
+        serverElapsedMs: request.caseId.startsWith('reto-')
+            ? retoElapsedMs
+            : null,
+        errors: request.caseId.startsWith('reto-') ? retoErrors : null,
+        score: request.caseId.startsWith('reto-')
+            ? retoElapsedMs + retoErrors * 30000
+            : null,
+        rank: request.caseId.startsWith('reto-') ? retoRank : null,
       );
     } else {
       response = SubmitWrong(wrong);

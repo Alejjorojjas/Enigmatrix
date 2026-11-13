@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
 import '../app_version.dart';
-import '../backend/validation_providers.dart'
-    show nicknameServiceProvider, validationClientProvider;
+import '../auth/auth_providers.dart';
+import '../backend/validation_providers.dart' show nicknameServiceProvider;
 import '../game/app_settings.dart';
 import '../game/dev_tools.dart';
 import 'appearance_picker.dart';
@@ -20,6 +20,7 @@ import 'case_list_screen.dart' show prefsProvider;
 import 'dev_texts.dart';
 import 'feedback_report.dart';
 import 'nickname_screen.dart';
+import 'registration_screen.dart';
 import 'skin_theme.dart';
 import 'tutorial_dialog.dart';
 import 'ui_kit.dart';
@@ -223,8 +224,36 @@ class _SettingsSheet extends ConsumerWidget {
         // Con servidor: apodo del ranking y borrado de la cuenta.
         if (ref.watch(nicknameServiceProvider) != null) ...[
           const Divider(height: 24),
-          // El apodo es del ranking: solo para usuarios registrados.
-          if (ref.watch(validationClientProvider)?.isAnonymous == false) ...[
+          if (ref.watch(isGuestProvider)) ...[
+            AppButton(
+              label: context.l10n.settingsSignIn,
+              icon: Icons.login_rounded,
+              onTap: () {
+                final router = GoRouter.of(context);
+                Navigator.pop(context);
+                router.push(kRegistrationRoute);
+              },
+            ),
+            const SizedBox(height: 10),
+          ] else ...[
+            Text(
+              switch (ref.watch(accountEmailProvider)) {
+                final String email => context.l10n.settingsSignedInAs(email),
+                _ => context.l10n.settingsSignedIn,
+              },
+              style: context.body(15, color: p.softText),
+            ),
+            const SizedBox(height: 10),
+            if (ref.watch(authServiceProvider) != null) ...[
+              AppButton(
+                label: context.l10n.settingsSignOut,
+                quiet: true,
+                icon: Icons.logout_rounded,
+                onTap: () => confirmSignOut(context, ref),
+              ),
+              const SizedBox(height: 10),
+            ],
+            // El apodo es del ranking: solo para usuarios registrados.
             AppButton(
               label: context.l10n.settingsChangeNick,
               quiet: true,

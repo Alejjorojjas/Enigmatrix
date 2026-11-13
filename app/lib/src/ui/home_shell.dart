@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
+import '../backend/backend_config.dart' show backendModeProvider;
 import '../game/dev_tools.dart' show showSimulatedProvider;
 import 'case_list_screen.dart' show prefsProvider;
 import 'game_chrome.dart';
@@ -56,7 +57,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final prefs = ref.watch(prefsProvider).valueOrNull;
     if (prefs != null) _maybeShowTutorial(prefs);
     // Ranking es simulado: solo existe con kShowSimulated (pregunta 18).
-    final showRanking = ref.watch(showSimulatedProvider);
+    // Con servidor el ranking es real y se ve también en la build de tienda.
+    final showRanking =
+        ref.watch(showSimulatedProvider) ||
+        ref.watch(backendModeProvider).usesServer;
     final tabs = [
       const HomeTab(),
       const WorldsTab(),

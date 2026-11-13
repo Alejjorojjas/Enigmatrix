@@ -1315,4 +1315,276 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get validationRegisterRequired => 'Regístrate para seguir jugando';
+
+  @override
+  String get registerTitle => 'Crea tu cuenta';
+
+  @override
+  String get registerBody =>
+      'Con una cuenta sigues la campaña, juegas el reto diario y entras al ranking. Lo que ya jugaste se conserva.';
+
+  @override
+  String get registerGoogle => 'Continuar con Google';
+
+  @override
+  String get registerApple => 'Continuar con Apple';
+
+  @override
+  String get registerOr => 'o con tu correo';
+
+  @override
+  String get registerModeCreate => 'Crear cuenta';
+
+  @override
+  String get registerModeSignIn => 'Ya tengo cuenta';
+
+  @override
+  String get registerEmailLabel => 'Correo';
+
+  @override
+  String get registerPasswordLabel => 'Contraseña';
+
+  @override
+  String get registerPasswordHelper => 'Mínimo 8 caracteres';
+
+  @override
+  String get registerSubmitCreate => 'Crear cuenta';
+
+  @override
+  String get registerSubmitSignIn => 'Iniciar sesión';
+
+  @override
+  String get registerBusy => 'Un momento...';
+
+  @override
+  String get registerForgot => 'Olvidé mi contraseña';
+
+  @override
+  String get registerResetSent =>
+      'Si ese correo tiene cuenta, te enviamos un enlace para cambiar la contraseña.';
+
+  @override
+  String get registerResetNeedsEmail =>
+      'Escribe tu correo para enviarte el enlace.';
+
+  @override
+  String get registerErrEmailInvalid => 'Escribe un correo válido.';
+
+  @override
+  String get registerErrPasswordShort =>
+      'La contraseña debe tener al menos 8 caracteres.';
+
+  @override
+  String get registerVerificationSent =>
+      'Te enviamos un correo para verificar tu cuenta.';
+
+  @override
+  String get registerReplacedGuest =>
+      'Entraste en tu cuenta existente. Lo que jugaste como invitado no se pasó a ella.';
+
+  @override
+  String get registerDone => 'Listo, ya tienes cuenta.';
+
+  @override
+  String get authErrInvalidEmail => 'Ese correo no es válido.';
+
+  @override
+  String get authErrWrongCredentials => 'Correo o contraseña incorrectos.';
+
+  @override
+  String get authErrEmailInUse =>
+      'Ese correo ya tiene una cuenta. Inicia sesión con su contraseña o con el método que usaste.';
+
+  @override
+  String get authErrWeakPassword =>
+      'La contraseña es muy débil. Usa al menos 8 caracteres.';
+
+  @override
+  String get authErrUserDisabled => 'Esta cuenta está deshabilitada.';
+
+  @override
+  String get authErrNetwork =>
+      'Sin conexión. Revisa tu internet e inténtalo de nuevo.';
+
+  @override
+  String get authErrTooManyRequests =>
+      'Demasiados intentos. Espera un momento e inténtalo de nuevo.';
+
+  @override
+  String get authErrNotAllowed =>
+      'Este método de ingreso no está disponible por ahora.';
+
+  @override
+  String get authErrUnavailable =>
+      'Este método no está disponible en tu teléfono.';
+
+  @override
+  String get authErrUnknown => 'No se pudo completar. Inténtalo de nuevo.';
+
+  @override
+  String get registerInviteTitle => 'Regístrate para seguir jugando';
+
+  @override
+  String get registerInviteBody =>
+      'Los dos primeros casos son gratis. Con una cuenta sigues la campaña, juegas el reto diario y entras al ranking.';
+
+  @override
+  String get registerInviteAction => 'Registrarme';
+
+  @override
+  String get registerInviteLater => 'Ahora no';
+
+  @override
+  String get caseListRegisterToContinue => 'Regístrate para seguir';
+
+  @override
+  String get caseListLockedTag => 'Con cuenta';
+
+  @override
+  String get settingsSignIn => 'Iniciar sesión / Registrarse';
+
+  @override
+  String settingsSignedInAs(String email) {
+    return 'Sesión iniciada con $email';
+  }
+
+  @override
+  String get settingsSignedIn => 'Sesión iniciada';
+
+  @override
+  String get settingsSignOut => 'Cerrar sesión';
+
+  @override
+  String get settingsSignOutTitle => '¿Cerrar sesión?';
+
+  @override
+  String get settingsSignOutBody =>
+      'Volverás a ser invitado en este teléfono. Podrás iniciar sesión otra vez cuando quieras.';
+
+  @override
+  String get settingsSignOutFailed =>
+      'No se pudo cerrar la sesión. Inténtalo de nuevo.';
+
+  @override
+  String get dailyLoading => 'Buscando el reto de hoy…';
+
+  @override
+  String get dailyRetry => 'Reintentar';
+
+  @override
+  String get dailyClockWarning =>
+      'El reloj del reto no se detiene aunque salgas de la app.';
+
+  @override
+  String dailyPenaltyNote(int seconds) {
+    return 'Tu tiempo se mide en el servidor desde que empiezas. Cada error suma $seconds segundos a tu total.';
+  }
+
+  @override
+  String get dailyStartButton => 'Empezar el reto';
+
+  @override
+  String get dailyContinueButton => 'Continuar el reto';
+
+  @override
+  String get dailyWarningTitle => 'Antes de empezar';
+
+  @override
+  String get dailyWarningStay => 'Todavía no';
+
+  @override
+  String get dailyWarningGo => 'Empezar ahora';
+
+  @override
+  String get dailyInProgress => 'Reto en curso';
+
+  @override
+  String dailyElapsedLine(String time) {
+    return 'Llevas $time';
+  }
+
+  @override
+  String get dailySolvedTitle => 'Reto de hoy resuelto';
+
+  @override
+  String get dailyScoreLabel => 'Total';
+
+  @override
+  String get dailyRankLabel => 'Puesto';
+
+  @override
+  String get dailyNoRankShort => 'Sin puesto';
+
+  @override
+  String get dailyNoRank => 'Esta vez no entraste al ranking del día.';
+
+  @override
+  String get dailySeeRanking => 'Ver ranking';
+
+  @override
+  String get dailyGuestTitle => 'El reto diario es para detectives registrados';
+
+  @override
+  String get dailyGuestBody =>
+      'Crea tu cuenta para jugar el reto y competir en el ranking. No pierdes lo que ya jugaste.';
+
+  @override
+  String get dailyGuestButton => 'Registrarme';
+
+  @override
+  String get dailyOfflineNote =>
+      'Sin conexión: puedes jugar el reto de hoy, pero no entrará al ranking.';
+
+  @override
+  String get dailyServerErrorNote =>
+      'No pudimos consultar el reto en el servidor. Puedes jugar, pero no entrará al ranking.';
+
+  @override
+  String get dailyLoadError =>
+      'No pudimos cargar el reto. Revisa tu conexión y vuelve a intentar.';
+
+  @override
+  String rankingTodaySub(String date) {
+    return 'Reto del $date';
+  }
+
+  @override
+  String get rankingEmpty =>
+      'Todavía nadie ha resuelto el reto de hoy. ¡Sé el primero!';
+
+  @override
+  String get rankingLoadError =>
+      'No pudimos cargar el ranking. Revisa tu conexión y vuelve a intentar.';
+
+  @override
+  String get rankingUnavailable => 'El ranking no está disponible por ahora.';
+
+  @override
+  String rankingRowDetail(String time, int errors, String total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      errors,
+      locale: localeName,
+      other: '$errors errores',
+      one: '1 error',
+      zero: 'sin errores',
+    );
+    return '$time · $_temp0 · total $total';
+  }
+
+  @override
+  String get rankingYouTag => 'Tú';
+
+  @override
+  String get rankingYourPlace => 'Tu puesto';
+
+  @override
+  String rankingPenaltyNote(int seconds) {
+    return 'Total = tiempo + $seconds s por error.';
+  }
+
+  @override
+  String get rankingGuestNote => 'Regístrate para aparecer en el ranking.';
+
+  @override
+  String get rankingClose => 'Cerrar';
 }

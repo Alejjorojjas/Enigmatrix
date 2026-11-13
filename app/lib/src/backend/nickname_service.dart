@@ -72,6 +72,7 @@ bool isAccountDataKey(String key) =>
     key == kNickKey ||
     key == kNickPendingKey ||
     key.startsWith('started:') ||
+    key.startsWith('startedAt:') ||
     key.startsWith('done:') ||
     key.startsWith('game:');
 

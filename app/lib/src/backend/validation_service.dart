@@ -25,12 +25,39 @@ import 'validation_client.dart';
 const kPendingKey = 'pending:submissions';
 
 String _startedKey(String caseId) => 'started:$caseId';
+
+/// Inicio oficial de un reto del día (`startedAt` del servidor): JSON
+/// `{date, at}` con la fecha local del reto y los ms desde la época (`at`
+/// falta si el inicio fue sin conexión). Es cache: la verdad la tiene el
+/// servidor.
+String startedAtKey(String caseId) => 'startedAt:$caseId';
 String _doneKey(String caseId) => 'done:$caseId';
 
 /// Tamaño del id de cada envío (el servidor pide de 8 a 64 caracteres).
 const _kSubmissionIdLength = 28;
 const _kIdChars =
     'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+/// Campos del resultado oficial de un reto para guardar en `done:<caso>`:
+/// vacío si no es un reto o el servidor no devolvió tiempo y score.
+Map<String, Object?> dailyResultJson(PendingSubmission p, SubmitSolved r) {
+  final ms = r.serverElapsedMs;
+  final score = r.score;
+  final localDate = p.localDate;
+  if (!p.caseId.startsWith('reto-') ||
+      ms == null ||
+      score == null ||
+      localDate == null) {
+    return const {};
+  }
+  return {
+    'localDate': localDate,
+    'serverElapsedMs': ms,
+    'serverErrors': r.errors ?? p.errorCount,
+    'score': score,
+    'rank': r.rank,
+  };
+}
 
 /// Un envío de Resolver que aún no tiene respuesta del servidor.
 @immutable
@@ -255,6 +282,7 @@ class ValidationService {
   final Map<String, PendingSubmission> _queue = {};
   final Set<String> _inFlight = {};
   final Map<String, Future<bool>> _starts = {};
+  final Map<String, SubmitSolved> _solved = {};
   final StreamController<ValidationEvent> _events =
       StreamController<ValidationEvent>.broadcast();
 
@@ -278,6 +306,11 @@ class ValidationService {
   Set<String> get pendingCaseIds => Set.unmodifiable(_queue.keys);
 
   bool isPending(String caseId) => _queue.containsKey(caseId);
+
+  /// Última respuesta "resuelto" del servidor para [caseId] en esta sesión
+  /// (la pantalla de victoria muestra de ahí el tiempo, el score y el puesto
+  /// de un reto). Null si no hubo.
+  SubmitSolved? solvedResponse(String caseId) => _solved[caseId];
 
   /// El envío de este caso se detuvo y espera la decisión del jugador.
   bool isStalled(String caseId) => _queue[caseId]?.stalled ?? false;
@@ -409,6 +442,17 @@ class ValidationService {
   Future<bool> _startOnce(String caseId, bool alreadyPlayed) async {
     try {
       final prefs = await _prefs();
+      final isReto = caseId.startsWith('reto-');
+      final today = isReto ? formatLocalDate(_clock()) : null;
+      if (isReto) {
+        // Un inicio guardado de otro día (el ciclo repite los retos cada 30
+        // días) ya no vale: se empieza de nuevo.
+        final rec = _readStartedAt(prefs, caseId);
+        if (rec != null && rec.$1 != today) {
+          await prefs.remove(_startedKey(caseId));
+          await prefs.remove(startedAtKey(caseId));
+        }
+      }
       final stored = prefs.getString(_startedKey(caseId));
       if (stored == '1') return true;
       if (stored == '0') return false;
@@ -418,17 +462,24 @@ class ValidationService {
       }
       try {
         await _session();
-        await client.startCase(
-          caseId,
-          localDate: caseId.startsWith('reto-')
-              ? formatLocalDate(_clock())
-              : null,
-        );
+        final startedAt = await client.startCase(caseId, localDate: today);
+        if (today != null) {
+          await prefs.setString(
+            startedAtKey(caseId),
+            jsonEncode({'date': today, 'at': ?startedAt}),
+          );
+        }
       } on ValidationException catch (e) {
         if (e.kind == ValidationFailure.network) {
           // De verdad empezó sin conexión: no entra al ranking y se recuerda.
           debugPrint('startCase sin conexión ($caseId): $e');
           await prefs.setString(_startedKey(caseId), '0');
+          if (today != null) {
+            await prefs.setString(
+              startedAtKey(caseId),
+              jsonEncode({'date': today}),
+            );
+          }
         } else {
           // El servidor respondió con un error: no se sabe nada de cómo empezó
           // el jugador. No se guarda nada y la próxima vez que abra el caso se
@@ -447,10 +498,28 @@ class ValidationService {
     }
   }
 
+  /// `(fecha local, startedAt en ms o null)` guardado para un reto.
+  static (String, int?)? _readStartedAt(SharedPreferences prefs, String id) {
+    final raw = prefs.getString(startedAtKey(id));
+    if (raw == null) return null;
+    try {
+      final json = jsonDecode(raw);
+      if (json is Map && json['date'] is String) {
+        final at = json['at'];
+        return (json['date'] as String, at is int ? at : null);
+      }
+    } on FormatException {
+      // dato dañado: se ignora
+    }
+    return null;
+  }
+
   Future<void> _forgetStart(String caseId) async {
     _starts.remove(caseId);
     final prefs = await _prefs();
     await prefs.remove(_startedKey(caseId));
+    // El inicio oficial se conserva hasta la fecha: la pantalla del reto lo
+    // usa para saber que hoy ya se empezó; el resultado vive en `done:`.
   }
 
   // ---- envío desde la partida -------------------------------------------------------
@@ -563,7 +632,8 @@ class ValidationService {
   Future<void> _deliver(PendingSubmission p, SubmitOutcome out) async {
     switch (out) {
       case OutcomeSolved(:final response):
-        await _applySolved(p);
+        _solved[p.caseId] = response;
+        await _applySolved(p, response);
         _emit(ValidationEvent(ValidationEventKind.solved, p, response));
       case OutcomeWrong(:final response):
         await _applyWrong(p);
@@ -649,16 +719,19 @@ class ValidationService {
 
   /// Caso resuelto por una respuesta tardía: queda marcado como resuelto en el
   /// progreso local y se borra la partida guardada.
-  Future<void> _applySolved(PendingSubmission p) async {
+  Future<void> _applySolved(PendingSubmission p, SubmitSolved r) async {
     try {
       final prefs = await _prefs();
-      if (!prefs.containsKey(_doneKey(p.caseId))) {
+      final fresh = dailyResultJson(p, r);
+      if (!prefs.containsKey(_doneKey(p.caseId)) ||
+          _isStaleDaily(prefs.getString(_doneKey(p.caseId)), fresh)) {
         await prefs.setString(
           _doneKey(p.caseId),
           jsonEncode({
             'time': p.elapsedSeconds,
             'errors': p.errorCount,
             'date': _clock().toIso8601String().substring(0, 16),
+            ...fresh,
           }),
         );
       }
@@ -666,6 +739,19 @@ class ValidationService {
       await _forgetStart(p.caseId);
     } on Object catch (e) {
       debugPrint('No se pudo guardar el progreso de ${p.caseId}: $e');
+    }
+  }
+
+  /// El `done:` guardado es de otro día del mismo reto (el ciclo los repite
+  /// cada 30 días): el de hoy lo reemplaza.
+  static bool _isStaleDaily(String? raw, Map<String, Object?> fresh) {
+    final date = fresh['localDate'];
+    if (raw == null || date == null) return false;
+    try {
+      final json = jsonDecode(raw);
+      return json is Map && json['localDate'] != date;
+    } on FormatException {
+      return true;
     }
   }
 

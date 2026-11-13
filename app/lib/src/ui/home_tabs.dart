@@ -11,7 +11,12 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/l10n.dart';
+import '../backend/backend_config.dart';
+import '../backend/validation_client.dart' show formatLocalDate;
 import '../backend/validation_providers.dart';
+import '../daily/daily_logic.dart';
+import '../daily/daily_providers.dart';
+import '../daily/daily_screens.dart';
 import '../data/case_repository.dart';
 import '../game/dev_tools.dart' show showSimulatedProvider;
 import '../game/game_config.dart';
@@ -32,15 +37,36 @@ int solvedIn(List<PuzzleCase> cases, SharedPreferences? prefs) =>
 List<PuzzleCase> worldCases(WidgetRef ref) =>
     ref.watch(campaignProvider(kMundoMansion)).valueOrNull ?? const [];
 
-/// El reto de hoy (null si aún carga o ese día no existe).
-DailyChallenge? todaysChallengeOf(WidgetRef ref) => todaysChallenge(
-  ref.watch(dailyChallengesProvider).valueOrNull ?? const [],
-  DateTime.now(),
-  config: ref.watch(gameConfigProvider),
-);
+/// El reto de hoy (null si aún carga o ese día no existe). Con el servidor
+/// activo manda su fórmula (inicio 16-11-2026, ciclo de 30 días).
+DailyChallenge? todaysChallengeOf(WidgetRef ref) {
+  final all = ref.watch(dailyChallengesProvider).valueOrNull ?? const [];
+  if (ref.watch(backendModeProvider).usesServer) {
+    final id = dailyCaseIdForLocalDate(
+      formatLocalDate(ref.watch(dailyClockProvider)()),
+    );
+    return all.where((c) => c.puzzle.caseId == id).firstOrNull;
+  }
+  return todaysChallenge(
+    all,
+    DateTime.now(),
+    config: ref.watch(gameConfigProvider),
+  );
+}
 
-void _playToday(BuildContext context, DailyChallenge? today) {
-  if (today != null) context.go('/play/${today.puzzle.caseId}');
+Future<void> _playToday(
+  BuildContext context,
+  WidgetRef ref,
+  DailyChallenge? today,
+) async {
+  if (today == null) return;
+  if (ref.read(backendModeProvider).usesServer) {
+    // Con servidor: aviso del reloj, invitación a registrarse y reto oficial.
+    final state = await ref.read(dailyTabProvider.future);
+    if (!context.mounted) return;
+    return playDailyChallenge(context, ref, state);
+  }
+  context.go('/play/${today.puzzle.caseId}');
 }
 
 /// Estado del reto de hoy según lo guardado: sin iniciar, en curso o
@@ -160,7 +186,9 @@ class HomeTab extends ConsumerWidget {
               AppButton(
                 label: context.l10n.homePlayChallenge,
                 color: p.danger,
-                onTap: today == null ? null : () => _playToday(context, today),
+                onTap: today == null
+                    ? null
+                    : () => _playToday(context, ref, today),
               ),
             ],
           ),
@@ -395,6 +423,10 @@ class ChallengeTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Con servidor: reto oficial con ranking (ronda F2b).
+    if (ref.watch(backendModeProvider).usesServer) {
+      return const ServerChallengeTab();
+    }
     final p = context.pal;
     final prefs = ref.watch(prefsProvider).valueOrNull;
     final today = todaysChallengeOf(ref);
@@ -515,7 +547,9 @@ class ChallengeTab extends ConsumerWidget {
               AppButton(
                 label: context.l10n.homePlayToday,
                 color: p.danger,
-                onTap: today == null ? null : () => _playToday(context, today),
+                onTap: today == null
+                    ? null
+                    : () => _playToday(context, ref, today),
               ),
             ],
           ),
@@ -547,11 +581,15 @@ class ChallengeTab extends ConsumerWidget {
 
 // ---------- RANKING ----------
 
-class RankingTab extends StatelessWidget {
+class RankingTab extends ConsumerWidget {
   const RankingTab({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Con servidor: ranking real del día (ronda F2b).
+    if (ref.watch(backendModeProvider).usesServer) {
+      return const ServerRankingTab();
+    }
     final p = context.pal;
     // El jugador entra en el orden real por puntos (datos simulados).
     final rows = <(String, int, String, bool)>[

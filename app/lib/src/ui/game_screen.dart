@@ -40,6 +40,7 @@ import 'game_toolbar.dart';
 import 'game_tray.dart';
 import 'layout_metrics.dart';
 import 'skin_theme.dart';
+import 'registration_screen.dart' show showRegistrationInvite;
 import 'tutorial_coach.dart';
 import 'v1_scope.dart' show caseTitle, difficultyName, exitRouteFor;
 import 'victory_screen.dart';
@@ -538,11 +539,7 @@ class _GameBodyState extends ConsumerState<_GameBody> {
           duration: const Duration(milliseconds: 3500),
         );
       case ActionFeedback.registrationRequired:
-        // La invitación completa a registrarse llega en la ronda del registro.
-        _showToast(
-          context.l10n.validationRegisterRequired,
-          duration: const Duration(milliseconds: 3500),
-        );
+        unawaited(showRegistrationInvite(context));
       default:
         _afterResolve(fb);
     }
