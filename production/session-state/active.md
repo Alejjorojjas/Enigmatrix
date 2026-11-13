@@ -124,3 +124,19 @@ Todo lo anterior (entradas de sesión, decisiones y hallazgos desde el 10-06-202
   - formularios de datos de Play y de App Store;
   - pasos 1 a 8 de la guía de Apple para TestFlight;
   - mapas más lógicos.
+
+## 13-11-2026: 0.9.0 funcionando en las dos tiendas (prueba)
+
+- **TestFlight.** La compilación 10004 (0.9.0) está en TestFlight. Requirió:
+  - fijar el Firebase SDK 12.19.0 en el Podfile (PR #3);
+  - compilar en `macos-26` con Xcode 26 (PR #4).
+
+  El grupo interno "Equipo Murdoku" ya tiene a Alejandro, que agregó Murdoku a su usuario en App Store Connect. Funciona en el iPhone y el guardia pasa. Falta el grupo externo "Amigos" con enlace público, que requiere la revisión beta de Apple.
+- **Play, prueba interna.** La 10016 (0.9.0) se subió a mano desde el artefacto de GitHub; el `PLAY_UPLOAD` automático sigue sin cuenta de servicio. Funciona el ranking en Android.
+- **App Check en Android: falla.** El token de Play Integrity llega inválido ("Decoding App Check token failed"), aunque:
+  - las API de Play Integrity y de App Check están habilitadas;
+  - el SHA-256 de la firma de Play está registrado;
+  - el proyecto está vinculado en Play Console.
+
+  **Exigencia apagada TEMPORALMENTE** (decisión de Alejandro, 13-11): `APP_CHECK_TEMPORALMENTE_APAGADO=si` en `backend/functions/.env.murdoku-diario`, rama `fix/appcheck-android-temporal`, ya desplegado. El iPhone sí pasa. **Pendiente:** diagnosticar y volver a encenderlo.
+- **Ícono.** Se mostraron 6 propuestas (A a F); el arquitecto recomienda B (tablero) o C (M de casillas). Falta que Alejandro elija.
