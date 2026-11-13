@@ -359,19 +359,6 @@
       "group": "planta"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 3,
-      "c2": 15,
-      "c3": 17,
-      "c4": 24,
-      "c5": 34,
-      "c6": 46,
-      "c7": 53,
-      "c8": 60
-    },
-    "murderer": "c4"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

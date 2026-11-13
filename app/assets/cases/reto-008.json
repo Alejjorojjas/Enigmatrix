@@ -379,19 +379,6 @@
       "group": "armario"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 3,
-      "c2": 12,
-      "c3": 18,
-      "c4": 31,
-      "c5": 32,
-      "c6": 45,
-      "c7": 49,
-      "c8": 62
-    },
-    "murderer": "c2"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

@@ -1,0 +1,301 @@
+{
+  "caseId": "mansion-02",
+  "mapId": "mapa-principiante-s6",
+  "map": {
+    "id": "mapa-principiante-s6",
+    "name_es": "La Mansión",
+    "size": 6,
+    "areas": [
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          6,
+          12,
+          18,
+          19,
+          24,
+          25,
+          30,
+          31
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          7,
+          8,
+          9,
+          13
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          14,
+          15,
+          20,
+          26,
+          32,
+          33,
+          34
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          4,
+          5,
+          10,
+          11,
+          17,
+          23
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          16,
+          21,
+          22,
+          27,
+          28,
+          29,
+          35
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "planta-1",
+        "type": "planta",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "silla-2",
+        "type": "silla",
+        "cells": [
+          31
+        ]
+      },
+      {
+        "id": "mesa-3",
+        "type": "mesa",
+        "cells": [
+          24,
+          25
+        ]
+      },
+      {
+        "id": "alfombra-4",
+        "type": "alfombra",
+        "cells": [
+          3,
+          9
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          7
+        ]
+      },
+      {
+        "id": "planta-6",
+        "type": "planta",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "mesa-7",
+        "type": "mesa",
+        "cells": [
+          26,
+          32
+        ]
+      },
+      {
+        "id": "caja-8",
+        "type": "caja",
+        "cells": [
+          20
+        ]
+      },
+      {
+        "id": "planta-9",
+        "type": "planta",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "mesa-10",
+        "type": "mesa",
+        "cells": [
+          23,
+          17
+        ]
+      },
+      {
+        "id": "mesa-11",
+        "type": "mesa",
+        "cells": [
+          16,
+          22
+        ]
+      },
+      {
+        "id": "nevera-12",
+        "type": "nevera",
+        "cells": [
+          35
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "bodega"
+      },
+      {
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "invernadero"
+      },
+      {
+        "id": "baston",
+        "name_es": "el bastón de plata",
+        "category": "contundente",
+        "area": "estudio"
+      }
+    ]
+  },
+  "difficulty": "principiante",
+  "hasWeapon": false,
+  "victim": "c3",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Domingo",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Fermín",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Teodora",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Ximena",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "in_area",
+      "subject": "c1",
+      "area": "estudio"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c2",
+      "group": "silla"
+    },
+    {
+      "type": "victim_filler",
+      "subject": "c3"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "mesa"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 5,
+      "c2": 7,
+      "c3": 14,
+      "c4": 18,
+      "c5": 28,
+      "c6": 33
+    },
+    "murderer": "c6"
+  },
+  "metrics": {
+    "deductionSteps": 6,
+    "maxTier": 3,
+    "clueCount": 6
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El testamento sellado"
+    },
+    "premise": {
+      "es": "Un sobre lacrado debe permanecer cerrado hasta el domingo. Esa noche, uno de los presentes es hallado sin vida y cada cual tiene algo que callar."
+    }
+  }
+}

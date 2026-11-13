@@ -58,7 +58,7 @@ String renderCaseSheet(PuzzleCase pc, {bool revealSolution = false}) {
       'Nadie puede estar en celdas con muebles que bloquean. '
       'El asesino quedó a solas con la víctima en la misma habitación.');
 
-  if (revealSolution) {
+  if (revealSolution && pc.hasSolution) {
     final sol = pc.solution;
     b.writeln('\n${'-' * 64}');
     b.writeln('SOLUCIÓN (interna — el cliente nunca la recibe):');
@@ -97,7 +97,7 @@ String _renderGrid(PuzzleCase pc, {required bool revealSolution}) {
     areaLetter[map.areas[i].id] = String.fromCharCode('a'.codeUnitAt(0) + i);
   }
   final charAt = <int, String>{};
-  if (revealSolution) {
+  if (revealSolution && pc.hasSolution) {
     for (final ch in pc.characters) {
       final initial = ch.nameEs[0].toUpperCase();
       charAt[pc.solution.positions[ch.id]!] =

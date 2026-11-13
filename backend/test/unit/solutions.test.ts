@@ -54,7 +54,7 @@ describe("parseSolutions", () => {
   });
 });
 
-describe("build-solutions con los casos reales de la app", () => {
+describe("build-solutions con los casos completos del servidor (tools/data/casos-servidor)", () => {
   it("lee los 40 casos (10 mansion y 30 reto) y reto-001..reto-030 existen", () => {
     expect(listCaseFiles(DEFAULT_CASES_DIR)).toHaveLength(40);
     const sols = buildSolutions();

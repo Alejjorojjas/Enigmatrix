@@ -1,0 +1,544 @@
+{
+  "caseId": "reto-014",
+  "mapId": "mapa-intermedio-s119-v3",
+  "map": {
+    "id": "mapa-intermedio-s119-v3",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          60,
+          61,
+          62,
+          68,
+          69,
+          70,
+          71,
+          76,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          47,
+          54,
+          55,
+          56,
+          63,
+          64,
+          65,
+          72,
+          73,
+          74,
+          75
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          18,
+          19,
+          20,
+          27,
+          28,
+          29,
+          30,
+          36,
+          37,
+          38,
+          39,
+          45,
+          46
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          32,
+          33,
+          34,
+          35,
+          41,
+          42,
+          43,
+          44,
+          51,
+          52,
+          53
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          0,
+          1,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          21,
+          22,
+          23,
+          24
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          31,
+          40,
+          48,
+          49,
+          50,
+          57,
+          58,
+          59,
+          66,
+          67
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          16,
+          17,
+          25,
+          26
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "silla-1",
+        "type": "silla",
+        "cells": [
+          60
+        ]
+      },
+      {
+        "id": "silla-2",
+        "type": "silla",
+        "cells": [
+          69
+        ]
+      },
+      {
+        "id": "nevera-3",
+        "type": "nevera",
+        "cells": [
+          62
+        ]
+      },
+      {
+        "id": "barra-4",
+        "type": "barra",
+        "cells": [
+          77,
+          78
+        ]
+      },
+      {
+        "id": "silla-5",
+        "type": "silla",
+        "cells": [
+          63
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          74
+        ]
+      },
+      {
+        "id": "chimenea-7",
+        "type": "chimenea",
+        "cells": [
+          75
+        ]
+      },
+      {
+        "id": "alfombra-8",
+        "type": "alfombra",
+        "cells": [
+          55,
+          54
+        ]
+      },
+      {
+        "id": "piano-9",
+        "type": "piano",
+        "cells": [
+          20
+        ]
+      },
+      {
+        "id": "alfombra-10",
+        "type": "alfombra",
+        "cells": [
+          46,
+          37
+        ]
+      },
+      {
+        "id": "chimenea-11",
+        "type": "chimenea",
+        "cells": [
+          29
+        ]
+      },
+      {
+        "id": "planta-12",
+        "type": "planta",
+        "cells": [
+          27
+        ]
+      },
+      {
+        "id": "alfombra-13",
+        "type": "alfombra",
+        "cells": [
+          43,
+          44
+        ]
+      },
+      {
+        "id": "silla-14",
+        "type": "silla",
+        "cells": [
+          42
+        ]
+      },
+      {
+        "id": "planta-15",
+        "type": "planta",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "planta-16",
+        "type": "planta",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "armario-17",
+        "type": "armario",
+        "cells": [
+          13
+        ]
+      },
+      {
+        "id": "alfombra-18",
+        "type": "alfombra",
+        "cells": [
+          12,
+          21
+        ]
+      },
+      {
+        "id": "planta-19",
+        "type": "planta",
+        "cells": [
+          24
+        ]
+      },
+      {
+        "id": "armario-20",
+        "type": "armario",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "armario-21",
+        "type": "armario",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "alfombra-22",
+        "type": "alfombra",
+        "cells": [
+          40,
+          49
+        ]
+      },
+      {
+        "id": "perchero-23",
+        "type": "perchero",
+        "cells": [
+          66
+        ]
+      },
+      {
+        "id": "alfombra-24",
+        "type": "alfombra",
+        "cells": [
+          5,
+          4
+        ]
+      },
+      {
+        "id": "planta-25",
+        "type": "planta",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "silla-26",
+        "type": "silla",
+        "cells": [
+          3
+        ]
+      },
+      {
+        "id": "perchero-27",
+        "type": "perchero",
+        "cells": [
+          16
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "galeria"
+      },
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "biblioteca"
+      },
+      {
+        "id": "bufanda",
+        "name_es": "la bufanda de seda",
+        "category": "asfixia",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c7",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Damián",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Horacio",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c7",
+      "name_es": "Patricio",
+      "female": false
+    },
+    {
+      "id": "c8",
+      "name_es": "Rosario",
+      "female": true
+    },
+    {
+      "id": "c9",
+      "name_es": "Ximena",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "dormitorio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "perchero"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "estudio"
+        },
+        {
+          "type": "on_object",
+          "subject": "c2",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c3",
+      "area": "salon"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "alfombra"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c5",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c5",
+          "area": "galeria"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c5",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "galeria"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c7",
+      "group": "alfombra"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "biblioteca"
+        },
+        {
+          "type": "on_object",
+          "subject": "c8",
+          "group": "silla"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c9",
+      "area": "cocina"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 7,
+      "c2": 12,
+      "c3": 19,
+      "c4": 31,
+      "c5": 41,
+      "c6": 51,
+      "c7": 56,
+      "c8": 63,
+      "c9": 80
+    },
+    "murderer": "c8",
+    "lethalWeapon": "copa"
+  },
+  "metrics": {
+    "deductionSteps": 11,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El sombrero olvidado"
+    },
+    "premise": {
+      "es": "Alguien olvida un sombrero en la mansión y todos juran que no es suyo. Esa noche, uno de los presentes es hallado sin vida."
+    }
+  }
+}

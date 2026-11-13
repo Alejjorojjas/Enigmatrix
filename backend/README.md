@@ -24,7 +24,7 @@ Todas son `onCall`, región `southamerica-east1`, con sesión obligatoria y App 
 - `dailyCleanup` (programada, todos los días 03:00 `America/Bogota`): borra los rankings de más de 30 días y las cuentas con `lastSeenAt` de hace más de 12 meses. `lastSeenAt` se actualiza en cada llamada.
 - **Invitados** (sesión anónima): solo juegan los casos de `freeCaseIds` (por defecto `mansion-01` y `mansion-02`; el tutorial corre en el teléfono). Cualquier otro caso, los `reto-*`, `getDailyChallenge` y `setNickname` responden `failed-precondition` con "Regístrate para seguir jugando." Al registrarse Firebase conserva el uid, así que el progreso se mantiene.
 - `config/server` (solo Admin), todo opcional: `maxSubmitsPerMinute` (entero, 1 a 60; 6), `maxWrongPerCase` (1 a 1000; 15), `errorPenaltyMs` (0 a 24 h; 30000), `dailyStartDate` (`AAAA-MM-DD`; `2026-11-16`), `freeCaseIds` (lista de ids; `["mansion-01","mansion-02"]`), `clientClockMarginMs` (>= 0; 5000).
-- **Las soluciones no están en Firestore.** `scripts/build-solutions.ts` lee `app/assets/cases/mansion-*.json` y `reto-*.json` y genera `functions/data/solutions.json` (fuera de git), que las funciones leen. Se genera antes de compilar, de las pruebas y en `predeploy`. Las colecciones `cases` y `caseSolutions` ya no existen.
+- **Las soluciones no están en Firestore.** `scripts/build-solutions.ts` lee `tools/data/casos-servidor/mansion-*.json` y `reto-*.json` (los casos completos; los de `app/assets/cases` ya no llevan `solution`) y genera `functions/data/solutions.json` (fuera de git), que las funciones leen. Se genera antes de compilar, de las pruebas y en `predeploy`. Las colecciones `cases` y `caseSolutions` ya no existen.
 
 ## Datos en Firestore
 

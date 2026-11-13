@@ -268,17 +268,6 @@
       "area": "invernadero"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 4,
-      "c2": 7,
-      "c3": 17,
-      "c4": 20,
-      "c5": 27,
-      "c6": 30
-    },
-    "murderer": "c6"
-  },
   "metrics": {
     "deductionSteps": 4,
     "maxTier": 3,

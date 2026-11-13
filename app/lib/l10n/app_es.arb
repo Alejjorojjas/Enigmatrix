@@ -1724,6 +1724,10 @@
   "@validationRateLimited": {
     "description": "Aviso cuando el servidor limita los envíos de Resolver por minuto."
   },
+  "solveServerOnly": "Este caso se valida en el servidor. Esta compilación no tiene servidor conectado.",
+  "@solveServerOnly": {
+    "description": "Aviso de desarrollo (ENX_BACKEND=none): un caso publicado no trae su solución y solo se puede validar en el servidor."
+  },
   "validationRejected": "No pudimos validar este caso. Inténtalo de nuevo.",
   "@validationRejected": {
     "description": "Aviso cuando el servidor no acepta el envío de Resolver."

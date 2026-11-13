@@ -1,11 +1,13 @@
 /// Bandera de compilación del servidor (etapa 5A.2, ADR-0016).
 ///
 /// `--dart-define=ENX_BACKEND=` admite tres valores:
-///  - `none` (por defecto): la app valida en el teléfono, como hasta ahora.
-///    No arranca Firebase ni usa la red.
+///  - `none` (solo desarrollo): sin servidor ni red. Solo se pueden validar
+///    en el teléfono el tutorial y el banco `caso-*`; los casos publicados
+///    (`mansion-*`, `reto-*`) no traen su solución y muestran "Este caso se
+///    valida en el servidor".
+///  - `firebase` (por defecto): proyecto real (corte de la ronda 5A.3).
 ///  - `emulator`: valida con el emulador local de Firebase (proyecto
 ///    `demo-enigmatrix`). El host se pasa con `--dart-define=ENX_EMULATOR_HOST=`.
-///  - `firebase`: proyecto real. Se activa en la ronda de corte (5A.3).
 ///
 /// Solo los casos de la campaña y del reto diario van al servidor. El tutorial
 /// y el banco de pruebas validan siempre en el teléfono (ADR-0016).
@@ -26,7 +28,7 @@ enum BackendMode {
 /// Valor crudo de `--dart-define=ENX_BACKEND=`.
 const String kEnxBackendRaw = String.fromEnvironment(
   'ENX_BACKEND',
-  defaultValue: 'none',
+  defaultValue: 'firebase',
 );
 
 /// Valor crudo de `--dart-define=ENX_EMULATOR_HOST=` (vacío = el de la

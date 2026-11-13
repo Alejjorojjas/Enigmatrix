@@ -1,6 +1,7 @@
-// Genera functions/data/solutions.json a partir de los casos completos de la app
-// (app/assets/cases/mansion-*.json y reto-*.json). Las funciones leen ese archivo para
-// validar soluciones; no sale a ningún cliente y NO se versiona (está en .gitignore).
+// Genera functions/data/solutions.json a partir de los casos COMPLETOS del servidor
+// (tools/data/casos-servidor/mansion-*.json y reto-*.json; la app solo lleva la versión
+// sin "solution"). Las funciones leen ese archivo para validar soluciones; no sale a ningún
+// cliente y NO se versiona (está en .gitignore).
 // No publica nada en Firestore ni necesita credenciales.
 //
 // Uso:  npm run build:solutions
@@ -11,7 +12,7 @@ import { ID_PATTERN, caseShapeFromDoc } from "../functions/src/validation";
 import { parseSolutions, type SolutionEntry } from "../functions/src/solutions";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-export const DEFAULT_CASES_DIR = path.resolve(here, "../../app/assets/cases");
+export const DEFAULT_CASES_DIR = path.resolve(here, "../../tools/data/casos-servidor");
 export const DEFAULT_OUTPUT = path.resolve(here, "../functions/data/solutions.json");
 
 export interface CaseFile {

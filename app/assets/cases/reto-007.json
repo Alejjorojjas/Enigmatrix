@@ -467,21 +467,6 @@
       "area": "bodega"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 6,
-      "c2": 12,
-      "c3": 19,
-      "c4": 27,
-      "c5": 40,
-      "c6": 52,
-      "c7": 56,
-      "c8": 71,
-      "c9": 77
-    },
-    "murderer": "c3",
-    "lethalWeapon": "bufanda"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

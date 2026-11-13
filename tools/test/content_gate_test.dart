@@ -29,7 +29,7 @@ void main() {
     for (final f in [...files, ...caseFilesIn(tutorialDir)]) {
       final name = f.uri.pathSegments.last;
       test('$name: Validator, solución única y deducción pura', () {
-        final pc = loadCaseFile(f);
+        final pc = loadFullCaseFile(f);
         // 1. El Validator acepta la solución declarada.
         final v = Validator.validate(pc, pc.solution.positions);
         expect(v.valid, isTrue, reason: '${v.errors}');
@@ -51,6 +51,7 @@ void main() {
       final report = runContentGate(
           casesDir: casesDir,
           tutorialDir: tutorialDir,
+          serverCasesDir: findServerCasesDir(),
           mapRulesExemptMundos: mundosExentosDeReglasDeMapa);
       expect(report.allProblems, isEmpty);
       expect(report.passed, isTrue);
@@ -62,8 +63,10 @@ void main() {
         'assets (ver support/regeneracion_pendiente.dart)', () {
       // Con la exención por defecto (solo el banco de pruebas y el
       // tutorial), ¿los casos de la Mansión incumplen las reglas de mapa?
-      final estricta =
-          runContentGate(casesDir: casesDir, tutorialDir: tutorialDir);
+      final estricta = runContentGate(
+          casesDir: casesDir,
+          tutorialDir: tutorialDir,
+          serverCasesDir: findServerCasesDir());
       final deMapa = [
         for (final p in estricta.allProblems)
           if (p.contains('mapa:')) p

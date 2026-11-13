@@ -450,21 +450,6 @@
       "area": "sala-de-musica"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 7,
-      "c2": 17,
-      "c3": 20,
-      "c4": 33,
-      "c5": 41,
-      "c6": 45,
-      "c7": 58,
-      "c8": 64,
-      "c9": 75
-    },
-    "murderer": "c9",
-    "lethalWeapon": "pisapapeles"
-  },
   "metrics": {
     "deductionSteps": 11,
     "maxTier": 4,

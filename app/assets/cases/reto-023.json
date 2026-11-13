@@ -400,19 +400,6 @@
       "b": "c6"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 5,
-      "c2": 9,
-      "c3": 23,
-      "c4": 28,
-      "c5": 32,
-      "c6": 46,
-      "c7": 51,
-      "c8": 58
-    },
-    "murderer": "c5"
-  },
   "metrics": {
     "deductionSteps": 8,
     "maxTier": 3,

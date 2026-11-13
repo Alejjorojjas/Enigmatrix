@@ -2,7 +2,7 @@
 #
 # Cada push a main que toque código:
 #   1. corre las pruebas del motor (tools) y de la app;
-#   2. compila el .aab de tienda (sin ENX_DEV, servidor apagado: ENX_BACKEND=none);
+#   2. compila el .aab de tienda (sin ENX_DEV, con el servidor real: ENX_BACKEND=firebase, que es el valor por defecto);
 #   3. lo guarda como artefacto del run (sirve para la primera subida manual);
 #   4. si la variable del repositorio PLAY_UPLOAD vale "true", lo sube a la pista
 #      que diga PLAY_TRACK (por defecto "internal": prueba interna, sin revisión),
@@ -152,7 +152,7 @@ jobs:
           # de los APK compilados a mano (split-per-abi llega a ~3010). El nombre sale de pubspec.yaml.
           flutter build appbundle --release \
             --build-number=$((10000 + ${{ github.run_number }})) \
-            --dart-define=ENX_BACKEND=none
+            --dart-define=ENX_BACKEND=firebase
 
       - name: Borrar la llave del runner
         if: always()

@@ -16,8 +16,13 @@
 ///       Valida los datos de un mundo (tools/data/mundos/ID.json).
 ///   dart run bin/enigmatrix.dart catalog-add ARCHIVO.json... --mundo M
 ///       [--tipo campana|reto] [--dia-inicio N] [--dir ../app/assets/cases]
+///       [--servidor data/casos-servidor]
+///       Los casos mansion-* y reto-* se guardan COMPLETOS en --servidor y
+///       sin "solution" en --dir (la app no lleva su solución).
 ///   dart run bin/enigmatrix.dart catalog-check [--dir ../app/assets/cases]
-///       [--tutorial ../app/assets/tutorial]
+///       [--tutorial ../app/assets/tutorial] [--servidor data/casos-servidor]
+///       Valida los casos del servidor sobre su fuente completa y exige que
+///       los assets sean idénticos sin "solution".
 library;
 
 import 'dart:convert';
@@ -174,6 +179,11 @@ void _show(List<String> args) {
 void _validate(List<String> args) {
   final path = args.firstWhere((a) => !a.startsWith('--'));
   final pc = _load(path);
+  if (!pc.hasSolution) {
+    stderr.writeln('El caso ${pc.caseId} no trae solución (se valida en el '
+        'servidor): valida su fuente en tools/data/casos-servidor.');
+    exit(1);
+  }
 
   final v = Validator.validate(pc, pc.solution.positions);
   stdout.writeln('Validador: ${v.valid ? 'OK' : 'FALLA ${v.errors}'}');
@@ -239,6 +249,11 @@ void _measure(List<String> args) {
 Directory _casesDir(List<String> args) =>
     Directory(_opt(args, 'dir') ?? '../app/assets/cases');
 
+Directory _serverDir(List<String> args) {
+  final d = _opt(args, 'servidor');
+  return d == null ? findServerCasesDir() : Directory(d);
+}
+
 void _catalogAdd(List<String> args) {
   final mundo = _opt(args, 'mundo');
   if (mundo == null) {
@@ -251,7 +266,7 @@ void _catalogAdd(List<String> args) {
     exit(1);
   }
   // Los argumentos sin "--" que no sean valor de una opción son archivos.
-  final valueOpts = {'mundo', 'tipo', 'dir', 'dia-inicio'};
+  final valueOpts = {'mundo', 'tipo', 'dir', 'dia-inicio', 'servidor'};
   final files = <File>[];
   for (var i = 0; i < args.length; i++) {
     final a = args[i];
@@ -271,6 +286,7 @@ void _catalogAdd(List<String> args) {
       sources: files,
       mundo: mundo,
       tipo: tipo,
+      serverCasesDir: _serverDir(args),
       diaInicio: diaInicio == null ? null : int.parse(diaInicio));
   if (r.errors.isNotEmpty) {
     stderr.writeln('No se agregó nada:');
@@ -343,7 +359,10 @@ void _buildPlan(List<String> args) {
 
 void _catalogCheck(List<String> args) {
   final tut = Directory(_opt(args, 'tutorial') ?? '../app/assets/tutorial');
-  final report = runContentGate(casesDir: _casesDir(args), tutorialDir: tut);
+  final report = runContentGate(
+      casesDir: _casesDir(args),
+      tutorialDir: tut,
+      serverCasesDir: _serverDir(args));
   report.checks.forEach((name, c) {
     stdout.writeln('${c.passed ? 'OK   ' : 'FALLA'} $name '
         '${c.steps == null ? '' : '(${c.steps} pasos, T${c.tier})'}');

@@ -182,6 +182,9 @@ enum ActionFeedback {
   registrationRequired, // invitado en un caso que pide registro
   wrongLimit, // sin intentos fallidos en el reto de hoy
   emailUnverified, // cuenta de correo sin verificar
+
+  // Solo con ENX_BACKEND=none (desarrollo):
+  serverOnly, // caso publicado sin solución: solo se valida en el servidor
 }
 
 /// Tope del tiempo que se informa al servidor (24 h, backend/validation.ts).
@@ -762,6 +765,9 @@ class GameController extends AutoDisposeFamilyNotifier<GameState, PuzzleCase> {
       return ActionFeedback.ok;
     }
     if (!_editable) return ActionFeedback.ok;
+    // Los casos publicados (mansion-*, reto-*) no traen la solución: sin
+    // servidor (ENX_BACKEND=none, solo desarrollo) no se pueden validar aquí.
+    if (!state.pc.hasSolution) return ActionFeedback.serverOnly;
     final positions = state.board.confirmedPositions(
       state.pc.characters.map((c) => c.id),
     );

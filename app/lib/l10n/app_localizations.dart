@@ -1920,6 +1920,12 @@ abstract class AppLocalizations {
   /// **'Demasiados intentos. Espera un momento.'**
   String get validationRateLimited;
 
+  /// Aviso de desarrollo (ENX_BACKEND=none): un caso publicado no trae su solución y solo se puede validar en el servidor.
+  ///
+  /// In es, this message translates to:
+  /// **'Este caso se valida en el servidor. Esta compilación no tiene servidor conectado.'**
+  String get solveServerOnly;
+
   /// Aviso cuando el servidor no acepta el envío de Resolver.
   ///
   /// In es, this message translates to:

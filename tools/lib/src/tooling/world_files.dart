@@ -36,6 +36,12 @@ String _stripBom(String s) =>
 Directory defaultWorldsDir() =>
     Directory.fromUri(Platform.script.resolve('../data/mundos/'));
 
+/// Carpeta con los casos COMPLETOS (con solución) de los mundos
+/// (tools/data/casos-servidor), relativa a este paquete. Es la fuente del
+/// servidor: la app solo lleva la versión sin `solution`.
+Directory defaultServerCasesDir() =>
+    Directory.fromUri(Platform.script.resolve('../data/casos-servidor/'));
+
 /// Lee un mundo de un archivo. Lanza [FormatException] si es inválido o si
 /// [WorldData.problems] encuentra algo.
 WorldData loadWorldFile(File f) {
@@ -127,4 +133,18 @@ File writeCaseFile(PuzzleCase pc, Directory outDir) {
   f.writeAsStringSync(
       '${const JsonEncoder.withIndent('  ').convert(pc.toJson())}\n');
   return f;
+}
+
+/// true si el id es de un caso que valida el servidor (`mansion-*` y
+/// `reto-*`): su solución no va en los assets de la app.
+bool isServerCaseId(String caseId) =>
+    caseId.startsWith('mansion-') || caseId.startsWith('reto-');
+
+/// Publica un caso en la app. Los casos del servidor se escriben completos
+/// en [serverDir] y SIN solución en [casesDir]; los locales (tutorial y banco
+/// `caso-*`) completos en [casesDir]. Devuelve el archivo de [casesDir].
+File publishCaseFile(PuzzleCase pc, Directory casesDir, Directory serverDir) {
+  if (!isServerCaseId(pc.caseId)) return writeCaseFile(pc, casesDir);
+  writeCaseFile(pc, serverDir);
+  return writeCaseFile(pc.withoutSolution(), casesDir);
 }

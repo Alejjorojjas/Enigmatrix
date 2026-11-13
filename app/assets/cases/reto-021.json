@@ -484,21 +484,6 @@
       "group": "piano"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 7,
-      "c2": 12,
-      "c3": 18,
-      "c4": 31,
-      "c5": 44,
-      "c6": 46,
-      "c7": 60,
-      "c8": 68,
-      "c9": 74
-    },
-    "murderer": "c3",
-    "lethalWeapon": "pisapapeles"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

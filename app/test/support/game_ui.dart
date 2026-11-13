@@ -26,10 +26,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n.dart';
 
 /// Carga un caso real del banco por su nombre de archivo (sin .json).
+///
+/// Los casos que valida el servidor (`mansion-*`, `reto-*`) no llevan la
+/// solución en los assets de la app; las pruebas la necesitan para jugarlos,
+/// así que se leen de su fuente completa (tools/data/casos-servidor). Los
+/// demás (tutorial y banco `caso-*`) salen de los assets.
 PuzzleCase loadBankCase(String name) => PuzzleCase.fromJson(
   (jsonDecode(
             File(
-              'assets/cases/$name.json',
+              name.startsWith('mansion-') || name.startsWith('reto-')
+                  ? '../tools/data/casos-servidor/$name.json'
+                  : 'assets/cases/$name.json',
             ).readAsStringSync().replaceFirst('\uFEFF', ''),
           )
           as Map)

@@ -1,0 +1,474 @@
+{
+  "caseId": "reto-006",
+  "mapId": "mapa-intermedio-s114-v2",
+  "map": {
+    "id": "mapa-intermedio-s114-v2",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          5,
+          6,
+          7,
+          8,
+          15,
+          16,
+          17,
+          24,
+          25,
+          26,
+          33,
+          34,
+          35,
+          43,
+          44,
+          53
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          62,
+          70,
+          71,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          45,
+          46,
+          54,
+          55,
+          63,
+          64,
+          72,
+          73,
+          74
+        ]
+      },
+      {
+        "id": "galeria",
+        "name_es": "la Galería",
+        "cells": [
+          48,
+          49,
+          56,
+          57,
+          58,
+          65,
+          66,
+          67
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
+          2,
+          3,
+          4,
+          12,
+          13,
+          14,
+          22,
+          23,
+          30,
+          31,
+          32,
+          39,
+          40,
+          41,
+          42,
+          50,
+          51
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          0,
+          1,
+          9,
+          10,
+          11,
+          18,
+          19,
+          20,
+          21,
+          27,
+          28,
+          29,
+          36,
+          37,
+          38,
+          47
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "name_es": "la Biblioteca",
+        "cells": [
+          52,
+          59,
+          60,
+          61,
+          68,
+          69,
+          75,
+          76,
+          77
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "mesa-1",
+        "type": "mesa",
+        "cells": [
+          53,
+          44
+        ]
+      },
+      {
+        "id": "caja-2",
+        "type": "caja",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "mesa-3",
+        "type": "mesa",
+        "cells": [
+          26,
+          17
+        ]
+      },
+      {
+        "id": "caja-4",
+        "type": "caja",
+        "cells": [
+          7
+        ]
+      },
+      {
+        "id": "alfombra-5",
+        "type": "alfombra",
+        "cells": [
+          70,
+          79
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          80
+        ]
+      },
+      {
+        "id": "alfombra-7",
+        "type": "alfombra",
+        "cells": [
+          54,
+          55
+        ]
+      },
+      {
+        "id": "planta-8",
+        "type": "planta",
+        "cells": [
+          63
+        ]
+      },
+      {
+        "id": "mesa-9",
+        "type": "mesa",
+        "cells": [
+          73,
+          72
+        ]
+      },
+      {
+        "id": "alfombra-10",
+        "type": "alfombra",
+        "cells": [
+          56,
+          57
+        ]
+      },
+      {
+        "id": "silla-11",
+        "type": "silla",
+        "cells": [
+          67
+        ]
+      },
+      {
+        "id": "planta-12",
+        "type": "planta",
+        "cells": [
+          66
+        ]
+      },
+      {
+        "id": "planta-13",
+        "type": "planta",
+        "cells": [
+          40
+        ]
+      },
+      {
+        "id": "planta-14",
+        "type": "planta",
+        "cells": [
+          32
+        ]
+      },
+      {
+        "id": "banera-15",
+        "type": "banera",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "alfombra-16",
+        "type": "alfombra",
+        "cells": [
+          2,
+          3
+        ]
+      },
+      {
+        "id": "perchero-17",
+        "type": "perchero",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "silla-18",
+        "type": "silla",
+        "cells": [
+          36
+        ]
+      },
+      {
+        "id": "cama-19",
+        "type": "cama",
+        "cells": [
+          27,
+          28
+        ]
+      },
+      {
+        "id": "alfombra-20",
+        "type": "alfombra",
+        "cells": [
+          37,
+          38
+        ]
+      },
+      {
+        "id": "planta-21",
+        "type": "planta",
+        "cells": [
+          75
+        ]
+      },
+      {
+        "id": "chimenea-22",
+        "type": "chimenea",
+        "cells": [
+          60
+        ]
+      },
+      {
+        "id": "silla-23",
+        "type": "silla",
+        "cells": [
+          61
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "bano"
+      },
+      {
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "galeria"
+      },
+      {
+        "id": "cordon",
+        "name_es": "el cordón de la cortina",
+        "category": "asfixia",
+        "area": "sala-de-musica"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c1",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Beatriz",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Candela",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Fermín",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Horacio",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Olimpia",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Ximena",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "only_one_on",
+      "subject": "c1",
+      "group": "alfombra"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c2",
+      "group": "perchero"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "caja"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "banera"
+    },
+    {
+      "type": "in_area",
+      "subject": "c6",
+      "area": "galeria"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c7",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "comedor"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "alone_with",
+      "a": "c9",
+      "b": "c7"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 2,
+      "c2": 9,
+      "c3": 24,
+      "c4": 35,
+      "c5": 39,
+      "c6": 49,
+      "c7": 61,
+      "c8": 64,
+      "c9": 77
+    },
+    "murderer": "c5",
+    "lethalWeapon": "copa"
+  },
+  "metrics": {
+    "deductionSteps": 10,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "La partida de ajedrez"
+    },
+    "premise": {
+      "es": "Una partida de ajedrez queda a medias y nadie recuerda quién movía. Al caer la noche, uno de los presentes es hallado sin vida."
+    }
+  }
+}

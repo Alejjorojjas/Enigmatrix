@@ -483,21 +483,6 @@
       ]
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 2,
-      "c2": 17,
-      "c3": 18,
-      "c4": 28,
-      "c5": 42,
-      "c6": 48,
-      "c7": 61,
-      "c8": 67,
-      "c9": 77
-    },
-    "murderer": "c7",
-    "lethalWeapon": "abrecartas"
-  },
   "metrics": {
     "deductionSteps": 10,
     "maxTier": 3,

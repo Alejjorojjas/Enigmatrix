@@ -1,0 +1,482 @@
+{
+  "caseId": "mansion-09",
+  "mapId": "mapa-intermedio-s4-v4",
+  "map": {
+    "id": "mapa-intermedio-s4-v4",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          55,
+          63,
+          64,
+          65,
+          72,
+          73,
+          74,
+          75,
+          76
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          59,
+          60,
+          61,
+          67,
+          68,
+          69,
+          70,
+          71,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          21,
+          22,
+          23,
+          24,
+          25,
+          31,
+          32
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          9,
+          10,
+          11,
+          18,
+          19,
+          20,
+          27,
+          28,
+          36,
+          37,
+          45,
+          46,
+          54
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          26,
+          33,
+          34,
+          35,
+          41,
+          42,
+          43,
+          44,
+          50,
+          51,
+          52,
+          53,
+          62
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          29,
+          30,
+          38,
+          39,
+          40,
+          47,
+          48,
+          49,
+          56,
+          57,
+          58,
+          66
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "piano-1",
+        "type": "piano",
+        "cells": [
+          65
+        ]
+      },
+      {
+        "id": "sillon-2",
+        "type": "sillon",
+        "cells": [
+          64
+        ]
+      },
+      {
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          72
+        ]
+      },
+      {
+        "id": "sillon-4",
+        "type": "sillon",
+        "cells": [
+          71
+        ]
+      },
+      {
+        "id": "planta-5",
+        "type": "planta",
+        "cells": [
+          60
+        ]
+      },
+      {
+        "id": "sillon-6",
+        "type": "sillon",
+        "cells": [
+          69
+        ]
+      },
+      {
+        "id": "mesa-7",
+        "type": "mesa",
+        "cells": [
+          68,
+          59
+        ]
+      },
+      {
+        "id": "planta-8",
+        "type": "planta",
+        "cells": [
+          4
+        ]
+      },
+      {
+        "id": "planta-9",
+        "type": "planta",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "mesa-10",
+        "type": "mesa",
+        "cells": [
+          5,
+          6
+        ]
+      },
+      {
+        "id": "mesa-11",
+        "type": "mesa",
+        "cells": [
+          12,
+          21
+        ]
+      },
+      {
+        "id": "planta-12",
+        "type": "planta",
+        "cells": [
+          28
+        ]
+      },
+      {
+        "id": "planta-13",
+        "type": "planta",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "alfombra-14",
+        "type": "alfombra",
+        "cells": [
+          18,
+          27
+        ]
+      },
+      {
+        "id": "mesa-15",
+        "type": "mesa",
+        "cells": [
+          1,
+          2
+        ]
+      },
+      {
+        "id": "alfombra-16",
+        "type": "alfombra",
+        "cells": [
+          33,
+          34
+        ]
+      },
+      {
+        "id": "perchero-17",
+        "type": "perchero",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "armario-18",
+        "type": "armario",
+        "cells": [
+          51
+        ]
+      },
+      {
+        "id": "armario-19",
+        "type": "armario",
+        "cells": [
+          53
+        ]
+      },
+      {
+        "id": "planta-20",
+        "type": "planta",
+        "cells": [
+          66
+        ]
+      },
+      {
+        "id": "planta-21",
+        "type": "planta",
+        "cells": [
+          29
+        ]
+      },
+      {
+        "id": "nevera-22",
+        "type": "nevera",
+        "cells": [
+          49
+        ]
+      },
+      {
+        "id": "mesa-23",
+        "type": "mesa",
+        "cells": [
+          56,
+          57
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "candelabro",
+        "name_es": "el candelabro",
+        "category": "contundente",
+        "area": "cocina"
+      },
+      {
+        "id": "pisapapeles",
+        "name_es": "el pisapapeles de bronce",
+        "category": "contundente",
+        "area": "sala-de-musica"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c8",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Amparo",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c3",
+      "name_es": "Fermín",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Genoveva",
+      "female": true
+    },
+    {
+      "id": "c5",
+      "name_es": "Julián",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Leonor",
+      "female": true
+    },
+    {
+      "id": "c7",
+      "name_es": "Rosario",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Sabina",
+      "female": true
+    },
+    {
+      "id": "c9",
+      "name_es": "Ulises",
+      "female": false
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "planta"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "in_area",
+      "subject": "c3",
+      "area": "comedor"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c4",
+      "group": "alfombra"
+    },
+    {
+      "type": "alone_with",
+      "a": "c5",
+      "b": "c4"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "comedor"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "cocina"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c8",
+      "group": "sillon"
+    },
+    {
+      "type": "in_area",
+      "subject": "c9",
+      "area": "sala-de-musica"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 7,
+      "c2": 17,
+      "c3": 20,
+      "c4": 33,
+      "c5": 41,
+      "c6": 45,
+      "c7": 58,
+      "c8": 64,
+      "c9": 75
+    },
+    "murderer": "c9",
+    "lethalWeapon": "pisapapeles"
+  },
+  "metrics": {
+    "deductionSteps": 11,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El último invitado"
+    },
+    "premise": {
+      "es": "Un invitado inesperado llega a la mansión poco antes de la medianoche. Al amanecer, una de las personas presentes es hallada sin vida."
+    }
+  }
+}

@@ -1214,6 +1214,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get validationRateLimited => 'Demasiados intentos. Espera un momento.';
 
   @override
+  String get solveServerOnly =>
+      'Este caso se valida en el servidor. Esta compilación no tiene servidor conectado.';
+
+  @override
   String get validationRejected =>
       'No pudimos validar este caso. Inténtalo de nuevo.';
 

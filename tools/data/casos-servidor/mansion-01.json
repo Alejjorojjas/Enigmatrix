@@ -1,0 +1,296 @@
+{
+  "caseId": "mansion-01",
+  "mapId": "mapa-principiante-s74",
+  "map": {
+    "id": "mapa-principiante-s74",
+    "name_es": "La Mansión",
+    "size": 6,
+    "areas": [
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          0,
+          6,
+          7,
+          12,
+          18,
+          24,
+          25,
+          30
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          10,
+          11,
+          16,
+          17,
+          21,
+          22,
+          23
+        ]
+      },
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          9
+        ]
+      },
+      {
+        "id": "comedor",
+        "name_es": "el Comedor",
+        "cells": [
+          8,
+          13,
+          14,
+          15,
+          19,
+          20,
+          26
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
+          27,
+          28,
+          29,
+          31,
+          32,
+          33,
+          34,
+          35
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "mesa-1",
+        "type": "mesa",
+        "cells": [
+          18,
+          12
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          25
+        ]
+      },
+      {
+        "id": "planta-3",
+        "type": "planta",
+        "cells": [
+          6
+        ]
+      },
+      {
+        "id": "planta-4",
+        "type": "planta",
+        "cells": [
+          11
+        ]
+      },
+      {
+        "id": "nevera-5",
+        "type": "nevera",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "sillon-6",
+        "type": "sillon",
+        "cells": [
+          5
+        ]
+      },
+      {
+        "id": "mesa-7",
+        "type": "mesa",
+        "cells": [
+          9,
+          3
+        ]
+      },
+      {
+        "id": "alfombra-8",
+        "type": "alfombra",
+        "cells": [
+          26,
+          20
+        ]
+      },
+      {
+        "id": "mesa-9",
+        "type": "mesa",
+        "cells": [
+          19,
+          13
+        ]
+      },
+      {
+        "id": "alfombra-10",
+        "type": "alfombra",
+        "cells": [
+          31,
+          32
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          34
+        ]
+      },
+      {
+        "id": "banera-12",
+        "type": "banera",
+        "cells": [
+          33
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "bano"
+      },
+      {
+        "id": "baston",
+        "name_es": "el bastón de plata",
+        "category": "contundente",
+        "area": "comedor"
+      }
+    ]
+  },
+  "difficulty": "principiante",
+  "hasWeapon": false,
+  "victim": "c2",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Damián",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Horacio",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Octavio",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Rodrigo",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Yolanda",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "compound",
+      "subject": "c1",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c1",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c1",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c2",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c2",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c2",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "planta"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c4",
+      "group": "alfombra"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c5",
+      "group": "banera"
+    },
+    {
+      "type": "in_area",
+      "subject": "c6",
+      "area": "invernadero"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 4,
+      "c2": 7,
+      "c3": 17,
+      "c4": 20,
+      "c5": 27,
+      "c6": 30
+    },
+    "murderer": "c6"
+  },
+  "metrics": {
+    "deductionSteps": 4,
+    "maxTier": 3,
+    "clueCount": 6
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "Cena de bienvenida"
+    },
+    "premise": {
+      "es": "Los invitados llegan a la mansión para una cena de bienvenida. Antes del postre, una de las personas presentes es hallada sin vida y la casa queda en silencio."
+    }
+  }
+}

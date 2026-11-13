@@ -1,0 +1,425 @@
+{
+  "caseId": "reto-015",
+  "mapId": "mapa-casual-s140",
+  "map": {
+    "id": "mapa-casual-s140",
+    "name_es": "La Mansión",
+    "size": 8,
+    "areas": [
+      {
+        "id": "invernadero",
+        "name_es": "el Invernadero",
+        "cells": [
+          38,
+          45,
+          46,
+          47,
+          53,
+          54,
+          55,
+          61,
+          62,
+          63
+        ]
+      },
+      {
+        "id": "dormitorio",
+        "name_es": "el Dormitorio",
+        "cells": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          8,
+          9,
+          10,
+          11,
+          16,
+          18,
+          24
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          5,
+          6,
+          7,
+          13,
+          14,
+          15,
+          21,
+          22,
+          23,
+          29,
+          30,
+          31,
+          39
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          17,
+          25,
+          26,
+          32,
+          33,
+          34,
+          35,
+          40,
+          41
+        ]
+      },
+      {
+        "id": "cocina",
+        "name_es": "la Cocina",
+        "cells": [
+          12,
+          19,
+          20,
+          27,
+          28,
+          36,
+          37,
+          43,
+          44,
+          51,
+          52
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          42,
+          48,
+          49,
+          50,
+          56,
+          57,
+          58,
+          59,
+          60
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "planta-1",
+        "type": "planta",
+        "cells": [
+          62
+        ]
+      },
+      {
+        "id": "planta-2",
+        "type": "planta",
+        "cells": [
+          38
+        ]
+      },
+      {
+        "id": "silla-3",
+        "type": "silla",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "cama-4",
+        "type": "cama",
+        "cells": [
+          1,
+          0
+        ]
+      },
+      {
+        "id": "alfombra-5",
+        "type": "alfombra",
+        "cells": [
+          11,
+          3
+        ]
+      },
+      {
+        "id": "silla-6",
+        "type": "silla",
+        "cells": [
+          9
+        ]
+      },
+      {
+        "id": "silla-7",
+        "type": "silla",
+        "cells": [
+          10
+        ]
+      },
+      {
+        "id": "piano-8",
+        "type": "piano",
+        "cells": [
+          21
+        ]
+      },
+      {
+        "id": "planta-9",
+        "type": "planta",
+        "cells": [
+          31
+        ]
+      },
+      {
+        "id": "planta-10",
+        "type": "planta",
+        "cells": [
+          30
+        ]
+      },
+      {
+        "id": "chimenea-11",
+        "type": "chimenea",
+        "cells": [
+          23
+        ]
+      },
+      {
+        "id": "armario-12",
+        "type": "armario",
+        "cells": [
+          26
+        ]
+      },
+      {
+        "id": "silla-13",
+        "type": "silla",
+        "cells": [
+          17
+        ]
+      },
+      {
+        "id": "perchero-14",
+        "type": "perchero",
+        "cells": [
+          41
+        ]
+      },
+      {
+        "id": "silla-15",
+        "type": "silla",
+        "cells": [
+          12
+        ]
+      },
+      {
+        "id": "mesa-16",
+        "type": "mesa",
+        "cells": [
+          52,
+          44
+        ]
+      },
+      {
+        "id": "nevera-17",
+        "type": "nevera",
+        "cells": [
+          27
+        ]
+      },
+      {
+        "id": "planta-18",
+        "type": "planta",
+        "cells": [
+          36
+        ]
+      },
+      {
+        "id": "armario-19",
+        "type": "armario",
+        "cells": [
+          50
+        ]
+      },
+      {
+        "id": "armario-20",
+        "type": "armario",
+        "cells": [
+          48
+        ]
+      },
+      {
+        "id": "mesa-21",
+        "type": "mesa",
+        "cells": [
+          56,
+          57
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "veneno",
+        "name_es": "el frasco de veneno",
+        "category": "veneno",
+        "area": "invernadero"
+      },
+      {
+        "id": "abrecartas",
+        "name_es": "el abrecartas",
+        "category": "cortante",
+        "area": "dormitorio"
+      }
+    ]
+  },
+  "difficulty": "casual",
+  "hasWeapon": false,
+  "victim": "c2",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Fermín",
+      "female": false
+    },
+    {
+      "id": "c2",
+      "name_es": "Gaspar",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Máximo",
+      "female": false
+    },
+    {
+      "id": "c4",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Rosario",
+      "female": true
+    },
+    {
+      "id": "c6",
+      "name_es": "Sabina",
+      "female": true
+    },
+    {
+      "id": "c7",
+      "name_es": "Teodora",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Ximena",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "in_area",
+      "subject": "c1",
+      "area": "salon"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c2",
+      "group": "piano"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c3",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c4",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c4",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c4",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "same_area",
+      "a": "c5",
+      "b": "c4"
+    },
+    {
+      "type": "beside_object",
+      "subject": "c6",
+      "group": "perchero"
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "invernadero"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "bodega"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "armario"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 7,
+      "c2": 13,
+      "c3": 20,
+      "c4": 25,
+      "c5": 35,
+      "c6": 40,
+      "c7": 54,
+      "c8": 58
+    },
+    "murderer": "c1"
+  },
+  "metrics": {
+    "deductionSteps": 8,
+    "maxTier": 3,
+    "clueCount": 8
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El carruaje retrasado"
+    },
+    "premise": {
+      "es": "Un carruaje llega con retraso y deja a los invitados cansados y de mal humor. Antes de la cena, una de las personas presentes es hallada sin vida."
+    }
+  }
+}

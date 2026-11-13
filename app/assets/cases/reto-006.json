@@ -442,21 +442,6 @@
       "b": "c7"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 2,
-      "c2": 9,
-      "c3": 24,
-      "c4": 35,
-      "c5": 39,
-      "c6": 49,
-      "c7": 61,
-      "c8": 64,
-      "c9": 77
-    },
-    "murderer": "c5",
-    "lethalWeapon": "copa"
-  },
   "metrics": {
     "deductionSteps": 10,
     "maxTier": 4,

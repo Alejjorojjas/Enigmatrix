@@ -468,6 +468,13 @@ class _GameBodyState extends ConsumerState<_GameBody> {
   }
 
   void _afterResolve(ActionFeedback fb) {
+    if (fb == ActionFeedback.serverOnly) {
+      _showToast(
+        context.l10n.solveServerOnly,
+        duration: const Duration(milliseconds: 4500),
+      );
+      return;
+    }
     if (fb == ActionFeedback.solvedOk) {
       // Si por algo la secuencia del tablero no termina, el resumen sale igual.
       _fallbackTimer?.cancel();

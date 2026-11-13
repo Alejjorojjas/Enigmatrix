@@ -13,12 +13,14 @@ on:
     paths:
       - "backend/**"
       - "app/assets/cases/**"
+      - "tools/data/casos-servidor/**"
       - ".github/workflows/backend.yml"
   push:
     branches: [main]
     paths:
       - "backend/**"
       - "app/assets/cases/**"
+      - "tools/data/casos-servidor/**"
       - ".github/workflows/backend.yml"
   workflow_dispatch: {}
 

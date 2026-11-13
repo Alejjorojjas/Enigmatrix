@@ -411,19 +411,6 @@
       "group": "piano"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 1,
-      "c2": 14,
-      "c3": 23,
-      "c4": 24,
-      "c5": 34,
-      "c6": 43,
-      "c7": 52,
-      "c8": 61
-    },
-    "murderer": "c2"
-  },
   "metrics": {
     "deductionSteps": 6,
     "maxTier": 3,

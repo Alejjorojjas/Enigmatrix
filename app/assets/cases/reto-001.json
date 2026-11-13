@@ -413,19 +413,6 @@
       "subject": "c8"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 6,
-      "c2": 15,
-      "c3": 20,
-      "c4": 26,
-      "c5": 37,
-      "c6": 43,
-      "c7": 49,
-      "c8": 56
-    },
-    "murderer": "c7"
-  },
   "metrics": {
     "deductionSteps": 5,
     "maxTier": 2,

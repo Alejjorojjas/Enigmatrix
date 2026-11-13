@@ -1,0 +1,484 @@
+{
+  "caseId": "mansion-10",
+  "mapId": "mapa-intermedio-s16-v2",
+  "map": {
+    "id": "mapa-intermedio-s16-v2",
+    "name_es": "La Mansión",
+    "size": 9,
+    "areas": [
+      {
+        "id": "estudio",
+        "name_es": "el Estudio",
+        "cells": [
+          48,
+          49,
+          54,
+          55,
+          56,
+          57,
+          63,
+          64,
+          65,
+          66,
+          72,
+          73,
+          74
+        ]
+      },
+      {
+        "id": "salon",
+        "name_es": "el Salón",
+        "cells": [
+          0,
+          1,
+          2,
+          9,
+          10,
+          18,
+          19,
+          27,
+          28,
+          29,
+          30,
+          36,
+          37,
+          38,
+          39,
+          45,
+          46,
+          47
+        ]
+      },
+      {
+        "id": "bano",
+        "name_es": "el Baño",
+        "cells": [
+          50,
+          58,
+          59,
+          67,
+          68,
+          69,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "sala-de-musica",
+        "name_es": "la Sala de Música",
+        "cells": [
+          51,
+          52,
+          60,
+          61,
+          62,
+          70,
+          71
+        ]
+      },
+      {
+        "id": "vestibulo",
+        "name_es": "el Vestíbulo",
+        "cells": [
+          7,
+          8,
+          16,
+          17,
+          25,
+          26,
+          34,
+          35,
+          40,
+          41,
+          42,
+          43,
+          44,
+          53
+        ]
+      },
+      {
+        "id": "bodega",
+        "name_es": "la Bodega",
+        "cells": [
+          3,
+          4,
+          5,
+          6,
+          11,
+          12,
+          13,
+          14,
+          15,
+          20,
+          21,
+          22,
+          23,
+          24,
+          31,
+          32,
+          33
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "planta-1",
+        "type": "planta",
+        "cells": [
+          64
+        ]
+      },
+      {
+        "id": "alfombra-2",
+        "type": "alfombra",
+        "cells": [
+          73,
+          74
+        ]
+      },
+      {
+        "id": "mesa-3",
+        "type": "mesa",
+        "cells": [
+          48,
+          57
+        ]
+      },
+      {
+        "id": "mesa-4",
+        "type": "mesa",
+        "cells": [
+          54,
+          55
+        ]
+      },
+      {
+        "id": "chimenea-5",
+        "type": "chimenea",
+        "cells": [
+          46
+        ]
+      },
+      {
+        "id": "alfombra-6",
+        "type": "alfombra",
+        "cells": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "mesa-7",
+        "type": "mesa",
+        "cells": [
+          28,
+          27
+        ]
+      },
+      {
+        "id": "mesa-8",
+        "type": "mesa",
+        "cells": [
+          45,
+          36
+        ]
+      },
+      {
+        "id": "planta-9",
+        "type": "planta",
+        "cells": [
+          59
+        ]
+      },
+      {
+        "id": "alfombra-10",
+        "type": "alfombra",
+        "cells": [
+          79,
+          80
+        ]
+      },
+      {
+        "id": "planta-11",
+        "type": "planta",
+        "cells": [
+          58
+        ]
+      },
+      {
+        "id": "banera-12",
+        "type": "banera",
+        "cells": [
+          69
+        ]
+      },
+      {
+        "id": "silla-13",
+        "type": "silla",
+        "cells": [
+          61
+        ]
+      },
+      {
+        "id": "alfombra-14",
+        "type": "alfombra",
+        "cells": [
+          52,
+          51
+        ]
+      },
+      {
+        "id": "perchero-15",
+        "type": "perchero",
+        "cells": [
+          34
+        ]
+      },
+      {
+        "id": "armario-16",
+        "type": "armario",
+        "cells": [
+          44
+        ]
+      },
+      {
+        "id": "armario-17",
+        "type": "armario",
+        "cells": [
+          35
+        ]
+      },
+      {
+        "id": "silla-18",
+        "type": "silla",
+        "cells": [
+          16
+        ]
+      },
+      {
+        "id": "mesa-19",
+        "type": "mesa",
+        "cells": [
+          24,
+          15
+        ]
+      },
+      {
+        "id": "armario-20",
+        "type": "armario",
+        "cells": [
+          33
+        ]
+      },
+      {
+        "id": "mesa-21",
+        "type": "mesa",
+        "cells": [
+          22,
+          13
+        ]
+      },
+      {
+        "id": "armario-22",
+        "type": "armario",
+        "cells": [
+          6
+        ]
+      }
+    ],
+    "weapons": [
+      {
+        "id": "copa",
+        "name_es": "la copa envenenada",
+        "category": "veneno",
+        "area": "bodega"
+      },
+      {
+        "id": "baston",
+        "name_es": "el bastón de plata",
+        "category": "contundente",
+        "area": "bano"
+      },
+      {
+        "id": "atizador",
+        "name_es": "el atizador de la chimenea",
+        "category": "contundente",
+        "area": "sala-de-musica"
+      }
+    ]
+  },
+  "difficulty": "intermedio",
+  "hasWeapon": true,
+  "victim": "c4",
+  "characters": [
+    {
+      "id": "c1",
+      "name_es": "Cecilia",
+      "female": true
+    },
+    {
+      "id": "c2",
+      "name_es": "Gaspar",
+      "female": false
+    },
+    {
+      "id": "c3",
+      "name_es": "Inés",
+      "female": true
+    },
+    {
+      "id": "c4",
+      "name_es": "Máximo",
+      "female": false
+    },
+    {
+      "id": "c5",
+      "name_es": "Nicanor",
+      "female": false
+    },
+    {
+      "id": "c6",
+      "name_es": "Octavio",
+      "female": false
+    },
+    {
+      "id": "c7",
+      "name_es": "Pilar",
+      "female": true
+    },
+    {
+      "id": "c8",
+      "name_es": "Wenceslao",
+      "female": false
+    },
+    {
+      "id": "c9",
+      "name_es": "Yolanda",
+      "female": true
+    }
+  ],
+  "clues": [
+    {
+      "type": "in_area",
+      "subject": "c1",
+      "area": "bodega"
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c2",
+      "group": "silla"
+    },
+    {
+      "type": "compound",
+      "subject": "c3",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c3",
+          "area": "salon"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c3",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "beside_object",
+      "subject": "c4",
+      "group": "mesa"
+    },
+    {
+      "type": "same_area",
+      "a": "c5",
+      "b": "c2"
+    },
+    {
+      "type": "compound",
+      "subject": "c6",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c6",
+          "area": "vestibulo"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c6",
+          "group": "armario"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c7",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c7",
+          "area": "estudio"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c7",
+          "group": "mesa"
+        }
+      ]
+    },
+    {
+      "type": "compound",
+      "subject": "c8",
+      "parts": [
+        {
+          "type": "in_area",
+          "subject": "c8",
+          "area": "bano"
+        },
+        {
+          "type": "beside_object",
+          "subject": "c8",
+          "group": "planta"
+        }
+      ]
+    },
+    {
+      "type": "only_one_on",
+      "subject": "c9",
+      "group": "alfombra"
+    }
+  ],
+  "solution": {
+    "positions": {
+      "c1": 3,
+      "c2": 16,
+      "c3": 18,
+      "c4": 31,
+      "c5": 42,
+      "c6": 53,
+      "c7": 56,
+      "c8": 68,
+      "c9": 73
+    },
+    "murderer": "c1",
+    "lethalWeapon": "copa"
+  },
+  "metrics": {
+    "deductionSteps": 14,
+    "maxTier": 4,
+    "clueCount": 9
+  },
+  "story": {
+    "world": "mansion",
+    "title": {
+      "es": "El reloj de las doce"
+    },
+    "premise": {
+      "es": "Todos los relojes de la mansión se detienen a las doce y la casa entera contiene el aliento. Al volver a marcar la hora, alguien yace sin vida."
+    }
+  }
+}

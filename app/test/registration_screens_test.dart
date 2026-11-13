@@ -383,9 +383,13 @@ void main() {
   });
 
   group('lista de casos', () {
-    List<Override> content() => contentOverrides([
-      for (final n in ['01', '02', '03']) loadBankCase('mansion-$n'),
-    ]);
+    List<Override> content() => [
+      ...contentOverrides([
+        for (final n in ['01', '02', '03']) loadBankCase('mansion-$n'),
+      ]),
+      // contentOverrides fija none; esta lista usa el modo servidor.
+      backendModeProvider.overrideWithValue(BackendMode.emulator),
+    ];
 
     testWidgets('invitado: el caso 3 lleva candado y manda a /registro', (
       tester,

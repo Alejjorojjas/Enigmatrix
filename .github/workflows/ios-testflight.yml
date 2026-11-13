@@ -212,7 +212,7 @@ jobs:
           # El número de versión (0.8.1) sale de pubspec.yaml.
           flutter build ipa --release \
             --build-number=$((10000 + ${{ github.run_number }})) \
-            --dart-define=ENX_BACKEND=none \
+            --dart-define=ENX_BACKEND=firebase \
             --export-options-plist="$RUNNER_TEMP/ExportOptions.plist"
           ls -la build/ios/ipa
 

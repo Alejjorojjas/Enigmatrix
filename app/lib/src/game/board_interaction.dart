@@ -102,6 +102,7 @@ class BoardInteraction {
       case ActionFeedback.registrationRequired:
       case ActionFeedback.wrongLimit:
       case ActionFeedback.emailUnverified:
+      case ActionFeedback.serverOnly:
         break; // no salen de colocar
     }
   }

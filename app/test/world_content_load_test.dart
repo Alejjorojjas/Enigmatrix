@@ -272,9 +272,16 @@ void main() {
       };
       final retos = await CaseRepository.loadDailyChallenges();
       expect(retos.every((r) => !ids.contains(r.puzzle.caseId)), isTrue);
-      // Y entre sí, la solución de cada reto es distinta.
+      // Y entre sí, el rompecabezas (mapa y pistas) de cada reto es distinto.
+      // Los retos publicados ya no traen la solución en los assets.
+      expect(retos.every((r) => !r.puzzle.hasSolution), isTrue);
       final firmas = retos
-          .map((r) => jsonEncode(r.puzzle.solution.toJson()))
+          .map(
+            (r) => jsonEncode({
+              'map': r.puzzle.map.toJson(),
+              'clues': [for (final c in r.puzzle.clues) c.toJson()],
+            }),
+          )
           .toSet();
       expect(firmas.length, 30);
     });

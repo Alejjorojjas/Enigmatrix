@@ -262,17 +262,6 @@
       ]
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 4,
-      "c2": 7,
-      "c3": 12,
-      "c4": 21,
-      "c5": 29,
-      "c6": 32
-    },
-    "murderer": "c1"
-  },
   "metrics": {
     "deductionSteps": 7,
     "maxTier": 3,

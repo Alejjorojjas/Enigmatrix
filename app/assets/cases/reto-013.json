@@ -464,21 +464,6 @@
       "subject": "c9"
     }
   ],
-  "solution": {
-    "positions": {
-      "c1": 3,
-      "c2": 16,
-      "c3": 23,
-      "c4": 27,
-      "c5": 40,
-      "c6": 46,
-      "c7": 60,
-      "c8": 65,
-      "c9": 80
-    },
-    "murderer": "c7",
-    "lethalWeapon": "abrecartas"
-  },
   "metrics": {
     "deductionSteps": 10,
     "maxTier": 3,
