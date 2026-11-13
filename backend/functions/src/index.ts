@@ -49,6 +49,9 @@ import {
   rememberSubmission,
   resolveClientClockMarginMs,
   isRegisteredProvider,
+  assertEmailVerified,
+  isTooFast,
+  resolveMinRankedElapsedMs,
   resolveErrorPenaltyMs,
   resolveFreeCaseIds,
   resolveMaxSubmitsPerMinute,
@@ -78,7 +81,7 @@ function requireUid(request: CallableRequest): string {
 /** Convierte los errores de entrada en HttpsError; deja pasar los HttpsError. */
 function toHttpsError(e: unknown): HttpsError {
   if (e instanceof HttpsError) return e;
-  if (e instanceof InputError) return new HttpsError(e.code, e.message);
+  if (e instanceof InputError) return new HttpsError(e.code, e.message, e.details);
   // Muchas transacciones a la vez sobre el mismo documento (envíos en ráfaga
   // del mismo jugador): Firestore las aborta tras sus reintentos. No es un
   // fallo interno; el cliente reintenta con el mismo submissionId y no se
@@ -115,10 +118,18 @@ function loadSolution(caseId: string): SolutionEntry {
 /** Proveedor de inicio de sesión del token ("anonymous" para invitados). */
 const signInProvider = (request: CallableRequest): unknown => request.auth?.token?.firebase?.sign_in_provider;
 
-/** Exige usuario registrado (no invitado). */
+/** `email_verified` del token (solo cuenta para el proveedor "password"). */
+const emailVerified = (request: CallableRequest): unknown => request.auth?.token?.email_verified;
+
+/** Exige usuario registrado (no invitado) y, si entró con correo y contraseña, con el correo verificado. */
 function requireRegistered(request: CallableRequest): void {
   if (!isRegisteredProvider(signInProvider(request))) {
     throw new HttpsError("failed-precondition", REGISTER_MESSAGE);
+  }
+  try {
+    assertEmailVerified(signInProvider(request), emailVerified(request));
+  } catch (e) {
+    throw toHttpsError(e);
   }
 }
 
@@ -184,7 +195,7 @@ export const startCase = onCall(
       const startedAt = await db().runTransaction(async (tx) => {
         const [prog, cfg] = await Promise.all([tx.get(progRef), tx.get(cfgRef)]);
         const nowMs = Date.now();
-        assertCanPlay(signInProvider(request), caseId, isReto, resolveFreeCaseIds(cfg.data()));
+        assertCanPlay(signInProvider(request), caseId, isReto, resolveFreeCaseIds(cfg.data()), emailVerified(request));
         if (isReto) assertTodaysReto(caseId, localDate!, resolveDailyStartDate(cfg.data()), nowMs);
         const now = Timestamp.fromMillis(nowMs);
 
@@ -241,7 +252,7 @@ export const submitSolution = onCall(
         const now = Timestamp.fromMillis(nowMs);
 
         // Invitados: solo los casos gratis. El resto pide registro.
-        assertCanPlay(signInProvider(request), caseId, isReto, resolveFreeCaseIds(cfgData));
+        assertCanPlay(signInProvider(request), caseId, isReto, resolveFreeCaseIds(cfgData), emailVerified(request));
 
         // Puerta del reto diario: solo se valida el reto de hoy.
         if (isReto) assertTodaysReto(caseId, localDate!, resolveDailyStartDate(cfgData), nowMs);
@@ -268,13 +279,13 @@ export const submitSolution = onCall(
 
         const errors = typeof p.errors === "number" ? p.errors : 0;
 
-        // 1b. Tope de errores por usuario y caso: el caso ya no se puede enviar ni entra al ranking.
-        if (errors >= resolveMaxWrongPerCase(cfgData)) {
+        // 1b. Tope de errores por usuario y reto (la campaña no tiene tope): el reto ya no se puede
+        //     enviar ni entra al ranking. `details.reason` deja al cliente distinguirlo del límite por minuto.
+        if (isReto && errors >= resolveMaxWrongPerCase(cfgData)) {
           throw new HttpsError(
-            "resource-exhausted",
-            isReto
-              ? "Llegaste al máximo de errores de este reto; ya no puedes enviarlo ni entra al ranking."
-              : "Llegaste al máximo de errores de este caso.",
+            "failed-precondition",
+            "Llegaste al máximo de intentos del reto de hoy.",
+            { reason: "wrong-limit" },
           );
         }
 
@@ -294,8 +305,11 @@ export const submitSolution = onCall(
         const rankableMark = startedAt === undefined || p.rankable === false ? { rankable: false } : {};
 
         if (cmp.correct) {
-          const ranked = computeRanked(rankableMark.rankable ?? p.rankable, startedAt !== undefined, input.startedOnline);
           const serverElapsedMs = startedAt ? nowMs - startedAt.toMillis() : null;
+          // Un reto resuelto más rápido que el mínimo plausible vale como resuelto, pero no rankea.
+          const tooFast = isReto && isTooFast(serverElapsedMs, resolveMinRankedElapsedMs(cfgData));
+          const ranked =
+            !tooFast && computeRanked(rankableMark.rankable ?? p.rankable, startedAt !== undefined, input.startedOnline);
           const score =
             isReto && serverElapsedMs !== null
               ? computeScore(serverElapsedMs, errors, resolveErrorPenaltyMs(cfgData))
@@ -316,7 +330,7 @@ export const submitSolution = onCall(
           const stats = isReto ? { serverElapsedMs, errors, score, rank } : null;
           const response = solvedResponse(sol, ranked, stats);
           if (entryRef) {
-            tx.set(entryRef, { uid, nickname, serverElapsedMs, errors, score, solvedAt: now });
+            tx.set(entryRef, { nickname, serverElapsedMs, errors, score, solvedAt: now });
           }
           put({
             startedAt: startedAt ?? null,
@@ -327,7 +341,8 @@ export const submitSolution = onCall(
             serverElapsedMs,
             clientElapsedMs: input.clientElapsedMs,
             ranked,
-            suspicious: isSuspicious(input.clientElapsedMs, serverElapsedMs, resolveClientClockMarginMs(cfgData)),
+            suspicious:
+              tooFast || isSuspicious(input.clientElapsedMs, serverElapsedMs, resolveClientClockMarginMs(cfgData)),
             ...rankableMark,
             ...retoFields,
             ...(isReto ? { score, rank } : {}),
@@ -421,7 +436,6 @@ export const setNickname = onCall(
             p.solvedAt instanceof Timestamp
           ) {
             tx.set(firestore.collection("dailyRankings").doc(p.localDate).collection("entries").doc(uid), {
-              uid,
               nickname,
               serverElapsedMs: p.serverElapsedMs,
               errors: typeof p.errors === "number" ? p.errors : 0,
@@ -443,7 +457,7 @@ export const deleteAccount = onCall(
   async (request) => {
     try {
       const uid = requireUid(request);
-      await deleteUserData(db(), await authService(), uid);
+      await deleteUserData(db(), await authService(), uid, Date.now());
       return { deleted: true };
     } catch (e) {
       throw toHttpsError(e);
@@ -456,6 +470,6 @@ export const dailyCleanup = onSchedule(
   { schedule: "every day 03:00", timeZone: "America/Bogota", timeoutSeconds: 540 },
   async () => {
     const r = await runCleanup(db(), await authService(), Date.now());
-    console.log(`Limpieza: ${r.rankingDaysDeleted} días de ranking y ${r.accountsDeleted} cuentas borrados.`);
+    console.log(`Limpieza: ${r.rankingDaysDeleted} días de ranking y ${r.accountsDeleted} cuentas borrados (${r.accountsFailed} con error).`);
   },
 );

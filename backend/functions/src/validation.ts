@@ -17,6 +17,9 @@ export const MAX_ERROR_PENALTY_MS = 24 * 60 * 60 * 1000;
 /** Casos que puede jugar un invitado (sesión anónima), además del tutorial que corre en el teléfono. */
 export const DEFAULT_FREE_CASE_IDS: readonly string[] = ["mansion-01", "mansion-02"];
 export const MAX_FREE_CASE_IDS = 50;
+/** Tiempo mínimo plausible (servidor) para resolver un reto y entrar al ranking. */
+export const DEFAULT_MIN_RANKED_ELAPSED_MS = 20_000;
+export const MAX_MIN_RANKED_ELAPSED_MS = 60 * 60 * 1000;
 
 /** Ids de caso y de personaje: empiezan por letra o número; luego letras, números, `-` y `_`. */
 export const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
@@ -27,6 +30,8 @@ export class InputError extends Error {
   constructor(
     public readonly code: "invalid-argument" | "not-found" | "resource-exhausted" | "failed-precondition",
     message: string,
+    /** Datos extra para el cliente (HttpsError.details), p. ej. `{ reason: "email-unverified" }`. */
+    public readonly details?: Record<string, unknown>,
   ) {
     super(message);
     this.name = "InputError";
@@ -235,14 +240,51 @@ export function isRegisteredProvider(provider: unknown): boolean {
 
 export const REGISTER_MESSAGE = "Regístrate para seguir jugando.";
 
+export const EMAIL_UNVERIFIED_MESSAGE = "Verifica tu correo para jugar el reto.";
+
+/**
+ * Un correo con contraseña sin verificar no cuenta como registrado para el reto ni para el apodo.
+ * Los demás proveedores (Google, Apple...) ya vienen verificados. Lanza failed-precondition
+ * con details `{ reason: "email-unverified" }`.
+ */
+export function assertEmailVerified(provider: unknown, emailVerified: unknown): void {
+  if (provider === "password" && emailVerified !== true) {
+    throw new InputError("failed-precondition", EMAIL_UNVERIFIED_MESSAGE, { reason: "email-unverified" });
+  }
+}
+
 /**
  * Los invitados solo juegan los casos gratis; el resto de la campaña y todos los retos exigen registro.
+ * En la campaña basta con no ser anónimo; en los retos, además, el correo debe estar verificado.
  * Lanza failed-precondition si no se puede jugar.
  */
-export function assertCanPlay(provider: unknown, caseId: string, isReto: boolean, freeCaseIds: readonly string[]): void {
-  if (isRegisteredProvider(provider)) return;
+export function assertCanPlay(
+  provider: unknown,
+  caseId: string,
+  isReto: boolean,
+  freeCaseIds: readonly string[],
+  emailVerified?: unknown,
+): void {
+  if (isRegisteredProvider(provider)) {
+    if (isReto) assertEmailVerified(provider, emailVerified);
+    return;
+  }
   if (!isReto && freeCaseIds.includes(caseId)) return;
   throw new InputError("failed-precondition", REGISTER_MESSAGE);
+}
+
+/** Lee `minRankedElapsedMs` de config/server (entero entre 0 y 1 h); si no, 20000 ms. */
+export function resolveMinRankedElapsedMs(cfg: unknown): number {
+  if (isPlainObject(cfg)) {
+    const v = cfg.minRankedElapsedMs;
+    if (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= MAX_MIN_RANKED_ELAPSED_MS) return v;
+  }
+  return DEFAULT_MIN_RANKED_ELAPSED_MS;
+}
+
+/** ¿Un reto resuelto en menos del mínimo plausible? Entonces no es rankeable y es sospechoso. */
+export function isTooFast(serverElapsedMs: number | null, minMs: number): boolean {
+  return serverElapsedMs !== null && serverElapsedMs < minMs;
 }
 
 /** Lee `clientClockMarginMs` de config/server (entero >= 0); si no, 5000 ms. */

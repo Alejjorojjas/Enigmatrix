@@ -45,17 +45,22 @@ async function signInAnonymously(): Promise<{ uid: string; token: string }> {
 }
 
 let userCounter = 0;
-/** Usuario registrado (proveedor "password") del emulador de Auth: puede jugar todo. */
-async function signInRegistered(): Promise<{ uid: string; token: string }> {
+/** Crea un usuario con correo y contraseña; `verified` fija email_verified (el token ya lo lleva). */
+async function signInEmail(verified: boolean): Promise<{ uid: string; token: string }> {
   const email = `jugador-${Date.now().toString(36)}-${++userCounter}-${Math.random().toString(36).slice(2, 8)}@test.com`;
-  const r = await fetch(`${AUTH}/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-key`, {
+  const created = await getAuth(app).createUser({ email, password: "clave-segura-1", emailVerified: verified });
+  const r = await fetch(`${AUTH}/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-key`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ email, password: "clave-segura-1", returnSecureToken: true }),
   });
-  const j = (await r.json()) as { idToken: string; localId: string };
-  return { uid: j.localId, token: j.idToken };
+  const j = (await r.json()) as { idToken: string };
+  return { uid: created.uid, token: j.idToken };
 }
+/** Usuario registrado (proveedor "password", correo verificado) del emulador de Auth: puede jugar todo. */
+const signInRegistered = () => signInEmail(true);
+/** Usuario con correo SIN verificar: no puede jugar retos ni poner apodo. */
+const signInUnverified = () => signInEmail(false);
 
 interface CallResult {
   status: number;
@@ -63,6 +68,7 @@ interface CallResult {
   raw: string;
   result?: Record<string, unknown>;
   errorStatus?: string;
+  errorDetails?: Record<string, unknown>;
 }
 
 let sidCounter = 0;
@@ -78,8 +84,8 @@ async function call(name: string, data: unknown, token?: string): Promise<CallRe
   if (token) headers.authorization = `Bearer ${token}`;
   const r = await fetch(`${FUNCTIONS}/${name}`, { method: "POST", headers, body: JSON.stringify({ data }) });
   const raw = await r.text();
-  const j = JSON.parse(raw) as { result?: Record<string, unknown>; error?: { status: string } };
-  return { status: r.status, raw, result: j.result, errorStatus: j.error?.status };
+  const j = JSON.parse(raw) as { result?: Record<string, unknown>; error?: { status: string; details?: Record<string, unknown> } };
+  return { status: r.status, raw, result: j.result, errorStatus: j.error?.status, errorDetails: j.error?.details };
 }
 
 /** Un tablero con exactamente `n` personajes fuera de su casilla (rota entre `n` personajes). */
@@ -115,7 +121,7 @@ const retoId = (n: number): string => `reto-${String(n).padStart(3, "0")}`;
 
 /** Deja config/server de modo que el reto de hoy (TODAY) sea reto-n; `extra` suma otros valores. */
 async function setDaily(n: number, extra: Record<string, unknown> = {}): Promise<void> {
-  await db.doc("config/server").set({ dailyStartDate: addDays(TODAY, -(n - 1)), ...extra });
+  await db.doc("config/server").set({ dailyStartDate: addDays(TODAY, -(n - 1)), minRankedElapsedMs: 0, ...extra });
 }
 const clearConfig = async (): Promise<void> => {
   await db.doc("config/server").delete();
@@ -319,6 +325,10 @@ describe("submitSolution", () => {
     for (const wave of [4, 8, 12, 16, 20]) {
       await Promise.all(Array.from({ length: wave }, () => call("getDailyChallenge", { localDate: TODAY }, u.token)));
     }
+    // Lo mismo con submitSolution, con una entrada inválida: abre los procesos sin tocar el progreso.
+    for (const wave of [4, 8, 12, 16, 20]) {
+      await Promise.all(Array.from({ length: wave }, () => call("submitSolution", {}, u.token)));
+    }
     const board = boardWithWrong(c.solution, 2);
     const rs = await Promise.all(
       Array.from({ length: 20 }, () =>
@@ -513,7 +523,7 @@ describe("entrada maliciosa", () => {
       headers: { "content-type": "application/json", authorization: `Bearer ${u.token}` },
       body: raw,
     });
-    const j = (await r.json()) as { error?: { status: string } };
+    const j = (await r.json()) as { error?: { status: string; details?: Record<string, unknown> } };
     expect(j.error?.status).toBe("INVALID_ARGUMENT");
   });
 });
@@ -697,8 +707,9 @@ describe("ranking del día", () => {
     const prog = (await db.doc(`users/${u.uid}/progress/reto-020`).get()).data()!;
     expect(prog.serverElapsedMs).toBe(prog.solvedAt.toMillis() - prog.startedAt.toMillis());
     const e = (await entry(u.uid))!;
-    expect(Object.keys(e).sort()).toEqual(["errors", "nickname", "score", "serverElapsedMs", "solvedAt", "uid"]);
-    expect(e).toMatchObject({ uid: u.uid, nickname: "Detective Ana", errors: 0, score: res.score, serverElapsedMs: res.serverElapsedMs });
+    expect(e).not.toHaveProperty("uid");
+    expect(Object.keys(e).sort()).toEqual(["errors", "nickname", "score", "serverElapsedMs", "solvedAt"]);
+    expect(e).toMatchObject({ nickname: "Detective Ana", errors: 0, score: res.score, serverElapsedMs: res.serverElapsedMs });
     expect(e.solvedAt.toMillis()).toBe(prog.solvedAt.toMillis());
     expect(prog.localDate).toBe(TODAY);
     expect(prog.rank).toBe(1);
@@ -730,7 +741,7 @@ describe("ranking del día", () => {
     await clearRanking();
     const col = db.collection("dailyRankings").doc(TODAY).collection("entries");
     const seed = (id: string, score: number, solvedAtMs: number) =>
-      col.doc(id).set({ uid: id, nickname: id, serverElapsedMs: score, errors: 0, score, solvedAt: Timestamp.fromMillis(solvedAtMs) });
+      col.doc(id).set({ nickname: id, serverElapsedMs: score, errors: 0, score, solvedAt: Timestamp.fromMillis(solvedAtMs) });
     await seed("mejor-1", 0, 1_000);
     await seed("mejor-2", 0, 2_000);
     await seed("peor-1", 9_000_000_000, 3_000);
@@ -748,7 +759,7 @@ describe("ranking del día", () => {
     await clearRanking();
     const col = db.collection("dailyRankings").doc(TODAY).collection("entries");
     const seed = (id: string, solvedAtMs: number) =>
-      col.doc(id).set({ uid: id, nickname: id, serverElapsedMs: 5000, errors: 0, score: 5000, solvedAt: Timestamp.fromMillis(solvedAtMs) });
+      col.doc(id).set({ nickname: id, serverElapsedMs: 5000, errors: 0, score: 5000, solvedAt: Timestamp.fromMillis(solvedAtMs) });
     await seed("tarde", 3_000);
     await seed("primero", 1_000);
     await seed("medio", 2_000);
@@ -769,7 +780,7 @@ describe("ranking del día", () => {
     const n1 = await track(call("setNickname", { nickname: "Tardón" }, u.token));
     expect(n1.result).toEqual({ nickname: "Tardón" });
     const e1 = (await entry(u.uid))!;
-    expect(e1).toMatchObject({ uid: u.uid, nickname: "Tardón", score: r.result!.score, serverElapsedMs: r.result!.serverElapsedMs, errors: 0 });
+    expect(e1).toMatchObject({ nickname: "Tardón", score: r.result!.score, serverElapsedMs: r.result!.serverElapsedMs, errors: 0 });
     // Lo cambia: la entrada lleva el apodo nuevo y conserva el resto.
     await track(call("setNickname", { nickname: "Madrugador" }, u.token));
     const e2 = (await entry(u.uid))!;
@@ -841,7 +852,7 @@ describe("ranking del día", () => {
 });
 
 describe("tope de errores por caso", () => {
-  it("al llegar a maxWrongPerCase: resource-exhausted (también con el tablero correcto) y el reto no entra al ranking", async () => {
+  it("al llegar a maxWrongPerCase en un reto: failed-precondition con reason wrong-limit (también con el tablero correcto) y no entra al ranking", async () => {
     await setDaily(27, { maxWrongPerCase: 3, maxSubmitsPerMinute: 60 });
     await clearRanking();
     const c = loadCase("reto-027");
@@ -850,12 +861,14 @@ describe("tope de errores por caso", () => {
     const wrong = { caseId: "reto-027", localDate: TODAY, positions: boardWithWrong(c.solution, 2), clientElapsedMs: 1, startedOnline: true };
     for (let i = 0; i < 3; i++) expect((await track(call("submitSolution", wrong, u.token))).result).toEqual({ result: "wrong", wrongCount: 2 });
     const blocked = await track(call("submitSolution", wrong, u.token));
-    expect(blocked.errorStatus).toBe("RESOURCE_EXHAUSTED");
-    expect(blocked.raw).toContain("máximo de errores");
+    expect(blocked.errorStatus).toBe("FAILED_PRECONDITION");
+    expect(blocked.raw).toContain("Llegaste al máximo de intentos del reto de hoy.");
+    expect(blocked.errorDetails).toEqual({ reason: "wrong-limit" });
     const good = await track(
       call("submitSolution", { ...wrong, positions: c.solution.positions }, u.token),
     );
-    expect(good.errorStatus).toBe("RESOURCE_EXHAUSTED");
+    expect(good.errorStatus).toBe("FAILED_PRECONDITION");
+    expect(good.errorDetails).toEqual({ reason: "wrong-limit" });
     const prog = (await db.doc(`users/${u.uid}/progress/reto-027`).get()).data()!;
     expect(prog.errors).toBe(3);
     expect(prog.solved).toBe(false);
@@ -864,38 +877,52 @@ describe("tope de errores por caso", () => {
     await clearConfig();
   });
 
-  it("por defecto el tope es 15: el error 16 ya no se evalúa", async () => {
-    await db.doc("config/server").set({ maxSubmitsPerMinute: 60 });
+  it("la campaña no tiene tope de errores: más de 15 errores siguen evaluándose", async () => {
+    await db.doc("config/server").set({ maxWrongPerCase: 2, maxSubmitsPerMinute: 60 });
     const c = loadCase("mansion-05");
     const u = await signInRegistered();
     const wrong = { caseId: "mansion-05", positions: boardWithWrong(c.solution, 2), clientElapsedMs: 1, startedOnline: true };
     try {
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 5; i++) {
         expect((await track(call("submitSolution", wrong, u.token))).result, String(i)).toEqual({ result: "wrong", wrongCount: 2 });
       }
-      expect((await track(call("submitSolution", wrong, u.token))).errorStatus).toBe("RESOURCE_EXHAUSTED");
       const prog = (await db.doc(`users/${u.uid}/progress/mansion-05`).get()).data()!;
-      expect(prog.errors).toBe(15);
-      expect(prog.attempts).toBe(15);
+      expect(prog.errors).toBe(5);
+      const ok = await track(call("submitSolution", { ...wrong, positions: c.solution.positions }, u.token));
+      expect(ok.result).toMatchObject({ result: "solved" });
     } finally {
       await clearConfig();
     }
   });
 
-  it("un error de otro caso no cuenta: el tope es por usuario y caso", async () => {
-    await db.doc("config/server").set({ maxWrongPerCase: 1, maxSubmitsPerMinute: 60 });
+  it("el tope de un reto es por usuario: otro jugador no queda bloqueado", async () => {
+    await setDaily(26, { maxWrongPerCase: 1, maxSubmitsPerMinute: 60 });
     try {
+      const mk = { caseId: "reto-026", localDate: TODAY, positions: boardWithWrong(loadCase("reto-026").solution, 2), clientElapsedMs: 1, startedOnline: true };
       const u = await signInRegistered();
-      const mk = (id: string) => ({ caseId: id, positions: boardWithWrong(loadCase(id).solution, 2), clientElapsedMs: 1, startedOnline: true });
-      expect((await track(call("submitSolution", mk("mansion-01"), u.token))).result!.result).toBe("wrong");
-      expect((await track(call("submitSolution", mk("mansion-01"), u.token))).errorStatus).toBe("RESOURCE_EXHAUSTED");
-      expect((await track(call("submitSolution", mk("mansion-02"), u.token))).result!.result).toBe("wrong");
+      expect((await track(call("submitSolution", mk, u.token))).result!.result).toBe("wrong");
+      expect((await track(call("submitSolution", mk, u.token))).errorDetails).toEqual({ reason: "wrong-limit" });
       const other = await signInRegistered();
-      expect((await track(call("submitSolution", mk("mansion-01"), other.token))).result!.result).toBe("wrong");
+      expect((await track(call("submitSolution", mk, other.token))).result!.result).toBe("wrong");
     } finally {
       await clearConfig();
     }
   });
+
+  it("el límite por minuto sigue siendo resource-exhausted (sin reason wrong-limit)", async () => {
+    await db.doc("config/server").set({ maxSubmitsPerMinute: 1 });
+    try {
+      const u = await signInRegistered();
+      const w = { caseId: "mansion-06", positions: boardWithWrong(loadCase("mansion-06").solution, 2), clientElapsedMs: 1, startedOnline: true };
+      expect((await track(call("submitSolution", w, u.token))).result!.result).toBe("wrong");
+      const r = await track(call("submitSolution", w, u.token));
+      expect(r.errorStatus).toBe("RESOURCE_EXHAUSTED");
+      expect(r.errorDetails).toBeUndefined();
+    } finally {
+      await clearConfig();
+    }
+  });
+
 });
 
 async function entry27(uid: string) {
@@ -1007,6 +1034,146 @@ describe("lastSeenAt", () => {
   });
 });
 
+describe("tiempo mínimo plausible del reto (minRankedElapsedMs)", () => {
+  it("un reto resuelto más rápido que el mínimo vale como resuelto, pero no rankea y queda suspicious", async () => {
+    await setDaily(25, { minRankedElapsedMs: 20_000 });
+    await clearRanking();
+    const u = await newUser("Muy Rapido");
+    await track(call("startCase", { caseId: "reto-025", localDate: TODAY }, u.token));
+    const r = await track(
+      call("submitSolution", { caseId: "reto-025", localDate: TODAY, positions: loadCase("reto-025").solution.positions, clientElapsedMs: 1, startedOnline: true }, u.token),
+    );
+    expect(r.result).toMatchObject({ result: "solved", ranked: false });
+    const prog = (await db.doc(`users/${u.uid}/progress/reto-025`).get()).data()!;
+    expect(prog.solved).toBe(true);
+    expect(prog.ranked).toBe(false);
+    expect(prog.suspicious).toBe(true);
+    expect((await db.collection("dailyRankings").doc(TODAY).collection("entries").get()).size).toBe(0);
+    await clearRanking();
+    await clearConfig();
+  });
+
+  it("pasado el mínimo (por defecto 20 s) entra al ranking", async () => {
+    await db.doc("config/server").set({ dailyStartDate: addDays(TODAY, -24) }); // sin minRankedElapsedMs: vale el defecto
+    await clearRanking();
+    const u = await newUser("Con Calma");
+    await track(call("startCase", { caseId: "reto-025", localDate: TODAY }, u.token));
+    await db.doc(`users/${u.uid}/progress/reto-025`).update({ startedAt: Timestamp.fromMillis(Date.now() - 30_000) });
+    const r = await track(
+      call("submitSolution", { caseId: "reto-025", localDate: TODAY, positions: loadCase("reto-025").solution.positions, clientElapsedMs: 30_000, startedOnline: true }, u.token),
+    );
+    expect(r.result).toMatchObject({ result: "solved", ranked: true });
+    expect((await db.doc(`users/${u.uid}/progress/reto-025`).get()).data()!.suspicious).toBe(false);
+    expect(await entry27(u.uid)).toBeDefined();
+    await clearRanking();
+    await clearConfig();
+  });
+
+  it("la campaña no se ve afectada por el mínimo", async () => {
+    await db.doc("config/server").set({ minRankedElapsedMs: 60_000 });
+    const u = await signInRegistered();
+    await track(call("startCase", { caseId: "mansion-04" }, u.token));
+    const r = await track(call("submitSolution", { caseId: "mansion-04", positions: loadCase("mansion-04").solution.positions, clientElapsedMs: 1, startedOnline: true }, u.token));
+    expect(r.result).toMatchObject({ result: "solved", ranked: true });
+    await clearConfig();
+  });
+});
+
+describe("correo sin verificar", () => {
+  const EMAIL = "Verifica tu correo para jugar el reto.";
+  const expectUnverified = (r: CallResult) => {
+    expect(r.errorStatus).toBe("FAILED_PRECONDITION");
+    expect(r.raw).toContain(EMAIL);
+    expect(r.errorDetails).toEqual({ reason: "email-unverified" });
+  };
+  it("no puede pedir el reto, empezarlo, enviarlo ni poner apodo; sin rastro", async () => {
+    await setDaily(24);
+    const u = await signInUnverified();
+    expectUnverified(await track(call("getDailyChallenge", { localDate: TODAY }, u.token)));
+    expectUnverified(await track(call("startCase", { caseId: "reto-024", localDate: TODAY }, u.token)));
+    expectUnverified(
+      await track(call("submitSolution", { caseId: "reto-024", localDate: TODAY, positions: loadCase("reto-024").solution.positions, clientElapsedMs: 1, startedOnline: true }, u.token)),
+    );
+    expectUnverified(await track(call("setNickname", { nickname: "Sin Verificar" }, u.token)));
+    expect((await db.doc(`users/${u.uid}/progress/reto-024`).get()).exists).toBe(false);
+    expect((await db.doc(`users/${u.uid}`).get()).data()?.nickname).toBeUndefined();
+    await clearConfig();
+  });
+  it("en la campaña sí juega (basta con no ser anónimo)", async () => {
+    const u = await signInUnverified();
+    expect((await track(call("startCase", { caseId: "mansion-03" }, u.token))).status).toBe(200);
+    const r = await track(call("submitSolution", { caseId: "mansion-03", positions: loadCase("mansion-03").solution.positions, clientElapsedMs: 1, startedOnline: true }, u.token));
+    expect(r.result).toMatchObject({ result: "solved" });
+  });
+  it("con el correo verificado todo se abre", async () => {
+    await setDaily(24);
+    const u = await signInRegistered();
+    expect((await track(call("getDailyChallenge", { localDate: TODAY }, u.token))).result).toEqual({ localDate: TODAY, caseId: "reto-024" });
+    expect((await track(call("setNickname", { nickname: "Verificado" }, u.token))).result).toEqual({ nickname: "Verificado" });
+    await clearConfig();
+  });
+});
+
+describe("limpieza de cuentas: orden y tolerancia a fallos", () => {
+  it("al borrar una cuenta se eliminan sus entradas de las últimas 31 fechas aunque el progreso no las recuerde", async () => {
+    const u = await signInRegistered();
+    const other = await signInRegistered();
+    const dates = [TODAY, addDays(TODAY, -10), addDays(TODAY, -30)];
+    for (const d of dates) {
+      for (const id of [u.uid, other.uid]) {
+        await db.doc(`dailyRankings/${d}/entries/${id}`).set({ nickname: "N", score: 1, serverElapsedMs: 1, errors: 0, solvedAt: Timestamp.fromMillis(Date.now()) });
+      }
+    }
+    expect((await track(call("deleteAccount", {}, u.token))).result).toEqual({ deleted: true });
+    for (const d of dates) {
+      expect((await db.doc(`dailyRankings/${d}/entries/${u.uid}`).get()).exists).toBe(false);
+      expect((await db.doc(`dailyRankings/${d}/entries/${other.uid}`).get()).exists).toBe(true);
+      await clearRanking(d);
+    }
+  });
+
+  it("si una cuenta falla, la limpieza sigue con las demás y conserva los datos de la que falló", async () => {
+    const now = Date.now();
+    const old = Timestamp.fromMillis(now - 400 * 86_400_000);
+    const bad = (await signInRegistered()).uid;
+    const good = (await signInRegistered()).uid;
+    for (const uid of [bad, good]) await db.doc(`users/${uid}`).set({ createdAt: old, lastSeenAt: old });
+    const real = getAuth(app);
+    const flaky = new Proxy(real, {
+      get(t, prop) {
+        if (prop === "deleteUser") {
+          return async (uid: string) => {
+            if (uid === bad) throw new Error("fallo simulado de Auth");
+            return t.deleteUser(uid);
+          };
+        }
+        const v = Reflect.get(t, prop);
+        return typeof v === "function" ? v.bind(t) : v;
+      },
+    });
+    const r = await runCleanup(db, flaky, now);
+    expect(r.accountsFailed).toBe(1);
+    expect(r.accountsDeleted).toBeGreaterThanOrEqual(1);
+    expect((await db.doc(`users/${good}`).get()).exists).toBe(false);
+    await expect(real.getUser(good)).rejects.toMatchObject({ code: "auth/user-not-found" });
+    // Auth falló primero: los datos de la cuenta que falló siguen, para reintentar mañana.
+    expect((await db.doc(`users/${bad}`).get()).exists).toBe(true);
+    // Reintento con Auth sano: ahora sí.
+    const again = await runCleanup(db, real, now);
+    expect(again.accountsFailed).toBe(0);
+    expect((await db.doc(`users/${bad}`).get()).exists).toBe(false);
+  });
+
+  it("si el usuario de Auth ya no existe, los datos igual se borran", async () => {
+    const u = await signInRegistered();
+    await db.doc(`users/${u.uid}`).set({ createdAt: Timestamp.now(), lastSeenAt: Timestamp.now() });
+    await getAuth(app).deleteUser(u.uid);
+    const { deleteUserData } = await import("../../functions/src/cleanup");
+    await deleteUserData(db, getAuth(app), u.uid);
+    expect((await db.doc(`users/${u.uid}`).get()).exists).toBe(false);
+  });
+});
+
 describe("deleteAccount", () => {
   it("sin sesión se rechaza", async () => {
     expect((await track(call("deleteAccount", {}))).errorStatus).toBe("UNAUTHENTICATED");
@@ -1063,8 +1230,8 @@ describe("limpieza por retención", () => {
     const edge = isoDate(now - 30 * DAY); // justo 30 días: se conserva
     const recent = isoDate(now - 5 * DAY);
     for (const d of [old1, old2, edge, recent]) {
-      await db.doc(`dailyRankings/${d}/entries/x1`).set({ uid: "x1", nickname: "X", score: 1, serverElapsedMs: 1, errors: 0, solvedAt: Timestamp.fromMillis(now) });
-      await db.doc(`dailyRankings/${d}/entries/x2`).set({ uid: "x2", nickname: "Y", score: 2, serverElapsedMs: 2, errors: 0, solvedAt: Timestamp.fromMillis(now) });
+      await db.doc(`dailyRankings/${d}/entries/x1`).set({ nickname: "X", score: 1, serverElapsedMs: 1, errors: 0, solvedAt: Timestamp.fromMillis(now) });
+      await db.doc(`dailyRankings/${d}/entries/x2`).set({ nickname: "Y", score: 2, serverElapsedMs: 2, errors: 0, solvedAt: Timestamp.fromMillis(now) });
     }
 
     const auth = getAuth(app);
@@ -1076,7 +1243,7 @@ describe("limpieza por retención", () => {
     await db.doc(`users/${inactive}`).set({ createdAt: Timestamp.fromMillis(now - 500 * DAY), lastSeenAt: Timestamp.fromMillis(now - 366 * DAY), nickname: "Viejo" });
     await db.doc(`users/${inactive}/progress/mansion-01`).set({ solved: true });
     await db.doc(`users/${inactive}/progress/reto-001`).set({ solved: true, localDate: recent });
-    await db.doc(`dailyRankings/${recent}/entries/${inactive}`).set({ uid: inactive, nickname: "Viejo", score: 3, serverElapsedMs: 3, errors: 0, solvedAt: Timestamp.fromMillis(now) });
+    await db.doc(`dailyRankings/${recent}/entries/${inactive}`).set({ nickname: "Viejo", score: 3, serverElapsedMs: 3, errors: 0, solvedAt: Timestamp.fromMillis(now) });
     await db.doc(`users/${active}`).set({ createdAt: Timestamp.fromMillis(now - 500 * DAY), lastSeenAt: Timestamp.fromMillis(now - 10 * DAY) });
     await db.doc(`users/${noSeen}`).set({ createdAt: Timestamp.fromMillis(now - 500 * DAY) });
     await db.doc(`users/${nearYear}`).set({ createdAt: Timestamp.fromMillis(now - 500 * DAY), lastSeenAt: Timestamp.fromMillis(now - 364 * DAY) });
@@ -1098,7 +1265,7 @@ describe("limpieza por retención", () => {
     }
     // Una segunda corrida no encuentra nada más que borrar de lo ya borrado.
     const again = await runCleanup(db, auth, now);
-    expect(again).toEqual({ rankingDaysDeleted: 0, accountsDeleted: 0 });
+    expect(again).toEqual({ rankingDaysDeleted: 0, accountsDeleted: 0, accountsFailed: 0 });
     for (const d of [edge, recent]) await clearRanking(d);
     for (const uid of [active, noSeen, nearYear]) await db.recursiveDelete(db.doc(`users/${uid}`));
   });
@@ -1210,7 +1377,16 @@ describe("invitados (sesión anónima) y usuarios registrados", () => {
 
     expect((await db.doc(`users/${g.uid}/progress/mansion-01`).get()).data()!.solved).toBe(true);
     expect((await track(call("startCase", { caseId: "mansion-05" }, j.idToken))).status).toBe(200);
-    expect((await track(call("setNickname", { nickname: "Ya Registrado" }, j.idToken))).result).toEqual({ nickname: "Ya Registrado" });
+    // Recién vinculado, el correo aún no está verificado: la campaña sigue, el apodo espera.
+    expect((await track(call("setNickname", { nickname: "Ya Registrado" }, j.idToken))).errorDetails).toEqual({ reason: "email-unverified" });
+    await getAuth(app).updateUser(g.uid, { emailVerified: true });
+    const refreshed = await fetch(`${AUTH}/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-key`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, password: "clave-segura-1", returnSecureToken: true }),
+    });
+    const verifiedToken = ((await refreshed.json()) as { idToken: string }).idToken;
+    expect((await track(call("setNickname", { nickname: "Ya Registrado" }, verifiedToken))).result).toEqual({ nickname: "Ya Registrado" });
     // El mismo uid: mansion-01 sigue resuelto (respuesta idempotente).
     const again = await track(call("submitSolution", solveBody("mansion-01"), j.idToken));
     expect(again.result).toMatchObject({ result: "solved" });

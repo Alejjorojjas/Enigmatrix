@@ -19,6 +19,9 @@ import {
   rememberSubmission,
   computeScore,
   assertCanPlay,
+  assertEmailVerified,
+  isTooFast,
+  resolveMinRankedElapsedMs,
   isRegisteredProvider,
   resolveFreeCaseIds,
   resolveClientClockMarginMs,
@@ -309,6 +312,20 @@ describe("tope de errores por caso", () => {
   });
 });
 
+describe("tiempo mínimo plausible", () => {
+  it("minRankedElapsedMs: entero entre 0 y 1 h; si no, 20000", () => {
+    expect(resolveMinRankedElapsedMs(undefined)).toBe(20_000);
+    expect(resolveMinRankedElapsedMs({ minRankedElapsedMs: 5000 })).toBe(5000);
+    expect(resolveMinRankedElapsedMs({ minRankedElapsedMs: 0 })).toBe(0);
+    for (const bad of ["9", 1.5, -1, 3_600_001, null]) expect(resolveMinRankedElapsedMs({ minRankedElapsedMs: bad })).toBe(20_000);
+  });
+  it("isTooFast: solo por debajo del mínimo y con tiempo del servidor", () => {
+    expect(isTooFast(19_999, 20_000)).toBe(true);
+    expect(isTooFast(20_000, 20_000)).toBe(false);
+    expect(isTooFast(null, 20_000)).toBe(false);
+  });
+});
+
 describe("invitados y usuarios registrados", () => {
   const free = ["mansion-01", "mansion-02"];
   it("solo 'anonymous' (o sin proveedor) es invitado", () => {
@@ -329,6 +346,22 @@ describe("invitados y usuarios registrados", () => {
   it("el registrado juega todo", () => {
     assertCanPlay("password", "mansion-09", false, free);
     assertCanPlay("google.com", "reto-030", true, []);
+  });
+  it("el correo sin verificar no juega retos, pero sí la campaña", () => {
+    rejects(() => assertCanPlay("password", "reto-001", true, free, false), "failed-precondition");
+    rejects(() => assertCanPlay("password", "reto-001", true, free, undefined), "failed-precondition");
+    assertCanPlay("password", "reto-001", true, free, true);
+    assertCanPlay("password", "mansion-09", false, free, false);
+    assertCanPlay("google.com", "reto-001", true, free, false);
+    assertCanPlay("apple.com", "reto-001", true, free, undefined);
+    try {
+      assertEmailVerified("password", false);
+    } catch (e) {
+      expect((e as InputError).details).toEqual({ reason: "email-unverified" });
+      expect((e as Error).message).toBe("Verifica tu correo para jugar el reto.");
+      return;
+    }
+    throw new Error("Debía fallar");
   });
   it("el mensaje es 'Regístrate para seguir jugando'", () => {
     try {

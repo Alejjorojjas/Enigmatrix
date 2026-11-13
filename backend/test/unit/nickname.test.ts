@@ -65,12 +65,12 @@ describe("filtro de groserías", () => {
     expect(normalizeForFilter("Cabrón")).toBe("cabron");
   });
   it("detecta trucos habituales", () => {
-    for (const bad of ["pu7a", "puuuta", "m1erda", "f.u.c.k", "p u t a", "sh1t", "h1jueputa", "p3nd3j0", "C4brón"]) {
+    for (const bad of ["pu7a", "puuuta", "m1erda", "f.u.c.k", "p u t a", "sh1t", "h1jueputa", "p3nd3j0", "C4brón", "nigger", "Niger", "N1gg3r", "fuk", "fuq"]) {
       expect(containsProfanity(bad), bad).toBe(true);
     }
   });
   it("no bloquea palabras normales que contienen letras de una grosería", () => {
-    for (const ok of ["Mariana", "Computadora", "Scunthorpe", "Cassandra", "Vergara", "Disputa", "Classic", "Peña", "Pluto", "Grupo", "Culebra", "Pistola", "Analista", "Hello World", "Mario", "Conchita", "Cumbre", "Penelope", "Pijamas"]) {
+    for (const ok of ["Mariana", "Computadora", "Scunthorpe", "Cassandra", "Vergara", "Disputa", "Classic", "Peña", "Pluto", "Grupo", "Culebra", "Pistola", "Analista", "Hello World", "Mario", "Conchita", "Cumbre", "Penelope", "Pijamas", "Nigeria", "Fukuoka", "Nigerian", "Fukushima"]) {
       expect(containsProfanity(ok), ok).toBe(false);
       expect(() => parseNickname(ok)).not.toThrow();
     }

@@ -32,8 +32,8 @@ beforeEach(async () => {
     await setDoc(doc(db, "users/alice/progress/c-1"), { solved: false });
     await setDoc(doc(db, "users/bob/progress/c-1"), { solved: true });
     await setDoc(doc(db, "config/server"), { maxSubmitsPerMinute: 6 });
-    await setDoc(doc(db, "dailyRankings/2026-11-16/entries/alice"), { uid: "alice", nickname: "Alice", score: 1000 });
-    await setDoc(doc(db, "dailyRankings/2026-11-16/entries/bob"), { uid: "bob", nickname: "Bob", score: 2000 });
+    await setDoc(doc(db, "dailyRankings/2026-11-16/entries/alice"), { nickname: "Alice", score: 1000 });
+    await setDoc(doc(db, "dailyRankings/2026-11-16/entries/bob"), { nickname: "Bob", score: 2000 });
   });
 });
 
@@ -88,11 +88,11 @@ describe("dailyRankings", () => {
   });
   it("nadie escribe en el ranking desde el cliente, ni siquiera su propia entrada", async () => {
     const db = env.authenticatedContext("alice").firestore();
-    await assertFails(setDoc(doc(db, "dailyRankings/2026-11-16/entries/alice"), { uid: "alice", score: 1 }));
+    await assertFails(setDoc(doc(db, "dailyRankings/2026-11-16/entries/alice"), { score: 1 }));
     await assertFails(updateDoc(doc(db, "dailyRankings/2026-11-16/entries/alice"), { score: 1 }));
     await assertFails(deleteDoc(doc(db, "dailyRankings/2026-11-16/entries/alice")));
-    await assertFails(setDoc(doc(db, "dailyRankings/2026-11-16/entries/bob"), { uid: "bob", score: 1 }));
-    await assertFails(setDoc(doc(db, "dailyRankings/2026-11-17/entries/alice"), { uid: "alice", score: 1 }));
+    await assertFails(setDoc(doc(db, "dailyRankings/2026-11-16/entries/bob"), { score: 1 }));
+    await assertFails(setDoc(doc(db, "dailyRankings/2026-11-17/entries/alice"), { score: 1 }));
     await assertFails(setDoc(doc(db, "dailyRankings/2026-11-16"), { x: 1 }));
   });
 });

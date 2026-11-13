@@ -1,7 +1,7 @@
 # Murdoku Diario: pruebas del servidor (Firebase en el emulador).
 #
 # Corre en cada PR hacia main y en cada push a main que toque backend/:
-# 37 pruebas unitarias y 58 de integración contra los emuladores de Auth,
+# pruebas unitarias y de integración contra los emuladores de Auth,
 # Firestore y Functions (proyecto de prueba demo-enigmatrix, sin cuenta real).
 # No despliega nada: el paso al proyecto real de Firebase es la etapa 5A.3.
 
@@ -12,11 +12,13 @@ on:
     branches: [main]
     paths:
       - "backend/**"
+      - "app/assets/cases/**"
       - ".github/workflows/backend.yml"
   push:
     branches: [main]
     paths:
       - "backend/**"
+      - "app/assets/cases/**"
       - ".github/workflows/backend.yml"
   workflow_dispatch: {}
 
