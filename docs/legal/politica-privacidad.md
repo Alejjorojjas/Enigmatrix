@@ -21,16 +21,18 @@ Murdoku Diario es un juego móvil de deducción lógica.
 
 ## Resumen
 
-- No pedimos tu nombre, correo, teléfono ni ubicación.
+- Puedes ver el tutorial y jugar los dos primeros casos **sin registrarte**.
+- Para seguir la campaña y jugar el reto diario necesitas una cuenta. Puedes registrarte con **Google**, con **Apple** o con **correo y contraseña**.
+- No pedimos teléfono ni ubicación.
 - No hay publicidad, herramientas de análisis ni compras dentro de la app.
-- Para el reto diario y el ranking usamos un identificador anónimo y el apodo que tú eliges.
 - Puedes borrar tu cuenta y tus datos desde la app en cualquier momento.
 
 ## Qué datos tratamos y para qué
 
 | Dato | Para qué |
 |---|---|
-| **Identificador anónimo.** Lo crea Firebase Authentication (Google) al abrir la app. No está ligado a tu nombre ni a tu correo. | Reconocer tus partidas sin pedirte una cuenta. |
+| **Identificador de invitado.** Lo crea Firebase Authentication (Google) al abrir la app. No está ligado a tu nombre ni a tu correo. | Reconocer tus partidas de invitado. Si te registras, tu progreso pasa a tu cuenta. |
+| **Datos de la cuenta.** Si te registras: tu **correo** y el identificador que entrega Google o Apple. Si usas Apple con "Ocultar mi correo", recibimos solo un correo de reenvío de Apple. Si usas correo y contraseña, la contraseña la guarda cifrada Firebase Authentication y nosotros nunca la vemos. | Crear tu cuenta, iniciar sesión, recuperar la contraseña y conservar tu progreso al cambiar de teléfono. **No te enviamos publicidad.** |
 | **Apodo.** El nombre que eliges para el ranking. | Mostrarlo en el ranking diario. **Otros jugadores lo ven.** No uses tu nombre real si no quieres. |
 | **Datos de cada partida en línea:** el caso, la hora de inicio y de fin, el tiempo, los errores y si lo resolviste. | Validar tu solución en el servidor, calcular tu puesto y armar el ranking. |
 | **Ranking diario:** tu apodo, tu tiempo y tus errores en el reto del día. | Mostrar la tabla del día a todos los jugadores. |
@@ -54,7 +56,7 @@ Tus preferencias de apariencia, sonido y vibración, las partidas en curso y los
 ## Cuánto tiempo guardamos los datos
 
 - **Ranking diario:** se borra a los **30 días**.
-- **Identificador, apodo y datos de partidas:** se guardan **hasta que borres tu cuenta** desde la app.
+- **Cuenta, correo, apodo y datos de partidas:** se guardan **hasta que borres tu cuenta** desde la app.
 - **Cuentas sin uso:** se eliminan tras **12 meses** sin abrir el juego.
 
 ## Tus derechos

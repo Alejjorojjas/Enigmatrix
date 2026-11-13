@@ -55,6 +55,13 @@ Alejandro pidió subir la app también a la App Store. Con eso la V1 deja de ser
 
 - **Dueño del proyecto de Firebase:** la cuenta de Google de Alejandro, coherente con que él es el responsable de los datos. Proyecto creado el 12-11-2026: nombre "Murdoku Diario", ID `murdoku-diario`, sin Google Analytics.
 - **Prueba con amigos:** sale con el **reto diario del servidor y el ranking diario con apodo juntos**, no por separado. El apodo es un dato nuevo y debe entrar en la política de privacidad antes de encender el servidor.
+- **Ranking diario (decidido el mismo día):**
+  - cuenta el tiempo del servidor, sin pausas; con esto se cierra la decisión 10 del ADR-0012 para los retos con ranking;
+  - el orden es el tiempo más 30 s por cada error;
+  - el apodo se pide al abrir la app por primera vez y se puede cambiar en Configuración;
+  - el correo de privacidad es murdokudiario@gmail.com.
+
+  El detalle está en `production/planes/2026-11-12-etapa-5a3-reto-y-ranking.md`.
 - **Plan Blaze:** se activa con una **alerta de presupuesto de 1 USD**. Activado el 12-11-2026 con presupuesto de 5.000 COP y la prueba gratuita de Google Cloud (90 días, vence hacia el 10-02-2027; antes hay que activar la cuenta completa o el servidor se apaga).
 - **App Check en Android:** lo enlaza el socio dueño de la cuenta de Google Play (Play Integrity); Alejandro le pasa las instrucciones. En iPhone se usa App Attest.
   - **Hecho por Alejandro el 12-11-2026** (tiene acceso a las dos cuentas).

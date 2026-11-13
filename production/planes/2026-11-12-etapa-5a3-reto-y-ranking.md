@@ -23,6 +23,16 @@
      - filtro de groserías en español e inglés;
      - no tiene que ser único.
 4. **Correo de privacidad:** murdokudiario@gmail.com.
+5. **Registro obligatorio, decidido el mismo día.** Esta decisión **reemplaza al punto 3 en cuándo se pide el apodo**.
+   - **Sin cuenta:** el invitado, con sesión anónima, juega el tutorial y los 2 primeros casos de La Mansión.
+   - **Con cuenta:** el resto de la campaña y el reto diario exigen registrarse.
+   - **Métodos de registro:**
+     - Google, en Android e iPhone;
+     - Apple, en iPhone;
+     - correo y contraseña, con verificación del correo y "olvidé mi contraseña".
+   - **Progreso:** la cuenta de invitado se vincula a la registrada, conserva el mismo uid y no pierde lo jugado.
+   - **Apodo:** se pide justo después de registrarse.
+   - **Servidor:** exige que el proveedor de la sesión no sea `anonymous` para los casos que no son gratis, para el reto y para `setNickname`. La lista de casos gratis va en `config/server.freeCaseIds`.
 
 ## Decisiones del arquitecto (reversibles)
 
