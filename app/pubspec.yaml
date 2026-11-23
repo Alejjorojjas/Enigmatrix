@@ -1,7 +1,7 @@
 name: enigmatrix
 description: Enigmatrix - juego de deduccion visual.
 publish_to: 'none'
-version: 0.9.0+12
+version: 0.9.1+13
 
 environment:
   sdk: ^3.11.1
@@ -38,7 +38,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icon/icon_full.png"
-  adaptive_icon_background: "#E9DCBE"
+  adaptive_icon_background: "#1F2A3A"
   adaptive_icon_foreground: "assets/icon/icon_fg.png"
   remove_alpha_ios: true
 
