@@ -1,5 +1,17 @@
 {
   "@@locale": "es",
+  "settingsPrivacy": "Política de privacidad",
+  "@settingsPrivacy": {
+    "description": "Botón de Configuración que abre la política de privacidad."
+  },
+  "settingsLicenses": "Licencias",
+  "@settingsLicenses": {
+    "description": "Botón de Configuración que abre las licencias de terceros."
+  },
+  "settingsLinkError": "No pudimos abrir el enlace. Revisa tu conexión.",
+  "@settingsLinkError": {
+    "description": "Aviso cuando no se puede abrir la política en el navegador."
+  },
   "uiDemo": "DEMO",
   "@uiDemo": {
     "description": "Etiqueta que marca como simulado (DEMO) lo que aún no tiene servidor."

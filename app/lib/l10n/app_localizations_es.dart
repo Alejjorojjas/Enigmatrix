@@ -9,6 +9,16 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get settingsPrivacy => 'Política de privacidad';
+
+  @override
+  String get settingsLicenses => 'Licencias';
+
+  @override
+  String get settingsLinkError =>
+      'No pudimos abrir el enlace. Revisa tu conexión.';
+
+  @override
   String get uiDemo => 'DEMO';
 
   @override

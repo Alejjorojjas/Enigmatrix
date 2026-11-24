@@ -94,6 +94,24 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('es')];
 
+  /// Botón de Configuración que abre la política de privacidad.
+  ///
+  /// In es, this message translates to:
+  /// **'Política de privacidad'**
+  String get settingsPrivacy;
+
+  /// Botón de Configuración que abre las licencias de terceros.
+  ///
+  /// In es, this message translates to:
+  /// **'Licencias'**
+  String get settingsLicenses;
+
+  /// Aviso cuando no se puede abrir la política en el navegador.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir el enlace. Revisa tu conexión.'**
+  String get settingsLinkError;
+
   /// Etiqueta que marca como simulado (DEMO) lo que aún no tiene servidor.
   ///
   /// In es, this message translates to:

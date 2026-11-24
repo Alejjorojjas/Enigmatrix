@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../l10n/l10n.dart';
 import '../app_version.dart';
@@ -15,6 +16,7 @@ import '../auth/auth_providers.dart';
 import '../backend/validation_providers.dart' show nicknameServiceProvider;
 import '../game/app_settings.dart';
 import '../game/dev_tools.dart';
+import '../legal_links.dart';
 import 'appearance_picker.dart';
 import 'case_list_screen.dart' show prefsProvider;
 import 'dev_texts.dart';
@@ -274,6 +276,25 @@ class _SettingsSheet extends ConsumerWidget {
             style: context.note(14, color: p.softText),
           ),
         ],
+        // Exigido por las tiendas: la política se abre desde la app.
+        const Divider(height: 24),
+        AppButton(
+          label: context.l10n.settingsPrivacy,
+          quiet: true,
+          icon: Icons.privacy_tip_outlined,
+          onTap: () => _openPrivacyPolicy(context),
+        ),
+        const SizedBox(height: 10),
+        AppButton(
+          label: context.l10n.settingsLicenses,
+          quiet: true,
+          icon: Icons.description_outlined,
+          onTap: () => showLicensePage(
+            context: context,
+            applicationName: 'Murdoku Diario',
+            applicationVersion: kAppVersion,
+          ),
+        ),
         // La cuenta es simulada hasta la etapa 5.
         if (showSim) ...[
           const SizedBox(height: 14),
@@ -394,4 +415,22 @@ void editNickname(
       ],
     ),
   );
+}
+
+/// Abre la política de privacidad en el navegador del teléfono.
+Future<void> _openPrivacyPolicy(BuildContext context) async {
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final errorText = context.l10n.settingsLinkError;
+  var opened = false;
+  try {
+    opened = await launchUrl(
+      Uri.parse(kPrivacyPolicyUrl),
+      mode: LaunchMode.externalApplication,
+    );
+  } catch (_) {
+    opened = false;
+  }
+  if (!opened) {
+    messenger?.showSnackBar(SnackBar(content: Text(errorText)));
+  }
 }
